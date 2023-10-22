@@ -1,0 +1,34 @@
+﻿using BeatEcoprove.Application.Authentication.Commands.RegisterPersonalAccount;
+using BeatEcoprove.Contracts.Authentication.Common;
+using BeatEcoprove.Contracts.Authentication.SignIn;
+using MapsterMapper;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BeatEcoprove.Api.Controllers;
+
+[Route("auth")]
+public class AuthenticationController : ApiController
+{
+    private readonly ISender _sender;
+    private readonly IMapper _mapper;
+
+    public AuthenticationController(ISender sender, IMapper mapper)
+    {
+        _sender = sender;
+        _mapper = mapper;
+    }
+
+    [HttpPost("signIn/personal")]
+    public async Task<ActionResult<AuthenticationResult>> SignInPersonalAccount(SignInPersonalAccountRequest request)
+    {
+        var resultTokens = 
+            await _sender.Send(_mapper.Map<SignInPersonalAccountCommand>(request));
+
+        return resultTokens.Match(
+            tokens => Ok(tokens),
+            Problem<AuthenticationResult>
+        );
+    }
+    
+}
