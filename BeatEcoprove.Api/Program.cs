@@ -1,13 +1,15 @@
 using BeatEcoprove.Api;
 using BeatEcoprove.Api.Controllers;
 using BeatEcoprove.Application;
+using BeatEcoprove.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services
     .AddPresentation()
-    .AddApplication();
+    .AddApplication()
+    .AddInfrastructure();
 
 var app = builder.Build();
 

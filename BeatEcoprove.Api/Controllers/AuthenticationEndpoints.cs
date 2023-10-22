@@ -19,12 +19,17 @@ public static class AuthenticationEndpoints
         var tokens = await sender.Send(new SignInPersonalAccountCommand(
             request.Name,
             request.BornDate,
-            request.Gender,
-            request.Phone,
             request.UserName,
+            request.Gender,
+            request.CountryCode,
+            request.Phone,
             request.AvatarUrl,
             request.Email,
-            request.Password));
+            request.Password,
+            request.Xp, 
+            request.SustainabilityPoints,
+            request.EcoScore
+        ));
 
         return Results.Ok(tokens);
     }

@@ -29,8 +29,23 @@ public sealed class Consumer : User
         Password password, 
         Phone phone, 
         string avatarUrl,
-        Profile profile)
+        UserName userName,
+        Gender gender,
+        DateOnly bornDate,
+        int xp,
+        double sustainabilityPoints,
+        double ecoScore)
     {
+        var profile = Profile.Create(
+            userName,
+            gender,
+            xp,
+            bornDate,
+            sustainabilityPoints,
+            ecoScore,
+            avatarUrl
+        );
+        
         return new Consumer(email, name, password, phone, avatarUrl, profile);
     }
 }
