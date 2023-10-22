@@ -12,10 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\BeatEcoprove.Application\BeatEcoprove.Application.csproj" />
       <ProjectReference Include="..\BeatEcoprove.Contracts\BeatEcoprove.Contracts.csproj" />
       <ProjectReference Include="..\BeatEcoprove.Domain\BeatEcoprove.Domain.csproj" />

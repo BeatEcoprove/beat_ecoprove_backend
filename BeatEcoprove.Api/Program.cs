@@ -1,4 +1,5 @@
 using BeatEcoprove.Api;
+using BeatEcoprove.Api.Controllers;
 using BeatEcoprove.Application;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ builder.Services
     .AddApplication();
 
 var app = builder.Build();
+
+app.MapAuthenticationEndpoints();
 
 app.UseHttpsRedirection();
 
