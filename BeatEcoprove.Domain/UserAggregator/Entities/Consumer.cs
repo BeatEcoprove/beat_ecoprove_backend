@@ -31,18 +31,12 @@ public sealed class Consumer : User
         string avatarUrl,
         UserName userName,
         Gender gender,
-        DateOnly bornDate,
-        int xp,
-        double sustainabilityPoints,
-        double ecoScore)
+        DateOnly bornDate)
     {
         var profile = Profile.Create(
             userName,
             gender,
-            xp,
             bornDate,
-            sustainabilityPoints,
-            ecoScore,
             avatarUrl
         );
         

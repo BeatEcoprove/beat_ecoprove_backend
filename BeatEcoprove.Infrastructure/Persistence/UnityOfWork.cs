@@ -1,4 +1,4 @@
-﻿using BeatEcoprove.Application.Interfaces.Persistence;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 
 namespace BeatEcoprove.Infrastructure.Persistence;
 

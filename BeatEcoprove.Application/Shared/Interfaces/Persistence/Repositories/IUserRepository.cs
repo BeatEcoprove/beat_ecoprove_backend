@@ -1,7 +1,7 @@
 ﻿using BeatEcoprove.Domain.UserAggregator;
 using BeatEcoprove.Domain.UserAggregator.ValueObjects;
 
-namespace BeatEcoprove.Application.Interfaces.Persistence.Repositories;
+namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
 public interface IUserRepository : IRepository<User, UserId>
 {

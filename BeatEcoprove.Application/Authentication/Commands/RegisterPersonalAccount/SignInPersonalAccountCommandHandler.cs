@@ -1,6 +1,6 @@
-﻿using BeatEcoprove.Application.Interfaces.Persistence;
-using BeatEcoprove.Application.Interfaces.Persistence.Repositories;
-using BeatEcoprove.Application.Shared;
+﻿using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
@@ -52,10 +52,7 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
                 request.AvatarUrl,
                 userName,
                 gender,
-                request.BornDate,
-                request.Xp,
-                request.SustainabilityPoints,
-                request.EcoScore
+                request.BornDate
             );
         
         // Persist User

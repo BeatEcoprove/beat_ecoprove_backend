@@ -14,8 +14,5 @@ public record SignInPersonalAccountCommand
     string Phone,
     string AvatarUrl,
     string Email,
-    string Password,
-    int Xp,
-    double SustainabilityPoints,
-    double EcoScore
+    string Password
 ) : ICommand<ErrorOr<AuthenticationResult>>;

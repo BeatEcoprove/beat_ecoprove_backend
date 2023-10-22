@@ -1,4 +1,4 @@
-﻿using BeatEcoprove.Application.Interfaces.Persistence.Repositories;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.UserAggregator;
 using BeatEcoprove.Domain.UserAggregator.ValueObjects;
 

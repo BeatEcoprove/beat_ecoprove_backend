@@ -1,6 +1,6 @@
 ﻿using BeatEcoprove.Domain.Shared.Models;
 
-namespace BeatEcoprove.Application.Interfaces.Persistence.Repositories;
+namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
 public interface IRepository<TEntity, in TId>
     where TEntity : AggregateRoot<TId, Guid>

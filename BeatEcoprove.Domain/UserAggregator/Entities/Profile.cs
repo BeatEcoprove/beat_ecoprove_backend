@@ -9,11 +9,11 @@ public class Profile : Entity<ProfileId>
     private Profile(
         UserName userName,
         Gender gender,
-        double xp,
         DateOnly bornDate,
+        string avatarUrl,
+        double xp,
         double sustainabilityPoints,
-        double ecoScore,
-        string avatarUrl)
+        double ecoScore)
     {
         UserName = userName;
         Gender = gender;
@@ -32,8 +32,8 @@ public class Profile : Entity<ProfileId>
     public double EcoScore { get; private set; }
     public string AvatarUrl { get; private set; }
 
-    public static Profile Create(UserName userName, Gender gender, double xp, DateOnly bornDate, double sustainabilityPoints, double ecoScore, string avatarUrl)
+    public static Profile Create(UserName userName, Gender gender, DateOnly bornDate, string avatarUrl)
     {
-        return new Profile(userName, gender, xp, bornDate, sustainabilityPoints, ecoScore, avatarUrl);
+        return new Profile(userName, gender, bornDate, avatarUrl, 0, 0 , 0);
     }
 }
