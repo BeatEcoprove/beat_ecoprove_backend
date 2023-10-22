@@ -1,4 +1,6 @@
-﻿namespace BeatEcoprove.Api;
+﻿using BeatEcoprove.Api.Mappers;
+
+namespace BeatEcoprove.Api;
 
 public static class DependencyInjection
 {
@@ -7,6 +9,7 @@ public static class DependencyInjection
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddControllers();
+        services.AddMappings();
 
         return services;
     }

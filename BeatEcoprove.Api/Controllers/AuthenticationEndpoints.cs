@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application.Authentication.Commands.RegisterPersonalAccount;
 using BeatEcoprove.Contracts.Authentication.SignIn;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,22 +15,9 @@ public static class AuthenticationEndpoints
         authGroup.MapPost("signIn/personal", RegisterPersonalAccount);
     }
 
-    private static async Task<IResult> RegisterPersonalAccount(SignInPersonalAccountRequest request, ISender sender)
+    private static async Task<IResult> RegisterPersonalAccount(SignInPersonalAccountRequest request, ISender sender, IMapper mapper)
     {
-        var tokens = await sender.Send(new SignInPersonalAccountCommand(
-            request.Name,
-            request.BornDate,
-            request.UserName,
-            request.Gender,
-            request.CountryCode,
-            request.Phone,
-            request.AvatarUrl,
-            request.Email,
-            request.Password,
-            request.Xp, 
-            request.SustainabilityPoints,
-            request.EcoScore
-        ));
+        var tokens = await sender.Send(mapper.Map<SignInPersonalAccountCommand>(request));
 
         return Results.Ok(tokens);
     }
