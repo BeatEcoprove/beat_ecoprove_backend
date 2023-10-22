@@ -17,8 +17,11 @@ public static class AuthenticationEndpoints
 
     private static async Task<IResult> RegisterPersonalAccount(SignInPersonalAccountRequest request, ISender sender, IMapper mapper)
     {
-        var tokens = await sender.Send(mapper.Map<SignInPersonalAccountCommand>(request));
+        var resultTokens = await sender.Send(mapper.Map<SignInPersonalAccountCommand>(request));
 
-        return Results.Ok(tokens);
+        return resultTokens.Match(
+            tokens => Results.Ok(tokens),
+            Results.BadRequest
+        );
     }
 }

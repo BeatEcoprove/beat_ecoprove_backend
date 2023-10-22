@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Contracts.Authentication.Common;
+using ErrorOr;
 
 namespace BeatEcoprove.Application.Authentication.Commands.RegisterPersonalAccount;
 
@@ -17,4 +18,4 @@ public record SignInPersonalAccountCommand
     int Xp,
     double SustainabilityPoints,
     double EcoScore
-) : ICommand<AuthenticationResult>;
+) : ICommand<ErrorOr<AuthenticationResult>>;

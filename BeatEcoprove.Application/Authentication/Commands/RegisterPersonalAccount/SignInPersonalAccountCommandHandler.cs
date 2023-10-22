@@ -2,13 +2,16 @@
 using BeatEcoprove.Application.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Contracts.Authentication.Common;
+using BeatEcoprove.Domain.Shared.Errors;
+using BeatEcoprove.Domain.Shared.Extensions;
 using BeatEcoprove.Domain.UserAggregator.Entities;
 using BeatEcoprove.Domain.UserAggregator.Enumerators;
 using BeatEcoprove.Domain.UserAggregator.ValueObjects;
+using ErrorOr;
 
 namespace BeatEcoprove.Application.Authentication.Commands.RegisterPersonalAccount;
 
-internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<SignInPersonalAccountCommand, AuthenticationResult>
+internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<SignInPersonalAccountCommand, ErrorOr<AuthenticationResult>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -19,28 +22,33 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         _userRepository = userRepository;
     }
 
-    public async Task<AuthenticationResult> Handle(SignInPersonalAccountCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<AuthenticationResult>> Handle(SignInPersonalAccountCommand request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-        
         var email = Email.Create(request.Email);
         var password = Password.Create(request.Password);
         var phone = Phone.Create(request.CountryCode, request.Phone);
         var userName = UserName.Create(request.UserName);
         var gender = Gender.Female;
+
+        var result = ValidateValues(email, password, phone);
+        
+        if (result.IsError)
+        {
+            return result.Errors;
+        }
         
         // Check if user exists
-        if (await _userRepository.ExistsUserByEmailAsync(email, cancellationToken))
+        if (await _userRepository.ExistsUserByEmailAsync(email.Value, cancellationToken))
         {
-            throw new Exception("User already exists");
+            return Errors.User.EmailNotValid;
         }
         
         // Create User
         var personalAccount = Consumer.Create(
-                email,
+                email.Value,
                 request.Name,
-                password,
-                phone,
+                password.Value,
+                phone.Value,
                 request.AvatarUrl,
                 userName,
                 gender,
@@ -60,5 +68,15 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         return new AuthenticationResult(
             "AccessToken",
             "RefreshToken");
+    }
+
+    private static ErrorOr<Email> ValidateValues(
+        ErrorOr<Email> email, 
+        ErrorOr<Password> password, 
+        ErrorOr<Phone> phone)
+    {
+        return email
+            .AddValidate(password)
+            .AddValidate(phone);
     }
 }
