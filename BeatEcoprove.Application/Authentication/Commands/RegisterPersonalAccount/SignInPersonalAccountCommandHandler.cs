@@ -1,6 +1,8 @@
 ﻿using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
@@ -15,10 +17,15 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IJwtProvider _jwtProvider;
 
-    public SignInPersonalAccountCommandHandler(IUserRepository userRepository, IUnitOfWork unitOfWork)
+    public SignInPersonalAccountCommandHandler(
+        IUserRepository userRepository, 
+        IUnitOfWork unitOfWork, 
+        IJwtProvider jwtProvider)
     {
         _unitOfWork = unitOfWork;
+        _jwtProvider = jwtProvider;
         _userRepository = userRepository;
     }
 
@@ -60,11 +67,13 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         // Generate Tokens
+        var accessToken = _jwtProvider.GenerateToken(personalAccount.Id, personalAccount.Email, personalAccount.Name, Tokens.Access);
+        var refreshToken = _jwtProvider.GenerateToken(personalAccount.Id, personalAccount.Email, personalAccount.Name, Tokens.Refresh);
 
         // Return Tokens
         return new AuthenticationResult(
-            "AccessToken",
-            "RefreshToken");
+            accessToken,
+            refreshToken);
     }
 
     private static ErrorOr<Email> ValidateValues(
