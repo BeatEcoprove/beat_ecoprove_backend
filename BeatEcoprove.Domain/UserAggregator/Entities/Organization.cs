@@ -6,6 +6,8 @@ namespace BeatEcoprove.Domain.UserAggregator.Entities;
 public sealed class Organization : User
 {
     private Organization(
+        UserName userName,
+        string typeOption,
         Email email, 
         string name, 
         Password password, 
@@ -16,25 +18,31 @@ public sealed class Organization : User
         double xp) 
         : base(email, name, password, phone, avatarUrl, UserType.Consumer)
     {
+        TypeOption = typeOption;
+        UserName = userName;
         Address = address;
         SustainabilityPoints = sustainabilityPoints;
         Xp = xp;
     }
 
+    public UserName UserName { get; private set; }
+    
+    // TODO: Create a TypeOption Enum
+    public string TypeOption { get; private set; }
     public Address Address { get; private set; }
     public int SustainabilityPoints { get; private set; }
     public double Xp { get; private set; }
     
     public static Organization Create(
+        UserName userName,
+        string typeOption,
         Email email, 
         string name, 
         Password password, 
         Phone phone, 
         string avatarUrl,
-        Address address,
-        int sustainabilityPoints,
-        double xp)
+        Address address)
     {
-        return new Organization(email, name, password, phone, avatarUrl, address, sustainabilityPoints, xp);
+        return new Organization(userName, typeOption, email, name, password, phone, avatarUrl, address, 0, 0);
     }
 }

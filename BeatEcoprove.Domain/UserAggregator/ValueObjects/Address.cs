@@ -1,10 +1,11 @@
 ﻿using BeatEcoprove.Domain.Shared.Models;
+using ErrorOr;
 
 namespace BeatEcoprove.Domain.UserAggregator.ValueObjects;
 
 public class Address : ValueObject
 {
-    private Address(string street, string port, string locality, PostalCode postalCode)
+    private Address(string street, int port, string locality, PostalCode postalCode)
     {
         Street = street;
         Port = port;
@@ -13,11 +14,11 @@ public class Address : ValueObject
     }
     
     public string Street { get; private set; }
-    public string Port { get; private set; }
+    public int Port { get; private set; }
     public string Locality { get; private set; }
     public PostalCode PostalCode { get; private set; }
     
-    public static Address Create(string street, string port, string locality, PostalCode postalCode)
+    public static ErrorOr<Address> Create(string street, int port, string locality, PostalCode postalCode)
     {
         return new Address(street, port, locality, postalCode);
     }

@@ -1,4 +1,5 @@
-﻿using BeatEcoprove.Application.Authentication.Commands.RegisterPersonalAccount;
+﻿using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
+using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Contracts.Authentication.SignIn;
 using MapsterMapper;
@@ -31,4 +32,15 @@ public class AuthenticationController : ApiController
         );
     }
     
+    [HttpPost("signIn/enterprise")]
+    public async Task<ActionResult<AuthenticationResult>> SignInEnterpriseAccount(SignInEnterpriseAccountRequest request)
+    {
+        var resultTokens = 
+            await _sender.Send(_mapper.Map<SignInEnterpriseAccountCommand>(request));
+
+        return resultTokens.Match(
+            tokens => Ok(tokens),
+            Problem<AuthenticationResult>
+        );
+    }
 }

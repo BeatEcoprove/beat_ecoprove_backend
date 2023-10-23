@@ -11,7 +11,7 @@ using BeatEcoprove.Domain.UserAggregator.Enumerators;
 using BeatEcoprove.Domain.UserAggregator.ValueObjects;
 using ErrorOr;
 
-namespace BeatEcoprove.Application.Authentication.Commands.RegisterPersonalAccount;
+namespace BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 
 internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<SignInPersonalAccountCommand, ErrorOr<AuthenticationResult>>
 {
@@ -47,7 +47,7 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         // Check if user exists
         if (await _userRepository.ExistsUserByEmailAsync(email.Value, cancellationToken))
         {
-            return Errors.User.EmailNotValid;
+            return Errors.User.EmailAlreadyExists;
         }
         
         // Create User

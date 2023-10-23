@@ -2,7 +2,7 @@
 using BeatEcoprove.Contracts.Authentication.Common;
 using ErrorOr;
 
-namespace BeatEcoprove.Application.Authentication.Commands.RegisterPersonalAccount;
+namespace BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 
 public record SignInPersonalAccountCommand
 (

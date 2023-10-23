@@ -6,8 +6,8 @@ public static partial class Errors
 {
     public class User 
     {
-        public static Error EmailNotValid => Error.Validation(
-            "User.EmailNotValid",
-            "Por favor, introduza um e-mail válido");
+        public static Error EmailAlreadyExists => Error.Validation(
+            "User.EmailAlreadyExists",
+            "Já existe um utilizador com este e-mail.");
     }
 }
