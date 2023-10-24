@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using Microsoft.Extensions.Options;
@@ -19,7 +20,7 @@ public class JwtProvider : IJwtProvider
         _jwtSettings = jwtSettings.Value;
     }
 
-    public string GenerateToken(Guid userId, string email, string name, Tokens tokenType)
+    public string GenerateToken(TokenPayload payload, Tokens tokenType)
     {
         var signCredentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
@@ -28,9 +29,14 @@ public class JwtProvider : IJwtProvider
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, email),
-            new Claim(JwtRegisteredClaimNames.GivenName, name),
+            new Claim(UserClaims.UserId, payload.UserId),
+            new Claim(UserClaims.UserName, payload.UserName),
+            new Claim(UserClaims.Email, payload.Email),
+            new Claim(UserClaims.AvatarUrl, payload.AvatarUrl),
+            new Claim(UserClaims.Level, payload.Level),
+            new Claim(UserClaims.LevelPercentage, payload.LevelPercentage),
+            new Claim(UserClaims.SustainablePoints, payload.SustainablePoints),
+            new Claim(UserClaims.TokenType, tokenType.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
         

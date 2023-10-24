@@ -1,5 +1,7 @@
 ﻿using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
 using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
+using BeatEcoprove.Application.Authentication.Queries.RefreshTokens;
+using BeatEcoprove.Contracts.Authentication;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Contracts.Authentication.SignIn;
 using MapsterMapper;
@@ -37,6 +39,18 @@ public class AuthenticationController : ApiController
     {
         var resultTokens = 
             await _sender.Send(_mapper.Map<SignInEnterpriseAccountCommand>(request));
+
+        return resultTokens.Match(
+            tokens => Ok(tokens),
+            Problem<AuthenticationResult>
+        );
+    }
+
+    [HttpGet("refresh_tokens")]
+    public async Task<ActionResult<AuthenticationResult>> RefreshTokens([FromQuery] string token)
+    {
+        var resultTokens = 
+            await _sender.Send(new RefreshTokensQuery(token));
 
         return resultTokens.Match(
             tokens => Ok(tokens),

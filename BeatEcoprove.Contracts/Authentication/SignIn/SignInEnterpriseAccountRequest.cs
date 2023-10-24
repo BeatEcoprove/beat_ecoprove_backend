@@ -6,10 +6,12 @@ public record SignInEnterpriseAccountRequest
     string TypeOption,
     string Phone,
     string CountryCode,
-    string Address,
+    string Street,
+    int Port,
+    string Locality,
+    string PostalCode,
     string UserName,
     string AvatarUrl,
     string Email,
-    string Password,
-    string PostalCode
+    string Password
 );

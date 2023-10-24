@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
@@ -71,10 +72,19 @@ public class SignInEnterpriseAccountCommandHandler : ICommandHandler<SignInEnter
         // Persist User
         await _userRepository.AddAsync(enterpriseAccount, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var payload = new TokenPayload(
+            enterpriseAccount.Id,
+            enterpriseAccount.Email, 
+            enterpriseAccount.Name,
+            enterpriseAccount.AvatarUrl,
+            10,
+            10,
+            10);
         
         // Generate Tokens
-        var accessToken = _jwtProvider.GenerateToken(enterpriseAccount.Id, enterpriseAccount.Email, enterpriseAccount.Name, Tokens.Access);
-        var refreshToken = _jwtProvider.GenerateToken(enterpriseAccount.Id, enterpriseAccount.Email, enterpriseAccount.Name, Tokens.Refresh);
+        var accessToken = _jwtProvider.GenerateToken(payload, Tokens.Access);
+        var refreshToken = _jwtProvider.GenerateToken(payload, Tokens.Refresh);
 
         
         return new AuthenticationResult(

@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
@@ -66,9 +67,18 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         await _userRepository.AddAsync(personalAccount, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
+        var payload = new TokenPayload(
+            personalAccount.Id,
+            personalAccount.Email, 
+            personalAccount.Name,
+            personalAccount.AvatarUrl,
+            10,
+            10,
+            10);
+            
         // Generate Tokens
-        var accessToken = _jwtProvider.GenerateToken(personalAccount.Id, personalAccount.Email, personalAccount.Name, Tokens.Access);
-        var refreshToken = _jwtProvider.GenerateToken(personalAccount.Id, personalAccount.Email, personalAccount.Name, Tokens.Refresh);
+        var accessToken = _jwtProvider.GenerateToken(payload, Tokens.Access);
+        var refreshToken = _jwtProvider.GenerateToken(payload, Tokens.Refresh);
 
         // Return Tokens
         return new AuthenticationResult(

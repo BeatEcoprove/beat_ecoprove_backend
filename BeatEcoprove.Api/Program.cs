@@ -13,6 +13,8 @@ builder.Services
 
 var app = builder.Build();
 
+app.UseCors(policyBuilder => policyBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
