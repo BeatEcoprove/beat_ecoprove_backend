@@ -12,7 +12,7 @@ public record SignInPersonalAccountCommand
     string Gender,
     string CountryCode,
     string Phone,
-    string AvatarUrl,
+    Stream AvatarPicture,
     string Email,
     string Password
 ) : ICommand<ErrorOr<AuthenticationResult>>;
