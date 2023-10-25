@@ -15,7 +15,7 @@ public record SignInEnterpriseAccountCommand
     string Locality,
     string PostalCode,
     string UserName,
-    string AvatarUrl,
+    Stream AvatarPicture,
     string Email,
     string Password
 ) : ICommand<ErrorOr<AuthenticationResult>>;

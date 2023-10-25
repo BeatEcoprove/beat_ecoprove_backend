@@ -31,7 +31,6 @@ public class SignInEnterpriseAccountCommandHandler : ICommandHandler<SignInEnter
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(SignInEnterpriseAccountCommand request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         var userName = UserName.Create(request.UserName);
         var email = Email.Create(request.Email);
         var phone = Phone.Create(request.CountryCode, request.Phone);
@@ -66,7 +65,7 @@ public class SignInEnterpriseAccountCommandHandler : ICommandHandler<SignInEnter
             request.Name,
             password.Value,
             phone.Value,
-            request.AvatarUrl,
+            "https://github.com/DiogoCC7.png",
             address.Value);
         
         // Persist User

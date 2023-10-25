@@ -1,7 +1,6 @@
 ﻿using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
 using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 using BeatEcoprove.Application.Authentication.Queries.RefreshTokens;
-using BeatEcoprove.Contracts.Authentication;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Contracts.Authentication.SignIn;
 using MapsterMapper;
@@ -23,7 +22,7 @@ public class AuthenticationController : ApiController
     }
 
     [HttpPost("signIn/personal")]
-    public async Task<ActionResult<AuthenticationResult>> SignInPersonalAccount(SignInPersonalAccountRequest request)
+    public async Task<ActionResult<AuthenticationResult>> SignInPersonalAccount([FromForm] SignInPersonalAccountRequest request)
     {
         var resultTokens = 
             await _sender.Send(_mapper.Map<SignInPersonalAccountCommand>(request));
@@ -35,7 +34,7 @@ public class AuthenticationController : ApiController
     }
     
     [HttpPost("signIn/enterprise")]
-    public async Task<ActionResult<AuthenticationResult>> SignInEnterpriseAccount(SignInEnterpriseAccountRequest request)
+    public async Task<ActionResult<AuthenticationResult>> SignInEnterpriseAccount([FromForm] SignInEnterpriseAccountRequest request)
     {
         var resultTokens = 
             await _sender.Send(_mapper.Map<SignInEnterpriseAccountCommand>(request));

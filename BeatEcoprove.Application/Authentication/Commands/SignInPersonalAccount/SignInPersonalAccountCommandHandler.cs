@@ -57,7 +57,7 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
                 request.Name,
                 password.Value,
                 phone.Value,
-                request.AvatarUrl,
+                "https://github.com/DiogoCC7.png",
                 userName,
                 gender,
                 request.BornDate

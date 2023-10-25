@@ -1,4 +1,6 @@
-﻿namespace BeatEcoprove.Contracts.Authentication.SignIn;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace BeatEcoprove.Contracts.Authentication.SignIn;
 
 public record SignInPersonalAccountRequest
 (
@@ -8,7 +10,7 @@ public record SignInPersonalAccountRequest
     string Gender,
     string CountryCode,
     string Phone,
-    string AvatarUrl,
+    IFormFile AvatarPicture,
     string Email,
     string Password
 );
