@@ -1,6 +1,8 @@
 ﻿using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
 using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
+using BeatEcoprove.Application.Authentication.Queries.Login;
 using BeatEcoprove.Application.Authentication.Queries.RefreshTokens;
+using BeatEcoprove.Contracts.Authentication;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Contracts.Authentication.SignIn;
 using MapsterMapper;
@@ -21,6 +23,18 @@ public class AuthenticationController : ApiController
         _mapper = mapper;
     }
 
+    [HttpPost("login")]
+    public async Task<ActionResult<AuthenticationResult>> LoginToAccount(LoginRequest request)
+    {
+        var resultTokens =
+            await _sender.Send(_mapper.Map<LoginQuery>(request));
+        
+        return resultTokens.Match(
+            tokens => Ok(tokens),
+            Problem<AuthenticationResult>
+        );
+    }
+    
     [HttpPost("signIn/personal")]
     public async Task<ActionResult<AuthenticationResult>> SignInPersonalAccount([FromForm] SignInPersonalAccountRequest request)
     {
@@ -28,7 +42,7 @@ public class AuthenticationController : ApiController
             await _sender.Send(_mapper.Map<SignInPersonalAccountCommand>(request));
 
         return resultTokens.Match(
-            tokens => Ok(tokens),
+            tokens => Created("", tokens),
             Problem<AuthenticationResult>
         );
     }
@@ -40,7 +54,7 @@ public class AuthenticationController : ApiController
             await _sender.Send(_mapper.Map<SignInEnterpriseAccountCommand>(request));
 
         return resultTokens.Match(
-            tokens => Ok(tokens),
+            tokens => Created("", tokens),
             Problem<AuthenticationResult>
         );
     }

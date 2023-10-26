@@ -1,5 +1,7 @@
 ﻿using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
 using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
+using BeatEcoprove.Application.Authentication.Queries.Login;
+using BeatEcoprove.Contracts.Authentication;
 using BeatEcoprove.Contracts.Authentication.SignIn;
 using Mapster;
 
@@ -9,6 +11,8 @@ public class UserMappingConfiguration : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
+        config.NewConfig<LoginRequest, LoginQuery>();
+        
         config.NewConfig<SignInPersonalAccountRequest, SignInPersonalAccountCommand>()
             .MapWith((source) =>
                 new SignInPersonalAccountCommand(
