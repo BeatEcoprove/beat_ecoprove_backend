@@ -30,4 +30,11 @@ public class UserRepository : IUserRepository
         await Task.CompletedTask;
         return _users.Any(user => user.Email == email);
     }
+
+    public async Task<User?> GetUserByEmail(Email email, CancellationToken cancellationToken = default)
+    {
+        await Task.CompletedTask;
+        return _users
+            .SingleOrDefault(user => user.Email == email);
+    }
 }
