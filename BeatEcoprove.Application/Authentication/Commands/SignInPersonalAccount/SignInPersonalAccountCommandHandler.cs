@@ -19,15 +19,18 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtProvider _jwtProvider;
+    private readonly IPasswordProvider _passwordProvider;
 
     public SignInPersonalAccountCommandHandler(
         IUserRepository userRepository,
         IUnitOfWork unitOfWork,
-        IJwtProvider jwtProvider)
+        IJwtProvider jwtProvider,
+        IPasswordProvider passwordProvider)
     {
         _unitOfWork = unitOfWork;
         _jwtProvider = jwtProvider;
         _userRepository = userRepository;
+        _passwordProvider = passwordProvider;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(SignInPersonalAccountCommand request, CancellationToken cancellationToken)
@@ -51,11 +54,19 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
             return Errors.User.EmailAlreadyExists;
         }
 
+        // Check if user exists
+        if (await _userRepository.ExistsUserByUserNameAsync(userName, cancellationToken))
+        {
+            return Errors.User.UserNameAlreadyExists;
+        }
+
+        var passwordHash = Password.FromHash(_passwordProvider.HashPassword(password.Value));
+
         // Create User
         var personalAccount = Consumer.Create(
                 email.Value,
                 request.Name,
-                password.Value,
+                passwordHash,
                 phone.Value,
                 "https://github.com/DiogoCC7.png",
                 userName,

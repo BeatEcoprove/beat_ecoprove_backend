@@ -15,13 +15,16 @@ internal sealed class LoginQueryHandler : IQueryHandler<LoginQuery, ErrorOr<Auth
 {
     private readonly IUserRepository _userRepository;
     private readonly IJwtProvider _jwtProvider;
+    private readonly IPasswordProvider _passwordProvider;
 
     public LoginQueryHandler(
-        IUserRepository userRepository, 
-        IJwtProvider jwtProvider)
+        IUserRepository userRepository,
+        IJwtProvider jwtProvider,
+        IPasswordProvider passwordProvider)
     {
         _userRepository = userRepository;
         _jwtProvider = jwtProvider;
+        _passwordProvider = passwordProvider;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -31,22 +34,23 @@ internal sealed class LoginQueryHandler : IQueryHandler<LoginQuery, ErrorOr<Auth
 
         var result = email.AddValidate(password);
         if (result.IsError) return result.Errors;
-        
+
+        var why = await _userRepository.JustPleaseWork(cancellationToken);
+
         var user = await _userRepository.GetUserByEmail(email.Value, cancellationToken);
-        
+
         // Verify user already exists
         if (user is null)
         {
             return Errors.User.EmailDoesNotExists;
         }
-        
-        // Verify password is correct
 
-        if (user.Password != password.Value)
+        // Verify password is correct
+        if (!_passwordProvider.VerifyPassword(password.Value, user.Password))
         {
             return Errors.User.BadCredentials;
         }
-        
+
         // Generate Tokens
         var payload = new TokenPayload(
             user.Id,

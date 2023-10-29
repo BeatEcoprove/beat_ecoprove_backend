@@ -18,7 +18,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.ToTable("app_users");
 
-        builder.HasDiscriminator(a => a.Type)
+        builder.HasDiscriminator(u => u.Type)
            .HasValue<Consumer>(UserType.Consumer)
            .HasValue<Organization>(UserType.Organization);
 
@@ -55,7 +55,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(256)
             .HasConversion(
                 p => p.Value,
-                p => Password.Create(p).Value);
+                p => Password.FromHash(p));
 
         builder.OwnsOne(u => u.Phone, p =>
         {

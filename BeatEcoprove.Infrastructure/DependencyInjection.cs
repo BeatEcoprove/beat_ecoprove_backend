@@ -1,4 +1,5 @@
-﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence;
+﻿using BeatEcoprove.Application;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Infrastructure.Authentication;
@@ -36,6 +37,7 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.AddScoped<IJwtProvider, JwtProvider>();
+        services.AddScoped<IPasswordProvider, PasswordProvider>();
 
         return services;
     }

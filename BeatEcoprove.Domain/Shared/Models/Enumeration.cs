@@ -23,7 +23,9 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
 
     public static TEnum? FromValue(int value)
     {
-        return default;
+        return Enumerations.TryGetValue(
+            value,
+            out TEnum? enumeration) ? enumeration : default;
     }
 
     public bool Equals(Enumeration<TEnum>? other)

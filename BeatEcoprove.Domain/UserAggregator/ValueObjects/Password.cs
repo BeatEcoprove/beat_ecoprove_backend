@@ -10,7 +10,7 @@ public class Password : ValueObject
 
     private Password(string value) => Value = value;
 
-    public string Value { get; private set; } = null!;
+    public string Value { get; set; } = null!;
 
     private static bool ContainsNumber(string value)
     {
@@ -25,6 +25,11 @@ public class Password : ValueObject
     private static bool ContainsNonCapitalLetter(string value)
     {
         return value.Any(char.IsLower);
+    }
+
+    public static Password FromHash(string hash)
+    {
+        return new(hash);
     }
 
     public static ErrorOr<Password> Create(string value)

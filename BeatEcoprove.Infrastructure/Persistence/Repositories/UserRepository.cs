@@ -1,5 +1,7 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.UserAggregator;
+using BeatEcoprove.Domain.UserAggregator.Entities;
+using BeatEcoprove.Domain.UserAggregator.Enumerators;
 using BeatEcoprove.Domain.UserAggregator.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,5 +45,21 @@ public class UserRepository : IUserRepository
         return await _dbContext
             .Users
             .SingleOrDefaultAsync(user => user.Email == email, cancellationToken);
+    }
+
+    public async Task<bool> ExistsUserByUserNameAsync(UserName userName, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext
+            .Users
+            .OfType<Consumer>()
+            .SelectMany(consumer => consumer.Profiles)
+            .AnyAsync(profile => profile.UserName == userName, cancellationToken);
+    }
+
+    public async Task<List<Consumer>> JustPleaseWork(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Users
+          .OfType<Consumer>() // or .OfType<Organization>() to get specific types
+          .ToListAsync(cancellationToken);
     }
 }
