@@ -2,7 +2,6 @@
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Infrastructure.Authentication;
-using BeatEcoprove.Infrastructure.Persistence;
 using BeatEcoprove.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -19,9 +18,8 @@ public static class DependencyInjection
     {
         var jwtSettings = new JwtSettings();
         configuration.Bind(JwtSettings.Section, jwtSettings);
-
         services.AddSingleton(Options.Create(jwtSettings));
-        
+
         services.AddAuthentication(
             options =>
             {
@@ -30,32 +28,39 @@ public static class DependencyInjection
         {
             options.TokenValidationParameters = JwtProvider.GetTokenValidationParameters(jwtSettings);
         });
-        
+
         return services;
     }
-    
+
     private static IServiceCollection AddProviders(
         this IServiceCollection services)
     {
         services.AddScoped<IJwtProvider, JwtProvider>();
-        
+
         return services;
     }
-    
-    private static IServiceCollection AddPersistence(this IServiceCollection services)
+
+    private static IServiceCollection AddPersistence(this IServiceCollection services, ConfigurationManager configurationManager)
     {
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        var dbSettings = new DbSettings();
+        configurationManager.Bind(DbSettings.Section, dbSettings);
+        services.AddSingleton(Options.Create(dbSettings));
+
+        services.AddDbContext<BeatEcoproveDbContext>();
+        services.AddScoped<IApplicationDbContext>(provider => provider.GetService<BeatEcoproveDbContext>()!);
+        services.AddScoped<IUnitOfWork>(provider => provider.GetService<BeatEcoproveDbContext>()!);
+
         services.AddScoped<IUserRepository, UserRepository>();
-        
+
         return services;
     }
-    
+
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
     {
-        services.AddPersistence();
         services.AddProviders();
+        services.AddPersistence(configuration);
         services.AddAuth(configuration);
-        
+
         return services;
     }
 }

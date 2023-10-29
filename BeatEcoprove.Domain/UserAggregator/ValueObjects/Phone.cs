@@ -6,15 +6,17 @@ namespace BeatEcoprove.Domain.UserAggregator.ValueObjects;
 
 public class Phone : ValueObject
 {
+    private Phone() { }
+
     private Phone(string code, string value)
     {
         Code = code;
         Value = value;
     }
-    
-    public string Value { get; private set; }
-    public string Code { get; private set; }
-    
+
+    public string Value { get; private set; } = null!;
+    public string Code { get; private set; } = null!;
+
     public static ErrorOr<Phone> Create(string code, string value)
     {
         if (ShouldNotBeNull(code, value))
@@ -26,12 +28,12 @@ public class Phone : ValueObject
         {
             return Errors.Phone.InvalidPhone;
         }
-        
+
         if (ShouldHaveLength(value, 9))
         {
             return Errors.Phone.MustBeNineLegth;
         }
-        
+
         return new Phone(code, value);
     }
 
@@ -54,6 +56,6 @@ public class Phone : ValueObject
     {
         yield return Value;
     }
-    
-    public static implicit operator string(Phone phone) =>  phone.Value;
+
+    public static implicit operator string(Phone phone) => phone.Value;
 }

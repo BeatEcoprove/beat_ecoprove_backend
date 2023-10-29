@@ -6,11 +6,13 @@ namespace BeatEcoprove.Domain.UserAggregator;
 
 public abstract class User : AggregateRoot<UserId, Guid>
 {
+    protected User() { }
+
     protected User(
-        Email email, 
-        string name, 
-        Password password, 
-        Phone phone, 
+        Email email,
+        string name,
+        Password password,
+        Phone phone,
         string avatarUrl,
         UserType type)
     {
@@ -22,11 +24,11 @@ public abstract class User : AggregateRoot<UserId, Guid>
         AvatarUrl = avatarUrl;
         Type = type;
     }
-    
-    public Email Email { get; private set; }
-    public string Name { get; private set; }
-    public Password Password { get; private set; }
-    public Phone Phone { get; private set; }
-    public string AvatarUrl { get; private set; }
-    public UserType Type { get; private set; }
+
+    public Email Email { get; private set; } = null!;
+    public string Name { get; private set; } = null!;
+    public Password Password { get; private set; } = null!;
+    public Phone Phone { get; private set; } = null!;
+    public string AvatarUrl { get; private set; } = null!;
+    public UserType Type { get; private set; } = null!;
 }

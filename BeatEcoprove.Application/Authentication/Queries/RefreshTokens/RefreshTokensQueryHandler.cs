@@ -21,12 +21,12 @@ internal sealed class RefreshTokensQueryHandler : IQueryHandler<RefreshTokensQue
     public async Task<ErrorOr<AuthenticationResult>> Handle(RefreshTokensQuery request, CancellationToken cancellationToken)
     {
         IDictionary<string, string> claims;
-        
+
         try
         {
             claims = await _jwtProvider.GetClaims(request.RefreshToken);
         }
-        catch (SecurityTokenException e)
+        catch (SecurityTokenException)
         {
             return Errors.Token.InvalidRefreshToken;
         }

@@ -8,29 +8,32 @@ namespace BeatEcoprove.Domain.UserAggregator.ValueObjects;
 public class PostalCode : ValueObject
 {
     private const string PostalCodeRegexPattern = @"^\d{4}(-\d{3})?$";
+
+    private PostalCode() { }
+
     private PostalCode(string value) => Value = value;
-    
-    public string Value { get; private set; }
-    
+
+    public string Value { get; private set; } = null!;
+
     public static ErrorOr<PostalCode> Create(string value)
     {
         if (string.IsNullOrEmpty(value))
         {
             return Errors.PostalCode.EmptyPostalCode;
         }
-        
+
         if (!Regex.IsMatch(value, PostalCodeRegexPattern))
         {
             return Errors.PostalCode.InvalidPostalCode;
         }
-        
+
         return new PostalCode(value);
     }
-    
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
-    
-    public static implicit operator string(PostalCode postalCode) =>  postalCode.Value;
+
+    public static implicit operator string(PostalCode postalCode) => postalCode.Value;
 }

@@ -6,10 +6,12 @@ namespace BeatEcoprove.Domain.UserAggregator.ValueObjects;
 
 public class Password : ValueObject
 {
+    private Password() { }
+
     private Password(string value) => Value = value;
-    
-    public string Value { get; private set; }
-    
+
+    public string Value { get; private set; } = null!;
+
     private static bool ContainsNumber(string value)
     {
         return value.Any(char.IsDigit);
@@ -24,7 +26,7 @@ public class Password : ValueObject
     {
         return value.Any(char.IsLower);
     }
-    
+
     public static ErrorOr<Password> Create(string value)
     {
         if (string.IsNullOrEmpty(value))
@@ -51,14 +53,14 @@ public class Password : ValueObject
         {
             return Errors.Password.MustContainAtLeastLetter;
         }
-        
+
         return new Password(value);
     }
-    
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
-    
-    public static implicit operator string(Password password) =>  password.Value;
+
+    public static implicit operator string(Password password) => password.Value;
 }

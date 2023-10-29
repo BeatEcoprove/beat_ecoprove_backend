@@ -21,8 +21,8 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
     private readonly IJwtProvider _jwtProvider;
 
     public SignInPersonalAccountCommandHandler(
-        IUserRepository userRepository, 
-        IUnitOfWork unitOfWork, 
+        IUserRepository userRepository,
+        IUnitOfWork unitOfWork,
         IJwtProvider jwtProvider)
     {
         _unitOfWork = unitOfWork;
@@ -39,18 +39,18 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         var gender = Gender.Female;
 
         var result = ValidateValues(email, password, phone);
-        
+
         if (result.IsError)
         {
             return result.Errors;
         }
-        
+
         // Check if user exists
         if (await _userRepository.ExistsUserByEmailAsync(email.Value, cancellationToken))
         {
             return Errors.User.EmailAlreadyExists;
         }
-        
+
         // Create User
         var personalAccount = Consumer.Create(
                 email.Value,
@@ -62,20 +62,20 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
                 gender,
                 request.BornDate
             );
-        
+
         // Persist User
         await _userRepository.AddAsync(personalAccount, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         var payload = new TokenPayload(
             personalAccount.Id,
-            personalAccount.Email, 
+            personalAccount.Email,
             personalAccount.Name,
             personalAccount.AvatarUrl,
             10,
             10,
             10);
-            
+
         // Generate Tokens
         var accessToken = _jwtProvider.GenerateToken(payload, Tokens.Access);
         var refreshToken = _jwtProvider.GenerateToken(payload, Tokens.Refresh);
@@ -87,8 +87,8 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
     }
 
     private static ErrorOr<Email> ValidateValues(
-        ErrorOr<Email> email, 
-        ErrorOr<Password> password, 
+        ErrorOr<Email> email,
+        ErrorOr<Password> password,
         ErrorOr<Phone> phone)
     {
         return email

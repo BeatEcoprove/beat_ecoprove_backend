@@ -1,11 +1,23 @@
 version: '3.1'
 
 services:
-  beat_api:
-    build: .
+  # beat_api:
+  #   build: .
+  #   ports:
+  #     - ${BEAT_API_PORT}:80
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Production
+  #     - ASPNETCORE_HTTP_PORTS=5182
+  #   depends_on:
+  #     - beat_db
+  #   restart: always
+  
+  beat_db:
+    image: postgres:alpine3.18
     ports:
-      - ${BEAT_API_PORT}:80
+      - 5432:${BEAT_DB_PORT}
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=5182
+      - POSTGRES_DB=${BEAT_DB_NAME}
+      - POSTGRES_USER=${BEAT_DB_USER}
+      - POSTGRES_PASSWORD=${BEAT_DB_PASSWORD}
     restart: always
