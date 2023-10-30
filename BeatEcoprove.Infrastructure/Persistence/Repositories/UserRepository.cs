@@ -1,40 +1,66 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.UserAggregator;
+using BeatEcoprove.Domain.UserAggregator.Entities;
 using BeatEcoprove.Domain.UserAggregator.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    private static readonly List<User> _users = new();
-    
+    private readonly IApplicationDbContext _dbContext;
+
+    public UserRepository(IApplicationDbContext applicationDbContext)
+    {
+        _dbContext = applicationDbContext;
+    }
+
     public async Task AddAsync(User entity, CancellationToken cancellationToken = default)
     {
-        await Task.CompletedTask;
-        _users.Add(entity);
+        await _dbContext.Users.AddAsync(entity, cancellationToken);
     }
 
     public async Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default)
     {
-        await Task.CompletedTask;
-        return _users.SingleOrDefault(user => user.Id == id);
+        return await _dbContext
+            .Users
+            .SingleOrDefaultAsync(user => user.Id == id, cancellationToken);
     }
 
-    public Task<User?> UpdateByIdAsync(UserId id, User entity, CancellationToken cancellationToken = default)
+    public Task UpdateByIdAsync(UserId id, User entity, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
     public async Task<bool> ExistsUserByEmailAsync(Email email, CancellationToken cancellationToken = default)
     {
-        await Task.CompletedTask;
-        return _users.Any(user => user.Email == email);
+        return await _dbContext
+            .Users
+            .AnyAsync(user => user.Email == email, cancellationToken);
     }
 
     public async Task<User?> GetUserByEmail(Email email, CancellationToken cancellationToken = default)
     {
-        await Task.CompletedTask;
-        return _users
-            .SingleOrDefault(user => user.Email == email);
+        return await _dbContext
+            .Users
+            .SingleOrDefaultAsync(user => user.Email == email, cancellationToken);
+    }
+
+    public async Task<bool> ExistsUserByUserNameAsync(UserName userName, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext
+            .Users
+            .OfType<Consumer>()
+            .SelectMany(consumer => consumer.Profiles)
+            .AnyAsync(profile => profile.UserName == userName, cancellationToken);
+    }
+
+    public async Task UpdateUserPassword(UserId userId, Password password, CancellationToken cancellationToken = default)
+    {
+        await _dbContext
+           .Users
+           .Where(user => user.Id == userId)
+           .ExecuteUpdateAsync(setters => setters
+               .SetProperty(p => p.Password, password), cancellationToken);
     }
 }

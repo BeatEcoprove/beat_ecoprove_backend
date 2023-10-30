@@ -19,15 +19,18 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtProvider _jwtProvider;
+    private readonly IPasswordProvider _passwordProvider;
 
     public SignInPersonalAccountCommandHandler(
-        IUserRepository userRepository, 
-        IUnitOfWork unitOfWork, 
-        IJwtProvider jwtProvider)
+        IUserRepository userRepository,
+        IUnitOfWork unitOfWork,
+        IJwtProvider jwtProvider,
+        IPasswordProvider passwordProvider)
     {
         _unitOfWork = unitOfWork;
         _jwtProvider = jwtProvider;
         _userRepository = userRepository;
+        _passwordProvider = passwordProvider;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(SignInPersonalAccountCommand request, CancellationToken cancellationToken)
@@ -39,46 +42,56 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         var gender = Gender.Female;
 
         var result = ValidateValues(email, password, phone);
-        
+
         if (result.IsError)
         {
             return result.Errors;
         }
-        
+
         // Check if user exists
         if (await _userRepository.ExistsUserByEmailAsync(email.Value, cancellationToken))
         {
             return Errors.User.EmailAlreadyExists;
         }
-        
+
+        // Check if user exists
+        if (await _userRepository.ExistsUserByUserNameAsync(userName, cancellationToken))
+        {
+            return Errors.User.UserNameAlreadyExists;
+        }
+
+        var passwordHash = Password.FromHash(_passwordProvider.HashPassword(password.Value));
+
         // Create User
         var personalAccount = Consumer.Create(
                 email.Value,
                 request.Name,
-                password.Value,
+                passwordHash,
                 phone.Value,
                 "https://github.com/DiogoCC7.png",
                 userName,
                 gender,
                 request.BornDate
             );
-        
+
         // Persist User
         await _userRepository.AddAsync(personalAccount, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
-        var payload = new TokenPayload(
+
+        var payload = new AuthTokenPayload(
             personalAccount.Id,
-            personalAccount.Email, 
+            personalAccount.Email,
             personalAccount.Name,
             personalAccount.AvatarUrl,
             10,
             10,
-            10);
-            
-        // Generate Tokens
-        var accessToken = _jwtProvider.GenerateToken(payload, Tokens.Access);
-        var refreshToken = _jwtProvider.GenerateToken(payload, Tokens.Refresh);
+            10,
+            Tokens.Access);
+
+        var accessToken = _jwtProvider.GenerateToken(payload);
+
+        payload.Type = Tokens.Refresh;
+        var refreshToken = _jwtProvider.GenerateToken(payload);
 
         // Return Tokens
         return new AuthenticationResult(
@@ -87,8 +100,8 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
     }
 
     private static ErrorOr<Email> ValidateValues(
-        ErrorOr<Email> email, 
-        ErrorOr<Password> password, 
+        ErrorOr<Email> email,
+        ErrorOr<Password> password,
         ErrorOr<Phone> phone)
     {
         return email

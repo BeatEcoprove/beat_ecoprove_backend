@@ -3,5 +3,6 @@
 public enum Tokens
 {
     Access,
-    Refresh
+    Refresh,
+    ForgotPassword
 }

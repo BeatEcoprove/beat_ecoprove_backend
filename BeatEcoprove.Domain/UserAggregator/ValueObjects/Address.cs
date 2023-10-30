@@ -5,6 +5,8 @@ namespace BeatEcoprove.Domain.UserAggregator.ValueObjects;
 
 public class Address : ValueObject
 {
+    private Address() { }
+
     private Address(string street, int port, string locality, PostalCode postalCode)
     {
         Street = street;
@@ -12,17 +14,17 @@ public class Address : ValueObject
         Locality = locality;
         PostalCode = postalCode;
     }
-    
-    public string Street { get; private set; }
+
+    public string Street { get; private set; } = null!;
     public int Port { get; private set; }
-    public string Locality { get; private set; }
-    public PostalCode PostalCode { get; private set; }
-    
+    public string Locality { get; private set; } = null!;
+    public PostalCode PostalCode { get; private set; } = null!;
+
     public static ErrorOr<Address> Create(string street, int port, string locality, PostalCode postalCode)
     {
         return new Address(street, port, locality, postalCode);
     }
-    
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Street;

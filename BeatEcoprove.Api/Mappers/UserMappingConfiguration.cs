@@ -1,6 +1,8 @@
-﻿using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
+﻿using BeatEcoprove.Application;
+using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
 using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 using BeatEcoprove.Application.Authentication.Queries.Login;
+using BeatEcoprove.Contracts;
 using BeatEcoprove.Contracts.Authentication;
 using BeatEcoprove.Contracts.Authentication.SignIn;
 using Mapster;
@@ -12,7 +14,8 @@ public class UserMappingConfiguration : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<LoginRequest, LoginQuery>();
-        
+        config.NewConfig<ForgotPasswordRequest, ForgotPasswordCommand>();
+
         config.NewConfig<SignInPersonalAccountRequest, SignInPersonalAccountCommand>()
             .MapWith((source) =>
                 new SignInPersonalAccountCommand(
@@ -25,7 +28,7 @@ public class UserMappingConfiguration : IRegister
                     source.AvatarPicture.OpenReadStream(),
                     source.Email,
                     source.Password));
-        
+
         config.NewConfig<SignInEnterpriseAccountRequest, SignInEnterpriseAccountCommand>()
             .MapWith((src) =>
                 new SignInEnterpriseAccountCommand(

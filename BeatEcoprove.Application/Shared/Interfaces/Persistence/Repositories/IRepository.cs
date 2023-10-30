@@ -8,5 +8,5 @@ public interface IRepository<TEntity, in TId>
 {
     Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
-    Task<TEntity?> UpdateByIdAsync(TId id, TEntity entity, CancellationToken cancellationToken = default);
+    Task UpdateByIdAsync(TId id, TEntity entity, CancellationToken cancellationToken = default);
 }

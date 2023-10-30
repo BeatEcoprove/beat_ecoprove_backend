@@ -21,27 +21,30 @@ internal sealed class RefreshTokensQueryHandler : IQueryHandler<RefreshTokensQue
     public async Task<ErrorOr<AuthenticationResult>> Handle(RefreshTokensQuery request, CancellationToken cancellationToken)
     {
         IDictionary<string, string> claims;
-        
+
         try
         {
             claims = await _jwtProvider.GetClaims(request.RefreshToken);
         }
-        catch (SecurityTokenException e)
+        catch (SecurityTokenException)
         {
             return Errors.Token.InvalidRefreshToken;
         }
 
-        var payload = new TokenPayload(
+        var payload = new AuthTokenPayload(
             Guid.Parse(claims[UserClaims.UserId]),
             claims[UserClaims.Email],
             claims[UserClaims.UserName],
             claims[UserClaims.AvatarUrl],
             10,
             10,
-            10);
+            10,
+            Tokens.Access);
 
-        var accessToken = _jwtProvider.GenerateToken(payload, Tokens.Access);
-        var refreshToken = _jwtProvider.GenerateToken(payload, Tokens.Refresh);
+        var accessToken = _jwtProvider.GenerateToken(payload);
+
+        payload.Type = Tokens.Refresh;
+        var refreshToken = _jwtProvider.GenerateToken(payload);
 
         return new AuthenticationResult(
             accessToken,

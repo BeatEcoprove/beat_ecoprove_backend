@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BeatEcoprove.Application;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
@@ -20,30 +21,28 @@ public class JwtProvider : IJwtProvider
         _jwtSettings = jwtSettings.Value;
     }
 
-    public string GenerateToken(TokenPayload payload, Tokens tokenType)
+    public string GenerateToken(TokenPayload payload)
     {
         var signCredentials = new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
-            Algorithm
-        );
+           new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
+           Algorithm
+       );
 
-        var claims = new[]
+        if (payload is AuthTokenPayload)
         {
-            new Claim(UserClaims.UserId, payload.UserId),
-            new Claim(UserClaims.UserName, payload.UserName),
-            new Claim(UserClaims.Email, payload.Email),
-            new Claim(UserClaims.AvatarUrl, payload.AvatarUrl),
-            new Claim(UserClaims.Level, payload.Level),
-            new Claim(UserClaims.LevelPercentage, payload.LevelPercentage),
-            new Claim(UserClaims.SustainablePoints, payload.SustainablePoints),
-            new Claim(UserClaims.TokenType, tokenType.ToString()),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        };
-        
+            payload.ExpireAt = GetExpireTime(payload.Type);
+        }
+
+        var claims = payload.GetPayload()
+            .Select(kvp => new Claim(kvp.Key, kvp.Value));
+
+        claims.Append(new Claim(UserClaims.TokenType, payload.Type.ToString()));
+        claims.Append(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+
         var token = new JwtSecurityToken(
             issuer: _jwtSettings.Issuer,
             audience: _jwtSettings.Audience,
-            expires: GetExpireTime(tokenType),
+            expires: payload.ExpireAt,
             claims: claims,
             signingCredentials: signCredentials
         );
@@ -51,7 +50,7 @@ public class JwtProvider : IJwtProvider
         return _jwtSecurityTokenHandler.WriteToken(token);
     }
 
-    public async Task<IDictionary<string, string>> GetClaims(string token)
+    public async Task<Dictionary<string, string>> GetClaims(string token)
     {
         if (!await ValidateToken(token))
         {
@@ -65,11 +64,11 @@ public class JwtProvider : IJwtProvider
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     }
 
-    private async Task<bool> ValidateToken(string token)
+    public async Task<bool> ValidateToken(string token)
     {
         var result =
             await _jwtSecurityTokenHandler.ValidateTokenAsync(token, GetTokenValidationParameters(_jwtSettings));
-        
+
         return result.IsValid;
     }
 
@@ -95,6 +94,6 @@ public class JwtProvider : IJwtProvider
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
             ValidateIssuerSigningKey = true
-        };    
+        };
     }
 }
