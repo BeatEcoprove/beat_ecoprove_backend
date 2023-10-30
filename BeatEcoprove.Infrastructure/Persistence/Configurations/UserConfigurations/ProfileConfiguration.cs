@@ -57,5 +57,11 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
         builder.Property(profile => profile.AvatarUrl)
             .HasColumnName("avatar_url")
             .IsRequired();
+
+        builder.HasMany(p => p.Garments)
+            .WithOne()
+            .HasForeignKey(g => g.Profile);
+
+        builder.Metadata.FindNavigation(nameof(Profile.Garments))!.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

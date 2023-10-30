@@ -22,6 +22,59 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("BeatEcoprove.Domain.Garment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("brand");
+
+                    b.Property<string>("ClothAvatar")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("cloth_avatar");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("color");
+
+                    b.Property<double>("Ecscore")
+                        .HasColumnType("double precision")
+                        .HasColumnName("ecscore");
+
+                    b.Property<bool>("IsBlocked")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_blocked");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("Profile")
+                        .HasColumnType("uuid")
+                        .HasColumnName("profile");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("integer")
+                        .HasColumnName("size");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Profile");
+
+                    b.ToTable("garments", (string)null);
+                });
+
             modelBuilder.Entity("BeatEcoprove.Domain.UserAggregator.Entities.Profile", b =>
                 {
                     b.Property<Guid>("Id")
@@ -149,6 +202,15 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue(1);
                 });
 
+            modelBuilder.Entity("BeatEcoprove.Domain.Garment", b =>
+                {
+                    b.HasOne("BeatEcoprove.Domain.UserAggregator.Entities.Profile", null)
+                        .WithMany("Garments")
+                        .HasForeignKey("Profile")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BeatEcoprove.Domain.UserAggregator.Entities.Profile", b =>
                 {
                     b.HasOne("BeatEcoprove.Domain.UserAggregator.Entities.Consumer", null)
@@ -242,6 +304,11 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                     b.Navigation("Address")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BeatEcoprove.Domain.UserAggregator.Entities.Profile", b =>
+                {
+                    b.Navigation("Garments");
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.UserAggregator.Entities.Consumer", b =>

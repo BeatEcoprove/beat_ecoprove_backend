@@ -6,6 +6,8 @@ namespace BeatEcoprove.Domain.UserAggregator.Entities;
 
 public class Profile : Entity<ProfileId>
 {
+    private readonly List<Garment> _garments = new();
+
     public Profile() { }
 
     private Profile(
@@ -39,6 +41,7 @@ public class Profile : Entity<ProfileId>
     public double EcoScore { get; private set; }
     public string AvatarUrl { get; private set; } = null!;
     public bool IsMainProfile { get; private set; }
+    public IReadOnlyList<Garment> Garments => _garments.AsReadOnly();
 
     public static Profile Create(UserId consumer, UserName userName, Gender gender, DateOnly bornDate, string avatarUrl)
     {
@@ -56,6 +59,11 @@ public class Profile : Entity<ProfileId>
     }
 
     public void SetAsMainProfile() => IsMainProfile = true;
+
+    public void AddGarment(Garment garment)
+    {
+        _garments.Add(garment);
+    }
 
     public Profile Clone()
     {
