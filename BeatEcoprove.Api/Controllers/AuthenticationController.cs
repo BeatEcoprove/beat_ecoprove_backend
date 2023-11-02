@@ -26,6 +26,22 @@ public class AuthenticationController : ApiController
         _mapper = mapper;
     }
 
+    [HttpGet("validate/check-field")]
+    public async Task<ActionResult<FieldValidationResponse>> ValidateField([FromQuery] string fieldName, [FromQuery] string value)
+    {
+        var fieldValidationResult =
+            await _sender.Send(new
+            {
+                FieldName = fieldName,
+                Value = value,
+            }.Adapt<ValidationFieldQuery>());
+
+        return fieldValidationResult.Match(
+            fieldValidationResponse => Ok(fieldValidationResponse),
+            Problem<FieldValidationResponse>
+        );
+    }
+
     [HttpPost("login")]
     public async Task<ActionResult<AuthenticationResult>> LoginToAccount(LoginRequest request)
     {
