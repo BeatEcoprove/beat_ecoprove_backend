@@ -12,7 +12,7 @@ using ErrorOr;
 
 namespace BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
 
-public class SignInEnterpriseAccountCommandHandler : ICommandHandler<SignInEnterpriseAccountCommand, ErrorOr<AuthenticationResult>>
+internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<SignInEnterpriseAccountCommand, ErrorOr<AuthenticationResult>>
 {
     private readonly IAuthRepository _authRepository;
     private readonly IProfileRepository _profileRepository;
