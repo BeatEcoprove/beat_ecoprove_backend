@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Api", "BeatEcoprove.Api\BeatEcoprove.Api.csproj", "{C75AEB47-5F35-403F-A04B-4A115220DF1D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Api", "src\BeatEcoprove.Api\BeatEcoprove.Api.csproj", "{C75AEB47-5F35-403F-A04B-4A115220DF1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Application", "BeatEcoprove.Application\BeatEcoprove.Application.csproj", "{AB08D416-1B8E-46D0-8188-302D69F10BC2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Application", "src\BeatEcoprove.Application\BeatEcoprove.Application.csproj", "{AB08D416-1B8E-46D0-8188-302D69F10BC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Contracts", "BeatEcoprove.Contracts\BeatEcoprove.Contracts.csproj", "{E8F9D20E-1C8F-4DF4-B997-1BC46DDEF0AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Contracts", "src\BeatEcoprove.Contracts\BeatEcoprove.Contracts.csproj", "{E8F9D20E-1C8F-4DF4-B997-1BC46DDEF0AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Infrastructure", "BeatEcoprove.Infrastructure\BeatEcoprove.Infrastructure.csproj", "{21CEA0C7-A76B-4D85-BCB3-1363AFEC40D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Infrastructure", "src\BeatEcoprove.Infrastructure\BeatEcoprove.Infrastructure.csproj", "{21CEA0C7-A76B-4D85-BCB3-1363AFEC40D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Domain", "BeatEcoprove.Domain\BeatEcoprove.Domain.csproj", "{44F8C560-71F1-4F14-8FE2-A5C110DC6057}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatEcoprove.Domain", "src\BeatEcoprove.Domain\BeatEcoprove.Domain.csproj", "{44F8C560-71F1-4F14-8FE2-A5C110DC6057}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
