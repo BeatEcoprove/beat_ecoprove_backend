@@ -15,7 +15,8 @@ public class ValidationFieldQueryHandler : IQueryHandler<ValidationFieldQuery, E
 
     public async Task<ErrorOr<FieldValidationResponse>> Handle(ValidationFieldQuery request, CancellationToken cancellationToken)
     {
-        var result = await _validationFieldService.IsFieldAvailable(request.FieldName, request.Value);
+        var result = await _validationFieldService
+            .IsFieldAvailable(request.FieldName, request.Value);
 
         return new FieldValidationResponse(
             request.FieldName,

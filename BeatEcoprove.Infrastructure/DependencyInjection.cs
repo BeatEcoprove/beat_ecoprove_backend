@@ -85,7 +85,7 @@ public static class DependencyInjection
         services.AddPersistence(configuration);
         services.AddAuth(configuration);
 
-        services.AddScoped<IValidationFieldService, ValidationFieldService>();
+        services.AddScoped<IValidationFieldService, ValidationService>();
 
         return services;
     }
