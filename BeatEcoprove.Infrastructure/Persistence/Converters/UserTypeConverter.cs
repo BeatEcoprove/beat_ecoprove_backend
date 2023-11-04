@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using BeatEcoprove.Domain.UserAggregator.Enumerators;
+﻿using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BeatEcoprove.Infrastructure;

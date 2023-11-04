@@ -1,6 +1,8 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence;
-using BeatEcoprove.Domain.UserAggregator;
-using BeatEcoprove.Domain.UserAggregator.Entities;
+using BeatEcoprove.Domain.ProfileAggregator;
+using BeatEcoprove.Domain.ProfileAggregator.Entities;
+using BeatEcoprove.Infrastructure.Authentication;
+using BeatEcoprove.Infrastructure.Profiles;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeatEcoprove.Infrastructure;
@@ -8,7 +10,9 @@ namespace BeatEcoprove.Infrastructure;
 public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWork
 {
 
-    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Auth> Auths { get; set; }
+
+    public DbSet<Profile> Profiles { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -19,6 +23,10 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(BeatEcoproveDbContext).Assembly);
+        // modelBuilder.ApplyConfiguration(new ProfileConfiguration());
+        // modelBuilder.ApplyConfiguration(new ConsumerConfiguration());
+        // modelBuilder.ApplyConfiguration(new OrganizationConfiguration());
+        // modelBuilder.ApplyConfiguration(new AuthConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 

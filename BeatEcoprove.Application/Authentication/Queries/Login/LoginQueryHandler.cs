@@ -1,27 +1,29 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Contracts.Authentication.Common;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
-using BeatEcoprove.Domain.UserAggregator.ValueObjects;
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Authentication.Queries.Login;
 
 internal sealed class LoginQueryHandler : IQueryHandler<LoginQuery, ErrorOr<AuthenticationResult>>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IAuthRepository _authRepository;
+    private readonly IProfileRepository _profileRepository;
     private readonly IJwtProvider _jwtProvider;
     private readonly IPasswordProvider _passwordProvider;
 
     public LoginQueryHandler(
-        IUserRepository userRepository,
+        IAuthRepository authRepository,
+        IProfileRepository profileRepository,
         IJwtProvider jwtProvider,
         IPasswordProvider passwordProvider)
     {
-        _userRepository = userRepository;
+        _authRepository = authRepository;
+        _profileRepository = profileRepository;
         _jwtProvider = jwtProvider;
         _passwordProvider = passwordProvider;
     }
@@ -34,25 +36,32 @@ internal sealed class LoginQueryHandler : IQueryHandler<LoginQuery, ErrorOr<Auth
         var result = email.AddValidate(password);
         if (result.IsError) return result.Errors;
 
-        var user = await _userRepository.GetUserByEmail(email.Value, cancellationToken);
+        var auth = await _authRepository.GetAuthByEmail(email.Value, cancellationToken);
 
         // Verify user already exists
-        if (user is null)
+        if (auth is null)
         {
             return Errors.User.EmailDoesNotExists;
         }
 
+        var profile = await _profileRepository.GetProfileByAuthId(auth.Id, cancellationToken);
+
+        if (profile is null)
+        {
+            return Errors.User.ProfileDoesNotExists;
+        }
+
         // Verify password is correct
-        if (!_passwordProvider.VerifyPassword(password.Value, user.Password))
+        if (!_passwordProvider.VerifyPassword(password.Value, auth.Password))
         {
             return Errors.User.BadCredentials;
         }
 
         // Generate Tokens
         var payload = new AuthTokenPayload(
-            user.Id,
-            user.Email,
-            user.Name,
+            auth.Id,
+            auth.Email,
+            profile.UserName,
             "https://github.com/DiogoCC7.png",
             10,
             10,

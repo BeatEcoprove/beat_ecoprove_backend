@@ -1,10 +1,7 @@
 ﻿using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
-using BeatEcoprove.Application.Shared.Interfaces.Helpers;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
-using BeatEcoprove.Domain.UserAggregator.ValueObjects;
 using ErrorOr;
 using MediatR;
 
@@ -13,16 +10,16 @@ namespace BeatEcoprove.Application;
 public class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordCommand, ErrorOr<string>>
 {
     private readonly IJwtProvider _jwtProvider;
-    private readonly IUserRepository _userRepository;
+    private readonly IAuthRepository _authRepository;
     private readonly IMailSender _mailSender;
 
     public ForgotPasswordCommandHandler(
         IJwtProvider jwtProvider,
-        IUserRepository userRepository,
+        IAuthRepository authRepository,
         IMailSender mailSender)
     {
         _jwtProvider = jwtProvider;
-        _userRepository = userRepository;
+        _authRepository = authRepository;
         _mailSender = mailSender;
     }
 
@@ -31,7 +28,7 @@ public class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordComman
         var email = Email.Create(request.Email);
 
         // get user by email
-        var user = await _userRepository.GetUserByEmail(email.Value, cancellationToken);
+        var user = await _authRepository.GetAuthByEmail(email.Value, cancellationToken);
 
         if (user is null)
         {

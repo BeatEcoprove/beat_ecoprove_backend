@@ -1,9 +1,8 @@
 ﻿using BeatEcoprove.Application;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Infrastructure.Authentication;
-using BeatEcoprove.Infrastructure.Persistence.Repositories;
+using BeatEcoprove.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -73,7 +72,8 @@ public static class DependencyInjection
         services.AddScoped<IApplicationDbContext>(provider => provider.GetService<BeatEcoproveDbContext>()!);
         services.AddScoped<IUnitOfWork>(provider => provider.GetService<BeatEcoproveDbContext>()!);
 
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IAuthRepository, AuthRepository>();
+        services.AddScoped<IProfileRepository, ProfileRepository>();
 
         return services;
     }
@@ -84,6 +84,8 @@ public static class DependencyInjection
         services.AddEmailConfiguration(configuration);
         services.AddPersistence(configuration);
         services.AddAuth(configuration);
+
+        services.AddScoped<IValidationFieldService, ValidationFieldService>();
 
         return services;
     }

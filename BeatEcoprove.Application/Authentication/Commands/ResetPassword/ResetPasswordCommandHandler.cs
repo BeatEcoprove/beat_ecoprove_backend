@@ -1,10 +1,8 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
-using BeatEcoprove.Domain.Shared.Extensions;
-using BeatEcoprove.Domain.UserAggregator.ValueObjects;
 using ErrorOr;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,16 +11,16 @@ namespace BeatEcoprove.Application;
 public class ResetPasswordCommandHandler : ICommandHandler<ResetPasswordCommand, ErrorOr<string>>
 {
     private readonly IJwtProvider _jwtProvider;
-    private readonly IUserRepository _userRepository;
+    private readonly IAuthRepository _authRepository;
     private readonly IPasswordProvider _passwordProvider;
 
     public ResetPasswordCommandHandler(
         IJwtProvider jwtProvider,
-        IUserRepository userRepository,
+        IAuthRepository authRepository,
         IPasswordProvider passwordProvider)
     {
         _jwtProvider = jwtProvider;
-        _userRepository = userRepository;
+        _authRepository = authRepository;
         _passwordProvider = passwordProvider;
     }
 
@@ -60,15 +58,15 @@ public class ResetPasswordCommandHandler : ICommandHandler<ResetPasswordCommand,
         }
 
         // get user by token
-        var user = await _userRepository.GetUserByEmail(email.Value, cancellationToken);
+        var auth = await _authRepository.GetAuthByEmail(email.Value, cancellationToken);
 
-        if (user is null)
+        if (auth is null)
         {
             return Errors.User.EmailDoesNotExists;
         }
 
         var hashedPassword = Password.FromHash(_passwordProvider.HashPassword(password.Value));
-        await _userRepository.UpdateUserPassword(user.Id, hashedPassword, cancellationToken);
+        await _authRepository.UpdateUserPassword(auth.Id, hashedPassword, cancellationToken);
 
         return "Password alterada com sucesso.";
     }

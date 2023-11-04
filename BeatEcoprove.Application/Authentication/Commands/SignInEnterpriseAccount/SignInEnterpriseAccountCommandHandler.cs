@@ -1,32 +1,34 @@
 ﻿using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Contracts.Authentication.Common;
+using BeatEcoprove.Domain.ProfileAggregator;
+using BeatEcoprove.Domain.ProfileAggregator.Entities;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
-using BeatEcoprove.Domain.UserAggregator.Entities;
-using BeatEcoprove.Domain.UserAggregator.ValueObjects;
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
 
 public class SignInEnterpriseAccountCommandHandler : ICommandHandler<SignInEnterpriseAccountCommand, ErrorOr<AuthenticationResult>>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IAuthRepository _authRepository;
+    private readonly IProfileRepository _profileRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtProvider _jwtProvider;
     private readonly IPasswordProvider _passwordProvider;
 
     public SignInEnterpriseAccountCommandHandler(
-        IUserRepository userRepository,
+        IAuthRepository authRepository,
+        IProfileRepository profileRepository,
         IUnitOfWork unitOfWork,
         IJwtProvider jwtProvider,
         IPasswordProvider passwordProvider)
     {
-        _userRepository = userRepository;
+        _authRepository = authRepository;
+        _profileRepository = profileRepository;
         _unitOfWork = unitOfWork;
         _jwtProvider = jwtProvider;
         _passwordProvider = passwordProvider;
@@ -55,38 +57,41 @@ public class SignInEnterpriseAccountCommandHandler : ICommandHandler<SignInEnter
         }
 
         // Check if user exists
-        if (await _userRepository.ExistsUserByEmailAsync(email.Value, cancellationToken))
+        if (await _authRepository.ExistsUserByEmailAsync(email.Value, cancellationToken))
         {
             return Errors.User.EmailAlreadyExists;
         }
 
         // Check if user ename already exists
-        if (await _userRepository.ExistsUserByUserNameAsync(userName, cancellationToken))
+        if (await _profileRepository.ExistsUserByUserNameAsync(userName, cancellationToken))
         {
             return Errors.User.UserNameAlreadyExists;
         }
 
         var passwordHash = Password.FromHash(_passwordProvider.HashPassword(password.Value));
 
-        // Create User
-        Organization enterpriseAccount = Organization.Create(
-            userName,
-            request.TypeOption,
+        var account = Auth.Create(
             email.Value,
-            request.Name,
-            passwordHash,
+            passwordHash);
+
+        var enterpriseAccount = Organization.Create(
+            account.Id,
+            userName,
             phone.Value,
             "https://github.com/DiogoCC7.png",
-            address.Value);
+            address.Value
+        );
 
         // Persist User
-        await _userRepository.AddAsync(enterpriseAccount, cancellationToken);
+        await _authRepository.AddAsync(account, cancellationToken);
+        await _profileRepository.AddAsync(enterpriseAccount, cancellationToken);
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var payload = new AuthTokenPayload(
             enterpriseAccount.Id,
-            enterpriseAccount.Email,
-            enterpriseAccount.Name,
+            account.Email,
+            enterpriseAccount.UserName,
             enterpriseAccount.AvatarUrl,
             10,
             10,

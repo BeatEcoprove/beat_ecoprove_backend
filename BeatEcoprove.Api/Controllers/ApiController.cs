@@ -1,5 +1,4 @@
 ﻿using ErrorOr;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -10,7 +9,7 @@ public class ApiController : ControllerBase
 {
     protected ActionResult<TResponse> Problem<TResponse>(List<Error> errors)
     {
-        if (errors.All(error => error.Type == ErrorType.Validation))
+        if (errors.All(error => error.Type == ErrorType.Conflict))
         {
             var modelValidation = new ModelStateDictionary();
 
@@ -20,10 +19,10 @@ public class ApiController : ControllerBase
                     error.Code,
                     error.Description);
             }
-            
+
             return ValidationProblem(modelValidation);
         }
-        
+
         var firstError = errors[0];
 
         var statusCode = firstError.Type switch
@@ -33,7 +32,7 @@ public class ApiController : ControllerBase
             ErrorType.NotFound => StatusCodes.Status404NotFound,
             _ => StatusCodes.Status500InternalServerError
         };
-        
+
         return Problem(statusCode: statusCode, title: firstError.Description);
     }
 }

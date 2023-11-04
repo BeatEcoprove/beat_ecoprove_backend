@@ -1,35 +1,37 @@
 ﻿using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Contracts.Authentication.Common;
+using BeatEcoprove.Domain;
+using BeatEcoprove.Domain.ProfileAggregator;
+using BeatEcoprove.Domain.ProfileAggregator.Entities;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
-using BeatEcoprove.Domain.UserAggregator.Entities;
-using BeatEcoprove.Domain.UserAggregator.Enumerators;
-using BeatEcoprove.Domain.UserAggregator.ValueObjects;
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 
 internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<SignInPersonalAccountCommand, ErrorOr<AuthenticationResult>>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IAuthRepository _authRepository;
+    private readonly IProfileRepository _profileRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtProvider _jwtProvider;
     private readonly IPasswordProvider _passwordProvider;
 
     public SignInPersonalAccountCommandHandler(
-        IUserRepository userRepository,
+        IAuthRepository authRepository,
+        IProfileRepository profileRepository,
         IUnitOfWork unitOfWork,
         IJwtProvider jwtProvider,
         IPasswordProvider passwordProvider)
     {
         _unitOfWork = unitOfWork;
         _jwtProvider = jwtProvider;
-        _userRepository = userRepository;
+        _authRepository = authRepository;
+        _profileRepository = profileRepository;
         _passwordProvider = passwordProvider;
     }
 
@@ -49,13 +51,13 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         }
 
         // Check if user exists
-        if (await _userRepository.ExistsUserByEmailAsync(email.Value, cancellationToken))
+        if (await _authRepository.ExistsUserByEmailAsync(email.Value, cancellationToken))
         {
             return Errors.User.EmailAlreadyExists;
         }
 
         // Check if user exists
-        if (await _userRepository.ExistsUserByUserNameAsync(userName, cancellationToken))
+        if (await _profileRepository.ExistsUserByUserNameAsync(userName, cancellationToken))
         {
             return Errors.User.UserNameAlreadyExists;
         }
@@ -63,26 +65,29 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         var passwordHash = Password.FromHash(_passwordProvider.HashPassword(password.Value));
 
         // Create User
-        var personalAccount = Consumer.Create(
-                email.Value,
-                request.Name,
-                passwordHash,
+        var account = Auth.Create(
+            email.Value,
+            passwordHash);
+
+        var personalProfile = Consumer.Create(
+                account.Id,
+                userName,
                 phone.Value,
                 "https://github.com/DiogoCC7.png",
-                userName,
-                gender,
-                request.BornDate
-            );
+                request.BornDate,
+                gender
+        );
 
-        // Persist User
-        await _userRepository.AddAsync(personalAccount, cancellationToken);
+        await _authRepository.AddAsync(account, cancellationToken);
+        await _profileRepository.AddAsync(personalProfile, cancellationToken);
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var payload = new AuthTokenPayload(
-            personalAccount.Id,
-            personalAccount.Email,
-            personalAccount.Name,
-            personalAccount.AvatarUrl,
+            personalProfile.Id,
+            account.Email,
+            personalProfile.UserName,
+            personalProfile.AvatarUrl,
             10,
             10,
             10,
