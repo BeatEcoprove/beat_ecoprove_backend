@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     [DbContext(typeof(BeatEcoproveDbContext))]
-    [Migration("20231105155435_InitialCreate")]
+    [Migration("20231105234037_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -85,9 +85,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("brand");
 
-                    b.Property<Guid?>("BucketId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("ClothAvatar")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -119,8 +116,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnName("type");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BucketId");
 
                     b.ToTable("cloths", (string)null);
                 });
@@ -200,11 +195,27 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue(1);
                 });
 
-            modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.Cloth", b =>
+            modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.Bucket", b =>
                 {
-                    b.HasOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.Bucket", null)
-                        .WithMany("Cloths")
-                        .HasForeignKey("BucketId");
+                    b.OwnsMany("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.BucketClothEntry", "BucketClothEntries", b1 =>
+                        {
+                            b1.Property<Guid>("BucketId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("bucket_id");
+
+                            b1.Property<Guid>("ClothId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("cloth_id");
+
+                            b1.HasKey("BucketId", "ClothId");
+
+                            b1.ToTable("bucket_cloths", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("BucketId");
+                        });
+
+                    b.Navigation("BucketClothEntries");
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", b =>
@@ -347,11 +358,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                     b.Navigation("Address")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.Bucket", b =>
-                {
-                    b.Navigation("Cloths");
                 });
 #pragma warning restore 612, 618
         }

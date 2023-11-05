@@ -5,7 +5,7 @@ namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
 
 public class Bucket : Entity<BucketId>
 {
-    private readonly List<Cloth> _cloths = new();
+    private readonly List<BucketClothEntry> _bucketClothEntries = new();
     
     public Bucket(
         BucketId id,
@@ -16,7 +16,7 @@ public class Bucket : Entity<BucketId>
     }
 
     public string Name { get; private set; }
-    public IReadOnlyList<Cloth> Cloths => _cloths.AsReadOnly();
+    public IReadOnlyList<BucketClothEntry> BucketClothEntries => _bucketClothEntries.AsReadOnly();
 
     public static Bucket Create(
         List<Cloth> cloths,
@@ -26,12 +26,24 @@ public class Bucket : Entity<BucketId>
             BucketId.CreateUnique(), 
             name);
         
-        bucket.AddGarments(cloths);
+        bucket.AddCloths(cloths);
         return bucket;
     }
     
-    public void AddGarments(List<Cloth> cloths)
+    public void AddCloths(List<Cloth> cloths)
     {
-        _cloths.AddRange(cloths);
+        foreach (var cloth in cloths)
+        {
+            AddCloth(cloth.Id);
+        }
+    }
+    
+    public void AddCloth(ClothId clothId)
+    {
+        _bucketClothEntries.Add(
+            new BucketClothEntry(
+                    this.Id,
+                    clothId
+                ));
     }
 }

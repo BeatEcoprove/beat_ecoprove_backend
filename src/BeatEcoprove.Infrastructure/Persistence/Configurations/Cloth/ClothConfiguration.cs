@@ -1,15 +1,14 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+﻿using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Profile;
+namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Cloth;
 
-public class ClothConfiguration : IEntityTypeConfiguration<Cloth>
+public class ClothConfiguration : IEntityTypeConfiguration<Domain.ProfileAggregator.Entities.Cloths.Cloth>
 {
     private const string ClothTable = "cloths";
     
-    public void Configure(EntityTypeBuilder<Cloth> builder)
+    public void Configure(EntityTypeBuilder<Domain.ProfileAggregator.Entities.Cloths.Cloth> builder)
     {
         builder.ToTable(ClothTable);
         builder.HasKey(c => c.Id);
