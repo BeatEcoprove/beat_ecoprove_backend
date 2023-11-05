@@ -1,15 +1,15 @@
 ﻿using BeatEcoprove.Application;
 using BC = BCrypt.Net.BCrypt;
 
-namespace BeatEcoprove.Infrastructure;
+namespace BeatEcoprove.Infrastructure.Providers;
 
 public class PasswordProvider : IPasswordProvider
 {
-    private const int ENCRIPT_COST = 12;
+    private const int EncriptCost = 12;
 
     public string HashPassword(string password)
     {
-        return BC.HashPassword(password, ENCRIPT_COST);
+        return BC.HashPassword(password, EncriptCost);
     }
 
     public bool VerifyPassword(string password, string passwordHash)

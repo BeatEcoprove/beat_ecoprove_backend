@@ -1,8 +1,11 @@
 ﻿using BeatEcoprove.Application;
+using BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
+using BeatEcoprove.Application.Authentication.Commands.ResetPassword;
 using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
 using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 using BeatEcoprove.Application.Authentication.Queries.Login;
 using BeatEcoprove.Application.Authentication.Queries.RefreshTokens;
+using BeatEcoprove.Application.Authentication.Queries.ValidationField;
 using BeatEcoprove.Contracts;
 using BeatEcoprove.Contracts.Authentication;
 using BeatEcoprove.Contracts.Authentication.Common;

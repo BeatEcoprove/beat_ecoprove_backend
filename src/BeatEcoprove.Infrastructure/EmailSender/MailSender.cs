@@ -1,7 +1,7 @@
 ﻿using BeatEcoprove.Application;
 using FluentEmail.Core;
 
-namespace BeatEcoprove.Infrastructure;
+namespace BeatEcoprove.Infrastructure.EmailSender;
 
 public class MailSender : IMailSender
 {

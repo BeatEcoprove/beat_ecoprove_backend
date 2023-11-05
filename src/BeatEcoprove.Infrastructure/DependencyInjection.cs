@@ -2,6 +2,11 @@
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Infrastructure.Authentication;
+using BeatEcoprove.Infrastructure.EmailSender;
+using BeatEcoprove.Infrastructure.Persistence;
+using BeatEcoprove.Infrastructure.Persistence.Repositories;
+using BeatEcoprove.Infrastructure.Persistence.Shared;
+using BeatEcoprove.Infrastructure.Providers;
 using BeatEcoprove.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;

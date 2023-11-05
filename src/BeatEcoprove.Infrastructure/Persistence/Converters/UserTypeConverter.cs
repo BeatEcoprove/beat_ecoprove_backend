@@ -1,7 +1,7 @@
 ﻿using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace BeatEcoprove.Infrastructure;
+namespace BeatEcoprove.Infrastructure.Persistence.Converters;
 
 public class UserTypeConverter : ValueConverter<UserType, int>
 {

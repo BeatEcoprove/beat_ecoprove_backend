@@ -1,7 +1,9 @@
 ﻿using BeatEcoprove.Application.Authentication.Queries.Login;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
-using BeatEcoprove.Domain.ProfileAggregator;
+using BeatEcoprove.Domain.AuthAggregator;
+using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using Bogus;

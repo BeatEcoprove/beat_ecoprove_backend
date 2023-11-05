@@ -1,8 +1,7 @@
-﻿
-using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
+﻿using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
-using BeatEcoprove.Domain.ProfileAggregator;
+using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using Bogus;

@@ -1,8 +1,8 @@
 ﻿using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Contracts;
+using BeatEcoprove.Contracts.Authentication.Common;
 using ErrorOr;
 
-namespace BeatEcoprove.Application;
+namespace BeatEcoprove.Application.Authentication.Queries.ValidationField;
 
 public record class ValidationFieldQuery
 (

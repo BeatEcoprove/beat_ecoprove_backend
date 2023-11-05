@@ -1,8 +1,8 @@
 ﻿namespace BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 
-public enum Gender
+public enum GarmentType
 {
-    Male,
-    Female,
-    Other
+    Male = 0,
+    Female = 1,
+    Unisex = 2
 }

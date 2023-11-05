@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application;
+using BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
 using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
 using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 using BeatEcoprove.Application.Authentication.Queries.Login;
