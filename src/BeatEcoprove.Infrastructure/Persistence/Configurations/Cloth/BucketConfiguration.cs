@@ -3,7 +3,7 @@ using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Profile;
+namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Cloth;
 
 public class BucketConfiguration : IEntityTypeConfiguration<Bucket>
 {
@@ -25,5 +25,25 @@ public class BucketConfiguration : IEntityTypeConfiguration<Bucket>
             .HasColumnName("name")
             .HasMaxLength(50)
             .IsRequired();
+
+        builder.OwnsMany(b => b.BucketClothEntries, clothEntries =>
+        {
+            clothEntries.ToTable("bucket_cloths");
+            clothEntries.HasKey(b => new { b.BucketId, b.ClothId });
+
+            clothEntries.WithOwner().HasForeignKey(b => b.BucketId);
+            
+            clothEntries.Property(b => b.BucketId)
+                .HasColumnName("bucket_id")
+                .HasConversion(
+                    id => id.Value,
+                    value => BucketId.Create(value));
+            
+            clothEntries.Property(b => b.ClothId)
+                .HasColumnName("cloth_id")
+                .HasConversion(
+                    id => id.Value,
+                    value => ClothId.Create(value));
+        });
     }
 }

@@ -39,6 +39,24 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "cloths",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    type = table.Column<int>(type: "integer", nullable: false),
+                    size = table.Column<int>(type: "integer", nullable: false),
+                    brand = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    color = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    eco_score = table.Column<int>(type: "integer", nullable: false),
+                    cloth_avatar = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_cloths", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "profiles",
                 columns: table => new
                 {
@@ -72,27 +90,21 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "cloths",
+                name: "bucket_cloths",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    type = table.Column<int>(type: "integer", nullable: false),
-                    size = table.Column<int>(type: "integer", nullable: false),
-                    brand = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    color = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    eco_score = table.Column<int>(type: "integer", nullable: false),
-                    cloth_avatar = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    BucketId = table.Column<Guid>(type: "uuid", nullable: true)
+                    bucket_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    cloth_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_cloths", x => x.id);
+                    table.PrimaryKey("PK_bucket_cloths", x => new { x.bucket_id, x.cloth_id });
                     table.ForeignKey(
-                        name: "FK_cloths_buckets_BucketId",
-                        column: x => x.BucketId,
+                        name: "FK_bucket_cloths_buckets_bucket_id",
+                        column: x => x.bucket_id,
                         principalTable: "buckets",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -134,11 +146,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_cloths_BucketId",
-                table: "cloths",
-                column: "BucketId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_profiles_AuthId",
                 table: "profiles",
                 column: "AuthId");
@@ -147,6 +154,9 @@ namespace BeatEcoprove.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "bucket_cloths");
+
             migrationBuilder.DropTable(
                 name: "bucket_entries");
 
@@ -157,10 +167,10 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 name: "cloths");
 
             migrationBuilder.DropTable(
-                name: "profiles");
+                name: "buckets");
 
             migrationBuilder.DropTable(
-                name: "buckets");
+                name: "profiles");
 
             migrationBuilder.DropTable(
                 name: "auths");
