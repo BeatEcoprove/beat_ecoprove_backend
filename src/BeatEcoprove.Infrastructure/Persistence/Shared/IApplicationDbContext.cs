@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using BeatEcoprove.Domain.ProfileAggregator;
+using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using Microsoft.EntityFrameworkCore;
 
-namespace BeatEcoprove.Infrastructure;
+namespace BeatEcoprove.Infrastructure.Persistence.Shared;
 
 public interface IApplicationDbContext
 {

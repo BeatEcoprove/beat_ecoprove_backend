@@ -1,13 +1,12 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
+﻿using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
-namespace BeatEcoprove.Domain.ProfileAggregator.Entities;
+namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
 public class Consumer : Profile
 {
-    private Consumer()
-    {
-    }
+    private Consumer() { }
 
     private Consumer(
         AuthId authId,

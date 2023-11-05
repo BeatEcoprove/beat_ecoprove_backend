@@ -3,9 +3,8 @@ using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
-using MediatR;
 
-namespace BeatEcoprove.Application;
+namespace BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
 
 internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordCommand, ErrorOr<string>>
 {

@@ -1,10 +1,10 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator;
-using BeatEcoprove.Domain.ProfileAggregator.Entities;
+﻿using BeatEcoprove.Domain.AuthAggregator;
+using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BeatEcoprove.Infrastructure.Authentication;
+namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Authentication;
 
 public class AuthConfiguration : IEntityTypeConfiguration<Auth>
 {

@@ -1,4 +1,4 @@
-﻿namespace BeatEcoprove.Infrastructure;
+﻿namespace BeatEcoprove.Infrastructure.EmailSender;
 
 public class MailSenderSettings
 {

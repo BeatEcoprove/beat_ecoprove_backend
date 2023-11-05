@@ -1,7 +1,8 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
+﻿using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
-namespace BeatEcoprove.Domain.ProfileAggregator.Entities;
+namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
 
 public class Organization : Profile

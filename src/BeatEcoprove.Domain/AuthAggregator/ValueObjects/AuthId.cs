@@ -1,6 +1,6 @@
 ﻿using BeatEcoprove.Domain.Shared.Models;
 
-namespace BeatEcoprove.Domain.ProfileAggregator.Entities;
+namespace BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 
 public class AuthId : AggregateRootId<Guid>
 {

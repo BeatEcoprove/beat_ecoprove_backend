@@ -1,8 +1,9 @@
 ﻿using BeatEcoprove.Domain.ProfileAggregator.Entities;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BeatEcoprove.Infrastructure;
+namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Profile;
 
 public class ConsumerConfiguration : IEntityTypeConfiguration<Consumer>
 {

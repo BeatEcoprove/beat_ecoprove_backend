@@ -1,4 +1,4 @@
-﻿namespace BeatEcoprove.Contracts;
+﻿namespace BeatEcoprove.Contracts.Authentication.Common;
 
 public record class FieldValidationResponse
 (

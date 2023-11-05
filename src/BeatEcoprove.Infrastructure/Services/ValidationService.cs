@@ -7,13 +7,13 @@ public class ValidationService : IValidationFieldService
 {
     private readonly IAuthRepository _authRepository;
     private readonly IProfileRepository _profileRepository;
-    private readonly Dictionary<string, Func<string, Task<bool>>> fieldVerifiers;
+    private readonly Dictionary<string, Func<string, Task<bool>>> _fieldVerifiers;
 
     public ValidationService(
         IAuthRepository authRepository,
         IProfileRepository profileRepository)
     {
-        fieldVerifiers = new Dictionary<string, Func<string, Task<bool>>>
+        _fieldVerifiers = new Dictionary<string, Func<string, Task<bool>>>
         {
             { "email", IsEmailAvailableAsync },
             { "username", IsUserNameAvailableAsync },
@@ -44,9 +44,9 @@ public class ValidationService : IValidationFieldService
 
     public Task<bool> IsFieldAvailable(string fieldName, string value)
     {
-        if (fieldVerifiers.ContainsKey(fieldName))
+        if (_fieldVerifiers.TryGetValue(fieldName, out var verifier))
         {
-            return fieldVerifiers[fieldName](value);
+            return verifier(value);
         }
 
         throw new ArgumentException($"Field {fieldName} is not supported");

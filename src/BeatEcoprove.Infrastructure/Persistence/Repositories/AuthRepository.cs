@@ -1,10 +1,13 @@
 ﻿using BeatEcoprove.Application;
-using BeatEcoprove.Domain.ProfileAggregator;
+using BeatEcoprove.Domain.AuthAggregator;
+using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Infrastructure.Persistence.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace BeatEcoprove.Infrastructure;
+namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
 public class AuthRepository : Repository<Auth, AuthId>, IAuthRepository
 {

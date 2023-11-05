@@ -1,7 +1,8 @@
 ﻿using BeatEcoprove.Domain.Shared.Models;
+using BeatEcoprove.Infrastructure.Persistence.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace BeatEcoprove.Infrastructure;
+namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
 public abstract class Repository<TEntity, TId>
     where TEntity : AggregateRoot<TId, Guid>

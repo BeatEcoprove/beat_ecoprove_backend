@@ -6,7 +6,7 @@ using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BeatEcoprove.Application;
+namespace BeatEcoprove.Application.Authentication.Commands.ResetPassword;
 
 internal sealed class ResetPasswordCommandHandler : ICommandHandler<ResetPasswordCommand, ErrorOr<string>>
 {

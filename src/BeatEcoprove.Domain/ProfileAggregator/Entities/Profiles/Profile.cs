@@ -1,12 +1,17 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
+﻿using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
 
-namespace BeatEcoprove.Domain.ProfileAggregator.Entities;
+namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
 
 public abstract class Profile : AggregateRoot<ProfileId, Guid>
 {
+    private readonly List<ClothEntry> _clothEntries = new();
+    private readonly List<BucketEntry> _bucketEntries = new();
+    
     protected Profile()
     {
     }
@@ -39,4 +44,18 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
     public int EcoScore { get; protected set; }
     public string AvatarUrl { get; protected set; } = null!;
     public UserType Type { get; protected set; } = null!;
+    public IReadOnlyList<ClothEntry> ClothEntries => _clothEntries.AsReadOnly();
+    public IReadOnlyList<BucketEntry> BucketEntries => _bucketEntries.AsReadOnly();
+    
+    public void AddCloth(Cloth cloth)
+    {
+        _clothEntries.Add(
+            new ClothEntry(this.Id, cloth.Id));
+    }
+    
+    public void AddBucket(Bucket bucket)
+    {
+        _bucketEntries.Add(
+            new BucketEntry(this.Id, bucket.Id));
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Domain.ProfileAggregator.Entities;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Enumerators;
