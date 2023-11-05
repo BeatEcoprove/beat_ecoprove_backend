@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BeatEcoprove.Application;
 
-public class ResetPasswordCommandHandler : ICommandHandler<ResetPasswordCommand, ErrorOr<string>>
+internal sealed class ResetPasswordCommandHandler : ICommandHandler<ResetPasswordCommand, ErrorOr<string>>
 {
     private readonly IJwtProvider _jwtProvider;
     private readonly IAuthRepository _authRepository;

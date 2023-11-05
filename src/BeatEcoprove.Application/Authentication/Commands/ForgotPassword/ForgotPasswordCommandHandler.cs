@@ -7,7 +7,7 @@ using MediatR;
 
 namespace BeatEcoprove.Application;
 
-public class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordCommand, ErrorOr<string>>
+internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordCommand, ErrorOr<string>>
 {
     private readonly IJwtProvider _jwtProvider;
     private readonly IAuthRepository _authRepository;

@@ -4,7 +4,7 @@ using ErrorOr;
 
 namespace BeatEcoprove.Application;
 
-public class ValidationFieldQueryHandler : IQueryHandler<ValidationFieldQuery, ErrorOr<FieldValidationResponse>>
+internal sealed class ValidationFieldQueryHandler : IQueryHandler<ValidationFieldQuery, ErrorOr<FieldValidationResponse>>
 {
     private readonly IValidationFieldService _validationFieldService;
 
