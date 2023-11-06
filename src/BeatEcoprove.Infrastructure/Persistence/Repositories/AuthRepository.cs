@@ -17,21 +17,21 @@ public class AuthRepository : Repository<Auth, AuthId>, IAuthRepository
 
     public async Task<bool> ExistsUserByEmailAsync(Email value, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Auths
+        return await DbContext.Auths
             .AnyAsync(auth => auth.Email == value, cancellationToken);
     }
 
     public async Task<Auth?> GetAuthByEmail(Email value, CancellationToken cancellationToken)
     {
-        return await _dbContext.Auths
+        return await DbContext.Auths
             .SingleOrDefaultAsync(auth => auth.Email == value, cancellationToken);
     }
 
     public async Task<Profile?> GetProfileAsync(AuthId authId, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Auths
+        return await DbContext.Auths
             .Where(auth => auth.Id == authId)
-            .Join(_dbContext.Profiles,
+            .Join(DbContext.Profiles,
                 auth => auth.Id,
                 profile => profile.AuthId,
                 (auth, profile) => profile)
@@ -40,7 +40,7 @@ public class AuthRepository : Repository<Auth, AuthId>, IAuthRepository
 
     public async Task UpdateUserPassword(AuthId id, Password hashedPassword, CancellationToken cancellationToken)
     {
-        await _dbContext
+        await DbContext
            .Auths
            .Where(user => user.Id == id)
            .ExecuteUpdateAsync(setters => setters

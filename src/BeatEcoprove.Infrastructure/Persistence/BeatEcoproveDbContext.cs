@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Domain.AuthAggregator;
+using BeatEcoprove.Domain.ClothAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -10,8 +11,9 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
 {
 
     public DbSet<Auth> Auths { get; set; } = null!;
-
     public DbSet<Profile> Profiles { get; set; } = null!;
+    public DbSet<Cloth> Cloths { get; set; } = null!;
+    public DbSet<Bucket> Buckets { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -22,10 +24,6 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(BeatEcoproveDbContext).Assembly);
-        // modelBuilder.ApplyConfiguration(new ProfileConfiguration());
-        // modelBuilder.ApplyConfiguration(new ConsumerConfiguration());
-        // modelBuilder.ApplyConfiguration(new OrganizationConfiguration());
-        // modelBuilder.ApplyConfiguration(new AuthConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 

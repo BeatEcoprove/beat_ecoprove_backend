@@ -1,6 +1,7 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Domain;
