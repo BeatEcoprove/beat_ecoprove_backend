@@ -1,6 +1,5 @@
-﻿using BeatEcoprove.Application;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
-using BeatEcoprove.Domain.ProfileAggregator.Entities;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
@@ -16,7 +15,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
 
     public async Task<bool> ExistsUserByUserNameAsync(UserName userName, CancellationToken cancellationToken)
     {
-        return await _dbContext
+        return await DbContext
             .Profiles
             .AnyAsync(p => p.UserName == userName, cancellationToken);
     }
@@ -24,7 +23,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
     public async Task<Profile?> GetProfileByAuthId(AuthId id, CancellationToken cancellationToken)
     {
         return await
-            _dbContext
+            DbContext
             .Profiles
             .SingleOrDefaultAsync(p => p.AuthId == id, cancellationToken);
     }

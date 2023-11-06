@@ -1,8 +1,9 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
+﻿using BeatEcoprove.Domain.ClothAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
 
-namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
+namespace BeatEcoprove.Domain.ClothAggregator;
 
 public class Cloth : AggregateRoot<ClothId, Guid>
 {

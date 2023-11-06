@@ -1,9 +1,11 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+﻿using BeatEcoprove.Domain.ClothAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
 
-namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
+namespace BeatEcoprove.Domain.ClothAggregator;
 
-public class Bucket : Entity<BucketId>
+public class Bucket : AggregateRoot<BucketId, Guid>
 {
     private readonly List<BucketClothEntry> _bucketClothEntries = new();
     

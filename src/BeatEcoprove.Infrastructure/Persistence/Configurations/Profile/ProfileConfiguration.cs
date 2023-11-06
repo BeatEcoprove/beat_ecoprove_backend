@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
+using BeatEcoprove.Domain.ClothAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;

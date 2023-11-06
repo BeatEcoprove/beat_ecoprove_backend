@@ -1,14 +1,14 @@
 ﻿using BeatEcoprove.Domain.Shared.Models;
 
-namespace BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+namespace BeatEcoprove.Domain.ClothAggregator.ValueObjects;
 
-public class BucketId : ValueObject
+public class BucketId : AggregateRootId<Guid>
 {
 
     private BucketId() { }
 
     private BucketId(Guid id) => Value = id;
-    public  Guid Value { get; private set; }
+    public sealed override Guid Value { get; protected set; }
 
     public static BucketId CreateUnique() => new(Guid.NewGuid());
 

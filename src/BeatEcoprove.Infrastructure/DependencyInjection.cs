@@ -1,6 +1,8 @@
 ﻿using BeatEcoprove.Application;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Infrastructure.Authentication;
 using BeatEcoprove.Infrastructure.EmailSender;
 using BeatEcoprove.Infrastructure.Persistence;
@@ -79,6 +81,15 @@ public static class DependencyInjection
 
         services.AddScoped<IAuthRepository, AuthRepository>();
         services.AddScoped<IProfileRepository, ProfileRepository>();
+        services.AddScoped<IClothRepository, ClothRepository>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddScoped<IValidationFieldService, ValidationService>();
+        services.AddScoped<IAuthorizationFacade, AuthorizationFacade>();
 
         return services;
     }
@@ -89,8 +100,7 @@ public static class DependencyInjection
         services.AddEmailConfiguration(configuration);
         services.AddPersistence(configuration);
         services.AddAuth(configuration);
-
-        services.AddScoped<IValidationFieldService, ValidationService>();
+        services.AddServices();
 
         return services;
     }
