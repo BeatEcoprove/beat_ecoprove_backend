@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 namespace BeatEcoprove.Infrastructure.Services;

@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
@@ -21,19 +22,22 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtProvider _jwtProvider;
     private readonly IPasswordProvider _passwordProvider;
+    private readonly IFileStorageProvider _fileStorageProvider;
 
     public SignInEnterpriseAccountCommandHandler(
         IAuthRepository authRepository,
         IProfileRepository profileRepository,
         IUnitOfWork unitOfWork,
         IJwtProvider jwtProvider,
-        IPasswordProvider passwordProvider)
+        IPasswordProvider passwordProvider, 
+        IFileStorageProvider fileStorageProvider)
     {
         _authRepository = authRepository;
         _profileRepository = profileRepository;
         _unitOfWork = unitOfWork;
         _jwtProvider = jwtProvider;
         _passwordProvider = passwordProvider;
+        _fileStorageProvider = fileStorageProvider;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(SignInEnterpriseAccountCommand request, CancellationToken cancellationToken)
@@ -75,12 +79,20 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
         var account = Auth.Create(
             email.Value,
             passwordHash);
+        
+        var avatarUrl = 
+            await _fileStorageProvider
+                .UploadFileAsync(
+                    Buckets.ProfileBucket, 
+                    account.Id.Value.ToString()!, 
+                    request.AvatarPicture, 
+                    cancellationToken);
 
         var enterpriseAccount = Organization.Create(
             account.Id,
             userName,
             phone.Value,
-            "https://github.com/DiogoCC7.png",
+            avatarUrl,
             address.Value
         );
 

@@ -1,6 +1,4 @@
 using BeatEcoprove.Api;
-using BeatEcoprove.Api.Controllers;
-using BeatEcoprove.Api.Middlewares;
 using BeatEcoprove.Application;
 using BeatEcoprove.Infrastructure;
 
@@ -12,16 +10,8 @@ builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
 
-var app = builder.Build();
+var app = builder
+    .Build();
 
-app.UseCors(policyBuilder => policyBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.UseMiddleware<ProfileCheckerMiddleware>();
-
+app.SetupConfiguration();
 app.Run();

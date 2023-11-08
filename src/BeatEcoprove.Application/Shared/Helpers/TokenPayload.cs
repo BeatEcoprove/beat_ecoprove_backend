@@ -5,12 +5,12 @@ namespace BeatEcoprove.Application.Shared.Helpers;
 
 public abstract class TokenPayload
 {
-    public TokenPayload(Tokens type)
+    protected TokenPayload(Tokens type)
     {
         Type = type;
     }
 
-    public TokenPayload(DateTime exp, Tokens type)
+    protected TokenPayload(DateTime exp, Tokens type)
     {
         ExpireAt = exp;
         Type = type;

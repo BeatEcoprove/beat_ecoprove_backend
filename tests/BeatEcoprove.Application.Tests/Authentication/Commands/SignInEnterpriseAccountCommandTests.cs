@@ -17,6 +17,7 @@ public class SignInEnterpriseAccountCommandTests
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IJwtProvider _jwtProvider = Substitute.For<IJwtProvider>();
     private readonly IPasswordProvider _passwordProvider = Substitute.For<IPasswordProvider>();
+    private readonly IFileStorageProvider _fileStorageProvider = Substitute.For<IFileStorageProvider>();
 
     private readonly SignInEnterpriseAccountCommandHandler _sut;
 
@@ -27,7 +28,8 @@ public class SignInEnterpriseAccountCommandTests
             _profileRepository,
             _unitOfWork,
             _jwtProvider,
-            _passwordProvider);
+            _passwordProvider,
+            _fileStorageProvider);
     }
 
     private async Task<Stream> GetAvatarPicture()
