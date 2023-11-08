@@ -1,13 +1,14 @@
-﻿using BeatEcoprove.Domain.AuthAggregator;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 namespace BeatEcoprove.Application;
 
-public interface IAuthRepository
+public interface IAuthRepository : IRepository<Auth, AuthId>
 {
-    Task AddAsync(Auth auth, CancellationToken cancellationToken);
     Task<bool> ExistsUserByEmailAsync(Email value, CancellationToken cancellationToken = default);
     Task<Auth?> GetAuthByEmail(Email value, CancellationToken cancellationToken);
     Task UpdateUserPassword(AuthId id, Password hashedPassword, CancellationToken cancellationToken);
+    Task<bool> DoesProfileBelongToAuth(AuthId authId, ProfileId profileId, CancellationToken cancellationToken);
 }

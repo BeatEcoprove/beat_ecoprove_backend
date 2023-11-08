@@ -6,6 +6,10 @@ public static partial class Errors
 {
     public class User
     {
+        public static Error ProfileDoesNotBelongToAuth => Error.Unexpected(
+            "User.ProfileDoesNotBelongToAuth",
+            "Este utilizador não tem acesso ao perfil escolhido.");
+        
         public static Error ProfileDoesNotExists => Error.Validation(
             "User.ProfileDoesNotExists",
             "Não foi encontrado nenhum perfil associado ao utilizador.");
