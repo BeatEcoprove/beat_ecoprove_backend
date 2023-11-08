@@ -1,11 +1,11 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Domain.ClothAggregator;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
 using ErrorOr;
 
-namespace BeatEcoprove.Application.Profiles.Queries;
+namespace BeatEcoprove.Application.Profiles.Queries.GetCloset;
 
 public record GetClosetQuery
 (
-    string UserEmail
+    Guid ProfileId,
+    string Email
 ) : IQuery<ErrorOr<List<Cloth>>>;

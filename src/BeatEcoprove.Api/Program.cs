@@ -1,5 +1,6 @@
 using BeatEcoprove.Api;
 using BeatEcoprove.Api.Controllers;
+using BeatEcoprove.Api.Middlewares;
 using BeatEcoprove.Application;
 using BeatEcoprove.Infrastructure;
 
@@ -20,5 +21,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ProfileCheckerMiddleware>();
 
 app.Run();

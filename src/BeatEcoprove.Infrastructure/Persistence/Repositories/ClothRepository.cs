@@ -13,7 +13,7 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
     {
     }
 
-    public async Task<List<Cloth>> GetAllClothAndBuckets(ProfileId profileId, CancellationToken cancellationToken = default)
+    public async Task<List<Cloth>> GetClothOfProfile(ProfileId profileId, CancellationToken cancellationToken = default)
     {
         return await
             DbContext.Profiles
@@ -25,5 +25,10 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
                     cloth => cloth.Id,
                     (clothEntry, cloth) => cloth)
                 .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<Cloth>> GetAllCloth(ProfileId currentProfile, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }

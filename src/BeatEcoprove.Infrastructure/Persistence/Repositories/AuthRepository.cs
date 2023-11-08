@@ -46,4 +46,13 @@ public class AuthRepository : Repository<Auth, AuthId>, IAuthRepository
            .ExecuteUpdateAsync(setters => setters
                .SetProperty(p => p.Password, hashedPassword), cancellationToken);
     }
+
+    public async Task<bool> DoesProfileBelongToAuth(AuthId authId, ProfileId profileId, CancellationToken cancellationToken)
+    {
+        return await DbContext
+            .Profiles
+            .Where(profile => profile.Id == profileId)
+            .Where(profile => profile.AuthId == authId)
+            .AnyAsync(cancellationToken);
+    }
 }
