@@ -1,4 +1,4 @@
-﻿namespace BeatEcoprove.Application;
+﻿namespace BeatEcoprove.Application.Shared.Interfaces.Services;
 
 public interface IValidationFieldService
 {

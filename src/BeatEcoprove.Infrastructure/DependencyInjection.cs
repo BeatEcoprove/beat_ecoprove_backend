@@ -5,6 +5,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Infrastructure.Authentication;
 using BeatEcoprove.Infrastructure.EmailSender;
+using BeatEcoprove.Infrastructure.FileStorage;
 using BeatEcoprove.Infrastructure.Persistence;
 using BeatEcoprove.Infrastructure.Persistence.Repositories;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
@@ -60,6 +61,24 @@ public static class DependencyInjection
         return services;
     }
 
+    private static IServiceCollection AddFileStorageConfiguration(
+        this IServiceCollection services,
+        ConfigurationManager configuration)
+    {
+        var mailSenderSettings = new LocalFileStorageSettings
+        {
+            BaseUrl = "http://localhost:5182",
+            FolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "public"),
+            PublicFolder = "public"
+        };
+        
+        services.AddSingleton(Options.Create(mailSenderSettings));
+        
+        services.AddScoped<IFileStorageProvider, LocalFileStorageProvider>();
+
+        return services;
+    }
+
     private static IServiceCollection AddProviders(
         this IServiceCollection services)
     {
@@ -98,6 +117,7 @@ public static class DependencyInjection
     {
         services.AddProviders();
         services.AddEmailConfiguration(configuration);
+        services.AddFileStorageConfiguration(configuration);
         services.AddPersistence(configuration);
         services.AddAuth(configuration);
         services.AddServices();

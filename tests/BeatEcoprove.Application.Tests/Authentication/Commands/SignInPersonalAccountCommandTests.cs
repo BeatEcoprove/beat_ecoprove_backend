@@ -17,6 +17,7 @@ public class SignInPersonalAccountCommandTests
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IJwtProvider _jwtProvider = Substitute.For<IJwtProvider>();
     private readonly IPasswordProvider _passwordProvider = Substitute.For<IPasswordProvider>();
+    private readonly IFileStorageProvider _fileStorageProvider = Substitute.For<IFileStorageProvider>();
 
     private readonly SignInPersonalAccountCommandHandler _sut;
 
@@ -27,7 +28,8 @@ public class SignInPersonalAccountCommandTests
             _profileRepository,
             _unitOfWork,
             _jwtProvider,
-            _passwordProvider);
+            _passwordProvider,
+            _fileStorageProvider);
     }
 
     private async Task<Stream> GetAvatarPicture()
@@ -35,8 +37,7 @@ public class SignInPersonalAccountCommandTests
         using HttpClient httpClient = new();
         var response = httpClient.GetAsync("https://github.com/DiogoCC7.png");
 
-        using Stream stream = await response.Result.Content.ReadAsStreamAsync();
-        return stream;
+       return await response.Result.Content.ReadAsStreamAsync();
     }
 
     private async Task<SignInPersonalAccountCommand> GetSutCommand()

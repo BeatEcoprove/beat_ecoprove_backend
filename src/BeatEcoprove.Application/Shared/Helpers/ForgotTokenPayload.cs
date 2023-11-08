@@ -1,7 +1,6 @@
-﻿using BeatEcoprove.Application.Shared.Helpers;
-using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 
-namespace BeatEcoprove.Application;
+namespace BeatEcoprove.Application.Shared.Helpers;
 
 public class ForgotTokenPayload : TokenPayload
 {
