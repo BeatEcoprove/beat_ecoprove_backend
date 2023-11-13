@@ -25,5 +25,8 @@
         <MakeDir Directories="$(OutputPath)public" Condition="!Exists('$(OutputPath)public')" />
     </Target>
 
+    <Target Name="CreateAppDataFolder" AfterTargets="Publish" Condition="'$(Configuration)' == 'Release'">
+        <MakeDir Directories="$(PublishDir)public" Condition="!Exists('$(PublishDir)public')" />
+    </Target>
 
 </Project>

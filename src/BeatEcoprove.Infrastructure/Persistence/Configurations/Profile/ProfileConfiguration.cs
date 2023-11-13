@@ -29,7 +29,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
         builder.OwnsMany(p => p.BucketEntries, bucketEntry =>
         {
             bucketEntry.ToTable(BucketEntryTable);
-            bucketEntry.HasKey(b => new { b.ProfileId, b.Bucket });
+            bucketEntry.HasKey(b => new { b.ProfileId, Bucket = b.BucketId });
 
             bucketEntry.Property(b => b.ProfileId)
                 .HasColumnName("profile_id")
@@ -38,7 +38,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
                     profileId => profileId.Value,
                     value => ProfileId.Create(value));
             
-            bucketEntry.Property(b => b.Bucket)
+            bucketEntry.Property(b => b.BucketId)
                 .HasColumnName("bucket_id")
                 .ValueGeneratedNever()
                 .HasConversion(
@@ -56,7 +56,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
         builder.OwnsMany(p => p.ClothEntries, clothEntry =>
         {
             clothEntry.ToTable(ClothEntryTable);
-            clothEntry.HasKey(c => new { c.ProfileId, c.Cloth });
+            clothEntry.HasKey(c => new { c.ProfileId, Cloth = c.ClothId });
 
             clothEntry.WithOwner().HasForeignKey(c => c.ProfileId);
 
@@ -67,7 +67,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
                     profileId => profileId.Value,
                     value => ProfileId.Create(value));
 
-            clothEntry.Property(c => c.Cloth)
+            clothEntry.Property(c => c.ClothId)
                 .HasColumnName("cloth_id")
                 .ValueGeneratedNever()
                 .HasConversion(

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     [DbContext(typeof(BeatEcoproveDbContext))]
-    [Migration("20231105234037_InitialCreate")]
+    [Migration("20231111011452_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -56,7 +56,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.ToTable("auths", (string)null);
                 });
 
-            modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.Bucket", b =>
+            modelBuilder.Entity("BeatEcoprove.Domain.ClothAggregator.Bucket", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -73,7 +73,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.ToTable("buckets", (string)null);
                 });
 
-            modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.Cloth", b =>
+            modelBuilder.Entity("BeatEcoprove.Domain.ClothAggregator.Cloth", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -87,8 +87,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                     b.Property<string>("ClothAvatar")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
                         .HasColumnName("cloth_avatar");
 
                     b.Property<string>("Color")
@@ -195,7 +195,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue(1);
                 });
 
-            modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.Bucket", b =>
+            modelBuilder.Entity("BeatEcoprove.Domain.ClothAggregator.Bucket", b =>
                 {
                     b.OwnsMany("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.BucketClothEntry", "BucketClothEntries", b1 =>
                         {

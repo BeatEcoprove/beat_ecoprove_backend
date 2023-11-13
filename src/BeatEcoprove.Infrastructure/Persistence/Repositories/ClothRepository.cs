@@ -21,7 +21,7 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
                 .Where(profile => profile.Id == profileId)
                 .SelectMany(profile => profile.ClothEntries)
                 .Join(DbContext.Cloths,
-                    clothEntry => clothEntry.Cloth,
+                    clothEntry => clothEntry.ClothId,
                     cloth => cloth.Id,
                     (clothEntry, cloth) => cloth)
                 .ToListAsync(cancellationToken);

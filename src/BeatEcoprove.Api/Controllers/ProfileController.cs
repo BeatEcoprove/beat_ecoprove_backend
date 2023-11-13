@@ -1,7 +1,8 @@
 ﻿using BeatEcoprove.Api.Extensions;
+using BeatEcoprove.Application.Profiles.Commands.AddBucketToCloset;
 using BeatEcoprove.Application.Profiles.Commands.AddClothToCloset;
-using BeatEcoprove.Application.Profiles.Queries;
 using BeatEcoprove.Application.Profiles.Queries.GetCloset;
+using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Contracts.Profile;
 using Mapster;
 using MapsterMapper;
@@ -27,7 +28,7 @@ public class ProfileController : ApiController
     }
 
     [HttpGet("closet")]
-    public async Task<ActionResult<List<ClothResponse>>> GetCloset(Guid profileId)
+    public async Task<ActionResult<ClosetResponse>> GetCloset(Guid profileId)
     {
         var userEmail = HttpContext.User.GetEmail();
 
@@ -39,8 +40,8 @@ public class ProfileController : ApiController
             }.Adapt<GetClosetQuery>());
 
         return result.Match(
-            response => Ok(_mapper.Map<List<ClothResponse>>(response)),
-            Problem<List<ClothResponse>>
+            response => Ok(_mapper.Map<ClosetResponse>(response)),
+            Problem<ClosetResponse>
         );
     }
     
@@ -50,21 +51,36 @@ public class ProfileController : ApiController
         var userEmail = HttpContext.User.GetEmail();
 
         var result = 
-            await _sender.Send( new
-            {
-                Email = userEmail,
-                Profile = profileId,
+            await _sender.Send( new AddClothToProfileCommand(
+                profileId,
+                userEmail,
                 request.Name,
                 request.Brand,
                 request.Color,
                 request.GarmentSize,
                 request.GarmentType,
-                ClothAvatar = request.ClothAvatar.OpenReadStream()
-            }.Adapt<AddClothToProfileCommand>());
+                request.ClothAvatar.OpenReadStream()));
 
         return result.Match(
             response => Ok(_mapper.Map<List<ClothResponse>>(response)),
             Problem<List<ClothResponse>>
+        );
+    }
+    
+    [HttpPost("closet/bucket")]
+    public async Task<ActionResult<string>> AddBucketToCloset(Guid profileId, AddBucketToProfile request)
+    {
+        var result = 
+            await _sender.Send(new
+            {
+                ProfileId = profileId,
+                request.Name,
+                ClothIds = request.ClothIds
+            }.Adapt<AddBucketToClosetCommand>());
+
+        return result.Match(
+            response => Ok(_mapper.Map<string>(response)),
+            Problem<string>
         );
     }
 }

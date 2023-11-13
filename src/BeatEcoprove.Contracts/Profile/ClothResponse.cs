@@ -2,6 +2,7 @@
 
 public record ClothResponse
 (
+    Guid Id,
     string Name,
     string Type,
     string Size,

@@ -7,14 +7,14 @@ public class BucketEntry
 {
     public BucketEntry(
         ProfileId profileId, 
-        BucketId bucket)
+        BucketId bucketId)
     {
         ProfileId = profileId;
-        Bucket = bucket;
+        BucketId = bucketId;
         IsBlocked = false;
     }
 
     public ProfileId ProfileId { get; private set; }
-    public BucketId Bucket { get; private set; }
+    public BucketId BucketId { get; private set; }
     public bool IsBlocked { get; private set; }
 }

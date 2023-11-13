@@ -49,7 +49,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     brand = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     color = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     eco_score = table.Column<int>(type: "integer", nullable: false),
-                    cloth_avatar = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    cloth_avatar = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {

@@ -9,7 +9,6 @@ namespace BeatEcoprove.Infrastructure.Persistence;
 
 public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWork
 {
-
     public DbSet<Auth> Auths { get; set; } = null!;
     public DbSet<Profile> Profiles { get; set; } = null!;
     public DbSet<Cloth> Cloths { get; set; } = null!;

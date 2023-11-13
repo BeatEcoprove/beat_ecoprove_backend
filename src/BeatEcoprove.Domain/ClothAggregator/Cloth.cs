@@ -5,7 +5,7 @@ using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Domain.ClothAggregator;
 
-public class Cloth : AggregateRoot<ClothId, Guid>
+public class Cloth : AggregateRoot<ClothId, Guid>, IWearable
 {
     private Cloth() { }
     
@@ -16,8 +16,7 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         GarmentSize size,
         string brand,
         string color,
-        int ecoScore,
-        string clothAvatar)
+        int ecoScore)
     {   
         Id = id;
         Name = name;
@@ -26,7 +25,6 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         Brand = brand;
         Color = color;
         EcoScore = ecoScore;
-        ClothAvatar = clothAvatar;
     }
     
     public string Name { get; private set; } = null!;
@@ -42,8 +40,7 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         GarmentType type,
         GarmentSize size,
         string brand,
-        string color,
-        string clothAvatar)
+        string color)
     {
         return new Cloth(
             ClothId.CreateUnique(),
@@ -52,7 +49,11 @@ public class Cloth : AggregateRoot<ClothId, Guid>
             size,
             brand,
             color,
-            0,
-            clothAvatar);
+            0);
+    }
+    
+    public void SetClothPicture(string clothAvatar)
+    {
+        ClothAvatar = clothAvatar;
     }
 }

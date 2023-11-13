@@ -101,6 +101,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthRepository, AuthRepository>();
         services.AddScoped<IProfileRepository, ProfileRepository>();
         services.AddScoped<IClothRepository, ClothRepository>();
+        services.AddScoped<IBucketRepository, BucketRepository>();
 
         return services;
     }

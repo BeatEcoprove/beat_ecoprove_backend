@@ -51,7 +51,7 @@ public class ClothConfiguration : IEntityTypeConfiguration<Domain.ClothAggregato
         
         builder.Property(c => c.ClothAvatar)
             .HasColumnName("cloth_avatar")
-            .HasMaxLength(50)
+            .HasMaxLength(256)
             .IsRequired();
     }
 }

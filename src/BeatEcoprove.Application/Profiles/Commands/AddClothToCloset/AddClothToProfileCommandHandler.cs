@@ -1,9 +1,10 @@
 ﻿using ErrorOr;
 using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClothAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
@@ -18,17 +19,20 @@ public class AddClothToProfileCommandHandler : ICommandHandler<AddClothToProfile
     private readonly IAuthorizationFacade _authorizationFacade;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IProfileRepository _profileRepository;
+    private readonly IFileStorageProvider _fileStorageProvider;
 
     public AddClothToProfileCommandHandler(
         IClothRepository clothRepository, 
         IAuthorizationFacade authorizationFacade, 
         IUnitOfWork unitOfWork, 
-        IProfileRepository profileRepository)
+        IProfileRepository profileRepository, 
+        IFileStorageProvider fileStorageProvider)
     {
         _clothRepository = clothRepository;
         _authorizationFacade = authorizationFacade;
         _unitOfWork = unitOfWork;
         _profileRepository = profileRepository;
+        _fileStorageProvider = fileStorageProvider;
     }
 
     private async Task<ErrorOr<Profile>> GetProfileAsync(string email, Guid profileIdValue, CancellationToken cancellationToken)
@@ -69,16 +73,21 @@ public class AddClothToProfileCommandHandler : ICommandHandler<AddClothToProfile
         {
             return profile.Errors;
         }
-
+        
         var cloth = Cloth.Create
         (
             request.Name,
             GarmentType.Male,
             GarmentSize.S,
             request.Brand,
-            request.Color,
-            "https://github.com/DiogoCC7.png"
+            request.Color
         );
+
+        var clothPicture = profile.Value.Id.Value.ToString() + "-" + cloth.Id.Value.ToString();
+        var clothPictureUrl = await _fileStorageProvider
+            .UploadFileAsync(Buckets.ClothBucket, clothPicture, request.ClothAvatar, cancellationToken);
+        
+        cloth.SetClothPicture(clothPictureUrl);
         
         profile.Value.AddCloth(cloth);
         

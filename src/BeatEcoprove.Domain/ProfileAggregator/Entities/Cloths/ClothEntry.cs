@@ -7,14 +7,14 @@ public class ClothEntry
 {
     public ClothEntry(
         ProfileId profileId, 
-        ClothId cloth)
+        ClothId clothId)
     {
         ProfileId = profileId;
-        Cloth = cloth;
+        ClothId = clothId;
         IsBlocked = false;
     }
 
     public ProfileId ProfileId { get; private set; }
-    public ClothId Cloth { get; private set; }
+    public ClothId ClothId { get; private set; }
     public bool IsBlocked { get; private set; }
 }

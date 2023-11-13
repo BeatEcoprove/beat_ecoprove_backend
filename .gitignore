@@ -19,6 +19,9 @@
 # Mono auto generated files
 mono_crash.*
 
+# http requests
+requests
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

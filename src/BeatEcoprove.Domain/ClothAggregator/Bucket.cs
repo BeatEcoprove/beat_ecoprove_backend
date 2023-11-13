@@ -1,11 +1,13 @@
 ﻿using BeatEcoprove.Domain.ClothAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
+using ErrorOr;
 
 namespace BeatEcoprove.Domain.ClothAggregator;
 
-public class Bucket : AggregateRoot<BucketId, Guid>
+public class Bucket : AggregateRoot<BucketId, Guid>, IWearable
 {
     private readonly List<BucketClothEntry> _bucketClothEntries = new();
     
@@ -20,23 +22,28 @@ public class Bucket : AggregateRoot<BucketId, Guid>
     public string Name { get; private set; }
     public IReadOnlyList<BucketClothEntry> BucketClothEntries => _bucketClothEntries.AsReadOnly();
 
-    public static Bucket Create(
-        List<Cloth> cloths,
-        string name)
+    public static ErrorOr<Bucket> Create(
+        string name,
+        List<ClothId> cloths)
     {
         Bucket bucket = new(
             BucketId.CreateUnique(), 
             name);
+
+        if (cloths.Count == 0)
+        {
+            return Errors.Bucket.EmptyClothIds;
+        }
         
         bucket.AddCloths(cloths);
         return bucket;
     }
     
-    public void AddCloths(List<Cloth> cloths)
+    public void AddCloths(List<ClothId> cloths)
     {
         foreach (var cloth in cloths)
         {
-            AddCloth(cloth.Id);
+            AddCloth(cloth);
         }
     }
     

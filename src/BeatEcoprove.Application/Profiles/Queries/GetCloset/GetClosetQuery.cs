@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Domain.ClothAggregator;
 using ErrorOr;
 
@@ -8,4 +9,4 @@ public record GetClosetQuery
 (
     Guid ProfileId,
     string Email
-) : IQuery<ErrorOr<List<Cloth>>>;
+) : IQuery<ErrorOr<MixedClothBucketList>>;

@@ -3,4 +3,5 @@
 public class Buckets
 {
     public const string ProfileBucket = "profile";
+    public const string ClothBucket = "cloth";
 }
