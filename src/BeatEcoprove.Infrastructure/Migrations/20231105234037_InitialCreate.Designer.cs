@@ -3,6 +3,7 @@ using System;
 using BeatEcoprove.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     [DbContext(typeof(BeatEcoproveDbContext))]
-    partial class BeatEcoproveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231105234037_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.ToTable("auths", (string)null);
                 });
 
-            modelBuilder.Entity("BeatEcoprove.Domain.ClothAggregator.Bucket", b =>
+            modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.Bucket", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -70,7 +73,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.ToTable("buckets", (string)null);
                 });
 
-            modelBuilder.Entity("BeatEcoprove.Domain.ClothAggregator.Cloth", b =>
+            modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.Cloth", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -84,8 +87,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                     b.Property<string>("ClothAvatar")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("cloth_avatar");
 
                     b.Property<string>("Color")
@@ -192,7 +195,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue(1);
                 });
 
-            modelBuilder.Entity("BeatEcoprove.Domain.ClothAggregator.Bucket", b =>
+            modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.Bucket", b =>
                 {
                     b.OwnsMany("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.BucketClothEntry", "BucketClothEntries", b1 =>
                         {
@@ -229,7 +232,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                                 .HasColumnType("uuid")
                                 .HasColumnName("profile_id");
 
-                            b1.Property<Guid>("BucketId")
+                            b1.Property<Guid>("Bucket")
                                 .HasColumnType("uuid")
                                 .HasColumnName("bucket_id");
 
@@ -237,7 +240,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                                 .HasColumnType("boolean")
                                 .HasColumnName("is_blocked");
 
-                            b1.HasKey("ProfileId", "BucketId");
+                            b1.HasKey("ProfileId", "Bucket");
+
                             b1.ToTable("bucket_entries", (string)null);
 
                             b1.WithOwner()
@@ -250,7 +254,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                                 .HasColumnType("uuid")
                                 .HasColumnName("profile_id");
 
-                            b1.Property<Guid>("ClothId")
+                            b1.Property<Guid>("Cloth")
                                 .HasColumnType("uuid")
                                 .HasColumnName("cloth_id");
 
@@ -258,7 +262,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                                 .HasColumnType("boolean")
                                 .HasColumnName("is_blocked");
 
-                            b1.HasKey("ProfileId", "ClothId");
+                            b1.HasKey("ProfileId", "Cloth");
+
                             b1.ToTable("cloth_entries", (string)null);
 
                             b1.WithOwner()

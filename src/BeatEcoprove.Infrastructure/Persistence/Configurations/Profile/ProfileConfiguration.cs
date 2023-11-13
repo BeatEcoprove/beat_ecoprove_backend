@@ -30,7 +30,6 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
         {
             bucketEntry.ToTable(BucketEntryTable);
             bucketEntry.HasKey(b => new { b.ProfileId, Bucket = b.BucketId });
-
             bucketEntry.Property(b => b.ProfileId)
                 .HasColumnName("profile_id")
                 .ValueGeneratedNever()
@@ -57,7 +56,6 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
         {
             clothEntry.ToTable(ClothEntryTable);
             clothEntry.HasKey(c => new { c.ProfileId, Cloth = c.ClothId });
-
             clothEntry.WithOwner().HasForeignKey(c => c.ProfileId);
 
             clothEntry.Property(c => c.ProfileId)
