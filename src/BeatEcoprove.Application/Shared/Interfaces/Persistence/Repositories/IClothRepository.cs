@@ -1,4 +1,4 @@
-﻿using BeatEcoprove.Domain.ClosetAggregator;
+using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using ErrorOr;

@@ -1,7 +1,6 @@
 ﻿using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -57,7 +56,6 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
         {
             clothEntry.ToTable(ClothEntryTable);
             clothEntry.HasKey(c => new { c.ProfileId, Cloth = c.ClothId });
-
             clothEntry.WithOwner().HasForeignKey(c => c.ProfileId);
 
             clothEntry.Property(c => c.ProfileId)

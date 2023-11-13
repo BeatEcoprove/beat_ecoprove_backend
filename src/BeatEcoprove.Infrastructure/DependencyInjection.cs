@@ -123,7 +123,7 @@ public static class DependencyInjection
         services.AddPersistence(configuration);
         services.AddAuth(configuration);
         services.AddServices();
-        
+
         return services;
     }
 }

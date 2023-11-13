@@ -6,7 +6,6 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Domain.AuthAggregator;
-using BeatEcoprove.Domain.ProfileAggregator.Entities;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
@@ -40,7 +39,7 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
         _fileStorageProvider = fileStorageProvider;
     }
 
-    public async Task<ErrorOr<AuthenticationResult>> Handle(SignInEnterpriseAccountCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<AuthenticationResult>> Handle(SignInEnterpriseAccountCommand request, CancellationToken cancellationToken = default)
     {
         var userName = UserName.Create(request.UserName);
         var email = Email.Create(request.Email);

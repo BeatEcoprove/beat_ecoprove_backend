@@ -11,6 +11,7 @@ services:
       - POSTGRES_PASSWORD=${BEAT_DB_PASSWORD}
     restart: always
 
+<<<<<<< HEAD
   beat_api:
     build: 
       context: .
@@ -34,3 +35,17 @@ services:
     depends_on:
       - beat_db
     restart: always
+=======
+#  beat_api:
+#    build: 
+#      context: .
+#      dockerfile: docker/api/Dockerfile
+#    ports:
+#      - ${BEAT_API_PORT}:80
+#    environment:
+#      - ASPNETCORE_ENVIRONMENT=Production
+#      - ASPNETCORE_HTTP_PORTS=5182
+#    depends_on:
+#      - beat_db
+#    restart: always
+>>>>>>> 85882cce51a445b38c48010fcbbde374c72b4476
