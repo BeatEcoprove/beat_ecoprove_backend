@@ -12,6 +12,10 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
         <PackageReference Include="Mapster" Version="7.4.0-pre06" />
         <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1-pre02" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.11">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>

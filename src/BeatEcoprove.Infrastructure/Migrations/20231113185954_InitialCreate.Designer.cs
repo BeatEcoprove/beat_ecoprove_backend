@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     [DbContext(typeof(BeatEcoproveDbContext))]
-    [Migration("20231111011452_InitialCreate")]
+    [Migration("20231113185954_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -232,7 +232,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                                 .HasColumnType("uuid")
                                 .HasColumnName("profile_id");
 
-                            b1.Property<Guid>("Bucket")
+                            b1.Property<Guid>("BucketId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("bucket_id");
 
@@ -240,7 +240,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                                 .HasColumnType("boolean")
                                 .HasColumnName("is_blocked");
 
-                            b1.HasKey("ProfileId", "Bucket");
+                            b1.HasKey("ProfileId", "BucketId");
 
                             b1.ToTable("bucket_entries", (string)null);
 
@@ -254,7 +254,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                                 .HasColumnType("uuid")
                                 .HasColumnName("profile_id");
 
-                            b1.Property<Guid>("Cloth")
+                            b1.Property<Guid>("ClothId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("cloth_id");
 
@@ -262,7 +262,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                                 .HasColumnType("boolean")
                                 .HasColumnName("is_blocked");
 
-                            b1.HasKey("ProfileId", "Cloth");
+                            b1.HasKey("ProfileId", "ClothId");
 
                             b1.ToTable("cloth_entries", (string)null);
 

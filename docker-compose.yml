@@ -19,6 +19,16 @@ services:
       - ${BEAT_API_PORT}:80
     environment:
       - JwtSettings:Issuer=${BEAT_API_JWT_ISSUER}
+      - JwtSettings:Audience=${BEAT_API_JWT_AUDIENCE}
+      - JwtSettings:SecretKey=${BEAT_API_JWT_SECRET_KEY}
+      - JwtSettings:AccessTokenExpirationInMinutes=${BEAT_API_JWT_ACCESS_TOKEN_EXPIRATION_IN_MINUTES}
+      - JwtSettings:RefreshTokenExpirationInDays=${BEAT_API_JWT_REFRESH_TOKEN_EXPIRATION_IN_DAYS}
+      - DbSettings:ConnectionString=${BEAT_API_CONNECTION_STRING}
+      - MailSenderSettings:HostEmail=${BEAT_MAIL_HOST_EMAIL}
+      - MailSenderSettings:SmtpServer=${BEAT_MAIL_SMTP_SERVER}
+      - MailSenderSettings:SmtpPort=${BEAT_MAIL_SMTP_PORT}
+      - MailSenderSettings:SmtpUser=${BEAT_MAIL_SMTP_USER}
+      - MailSenderSettings:SmtpPassword=${BEAT_MAIL_SMTP_PASSWORD}
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=5182
     depends_on:

@@ -12,6 +12,7 @@ using BeatEcoprove.Infrastructure.Persistence.Shared;
 using BeatEcoprove.Infrastructure.Providers;
 using BeatEcoprove.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -122,7 +123,7 @@ public static class DependencyInjection
         services.AddPersistence(configuration);
         services.AddAuth(configuration);
         services.AddServices();
-
+        
         return services;
     }
 }

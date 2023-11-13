@@ -4,11 +4,21 @@ using BeatEcoprove.Domain.ClothAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 
 namespace BeatEcoprove.Infrastructure.Persistence;
 
 public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWork
 {
+    private readonly DbSettings _dbSettings;
+    
+    public BeatEcoproveDbContext(
+        IOptions<DbSettings> dbSettings)
+    {
+        _dbSettings = dbSettings.Value;
+    }
+
     public DbSet<Auth> Auths { get; set; } = null!;
     public DbSet<Profile> Profiles { get; set; } = null!;
     public DbSet<Cloth> Cloths { get; set; } = null!;
@@ -16,7 +26,11 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Username=sa;Password=password;Database=ecoprove;");
+        optionsBuilder.UseNpgsql(_dbSettings.ConnectionString, builder =>
+        {
+            builder.MigrationsAssembly("BeatEcoprove.Infrastructure");
+        });
+        
         optionsBuilder.EnableSensitiveDataLogging();
     }
 
