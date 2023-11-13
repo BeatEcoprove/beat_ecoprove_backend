@@ -1,4 +1,4 @@
-﻿namespace BeatEcoprove.Contracts.Profile;
+﻿namespace BeatEcoprove.Contracts.Closet.Cloth;
 
 public record ClothResponse
 (

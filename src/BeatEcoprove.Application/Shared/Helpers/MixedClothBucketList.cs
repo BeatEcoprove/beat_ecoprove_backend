@@ -1,4 +1,4 @@
-﻿using BeatEcoprove.Domain.ClothAggregator;
+﻿using BeatEcoprove.Domain.ClosetAggregator;
 
 namespace BeatEcoprove.Application.Shared.Helpers;
 

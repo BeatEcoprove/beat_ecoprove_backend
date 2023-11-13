@@ -1,6 +1,6 @@
 ﻿using BeatEcoprove.Domain.Shared.Models;
 
-namespace BeatEcoprove.Domain.ClothAggregator.ValueObjects;
+namespace BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 
 public class ClothId : AggregateRootId<Guid>
 {

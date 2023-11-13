@@ -1,6 +1,6 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
-using BeatEcoprove.Domain.ClothAggregator;
-using BeatEcoprove.Domain.ClothAggregator.ValueObjects;
+using BeatEcoprove.Domain.ClosetAggregator;
+using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;

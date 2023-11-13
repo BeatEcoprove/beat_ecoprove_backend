@@ -1,9 +1,7 @@
 ﻿using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
-using BeatEcoprove.Domain.ClothAggregator;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
+using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 

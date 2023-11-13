@@ -1,13 +1,12 @@
-﻿using BeatEcoprove.Domain.ClothAggregator.ValueObjects;
+﻿using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
 using ErrorOr;
 
-namespace BeatEcoprove.Domain.ClothAggregator;
+namespace BeatEcoprove.Domain.ClosetAggregator;
 
-public class Bucket : AggregateRoot<BucketId, Guid>, IWearable
+public class Bucket : AggregateRoot<BucketId, Guid>
 {
     private readonly List<BucketClothEntry> _bucketClothEntries = new();
     

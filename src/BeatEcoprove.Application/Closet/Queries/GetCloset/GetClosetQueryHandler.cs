@@ -2,14 +2,12 @@
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.ClothAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
 using ErrorOr;
 
-namespace BeatEcoprove.Application.Profiles.Queries.GetCloset;
+namespace BeatEcoprove.Application.Closet.Queries.GetCloset;
 
 internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, ErrorOr<MixedClothBucketList>>
 {

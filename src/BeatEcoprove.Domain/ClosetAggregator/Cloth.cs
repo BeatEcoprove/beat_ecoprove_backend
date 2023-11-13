@@ -1,11 +1,10 @@
-﻿using BeatEcoprove.Domain.ClothAggregator.ValueObjects;
+﻿using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
 
-namespace BeatEcoprove.Domain.ClothAggregator;
+namespace BeatEcoprove.Domain.ClosetAggregator;
 
-public class Cloth : AggregateRoot<ClothId, Guid>, IWearable
+public class Cloth : AggregateRoot<ClothId, Guid>
 {
     private Cloth() { }
     

@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using BeatEcoprove.Domain.AuthAggregator;
-using BeatEcoprove.Domain.ClothAggregator;
-using BeatEcoprove.Domain.ProfileAggregator.Entities;
+using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,11 +1,10 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Domain.AuthAggregator;
-using BeatEcoprove.Domain.ClothAggregator;
+using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 
 namespace BeatEcoprove.Infrastructure.Persistence;
 

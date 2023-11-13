@@ -1,19 +1,19 @@
-﻿using ErrorOr;
-using BeatEcoprove.Application.Shared;
+﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.ClothAggregator;
+using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+using ErrorOr;
 
-namespace BeatEcoprove.Application.Profiles.Commands.AddClothToCloset;
+namespace BeatEcoprove.Application.Closet.Commands.CreateCloth;
 
-public class AddClothToProfileCommandHandler : ICommandHandler<AddClothToProfileCommand, ErrorOr<Cloth>>
+public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, ErrorOr<Cloth>>
 {
     private readonly IClothRepository _clothRepository;
     private readonly IAuthorizationFacade _authorizationFacade;
@@ -21,7 +21,7 @@ public class AddClothToProfileCommandHandler : ICommandHandler<AddClothToProfile
     private readonly IProfileRepository _profileRepository;
     private readonly IFileStorageProvider _fileStorageProvider;
 
-    public AddClothToProfileCommandHandler(
+    public CreateClothCommandHandler(
         IClothRepository clothRepository, 
         IAuthorizationFacade authorizationFacade, 
         IUnitOfWork unitOfWork, 
@@ -64,7 +64,7 @@ public class AddClothToProfileCommandHandler : ICommandHandler<AddClothToProfile
     }
 
     public async Task<ErrorOr<Cloth>> Handle(
-        AddClothToProfileCommand request, 
+        CreateClothCommand request, 
         CancellationToken cancellationToken)
     {
         var profile = await GetProfileAsync(request.Email, request.Profile, cancellationToken);

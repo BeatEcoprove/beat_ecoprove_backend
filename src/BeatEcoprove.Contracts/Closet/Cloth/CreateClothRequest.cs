@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace BeatEcoprove.Contracts.Profile;
+namespace BeatEcoprove.Contracts.Closet.Cloth;
 
-public record AddClothToProfile
+public record CreateClothRequest
 (
     string Name,
     string GarmentType,

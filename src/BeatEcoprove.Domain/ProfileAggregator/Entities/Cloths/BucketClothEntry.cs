@@ -1,4 +1,4 @@
-﻿using BeatEcoprove.Domain.ClothAggregator.ValueObjects;
+﻿using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;

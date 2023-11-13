@@ -1,9 +1,8 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
-using BeatEcoprove.Domain.ClothAggregator;
 using ErrorOr;
 
-namespace BeatEcoprove.Application.Profiles.Queries.GetCloset;
+namespace BeatEcoprove.Application.Closet.Queries.GetCloset;
 
 public record GetClosetQuery
 (

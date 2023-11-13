@@ -1,5 +1,5 @@
-﻿using BeatEcoprove.Domain.ClothAggregator;
-using BeatEcoprove.Domain.ClothAggregator.ValueObjects;
+﻿using BeatEcoprove.Domain.ClosetAggregator;
+using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using ErrorOr;
 
