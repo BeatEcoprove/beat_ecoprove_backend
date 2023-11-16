@@ -5,6 +5,9 @@ COPY src src
 COPY tests tests
 COPY BeatEcoprove.sln .
 
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
+RUN dotnet tool install --global dotnet-ef --version 7.0.11
 RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
