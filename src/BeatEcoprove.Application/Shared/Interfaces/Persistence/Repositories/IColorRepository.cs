@@ -1,6 +1,8 @@
-﻿namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+﻿using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 
-public class IColorRepository
+namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+
+public interface IColorRepository : IRepository<Color, ColorId>
 {
-    
+    Task<ColorId?> GetByHexValueAsync(string hexValue, CancellationToken cancellationToken = default);
 }

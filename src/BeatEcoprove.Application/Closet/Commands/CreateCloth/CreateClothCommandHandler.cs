@@ -20,19 +20,22 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
     private readonly IUnitOfWork _unitOfWork;
     private readonly IProfileRepository _profileRepository;
     private readonly IFileStorageProvider _fileStorageProvider;
+    private readonly IColorRepository _colorRepository;
 
     public CreateClothCommandHandler(
-        IClothRepository clothRepository, 
-        IAuthorizationFacade authorizationFacade, 
-        IUnitOfWork unitOfWork, 
-        IProfileRepository profileRepository, 
-        IFileStorageProvider fileStorageProvider)
+        IClothRepository clothRepository,
+        IAuthorizationFacade authorizationFacade,
+        IUnitOfWork unitOfWork,
+        IProfileRepository profileRepository,
+        IFileStorageProvider fileStorageProvider,
+        IColorRepository colorRepository)
     {
         _clothRepository = clothRepository;
         _authorizationFacade = authorizationFacade;
         _unitOfWork = unitOfWork;
         _profileRepository = profileRepository;
         _fileStorageProvider = fileStorageProvider;
+        _colorRepository = colorRepository;
     }
 
     private async Task<ErrorOr<Profile>> GetProfileAsync(string email, Guid profileIdValue, CancellationToken cancellationToken)
@@ -52,9 +55,9 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
         {
             return profile;
         }
-        
+
         profile = await _profileRepository.GetByIdAsync(profileId, cancellationToken);
-        
+
         if (profile is null)
         {
             return Errors.User.ProfileDoesNotExists;
@@ -64,33 +67,40 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
     }
 
     public async Task<ErrorOr<Cloth>> Handle(
-        CreateClothCommand request, 
+        CreateClothCommand request,
         CancellationToken cancellationToken)
     {
+        var colorId = await _colorRepository.GetByHexValueAsync(request.Color, cancellationToken);
+
+        if (colorId is null)
+        {
+            return Errors.Bucket.EmptyClothIds;
+        }
+
         var profile = await GetProfileAsync(request.Email, request.Profile, cancellationToken);
 
         if (profile.IsError)
         {
             return profile.Errors;
         }
-        
+
         var cloth = Cloth.Create
         (
             request.Name,
             GarmentType.Male,
             GarmentSize.S,
             request.Brand,
-            request.Color
+            colorId
         );
 
         var clothPicture = profile.Value.Id.Value.ToString() + "-" + cloth.Id.Value.ToString();
         var clothPictureUrl = await _fileStorageProvider
             .UploadFileAsync(Buckets.ClothBucket, clothPicture, request.ClothAvatar, cancellationToken);
-        
+
         cloth.SetClothPicture(clothPictureUrl);
-        
+
         profile.Value.AddCloth(cloth);
-        
+
         await _clothRepository.AddAsync(cloth, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
