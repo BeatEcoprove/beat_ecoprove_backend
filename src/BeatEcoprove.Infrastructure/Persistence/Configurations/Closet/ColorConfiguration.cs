@@ -1,5 +1,4 @@
-﻿using BeatEcoprove.Domain.ClosetAggregator;
-using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+﻿using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -7,28 +6,27 @@ namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Closet;
 
 public class ColorConfiguration : IEntityTypeConfiguration<Color>
 {
-    private const string ColorTable = "colors";
-    
     public void Configure(EntityTypeBuilder<Color> builder)
     {
-        builder.ToTable(ColorTable);
-        builder.HasKey(cl => cl.Id);
+        builder.ToTable("colors");
+        builder.HasKey(color => color.Id);
 
-        builder.Property(cl => cl.Id)
+        builder.Property(color => color.Id)
             .HasColumnName("id")
             .ValueGeneratedNever()
             .HasConversion(
                 id => id.Value,
-                value => ColorId.Create(value));
-        
-        builder.Property(cl => cl.Name)
-            .HasColumnName("name")
-            .HasMaxLength(50)
-            .IsRequired();
+                id => ColorId.Create(id)
+            );
 
-        builder.Property(cl => cl.Hex)
+        builder.Property(color => color.Hex)
             .HasColumnName("hex")
             .HasMaxLength(8)
+            .IsRequired();
+
+        builder.Property(color => color.Name)
+            .HasColumnName("name")
+            .HasMaxLength(256)
             .IsRequired();
     }
 }

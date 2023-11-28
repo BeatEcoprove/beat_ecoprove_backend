@@ -39,9 +39,17 @@ public class ClothConfiguration : IEntityTypeConfiguration<Domain.ClosetAggregat
             .HasMaxLength(50)
             .IsRequired();
 
+        builder
+            .HasOne<Color>()
+            .WithMany()
+            .HasForeignKey(c => c.Color);
+
         builder.Property(c => c.Color)
             .HasColumnName("color")
-            .HasMaxLength(50)
+            .HasConversion(
+                id => id.Value,
+                value => ColorId.Create(value)
+            )
             .IsRequired();
 
         builder.Property(c => c.EcoScore)

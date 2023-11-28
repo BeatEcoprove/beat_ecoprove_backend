@@ -7,7 +7,7 @@ public class ColorId : AggregateRootId<Guid>
     private ColorId() { }
 
     private ColorId(Guid id) => Value = id;
-    
+
     public sealed override Guid Value { get; protected set; }
 
     public static ColorId CreateUnique() => new(Guid.NewGuid());

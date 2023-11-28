@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
 public abstract class Repository<TEntity, TId>
-    where TEntity : AggregateRoot<TId, Guid>
-    where TId : AggregateRootId<Guid>
+    where TEntity : Entity<TId>
+    where TId : ValueObject
 {
     protected readonly IApplicationDbContext DbContext;
 

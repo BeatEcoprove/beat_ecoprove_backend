@@ -88,10 +88,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("cloth_avatar");
 
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                    b.Property<Guid>("Color")
+                        .HasColumnType("uuid")
                         .HasColumnName("color");
 
                     b.Property<int>("EcoScore")
@@ -114,10 +112,12 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Color");
+
                     b.ToTable("cloths", (string)null);
                 });
 
-            modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Color", b =>
+            modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.ValueObjects.Color", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -131,8 +131,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -236,6 +236,15 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         });
 
                     b.Navigation("BucketClothEntries");
+                });
+
+            modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Cloth", b =>
+                {
+                    b.HasOne("BeatEcoprove.Domain.ClosetAggregator.ValueObjects.Color", null)
+                        .WithMany()
+                        .HasForeignKey("Color")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", b =>

@@ -12,7 +12,6 @@ using BeatEcoprove.Infrastructure.Persistence.Shared;
 using BeatEcoprove.Infrastructure.Providers;
 using BeatEcoprove.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -72,9 +71,9 @@ public static class DependencyInjection
             FolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "public"),
             PublicFolder = "public"
         };
-        
+
         services.AddSingleton(Options.Create(mailSenderSettings));
-        
+
         services.AddScoped<IFileStorageProvider, LocalFileStorageProvider>();
 
         return services;
@@ -103,6 +102,7 @@ public static class DependencyInjection
         services.AddScoped<IProfileRepository, ProfileRepository>();
         services.AddScoped<IClothRepository, ClothRepository>();
         services.AddScoped<IBucketRepository, BucketRepository>();
+        services.AddScoped<IColorRepository, ColorRepository>();
 
         return services;
     }
