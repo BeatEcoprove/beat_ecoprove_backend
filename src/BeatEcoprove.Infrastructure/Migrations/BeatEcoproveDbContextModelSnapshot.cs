@@ -37,7 +37,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_enabled");
 
-                    b.Property<Guid?>("MainProfileId")
+                    b.Property<Guid>("MainProfileId")
                         .HasColumnType("uuid")
                         .HasColumnName("main_profile_id");
 
@@ -53,9 +53,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnName("salt");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MainProfileId")
-                        .IsUnique();
 
                     b.ToTable("auths", (string)null);
                 });
@@ -220,13 +217,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnName("type_option");
 
                     b.HasDiscriminator().HasValue(1);
-                });
-
-            modelBuilder.Entity("BeatEcoprove.Domain.AuthAggregator.Auth", b =>
-                {
-                    b.HasOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", null)
-                        .WithOne()
-                        .HasForeignKey("BeatEcoprove.Domain.AuthAggregator.Auth", "MainProfileId");
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Bucket", b =>

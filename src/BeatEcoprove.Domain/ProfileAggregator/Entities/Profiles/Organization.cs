@@ -12,15 +12,13 @@ public class Organization : Profile
     }
 
     private Organization(
-        AuthId authId,
         UserName userName,
         Phone phone,
         double xP,
         int sustainabilityPoints,
         int ecoScore,
-        string avatarUrl,
         Address address)
-        : base(authId, userName, phone, xP, sustainabilityPoints, ecoScore, avatarUrl, UserType.Organization)
+        : base(userName, phone, xP, sustainabilityPoints, ecoScore, UserType.Organization)
     {
         Address = address;
         TypeOption = TypeOption.Washer;
@@ -30,20 +28,16 @@ public class Organization : Profile
     public TypeOption TypeOption { get; private set; }
 
     public static Organization Create(
-        AuthId authId,
         UserName userName,
         Phone phone,
-        string avatarUrl,
         Address address)
     {
-        return new(
-            authId,
+        return new Organization(
             userName,
             phone,
             0.0,
             0,
             0,
-            avatarUrl,
             address);
     }
 }

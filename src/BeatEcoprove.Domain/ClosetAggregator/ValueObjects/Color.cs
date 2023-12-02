@@ -9,6 +9,8 @@ public class Color : Entity<ColorId>
 {
     private const string HexRegex = "^#(?:[0-9a-fA-F]{3}){1,2}$";
 
+    private Color() { }
+
     private Color(ColorId colorId, string name, string hex)
     {
         Id = colorId;

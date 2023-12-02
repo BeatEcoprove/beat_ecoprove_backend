@@ -2,7 +2,7 @@
 
 public struct UserClaims
 {
-    public const string UserId = "sub";
+    public const string AccountId = "sub";
     public const string Email = "email";
     public const string UserName = "given_name";
     public const string AvatarUrl = "avatar_url";

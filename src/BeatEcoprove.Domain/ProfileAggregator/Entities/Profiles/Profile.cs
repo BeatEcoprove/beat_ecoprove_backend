@@ -7,7 +7,6 @@ using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
-
 public abstract class Profile : AggregateRoot<ProfileId, Guid>
 {
     private readonly List<ClothEntry> _clothEntries = new();
@@ -18,22 +17,19 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
     }
 
     protected Profile(
-        AuthId authCredentials,
         UserName userName,
         Phone phone,
         double xP,
         int sustainabilityPoints,
         int ecoScore,
-        string avatarUrl, UserType type)
+        UserType type)
     {
         Id = ProfileId.CreateUnique();
-        AuthId = authCredentials;
         UserName = userName;
         Phone = phone;
         XP = xP;
         SustainabilityPoints = sustainabilityPoints;
         EcoScore = ecoScore;
-        AvatarUrl = avatarUrl;
         Type = type;
     }
 
@@ -47,6 +43,17 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
     public UserType Type { get; protected set; } = null!;
     public IReadOnlyList<ClothEntry> ClothEntries => _clothEntries.AsReadOnly();
     public IReadOnlyList<BucketEntry> BucketEntries => _bucketEntries.AsReadOnly();
+    
+    public void SetProfileAvatar(string avatarUrl)
+    {
+        AvatarUrl = avatarUrl;
+    }
+    
+    public void SetAuthPointer(AuthId authId)
+    {
+        ArgumentNullException.ThrowIfNull(authId);
+        AuthId = authId;
+    }
     
     public void AddCloth(Cloth cloth)
     {

@@ -93,8 +93,9 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
         builder.HasOne<Auth>()
             .WithMany()
             .HasForeignKey(t => t.AuthId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
-
+        
         builder.Property(profile => profile.AuthId)
             .HasColumnName("auth_id")
             .HasConversion(

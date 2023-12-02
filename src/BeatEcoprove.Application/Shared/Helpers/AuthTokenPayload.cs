@@ -5,7 +5,7 @@ namespace BeatEcoprove.Application.Shared.Helpers;
 
 public class AuthTokenPayload : TokenPayload
 {
-    private readonly Guid _userId;
+    private readonly Guid _accountId;
     private readonly string _email;
     private readonly string _userName;
     private readonly string _avatarUrl;
@@ -14,7 +14,7 @@ public class AuthTokenPayload : TokenPayload
     private readonly int _sustainablePoints;
 
     public AuthTokenPayload(
-        Guid userId,
+        Guid accountId,
         string email,
         string userName,
         string avatarUrl,
@@ -23,7 +23,7 @@ public class AuthTokenPayload : TokenPayload
         int sustainablePoints,
         Tokens tokenType) : base(tokenType)
     {
-        _userId = userId;
+        _accountId = accountId;
         _email = email;
         _userName = userName;
         _avatarUrl = avatarUrl;
@@ -32,7 +32,7 @@ public class AuthTokenPayload : TokenPayload
         _sustainablePoints = sustainablePoints;
     }
 
-    public string UserId => _userId.ToString();
+    public string AccountId => _accountId.ToString();
     public string Email => _email;
     public string UserName => _userName;
     public string AvatarUrl => _avatarUrl;
@@ -44,7 +44,7 @@ public class AuthTokenPayload : TokenPayload
     {
         return new Dictionary<string, string>
         {
-            { UserClaims.UserId, UserId },
+            { UserClaims.AccountId, AccountId },
             { UserClaims.Email, Email },
             { UserClaims.UserName, UserName },
             { UserClaims.AvatarUrl, AvatarUrl },

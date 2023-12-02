@@ -2,6 +2,7 @@
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
@@ -16,9 +17,8 @@ public class SignInPersonalAccountCommandTests
     private readonly IProfileRepository _profileRepository = Substitute.For<IProfileRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IJwtProvider _jwtProvider = Substitute.For<IJwtProvider>();
-    private readonly IPasswordProvider _passwordProvider = Substitute.For<IPasswordProvider>();
-    private readonly IFileStorageProvider _fileStorageProvider = Substitute.For<IFileStorageProvider>();
-
+    private readonly IAccountService _accountService = Substitute.For<IAccountService>();
+    
     private readonly SignInPersonalAccountCommandHandler _sut;
 
     public SignInPersonalAccountCommandTests()
@@ -28,8 +28,7 @@ public class SignInPersonalAccountCommandTests
             _profileRepository,
             _unitOfWork,
             _jwtProvider,
-            _passwordProvider,
-            _fileStorageProvider);
+            _accountService);
     }
 
     private async Task<Stream> GetAvatarPicture()

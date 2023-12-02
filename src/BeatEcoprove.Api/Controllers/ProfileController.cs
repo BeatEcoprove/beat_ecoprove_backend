@@ -47,14 +47,14 @@ public class ProfileController : ApiController
     }
     
     [HttpPost("closet/cloth")]
-    public async Task<ActionResult<List<ClothResponse>>> AddClothToCloset(Guid profileId, [FromForm] CreateClothRequest request)
+    public async Task<ActionResult<ClothResponse>> AddClothToCloset(Guid profileId, [FromForm] CreateClothRequest request)
     {
-        var userEmail = HttpContext.User.GetEmail();
+        var authId = HttpContext.User.GetUserId();
 
         var result = 
             await _sender.Send( new CreateClothCommand(
+                authId,
                 profileId,
-                userEmail,
                 request.Name,
                 request.GarmentSize,
                 request.GarmentType,
@@ -65,9 +65,9 @@ public class ProfileController : ApiController
         return result.Match(
             response => Created(
                 "",
-                _mapper.Map<List<ClothResponse>>(response) 
+                _mapper.Map<ClothResponse>(response)
                 ),
-            Problem<List<ClothResponse>>
+            Problem<ClothResponse>
         );
     }
     

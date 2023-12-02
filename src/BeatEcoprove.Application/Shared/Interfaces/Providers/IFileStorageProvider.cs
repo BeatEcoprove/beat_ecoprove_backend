@@ -2,5 +2,6 @@
 
 public interface IFileStorageProvider
 {
-    Task<string> UploadFileAsync(string bucketName, string fileName, Stream stream, CancellationToken cancellationToken = default);
+    Task<string> UploadFileAsync(string bucketName, string fileName, Stream stream,
+        CancellationToken cancellationToken = default);
 }

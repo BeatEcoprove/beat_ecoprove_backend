@@ -41,11 +41,6 @@ public class AuthConfiguration : IEntityTypeConfiguration<Auth>
         builder.Property(auth => auth.IsEnabled)
             .HasColumnName("is_enabled");
 
-        builder.HasOne<Domain.ProfileAggregator.Entities.Profiles.Profile>()
-            .WithOne()
-            .HasForeignKey<Auth>(auth => auth.MainProfileId)
-            .IsRequired(false);
-
         builder.Property(auth => auth.MainProfileId)
             .HasColumnName("main_profile_id")
             .ValueGeneratedNever()

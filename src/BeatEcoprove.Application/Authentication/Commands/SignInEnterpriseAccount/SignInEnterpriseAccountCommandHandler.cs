@@ -4,8 +4,8 @@ using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Contracts.Authentication.Common;
-using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
@@ -20,23 +20,20 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
     private readonly IProfileRepository _profileRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtProvider _jwtProvider;
-    private readonly IPasswordProvider _passwordProvider;
-    private readonly IFileStorageProvider _fileStorageProvider;
+    private readonly IAccountService _accountService;
 
     public SignInEnterpriseAccountCommandHandler(
         IAuthRepository authRepository,
         IProfileRepository profileRepository,
         IUnitOfWork unitOfWork,
         IJwtProvider jwtProvider,
-        IPasswordProvider passwordProvider, 
-        IFileStorageProvider fileStorageProvider)
+        IAccountService accountService)
     {
         _authRepository = authRepository;
         _profileRepository = profileRepository;
         _unitOfWork = unitOfWork;
         _jwtProvider = jwtProvider;
-        _passwordProvider = passwordProvider;
-        _fileStorageProvider = fileStorageProvider;
+        _accountService = accountService;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(SignInEnterpriseAccountCommand request, CancellationToken cancellationToken = default)
@@ -73,36 +70,23 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
             return Errors.User.UserNameAlreadyExists;
         }
 
-        var passwordHash = Password.FromHash(_passwordProvider.HashPassword(password.Value));
-
-        var account = Auth.Create(
-            email.Value,
-            passwordHash);
-        
-        var avatarUrl = 
-            await _fileStorageProvider
-                .UploadFileAsync(
-                    Buckets.ProfileBucket, 
-                    account.Id.Value.ToString()!, 
-                    request.AvatarPicture, 
-                    cancellationToken);
-
         var enterpriseAccount = Organization.Create(
-            account.Id,
             userName,
             phone.Value,
-            avatarUrl,
             address.Value
         );
-
-        // Persist User
-        await _authRepository.AddAsync(account, cancellationToken);
-        await _profileRepository.AddAsync(enterpriseAccount, cancellationToken);
-
+        
+        var account = await _accountService.CreateAccount(
+            email.Value, 
+            password.Value, 
+            enterpriseAccount, 
+            request.AvatarPicture, 
+            cancellationToken);
+        
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var payload = new AuthTokenPayload(
-            enterpriseAccount.Id,
+            account.Id,
             account.Email,
             enterpriseAccount.UserName,
             enterpriseAccount.AvatarUrl,
@@ -111,7 +95,6 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
             10,
             Tokens.Access);
 
-        // Generate Tokens
         var accessToken = _jwtProvider.GenerateToken(payload);
 
         payload.Type = Tokens.Refresh;
