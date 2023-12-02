@@ -1,6 +1,6 @@
 ﻿using BeatEcoprove.Domain.Shared.Models;
 
-namespace BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+namespace BeatEcoprove.Domain.Shared.ValueObjects;
 
 public class ColorId : AggregateRootId<Guid>
 {
