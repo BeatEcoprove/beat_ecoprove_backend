@@ -7,6 +7,6 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Services;
 
 public interface IProfileManager
 {
-    Task<ErrorOr<Profile>> GetProfileAsync(Guid authId, Guid? profileId = null,
+    Task<ErrorOr<Profile>> GetProfileAsync(Guid authId, Guid profileId,
         CancellationToken cancellationToken = default);
 }

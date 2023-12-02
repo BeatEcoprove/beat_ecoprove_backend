@@ -21,21 +21,28 @@ public class AuthRepository : Repository<Auth, AuthId>, IAuthRepository
             .AnyAsync(auth => auth.Email == value, cancellationToken);
     }
 
+    public async Task<bool> ExistsUserByIdAsync(AuthId authId, CancellationToken cancellationToken = default)
+    {
+        return await DbContext
+            .Auths
+            .AnyAsync(auth => auth.Id == authId, cancellationToken);
+    }
+
+    public async Task<Profile?> GetMainProfile(AuthId id, CancellationToken cancellationToken = default)
+    {
+        var getMainProfile =
+            from auth in DbContext.Auths
+            join profile in DbContext.Profiles on auth.Id equals profile.AuthId
+            where auth.Id == id
+            select profile;
+
+        return await getMainProfile.SingleOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<Auth?> GetAuthByEmail(Email value, CancellationToken cancellationToken)
     {
         return await DbContext.Auths
             .SingleOrDefaultAsync(auth => auth.Email == value, cancellationToken);
-    }
-
-    public async Task<Profile?> GetProfileAsync(AuthId authId, CancellationToken cancellationToken = default)
-    {
-        return await DbContext.Auths
-            .Where(auth => auth.Id == authId)
-            .Join(DbContext.Profiles,
-                auth => auth.Id,
-                profile => profile.AuthId,
-                (auth, profile) => profile)
-            .SingleOrDefaultAsync(cancellationToken);
     }
 
     public async Task UpdateUserPassword(AuthId id, Password hashedPassword, CancellationToken cancellationToken)

@@ -4,11 +4,8 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
 
@@ -17,57 +14,23 @@ namespace BeatEcoprove.Application.Closet.Commands.CreateCloth;
 public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, ErrorOr<Cloth>>
 {
     private readonly IClothRepository _clothRepository;
-    // private readonly IAuthorizationFacade _authorizationFacade;
     private readonly IUnitOfWork _unitOfWork;
-    // private readonly IProfileRepository _profileRepository;
     private readonly IFileStorageProvider _fileStorageProvider;
     private readonly IColorRepository _colorRepository;
     private readonly IProfileManager _profileManager;
 
     public CreateClothCommandHandler(
         IClothRepository clothRepository,
-        // IAuthorizationFacade authorizationFacade,
         IUnitOfWork unitOfWork,
-        // IProfileRepository profileRepository,
         IFileStorageProvider fileStorageProvider,
         IColorRepository colorRepository, IProfileManager profileManager)
     {
         _clothRepository = clothRepository;
-        // _authorizationFacade = authorizationFacade;
         _unitOfWork = unitOfWork;
-        // _profileRepository = profileRepository;
         _fileStorageProvider = fileStorageProvider;
         _colorRepository = colorRepository;
         _profileManager = profileManager;
     }
-
-    // private async Task<ErrorOr<Profile>> GetProfileAsync(string email, Guid profileIdValue, CancellationToken cancellationToken)
-    // {
-    //     var profileId = ProfileId.Create(profileIdValue);
-    //
-    //     var profileError = await _authorizationFacade.GetAuthProfileByEmailAsync(email, cancellationToken);
-    //
-    //     if (profileError.IsError)
-    //     {
-    //         return profileError.Errors;
-    //     }
-    //
-    //     var profile = profileError.Value;
-    //
-    //     if (profile.Id == profileId)
-    //     {
-    //         return profile;
-    //     }
-    //
-    //     profile = await _profileRepository.GetByIdAsync(profileId, cancellationToken);
-    //
-    //     if (profile is null)
-    //     {
-    //         return Errors.User.ProfileDoesNotExists;
-    //     }
-    //
-    //     return profile;
-    // }
 
     public async Task<ErrorOr<Cloth>> Handle(
         CreateClothCommand request,
@@ -84,7 +47,7 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
 
         if (colorId is null)
         {
-            return Errors.Bucket.EmptyClothIds;
+            return Errors.Color.BadHexValue;
         }
         
         var cloth = Cloth.Create

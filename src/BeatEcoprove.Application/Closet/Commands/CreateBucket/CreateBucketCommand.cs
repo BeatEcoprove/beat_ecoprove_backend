@@ -5,6 +5,7 @@ namespace BeatEcoprove.Application.Closet.Commands.CreateBucket;
 
 public record CreateBucketCommand
 (
+    Guid AuthId,
     Guid ProfileId,
     string Name,
     List<Guid> ClothIds
