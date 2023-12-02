@@ -4,10 +4,8 @@ using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Contracts.Authentication.Common;
-using BeatEcoprove.Domain;
-using BeatEcoprove.Domain.AuthAggregator;
-using BeatEcoprove.Domain.ProfileAggregator.Entities;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -23,23 +21,20 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
     private readonly IProfileRepository _profileRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtProvider _jwtProvider;
-    private readonly IPasswordProvider _passwordProvider;
-    private readonly IFileStorageProvider _fileStorageProvider;
+    private readonly IAccountService _accountService;
 
     public SignInPersonalAccountCommandHandler(
         IAuthRepository authRepository,
         IProfileRepository profileRepository,
         IUnitOfWork unitOfWork,
-        IJwtProvider jwtProvider,
-        IPasswordProvider passwordProvider, 
-        IFileStorageProvider fileStorageProvider)
+        IJwtProvider jwtProvider, 
+        IAccountService accountService)
     {
         _unitOfWork = unitOfWork;
         _jwtProvider = jwtProvider;
+        _accountService = accountService;
         _authRepository = authRepository;
         _profileRepository = profileRepository;
-        _passwordProvider = passwordProvider;
-        _fileStorageProvider = fileStorageProvider;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(SignInPersonalAccountCommand request, CancellationToken cancellationToken)
@@ -68,38 +63,26 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         {
             return Errors.User.UserNameAlreadyExists;
         }
-
-        var passwordHash = Password.FromHash(_passwordProvider.HashPassword(password.Value));
-
-        // Create User
-        var account = Auth.Create(
-            email.Value,
-            passwordHash);
-
-        var avatarUrl = 
-            await _fileStorageProvider
-                .UploadFileAsync(
-                    Buckets.ProfileBucket, 
-                    account.Id.Value.ToString()!, 
-                    request.AvatarPicture, 
-                    cancellationToken);
         
         var personalProfile = Consumer.Create(
-                account.Id,
                 userName,
                 phone.Value,
-                avatarUrl,
                 request.BornDate,
                 gender
         );
 
-        await _authRepository.AddAsync(account, cancellationToken);
-        await _profileRepository.AddAsync(personalProfile, cancellationToken);
+        var account = await _accountService.CreateAccount(
+            email.Value,
+            password.Value,
+            personalProfile,
+            request.AvatarPicture,
+            cancellationToken
+        );
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var payload = new AuthTokenPayload(
-            personalProfile.Id,
+            account.Id,
             account.Email,
             personalProfile.UserName,
             personalProfile.AvatarUrl,

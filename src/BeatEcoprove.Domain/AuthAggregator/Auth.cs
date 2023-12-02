@@ -26,6 +26,7 @@ public class Auth : AggregateRoot<AuthId, Guid>
 
     public Email Email { get; set; } = null!;
     public Password Password { get; set; } = null!;
+    public ProfileId MainProfileId { get; private set; }
     public string Salt { get; set; } = null!;
     public bool IsEnabled { get; set; }
 
@@ -39,5 +40,10 @@ public class Auth : AggregateRoot<AuthId, Guid>
             password,
             "",
             false);
+    }
+    
+    public void SetMainProfileId(ProfileId profileId)
+    {
+        MainProfileId = profileId;
     }
 }

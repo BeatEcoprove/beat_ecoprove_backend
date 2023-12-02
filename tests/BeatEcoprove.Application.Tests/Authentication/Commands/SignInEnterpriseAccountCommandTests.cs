@@ -2,6 +2,7 @@
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
@@ -16,8 +17,7 @@ public class SignInEnterpriseAccountCommandTests
     private readonly IProfileRepository _profileRepository = Substitute.For<IProfileRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IJwtProvider _jwtProvider = Substitute.For<IJwtProvider>();
-    private readonly IPasswordProvider _passwordProvider = Substitute.For<IPasswordProvider>();
-    private readonly IFileStorageProvider _fileStorageProvider = Substitute.For<IFileStorageProvider>();
+    private readonly IAccountService _accountService = Substitute.For<IAccountService>();
 
     private readonly SignInEnterpriseAccountCommandHandler _sut;
 
@@ -28,8 +28,8 @@ public class SignInEnterpriseAccountCommandTests
             _profileRepository,
             _unitOfWork,
             _jwtProvider,
-            _passwordProvider,
-            _fileStorageProvider);
+            _accountService
+            );
     }
 
     private async Task<Stream> GetAvatarPicture()
@@ -99,7 +99,7 @@ public class SignInEnterpriseAccountCommandTests
     }
 
     [Fact]
-    public async Task Should_ReturnAuthTokens_WhenUserSignInPersonalAccount()
+    public async Task Should_ReturnAuthTokens_WhenUserSignEnterpriseAccount()
     {
 
         // Arrange

@@ -32,7 +32,7 @@ internal sealed class RefreshTokensQueryHandler : IQueryHandler<RefreshTokensQue
         }
 
         var payload = new AuthTokenPayload(
-            Guid.Parse(claims[UserClaims.UserId]),
+            Guid.Parse(claims[UserClaims.AccountId]),
             claims[UserClaims.Email],
             claims[UserClaims.UserName],
             claims[UserClaims.AvatarUrl],

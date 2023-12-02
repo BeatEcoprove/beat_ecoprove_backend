@@ -112,6 +112,7 @@ public static class DependencyInjection
         services.AddScoped<IValidationFieldService, ValidationService>();
         services.AddScoped<IAuthorizationFacade, AuthorizationFacade>();
         services.AddScoped<IProfileManager, ProfileManager>();
+        services.AddScoped<IAccountService, AccountService>();
 
         return services;
     }
