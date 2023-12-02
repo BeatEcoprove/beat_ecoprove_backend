@@ -96,7 +96,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(profile => profile.AuthId)
-            .HasColumnName("AuthId")
+            .HasColumnName("auth_id")
             .HasConversion(
                 authId => authId.Value,
                 value => AuthId.Create(value));
