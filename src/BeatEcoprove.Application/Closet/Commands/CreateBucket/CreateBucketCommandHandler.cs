@@ -1,6 +1,7 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -12,31 +13,30 @@ namespace BeatEcoprove.Application.Closet.Commands.CreateBucket;
 internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketCommand, ErrorOr<string>>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IProfileRepository _profileRepository;
     private readonly IBucketRepository _bucketRepository;
+    private readonly IProfileManager _profileManager;
 
     public CreateBucketCommandHandler(
         IUnitOfWork unitOfWork, 
-        IProfileRepository profileRepository, 
-        IBucketRepository bucketRepository)
+        IBucketRepository bucketRepository, 
+        IProfileManager profileManager)
     {
         _unitOfWork = unitOfWork;
-        _profileRepository = profileRepository;
         _bucketRepository = bucketRepository;
+        _profileManager = profileManager;
     }
 
     public async Task<ErrorOr<string>> Handle(CreateBucketCommand request, CancellationToken cancellationToken)
     {
-        var profileId = ProfileId.Create(request.ProfileId);
-        var convertToClothId = request.ClothIds.Select(ClothId.Create).ToList();
+        var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
 
-        var profile = await _profileRepository.GetByIdAsync(profileId, cancellationToken);
-
-        if (profile is null)
+        if (profile.IsError)
         {
-            return Errors.User.ProfileDoesNotExists;
+            return profile.Errors;
         }
         
+        var convertToClothId = request.ClothIds.Select(ClothId.Create).ToList();
+
         var bucket = Bucket.Create(
             request.Name,
             convertToClothId
@@ -47,7 +47,7 @@ internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketC
             return bucket.Errors;
         }
         
-        profile.AddBucket(bucket.Value);
+        profile.Value.AddBucket(bucket.Value);
         
         await _bucketRepository.AddAsync(bucket.Value, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

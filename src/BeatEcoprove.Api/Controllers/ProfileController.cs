@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BeatEcoprove.Api.Controllers;
 
 [Authorize]
-[Route("profile/{profileId:guid}")]
+[Route("profiles")]
 public class ProfileController : ApiController
 {
     private readonly ISender _sender;
@@ -29,7 +29,7 @@ public class ProfileController : ApiController
     }
 
     [HttpGet("closet")]
-    public async Task<ActionResult<ClosetResponse>> GetCloset(Guid profileId)
+    public async Task<ActionResult<ClosetResponse>> GetCloset([FromQuery] Guid profileId)
     {
         var userEmail = HttpContext.User.GetEmail();
 
@@ -47,7 +47,7 @@ public class ProfileController : ApiController
     }
     
     [HttpPost("closet/cloth")]
-    public async Task<ActionResult<ClothResponse>> AddClothToCloset(Guid profileId, [FromForm] CreateClothRequest request)
+    public async Task<ActionResult<ClothResponse>> AddClothToCloset([FromForm] CreateClothRequest request, [FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
 
@@ -72,11 +72,14 @@ public class ProfileController : ApiController
     }
     
     [HttpPost("closet/bucket")]
-    public async Task<ActionResult<string>> AddBucketToCloset(Guid profileId, CreateBucketRequest request)
+    public async Task<ActionResult<string>> AddBucketToCloset(CreateBucketRequest request, [FromQuery] Guid profileId)
     {
+        var authId = HttpContext.User.GetUserId();
+        
         var result = 
             await _sender.Send(new
             {
+                AuthId = authId,
                 ProfileId = profileId,
                 request.Name,
                 ClothIds = request.ClothIds

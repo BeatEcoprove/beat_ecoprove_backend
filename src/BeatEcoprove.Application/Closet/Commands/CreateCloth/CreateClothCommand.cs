@@ -7,7 +7,7 @@ namespace BeatEcoprove.Application.Closet.Commands.CreateCloth;
 public record CreateClothCommand
 (
     Guid AuthId,
-    Guid? ProfileId,
+    Guid ProfileId,
     string Name,
     string GarmentType,
     string GarmentSize,
