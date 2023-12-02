@@ -46,6 +46,11 @@ internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketC
         {
             return bucket.Errors;
         }
+
+        if (!await _bucketRepository.CanAddClothsAsync(bucket.Value.Id, convertToClothId, cancellationToken))
+        {
+            return Errors.Bucket.CanAddClothToBucket;
+        }
         
         profile.Value.AddBucket(bucket.Value);
         

@@ -5,5 +5,5 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
 public interface IBucketRepository : IRepository<Bucket, BucketId>
 { 
-    
+    Task<bool> CanAddClothsAsync(BucketId bucketId, List<ClothId> clothIds, CancellationToken cancellationToken);
 }

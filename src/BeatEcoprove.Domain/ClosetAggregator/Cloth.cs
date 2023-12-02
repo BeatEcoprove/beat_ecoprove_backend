@@ -1,6 +1,7 @@
 ﻿using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.Shared.Models;
+using BeatEcoprove.Domain.Shared.ValueObjects;
 
 namespace BeatEcoprove.Domain.ClosetAggregator;
 

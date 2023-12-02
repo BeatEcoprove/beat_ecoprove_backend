@@ -1,9 +1,10 @@
 ﻿using System.Text.RegularExpressions;
-using BeatEcoprove.Domain.Shared.Errors;
+using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
+using BeatEcoprove.Domain.Shared.ValueObjects;
 using ErrorOr;
 
-namespace BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+namespace BeatEcoprove.Domain.Shared.Entities;
 
 public class Color : Entity<ColorId>
 {
@@ -37,12 +38,12 @@ public class Color : Entity<ColorId>
     {
         if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(hex))
         {
-            return Errors.Color.MustProvideColor;
+            return Errors.Errors.Color.MustProvideColor;
         }
 
         if (!IsValidHex(hex))
         {
-            return Errors.Color.BadHexValue;
+            return Errors.Errors.Color.BadHexValue;
         }
 
         return new Color(
@@ -56,12 +57,12 @@ public class Color : Entity<ColorId>
     {
         if (string.IsNullOrEmpty(hex))
         {
-            return Errors.Color.MustProvideColor;
+            return Errors.Errors.Color.MustProvideColor;
         }
 
         if (!IsValidHex(hex))
         {
-            return Errors.Color.BadHexValue;
+            return Errors.Errors.Color.BadHexValue;
         }
 
         return new Color(
