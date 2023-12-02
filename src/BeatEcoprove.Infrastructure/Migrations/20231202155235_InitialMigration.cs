@@ -12,21 +12,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "auths",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    password = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    salt = table.Column<string>(type: "text", nullable: false),
-                    is_enabled = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_auths", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "buckets",
                 columns: table => new
                 {
@@ -49,39 +34,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_colors", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "profiles",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AuthId = table.Column<Guid>(type: "uuid", nullable: false),
-                    user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    phone = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    phone_country_code = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false),
-                    xp = table.Column<double>(type: "double precision", nullable: false),
-                    sustainability_points = table.Column<int>(type: "integer", nullable: false),
-                    eco_score = table.Column<int>(type: "integer", nullable: false),
-                    avatar_url = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    type = table.Column<int>(type: "integer", nullable: false),
-                    born_date = table.Column<DateOnly>(type: "date", nullable: true),
-                    gender = table.Column<int>(type: "integer", nullable: true),
-                    street = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    port = table.Column<int>(type: "integer", nullable: true),
-                    locality = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    postal_code = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    type_option = table.Column<int>(type: "integer", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_profiles", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_profiles_auths_AuthId",
-                        column: x => x.AuthId,
-                        principalTable: "auths",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -127,6 +79,55 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "auths",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    password = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    main_profile_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    salt = table.Column<string>(type: "text", nullable: false),
+                    is_enabled = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_auths", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "profiles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    auth_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    phone = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    phone_country_code = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false),
+                    xp = table.Column<double>(type: "double precision", nullable: false),
+                    sustainability_points = table.Column<int>(type: "integer", nullable: false),
+                    eco_score = table.Column<int>(type: "integer", nullable: false),
+                    avatar_url = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    type = table.Column<int>(type: "integer", nullable: false),
+                    born_date = table.Column<DateOnly>(type: "date", nullable: true),
+                    gender = table.Column<int>(type: "integer", nullable: true),
+                    street = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    port = table.Column<int>(type: "integer", nullable: true),
+                    locality = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    postal_code = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    type_option = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_profiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_profiles_auths_auth_id",
+                        column: x => x.auth_id,
+                        principalTable: "auths",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "bucket_entries",
                 columns: table => new
                 {
@@ -165,19 +166,36 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_auths_main_profile_id",
+                table: "auths",
+                column: "main_profile_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_cloths_color",
                 table: "cloths",
                 column: "color");
 
             migrationBuilder.CreateIndex(
-                name: "IX_profiles_AuthId",
+                name: "IX_profiles_auth_id",
                 table: "profiles",
-                column: "AuthId");
+                column: "auth_id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_auths_profiles_main_profile_id",
+                table: "auths",
+                column: "main_profile_id",
+                principalTable: "profiles",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_auths_profiles_main_profile_id",
+                table: "auths");
+
             migrationBuilder.DropTable(
                 name: "bucket_cloths");
 
@@ -194,10 +212,10 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 name: "buckets");
 
             migrationBuilder.DropTable(
-                name: "profiles");
+                name: "colors");
 
             migrationBuilder.DropTable(
-                name: "colors");
+                name: "profiles");
 
             migrationBuilder.DropTable(
                 name: "auths");

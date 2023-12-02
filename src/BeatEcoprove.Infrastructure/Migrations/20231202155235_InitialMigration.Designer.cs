@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     [DbContext(typeof(BeatEcoproveDbContext))]
-    [Migration("20231121135344_InitialMigration")]
+    [Migration("20231202155235_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -40,6 +40,10 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_enabled");
 
+                    b.Property<Guid?>("MainProfileId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("main_profile_id");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -52,6 +56,9 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnName("salt");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MainProfileId")
+                        .IsUnique();
 
                     b.ToTable("auths", (string)null);
                 });
@@ -151,7 +158,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                     b.Property<Guid>("AuthId")
                         .HasColumnType("uuid")
-                        .HasColumnName("AuthId");
+                        .HasColumnName("auth_id");
 
                     b.Property<string>("AvatarUrl")
                         .IsRequired()
@@ -216,6 +223,13 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnName("type_option");
 
                     b.HasDiscriminator().HasValue(1);
+                });
+
+            modelBuilder.Entity("BeatEcoprove.Domain.AuthAggregator.Auth", b =>
+                {
+                    b.HasOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", null)
+                        .WithOne()
+                        .HasForeignKey("BeatEcoprove.Domain.AuthAggregator.Auth", "MainProfileId");
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Bucket", b =>
