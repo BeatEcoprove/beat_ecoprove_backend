@@ -5,7 +5,11 @@ using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Domain.Shared.Errors;
+using BeatEcoprove.Infrastructure.Extensions;
+using ErrorOr;
 
 namespace BeatEcoprove.Infrastructure.Services;
 
@@ -62,4 +66,13 @@ public class AccountService : IAccountService
         return auth;
     }
 
+    public ErrorOr<Gender> GetGender(string gender)
+    {
+        if (gender.CanConvertToEnum(out Gender result))
+        {
+            return result;
+        }
+
+        return Errors.User.InvalidUserGender;
+    }
 }

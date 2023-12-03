@@ -10,8 +10,8 @@ public record CreateClothCommand
     Guid AuthId,
     Guid ProfileId,
     string Name,
-    string GarmentType,
-    string GarmentSize,
+    string ClothType,
+    string ClothSize,
     string Brand,
     string Color,
     Stream ClothAvatar

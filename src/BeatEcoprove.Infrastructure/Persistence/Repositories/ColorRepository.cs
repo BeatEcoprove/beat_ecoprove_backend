@@ -12,6 +12,13 @@ public class ColorRepository : Repository<Color, ColorId>, IColorRepository
     {
     }
 
+    public async Task<List<Color>> GetAllColors(CancellationToken cancellationToken = default)
+    {
+        return await DbContext
+            .Set<Color>()
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<ColorId?> GetByHexValueAsync(string hexValue, CancellationToken cancellationToken = default)
     {
         return DbContext

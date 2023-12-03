@@ -1,4 +1,5 @@
-﻿using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+﻿using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
+using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.Shared.ValueObjects;
@@ -12,8 +13,8 @@ public class Cloth : AggregateRoot<ClothId, Guid>
     private Cloth(
         ClothId id,
         string name,
-        GarmentType type,
-        GarmentSize size,
+        ClothType type,
+        ClothSize size,
         string brand,
         ColorId color,
         int ecoScore)
@@ -28,8 +29,8 @@ public class Cloth : AggregateRoot<ClothId, Guid>
     }
 
     public string Name { get; private set; } = null!;
-    public GarmentType Type { get; private set; }
-    public GarmentSize Size { get; private set; }
+    public ClothType Type { get; private set; }
+    public ClothSize Size { get; private set; }
     public string Brand { get; private set; } = null!;
     public ColorId Color { get; private set; } = null!;
     public int EcoScore { get; private set; }
@@ -37,8 +38,8 @@ public class Cloth : AggregateRoot<ClothId, Guid>
 
     public static Cloth Create(
         string name,
-        GarmentType type,
-        GarmentSize size,
+        ClothType type,
+        ClothSize size,
         string brand,
         ColorId color)
     {

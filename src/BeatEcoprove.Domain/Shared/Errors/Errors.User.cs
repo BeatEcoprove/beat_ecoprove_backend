@@ -29,5 +29,9 @@ public static partial class Errors
         public static Error BadCredentials => Error.Validation(
             "User.BadCredentials",
             "O email ou a palavra-chave estão erradas.");
+        
+        public static Error InvalidUserGender => Error.Conflict(
+            "User.InvalidUserGender",
+            "O género do utilizador não é aceite.");
     }
 }
