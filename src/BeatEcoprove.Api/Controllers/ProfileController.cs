@@ -72,7 +72,7 @@ public class ProfileController : ApiController
     }
     
     [HttpPost("closet/bucket")]
-    public async Task<ActionResult<string>> AddBucketToCloset(CreateBucketRequest request, [FromQuery] Guid profileId)
+    public async Task<ActionResult<BucketResponse>> AddBucketToCloset(CreateBucketRequest request, [FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
         
@@ -88,8 +88,8 @@ public class ProfileController : ApiController
         return result.Match(
             response => Created(
                 "",
-                _mapper.Map<string>(response)),
-            Problem<string>
+                _mapper.Map<BucketResponse>(response)),
+            Problem<BucketResponse>
         );
     }
 }

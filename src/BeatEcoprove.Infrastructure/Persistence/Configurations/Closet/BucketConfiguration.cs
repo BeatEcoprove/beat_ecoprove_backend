@@ -31,7 +31,9 @@ public class BucketConfiguration : IEntityTypeConfiguration<Bucket>
             clothEntries.ToTable("bucket_cloths");
             clothEntries.HasKey(b => new { b.BucketId, b.ClothId });
 
-            clothEntries.WithOwner().HasForeignKey(b => b.BucketId);
+            clothEntries
+                .WithOwner()
+                .HasForeignKey(b => b.BucketId);
             
             clothEntries.Property(b => b.BucketId)
                 .HasColumnName("bucket_id")
@@ -44,6 +46,10 @@ public class BucketConfiguration : IEntityTypeConfiguration<Bucket>
                 .HasConversion(
                     id => id.Value,
                     value => ClothId.Create(value));
+            
+            clothEntries.HasOne<Cloth>()
+                .WithMany()
+                .HasForeignKey(b => b.ClothId);
         });
     }
 }

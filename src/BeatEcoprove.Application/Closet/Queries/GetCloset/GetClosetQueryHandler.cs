@@ -1,4 +1,5 @@
-﻿using BeatEcoprove.Application.Shared;
+﻿using BeatEcoprove.Application.Closet.Common;
+using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
@@ -6,6 +7,7 @@ using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Extensions;
 using ErrorOr;
+using Mapster;
 
 namespace BeatEcoprove.Application.Closet.Queries.GetCloset;
 
@@ -44,7 +46,9 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         var clothList = await _profileRepository.GetClosetCloth(profile.Value.Id, cancellationToken);
         var bucketList = await _profileRepository.GetBucketCloth(profile.Value.Id, cancellationToken);
 
-        return new MixedClothBucketList(clothList, bucketList);
+        return new MixedClothBucketList(
+            clothList.Adapt<List<ClothResult>>(), 
+            bucketList);
     }
 
     private static bool IsMainProfile(ProfileId currentProfile, ErrorOr<Profile> profile)

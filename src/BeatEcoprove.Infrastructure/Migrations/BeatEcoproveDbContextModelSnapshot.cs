@@ -121,29 +121,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.ToTable("cloths", (string)null);
                 });
 
-            modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.ValueObjects.Color", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Hex")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("character varying(8)")
-                        .HasColumnName("hex");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("colors", (string)null);
-                });
-
             modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", b =>
                 {
                     b.Property<Guid>("Id")
@@ -193,6 +170,29 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("BeatEcoprove.Domain.Shared.Entities.Color", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Hex")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("character varying(8)")
+                        .HasColumnName("hex");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("colors", (string)null);
+                });
+
             modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Consumer", b =>
                 {
                     b.HasBaseType("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile");
@@ -233,10 +233,18 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                             b1.HasKey("BucketId", "ClothId");
 
+                            b1.HasIndex("ClothId");
+
                             b1.ToTable("bucket_cloths", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("BucketId");
+
+                            b1.HasOne("BeatEcoprove.Domain.ClosetAggregator.Cloth", null)
+                                .WithMany()
+                                .HasForeignKey("ClothId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
                         });
 
                     b.Navigation("BucketClothEntries");
@@ -244,7 +252,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Cloth", b =>
                 {
-                    b.HasOne("BeatEcoprove.Domain.ClosetAggregator.ValueObjects.Color", null)
+                    b.HasOne("BeatEcoprove.Domain.Shared.Entities.Color", null)
                         .WithMany()
                         .HasForeignKey("Color")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -297,7 +305,15 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                             b1.HasKey("ProfileId", "ClothId");
 
+                            b1.HasIndex("ClothId");
+
                             b1.ToTable("cloth_entries", (string)null);
+
+                            b1.HasOne("BeatEcoprove.Domain.ClosetAggregator.Cloth", null)
+                                .WithMany()
+                                .HasForeignKey("ClothId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
                             b1.WithOwner()
                                 .HasForeignKey("ProfileId");

@@ -9,6 +9,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
         <PackageReference Include="MediatR" Version="12.1.1" />
+        <PackageReference Include="Mapster" Version="7.4.0-pre06" />
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.0-preview3" />
     </ItemGroup>
 

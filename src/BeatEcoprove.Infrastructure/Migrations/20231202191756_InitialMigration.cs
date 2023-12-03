@@ -86,24 +86,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "bucket_cloths",
-                columns: table => new
-                {
-                    bucket_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    cloth_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_bucket_cloths", x => new { x.bucket_id, x.cloth_id });
-                    table.ForeignKey(
-                        name: "FK_bucket_cloths_buckets_bucket_id",
-                        column: x => x.bucket_id,
-                        principalTable: "buckets",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "cloths",
                 columns: table => new
                 {
@@ -147,6 +129,30 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "bucket_cloths",
+                columns: table => new
+                {
+                    bucket_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    cloth_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_bucket_cloths", x => new { x.bucket_id, x.cloth_id });
+                    table.ForeignKey(
+                        name: "FK_bucket_cloths_buckets_bucket_id",
+                        column: x => x.bucket_id,
+                        principalTable: "buckets",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_bucket_cloths_cloths_cloth_id",
+                        column: x => x.cloth_id,
+                        principalTable: "cloths",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "cloth_entries",
                 columns: table => new
                 {
@@ -158,12 +164,28 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_cloth_entries", x => new { x.profile_id, x.cloth_id });
                     table.ForeignKey(
+                        name: "FK_cloth_entries_cloths_cloth_id",
+                        column: x => x.cloth_id,
+                        principalTable: "cloths",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_cloth_entries_profiles_profile_id",
                         column: x => x.profile_id,
                         principalTable: "profiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_bucket_cloths_cloth_id",
+                table: "bucket_cloths",
+                column: "cloth_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_cloth_entries_cloth_id",
+                table: "cloth_entries",
+                column: "cloth_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_cloths_color",
@@ -189,10 +211,10 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 name: "cloth_entries");
 
             migrationBuilder.DropTable(
-                name: "cloths");
+                name: "buckets");
 
             migrationBuilder.DropTable(
-                name: "buckets");
+                name: "cloths");
 
             migrationBuilder.DropTable(
                 name: "profiles");
