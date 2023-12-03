@@ -56,8 +56,8 @@ public class ProfileController : ApiController
                 authId,
                 profileId,
                 request.Name,
-                request.GarmentSize,
-                request.GarmentType,
+                request.ClothType,
+                request.ClothSize,
                 request.Brand,
                 request.Color,
                 request.ClothAvatar.OpenReadStream()));

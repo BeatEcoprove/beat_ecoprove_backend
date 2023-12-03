@@ -44,7 +44,7 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
         var password = Password.Create(request.Password);
         var postalCode = PostalCode.Create(request.PostalCode);
 
-        var result = ValidateValues(email, phone, password, postalCode);
+        var result = ValidateConstraints(email, phone, password, postalCode);
 
         if (result.IsError)
         {
@@ -105,7 +105,7 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
             refreshToken);
     }
 
-    private static ErrorOr<Email> ValidateValues(ErrorOr<Email> email, ErrorOr<Phone> phone, ErrorOr<Password> password, ErrorOr<PostalCode> postalCode)
+    private static ErrorOr<Email> ValidateConstraints(ErrorOr<Email> email, ErrorOr<Phone> phone, ErrorOr<Password> password, ErrorOr<PostalCode> postalCode)
     {
         return email
             .AddValidate(phone)

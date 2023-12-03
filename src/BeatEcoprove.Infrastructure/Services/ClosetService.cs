@@ -5,8 +5,11 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
+using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.Shared.Errors;
+using BeatEcoprove.Infrastructure.Extensions;
 using ErrorOr;
 using Mapster;
 
@@ -69,5 +72,25 @@ public class ClosetService : IClosetService
             bucket,
             cloths.Adapt<List<ClothResult>>()
             );
+    }
+    
+    public ErrorOr<ClothType> GetClothType(string type)
+    {
+        if (type.CanConvertToEnum(out ClothType result))
+        {
+            return result;
+        }
+
+        return Errors.Cloth.InvalidClothType;
+    }
+    
+    public ErrorOr<ClothSize> GetClothSize(string size)
+    {
+        if (size.CanConvertToEnum(out ClothSize result))
+        {
+            return result;
+        }
+
+        return Errors.Cloth.InvalidClothSize;
     }
 }

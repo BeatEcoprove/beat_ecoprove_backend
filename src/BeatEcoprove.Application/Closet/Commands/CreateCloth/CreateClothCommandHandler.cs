@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Extensions;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
@@ -8,6 +9,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.Shared.Errors;
+using BeatEcoprove.Domain.Shared.Extensions;
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Closet.Commands.CreateCloth;
@@ -48,13 +50,23 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
         {
             return Errors.Color.BadHexValue;
         }
+
+        var clothType = _closetService.GetClothType(request.ClothType);
+        var clothSize = _closetService.GetClothSize(request.ClothSize);
+
+        var shouldBeValidTypes = clothType.AddValidate(clothSize);
+        
+        if (shouldBeValidTypes.IsError)
+        {
+            return shouldBeValidTypes.Errors;
+        }
         
         var cloth = Cloth.Create
         (
-            request.Name,
-            GarmentType.Male,
-            GarmentSize.S,
-            request.Brand,
+            request.Name.Capitalize(),
+            clothType.Value,
+            clothSize.Value,
+            request.Brand.Capitalize(),
             colorId
         );
 

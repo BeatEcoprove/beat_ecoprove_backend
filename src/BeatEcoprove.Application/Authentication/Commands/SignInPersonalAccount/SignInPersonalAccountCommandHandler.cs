@@ -43,13 +43,13 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         var password = Password.Create(request.Password);
         var phone = Phone.Create(request.CountryCode, request.Phone);
         var userName = UserName.Create(request.UserName);
-        var gender = Gender.Female;
+        var gender = _accountService.GetGender(request.Gender);
 
-        var result = ValidateValues(email, password, phone);
+        var shouldBeValid = ValidateConstraints(email, password, phone, gender);
 
-        if (result.IsError)
+        if (shouldBeValid.IsError)
         {
-            return result.Errors;
+            return shouldBeValid.Errors;
         }
 
         // Check if user exists
@@ -68,7 +68,7 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
                 userName,
                 phone.Value,
                 request.BornDate,
-                gender
+                gender.Value
         );
 
         var account = await _accountService.CreateAccount(
@@ -102,13 +102,15 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
             refreshToken);
     }
 
-    private static ErrorOr<Email> ValidateValues(
-        ErrorOr<Email> email,
-        ErrorOr<Password> password,
-        ErrorOr<Phone> phone)
+    private ErrorOr<Email> ValidateConstraints(
+        ErrorOr<Email> email, 
+        ErrorOr<Password> password, 
+        ErrorOr<Phone> phone, 
+        ErrorOr<Gender> gender)
     {
         return email
             .AddValidate(password)
-            .AddValidate(phone);
+            .AddValidate(phone)
+            .AddValidate(gender);
     }
 }

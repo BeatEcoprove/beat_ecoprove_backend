@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.Shared.ValueObjects;
 using ErrorOr;
@@ -8,7 +7,7 @@ namespace BeatEcoprove.Domain.Shared.Entities;
 
 public class Color : Entity<ColorId>
 {
-    private const string HexRegex = "^#(?:[0-9a-fA-F]{3}){1,2}$";
+    private const string HexRegex = "^FF(?:[0-9a-fA-F]{3}){1,2}$";
 
     private Color() { }
 
