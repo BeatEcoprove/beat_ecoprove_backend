@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
+using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
@@ -71,6 +72,10 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
                 .HasConversion(
                     clothId => clothId.Value,
                     value => ClothId.Create(value));
+            
+            clothEntry.HasOne<Cloth>()
+                .WithMany()
+                .HasForeignKey(b => b.ClothId);
 
             clothEntry.Property(c => c.IsBlocked)
                 .HasColumnName("is_blocked")

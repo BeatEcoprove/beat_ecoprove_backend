@@ -1,32 +1,32 @@
-﻿using BeatEcoprove.Application.Shared;
+﻿using BeatEcoprove.Application.Closet.Common;
+using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Closet.Commands.CreateBucket;
 
-internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketCommand, ErrorOr<string>>
+internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketCommand, ErrorOr<BucketResult>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IBucketRepository _bucketRepository;
     private readonly IProfileManager _profileManager;
+    private readonly IBucketRepository _bucketRepository;
+    private readonly IClosetService _closetService;
 
     public CreateBucketCommandHandler(
-        IUnitOfWork unitOfWork, 
-        IBucketRepository bucketRepository, 
-        IProfileManager profileManager)
+        IProfileManager profileManager,
+        IBucketRepository bucketRepository,
+        IClosetService closetService)
     {
-        _unitOfWork = unitOfWork;
-        _bucketRepository = bucketRepository;
         _profileManager = profileManager;
+        _bucketRepository = bucketRepository;
+        _closetService = closetService;
     }
 
-    public async Task<ErrorOr<string>> Handle(CreateBucketCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<BucketResult>> Handle(CreateBucketCommand request, CancellationToken cancellationToken)
     {
         var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
 
@@ -36,6 +36,11 @@ internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketC
         }
         
         var convertToClothId = request.ClothIds.Select(ClothId.Create).ToList();
+        
+        if (!await _bucketRepository.CanAddClothsAsync(null, cancellationToken))
+        {
+            return Errors.Bucket.CanAddClothToBucket;
+        }
 
         var bucket = Bucket.Create(
             request.Name,
@@ -47,16 +52,8 @@ internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketC
             return bucket.Errors;
         }
 
-        if (!await _bucketRepository.CanAddClothsAsync(bucket.Value.Id, convertToClothId, cancellationToken))
-        {
-            return Errors.Bucket.CanAddClothToBucket;
-        }
+        var bucketResult = await _closetService.AddBucketToCloset(profile.Value, bucket.Value, cancellationToken);
         
-        profile.Value.AddBucket(bucket.Value);
-        
-        await _bucketRepository.AddAsync(bucket.Value, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-        return bucket.Value.Name;
+        return bucketResult;
     }
 }

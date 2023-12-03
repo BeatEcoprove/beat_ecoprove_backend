@@ -113,6 +113,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthorizationFacade, AuthorizationFacade>();
         services.AddScoped<IProfileManager, ProfileManager>();
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IClosetService, ClosetService>();
 
         return services;
     }
