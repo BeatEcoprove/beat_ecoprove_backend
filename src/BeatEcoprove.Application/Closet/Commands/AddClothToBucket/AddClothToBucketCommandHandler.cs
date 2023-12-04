@@ -1,69 +1,67 @@
 ﻿using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Extensions;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
-using Mapster;
 
-namespace BeatEcoprove.Application.Closet.Commands.CreateBucket;
+namespace BeatEcoprove.Application.Closet.Commands.AddClothToBucket;
 
-internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketCommand, ErrorOr<BucketResult>>
+internal sealed class AddClothToBucketCommandHandler : ICommandHandler<AddClothToBucketCommand, ErrorOr<BucketResult>>
 {
     private readonly IProfileManager _profileManager;
-    private readonly IBucketRepository _bucketRepository;
     private readonly IClosetService _closetService;
+    private readonly IBucketRepository _bucketRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateBucketCommandHandler(
-        IProfileManager profileManager,
-        IBucketRepository bucketRepository,
+    public AddClothToBucketCommandHandler(
+        IProfileManager profileManager, 
         IClosetService closetService, 
+        IBucketRepository bucketRepository, 
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
-        _bucketRepository = bucketRepository;
         _closetService = closetService;
+        _bucketRepository = bucketRepository;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ErrorOr<BucketResult>> Handle(CreateBucketCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<BucketResult>> Handle(AddClothToBucketCommand request, CancellationToken cancellationToken)
     {
+        BucketId bucketId = BucketId.Create(request.BucketId);
+        
         var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
 
         if (profile.IsError)
         {
             return profile.Errors;
         }
-        
-        var bucket = Bucket.Create(
-            request.Name.Capitalize()
-        );
 
-        if (bucket.IsError)
+        var bucket = await _bucketRepository.GetByIdAsync(bucketId, cancellationToken);
+
+        if (bucket is null)
         {
-            return bucket.Errors;
+            return Errors.Bucket.BucketDoesNotExists;
         }
 
-        var shouldAddBucketToCloset = await _closetService.AddBucketToCloset(
+        var shouldAddClothToBucket = await _closetService.AddClothToBucket(
             profile.Value, 
-            bucket.Value, 
-            ToClothIdList(request.ClothIds), 
+            bucket, 
+            ToClothIdList(request.ClothToAdd), 
             cancellationToken);
-        
-        if (shouldAddBucketToCloset.IsError)
+
+        if (shouldAddClothToBucket.IsError)
         {
-            return shouldAddBucketToCloset.Errors;
+            return shouldAddClothToBucket.Errors;
         }
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return await _closetService.GetBucketResult(bucket.Value, cancellationToken);
+        return await _closetService.GetBucketResult(bucket, cancellationToken);
     }
-
+    
     private static List<ClothId> ToClothIdList(List<Guid> clothIds)
     {
         return clothIds.Select(ClothId.Create).ToList();

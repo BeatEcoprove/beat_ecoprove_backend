@@ -2,6 +2,7 @@
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
+using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
@@ -63,5 +64,16 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             select bucket;
 
         return await getAllBuckets.ToListAsync(cancellationToken);
+    }
+
+    public Task<bool> CanProfileAccessBucket(ProfileId profileId, BucketId bucketId, CancellationToken cancellationToken = default)
+    {
+        var canAccessBucket =
+            from profile in DbContext.Profiles
+            from bucketEntry in profile.BucketEntries
+            where bucketEntry.BucketId == bucketId && profile.Id == profileId
+            select bucketEntry;
+        
+        return canAccessBucket.AnyAsync(cancellationToken);
     }
 }

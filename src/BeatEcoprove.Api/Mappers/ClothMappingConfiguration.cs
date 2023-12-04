@@ -38,6 +38,7 @@ public class ClothMappingConfiguration : IRegister
     private BucketResponse ToBucketResponse(Bucket bucket, List<ClothResult> cloths)
     {
        return new BucketResponse(
+           bucket.Id,
             bucket.Name,
             ConvertCloth(cloths, bucket));
     }

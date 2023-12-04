@@ -29,5 +29,13 @@ public static partial class Errors
         public static Error InvalidBucketName => Error.Validation(
             "Bucket.InvalidBucketName",
             "Por favor, escolha um nome válido para o cesto.");
+        
+        public static Error BucketDoesNotExists => Error.Validation(
+            "Bucket.BucketDoesNotExists",
+            "Falha ao encontrar o cesto.");
+        
+        public static Error CannotAccessBucket => Error.Validation(
+            "Bucket.CannotAccessBucket",
+            "Este ceste não lhe pertence.");
     }
 }

@@ -10,6 +10,7 @@ using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Infrastructure.Extensions;
 using ErrorOr;
+using Mapster;
 
 namespace BeatEcoprove.Infrastructure.Services;
 
@@ -18,15 +19,18 @@ public class ClosetService : IClosetService
     private readonly IFileStorageProvider _fileStorageProvider;
     private readonly IClothRepository _clothRepository;
     private readonly IBucketRepository _bucketRepository;
+    private readonly IProfileRepository _profileRepository;
 
     public ClosetService(
         IFileStorageProvider fileStorageProvider, 
         IClothRepository clothRepository, 
-        IBucketRepository bucketRepository)
+        IBucketRepository bucketRepository, 
+        IProfileRepository profileRepository)
     {
         _fileStorageProvider = fileStorageProvider;
         _clothRepository = clothRepository;
         _bucketRepository = bucketRepository;
+        _profileRepository = profileRepository;
     }
 
     public async Task<ClothResult> AddClothToCloset(
@@ -92,7 +96,44 @@ public class ClosetService : IClosetService
 
         return bucket;
     }
-    
+
+    public async Task<ErrorOr<Bucket>> AddClothToBucket(Profile profile, Bucket bucket, List<ClothId> cloths, CancellationToken cancellationToken = default)
+    {
+        if (!await _clothRepository.ClothExists(cloths, cancellationToken))
+        {
+            return Errors.Bucket.InvalidClothToAdd;
+        }
+        
+        if (!await _profileRepository.CanProfileAccessBucket(profile.Id, bucket.Id, cancellationToken))
+        {
+            return Errors.Bucket.CannotAccessBucket;
+        }
+        
+        if (!await _bucketRepository.CanAddClothsAsync(cloths, cancellationToken))
+        {
+            return Errors.Bucket.CanAddClothToBucket;
+        }
+        
+        var shouldAddAllCloth = bucket.AddCloths(cloths);
+
+        if (shouldAddAllCloth.IsError)
+        {
+            return shouldAddAllCloth.Errors;
+        }
+        
+        return bucket;
+    }
+
+    public async Task<BucketResult> GetBucketResult(Bucket bucket, CancellationToken cancellationToken = default)
+    {
+        var cloths = await
+            _bucketRepository.GetClothsAsync(bucket.Id, cancellationToken);
+        
+        return new BucketResult(
+            bucket,
+            cloths.Adapt<List<ClothResult>>());
+    }
+
     public ErrorOr<ClothType> GetClothType(string type)
     {
         if (type.CanConvertToEnum(out ClothType result))
