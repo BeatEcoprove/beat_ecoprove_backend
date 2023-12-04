@@ -121,7 +121,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
             .HasMaxLength(256)
             .HasConversion(
                 userName => userName.Value,
-                value => UserName.Create(value));
+                value => UserName.Create(value).Value);
 
         builder.OwnsOne(u => u.Phone, p =>
         {

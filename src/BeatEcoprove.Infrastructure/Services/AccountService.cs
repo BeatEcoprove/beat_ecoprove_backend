@@ -32,13 +32,23 @@ public class AccountService : IAccountService
         _passwordProvider = passwordProvider;
     }
 
-    public async Task<Auth> CreateAccount(
+    public async Task<ErrorOr<Auth>> CreateAccount(
         Email email, 
         Password password, 
         Profile profile, 
         Stream avatarStream, 
         CancellationToken cancellationToken = default)
     {
+        if (await _authRepository.ExistsUserByEmailAsync(email, cancellationToken))
+        {
+            return Errors.User.EmailAlreadyExists;
+        }
+
+        if (await _profileRepository.ExistsUserByUserNameAsync(profile.UserName, cancellationToken))
+        {
+            return Errors.User.UserNameAlreadyExists;
+        }
+        
         var passwordHash = Password.FromHash(_passwordProvider.HashPassword(password.Value));
         
         var auth = Auth.Create

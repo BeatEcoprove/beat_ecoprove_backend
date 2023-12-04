@@ -6,6 +6,10 @@ public partial class Errors
 {
     public class Cloth
     {
+        public static Error InvalidClothName => Error.Validation(
+            "Cloth.InvalidClothName",
+            "Por favor, intreduz um nome válido.");
+        
         public static Error InvalidClothType => Error.Validation(
             "Cloth.InvalidClothType",
             "Por favor, intreduz um tipo de peça válido.");

@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Extensions;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
@@ -38,13 +39,13 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(SignInEnterpriseAccountCommand request, CancellationToken cancellationToken = default)
     {
-        var userName = UserName.Create(request.UserName);
+        var userName = UserName.Create(request.UserName.Capitalize());
         var email = Email.Create(request.Email);
         var phone = Phone.Create(request.CountryCode, request.Phone);
         var password = Password.Create(request.Password);
         var postalCode = PostalCode.Create(request.PostalCode);
 
-        var result = ValidateConstraints(email, phone, password, postalCode);
+        var result = ValidateConstraints(email, phone, password, postalCode, userName);
 
         if (result.IsError)
         {
@@ -57,21 +58,9 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
         {
             return address.Errors;
         }
-
-        // Check if user exists
-        if (await _authRepository.ExistsUserByEmailAsync(email.Value, cancellationToken))
-        {
-            return Errors.User.EmailAlreadyExists;
-        }
-
-        // Check if user ename already exists
-        if (await _profileRepository.ExistsUserByUserNameAsync(userName, cancellationToken))
-        {
-            return Errors.User.UserNameAlreadyExists;
-        }
-
+        
         var enterpriseAccount = Organization.Create(
-            userName,
+            userName.Value,
             phone.Value,
             address.Value
         );
@@ -82,12 +71,17 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
             enterpriseAccount, 
             request.AvatarPicture, 
             cancellationToken);
+
+        if (account.IsError)
+        {
+            return account.Errors;
+        }
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var payload = new AuthTokenPayload(
-            account.Id,
-            account.Email,
+            account.Value.Id,
+            account.Value.Email,
             enterpriseAccount.UserName,
             enterpriseAccount.AvatarUrl,
             10,
@@ -105,11 +99,13 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
             refreshToken);
     }
 
-    private static ErrorOr<Email> ValidateConstraints(ErrorOr<Email> email, ErrorOr<Phone> phone, ErrorOr<Password> password, ErrorOr<PostalCode> postalCode)
+    private static ErrorOr<Email> ValidateConstraints(ErrorOr<Email> email, ErrorOr<Phone> phone,
+        ErrorOr<Password> password, ErrorOr<PostalCode> postalCode, ErrorOr<UserName> userName)
     {
         return email
             .AddValidate(phone)
             .AddValidate(password)
-            .AddValidate(postalCode);
+            .AddValidate(postalCode)
+            .AddValidate(userName);
     }
 }

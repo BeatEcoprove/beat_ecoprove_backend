@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     [DbContext(typeof(BeatEcoproveDbContext))]
-    [Migration("20231202191756_InitialMigration")]
+    [Migration("20231204003845_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />

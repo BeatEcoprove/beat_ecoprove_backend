@@ -70,9 +70,14 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
             colorId
         );
 
+        if (cloth.IsError)
+        {
+            return cloth.Errors;
+        }
+
         var clothResult = await _closetService.AddClothToCloset(
             profile.Value, 
-            cloth, 
+            cloth.Value, 
             request.Color, 
             request.ClothAvatar, 
             cancellationToken);
