@@ -3,6 +3,7 @@ using BeatEcoprove.Application.Closet.Commands.AddClothToBucket;
 using BeatEcoprove.Application.Closet.Commands.CreateBucket;
 using BeatEcoprove.Application.Closet.Commands.CreateCloth;
 using BeatEcoprove.Application.Closet.Commands.RemoveClothFromBucket;
+using BeatEcoprove.Application.Closet.Queries.GetBucket;
 using BeatEcoprove.Application.Closet.Queries.GetCloset;
 using BeatEcoprove.Application.Closet.Queries.GetCloth;
 using BeatEcoprove.Contracts.Closet;
@@ -107,13 +108,35 @@ public class ClosetController : ApiController
                 AuthId = authId,
                 ProfileId = profileId,
                 request.Name,
-                ClothIds = request.ClothIds
+                request.ClothIds
             }.Adapt<CreateBucketCommand>());
 
         return result.Match(
             response => Created(
                 "",
                 _mapper.Map<BucketResponse>(response)),
+            Problem<BucketResponse>
+        );
+    }
+    
+    [HttpGet("closet/bucket/{bucketId:guid}")]
+    public async Task<ActionResult<BucketResponse>> GetBucket([FromQuery] Guid profileId, Guid bucketId)
+    {
+        var authId = HttpContext.User.GetUserId();
+
+        var result = 
+            await _sender.Send(new
+            {
+                AuthId = authId,
+                ProfileId = profileId,
+                BucketId = bucketId
+            }.Adapt<GetBucketQuery>());
+
+        return result.Match(
+            response => Created(
+                "",
+                _mapper.Map<BucketResponse>(response)
+            ),
             Problem<BucketResponse>
         );
     }
