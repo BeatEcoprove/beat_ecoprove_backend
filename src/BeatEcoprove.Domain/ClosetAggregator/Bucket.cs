@@ -72,4 +72,23 @@ public class Bucket : AggregateRoot<BucketId, Guid>
                     clothId
                 ));
     }
+
+    public ErrorOr<bool> RemoveCloths(List<ClothId> clothToRemove)
+    {
+        if (HasZeroCloth(clothToRemove))
+        {
+            return Errors.Bucket.EmptyClothIds;
+        }
+
+        if (!CheckIfClothAreDiferent(clothToRemove))
+        {
+            return Errors.Bucket.ClothAreNotUnique;
+        }
+        
+        _bucketClothEntries
+            .RemoveAll(entry => 
+                clothToRemove.Contains(entry.ClothId));
+
+        return true;
+    }
 }

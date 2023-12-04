@@ -8,7 +8,7 @@ public static partial class Errors
     {
         public static Error InvalidClothToAdd => Error.Validation(
             "Bucket.InvalidClothToAdd",
-            "Por favor, adicione roupa que esteja no seu armário.");
+            "Roupa não encontrada.");
         
         public static Error EmptyClothIds => Error.Validation(
             "Bucket.EmptyClothIds",
@@ -21,6 +21,10 @@ public static partial class Errors
         public static Error CanAddClothToBucket => Error.Validation(
             "Bucket.CanAddClothToBucket",
             "Por favor, essa roupa já está num cesto.");
+        
+        public static Error CannotRemoveCloth => Error.Validation(
+            "Bucket.CannotRemoveCloth",
+            "Não é possível remover esta peça de roupa do cesto.");
         
         public static Error BucketNameAlreadyUsed => Error.Validation(
             "Bucket.BucketNameAlreadyUsed",
