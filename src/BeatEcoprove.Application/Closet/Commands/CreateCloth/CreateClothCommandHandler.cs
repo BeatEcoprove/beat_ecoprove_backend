@@ -20,17 +20,20 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
     private readonly IColorRepository _colorRepository;
     private readonly IProfileManager _profileManager;
     private readonly IClosetService _closetService;
+    private readonly IBrandRepository _brandRepository;
 
     public CreateClothCommandHandler(
         IUnitOfWork unitOfWork,
         IColorRepository colorRepository, 
         IProfileManager profileManager, 
-        IClosetService closetService)
+        IClosetService closetService, 
+        IBrandRepository brandRepository)
     {
         _unitOfWork = unitOfWork;
         _colorRepository = colorRepository;
         _profileManager = profileManager;
         _closetService = closetService;
+        _brandRepository = brandRepository;
     }
 
     public async Task<ErrorOr<ClothResult>> Handle(
@@ -50,6 +53,13 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
         {
             return Errors.Color.BadHexValue;
         }
+        
+        var brandId = await _brandRepository.GetBrandIdByNameAsync(request.Brand, cancellationToken);
+
+        if (brandId is null)
+        {
+            return Errors.Brand.ThereIsNoBrandName;
+        }
 
         var clothType = _closetService.GetClothType(request.ClothType);
         var clothSize = _closetService.GetClothSize(request.ClothSize);
@@ -66,7 +76,7 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
             request.Name.Capitalize(),
             clothType.Value,
             clothSize.Value,
-            request.Brand.Capitalize(),
+            brandId,
             colorId
         );
 
@@ -78,6 +88,7 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
         var clothResult = await _closetService.AddClothToCloset(
             profile.Value, 
             cloth.Value, 
+            request.Brand,
             request.Color, 
             request.ClothAvatar, 
             cancellationToken);

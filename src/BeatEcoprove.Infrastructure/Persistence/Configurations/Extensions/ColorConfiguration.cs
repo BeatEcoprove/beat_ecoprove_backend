@@ -1,10 +1,9 @@
-﻿using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Entities;
+﻿using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.Shared.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Closet;
+namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Extensions;
 
 public class ColorConfiguration : IEntityTypeConfiguration<Color>
 {

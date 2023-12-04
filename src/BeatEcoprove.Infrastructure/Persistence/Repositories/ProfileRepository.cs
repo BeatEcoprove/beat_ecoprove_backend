@@ -37,14 +37,15 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             from profile in DbContext.Profiles
             from clothEntry in profile.ClothEntries
             from color in DbContext.Set<Color>()
+            from brand in DbContext.Set<Brand>()
             join cloth in DbContext.Cloths on clothEntry.ClothId equals cloth.Id
-            where cloth.Color == color.Id
+            where cloth.Color == color.Id && cloth.Brand == brand.Id
             select new ClothDao(
                 cloth.Id,
                 cloth.Name,
                 cloth.Type.ToString(),
                 cloth.Size.ToString(),
-                cloth.Brand,
+                brand.Name,
                 color.Hex,
                 cloth.EcoScore,
                 cloth.ClothAvatar

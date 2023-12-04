@@ -45,14 +45,15 @@ public class BucketRepository : Repository<Bucket, BucketId>, IBucketRepository
             from bucket in DbContext.Buckets
             from cloth in DbContext.Cloths
             from color in DbContext.Set<Color>()
+            from brand in DbContext.Set<Brand>()
             from bucketEntry in bucket.BucketClothEntries
-            where bucket.Id == bucketId && bucketEntry.ClothId == cloth.Id && cloth.Color == color.Id
+            where bucket.Id == bucketId && bucketEntry.ClothId == cloth.Id && cloth.Color == color.Id && cloth.Brand == brand.Id
             select new ClothDao(
                 cloth.Id,
                 cloth.Name,
                 cloth.Type.ToString(),
                 cloth.Size.ToString(),
-                cloth.Brand,
+                brand.Name,
                 color.Hex,
                 cloth.EcoScore,
                 cloth.ClothAvatar

@@ -28,6 +28,19 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "brands",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    brand_avatar = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_brands", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "buckets",
                 columns: table => new
                 {
@@ -93,7 +106,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     type = table.Column<int>(type: "integer", nullable: false),
                     size = table.Column<int>(type: "integer", nullable: false),
-                    brand = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    brand = table.Column<Guid>(type: "uuid", nullable: false),
                     color = table.Column<Guid>(type: "uuid", nullable: false),
                     eco_score = table.Column<int>(type: "integer", nullable: false),
                     cloth_avatar = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false)
@@ -101,6 +114,12 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_cloths", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_cloths_brands_brand",
+                        column: x => x.brand,
+                        principalTable: "brands",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_cloths_colors_color",
                         column: x => x.color,
@@ -188,6 +207,11 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 column: "cloth_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_cloths_brand",
+                table: "cloths",
+                column: "brand");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_cloths_color",
                 table: "cloths",
                 column: "color");
@@ -218,6 +242,9 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "profiles");
+
+            migrationBuilder.DropTable(
+                name: "brands");
 
             migrationBuilder.DropTable(
                 name: "colors");
