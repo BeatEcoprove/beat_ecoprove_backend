@@ -10,6 +10,10 @@ public partial class Errors
             "Cloth.InvalidClothName",
             "Por favor, intreduz um nome válido.");
         
+        public static Error ClothNotFound => Error.Validation(
+            "Cloth.ClothNotFound",
+            "A peça que tentou aceder não existe.");
+        
         public static Error InvalidClothType => Error.Validation(
             "Cloth.InvalidClothType",
             "Por favor, intreduz um tipo de peça válido.");
@@ -17,5 +21,9 @@ public partial class Errors
         public static Error InvalidClothSize => Error.Validation(
             "Cloth.InvalidClothSize",
             "Por favor, intreduz um tamanho válido (xs, s, m, l, xl, xxl).");
+        
+        public static Error CannotAccessBucket => Error.Validation(
+            "Cloth.CannotAccessBucket",
+            "Esta peça de roupa não lhe pertence.");
     }
 }

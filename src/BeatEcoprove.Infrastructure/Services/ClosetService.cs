@@ -151,6 +151,24 @@ public class ClosetService : IClosetService
         return bucket;
     }
 
+    public async Task<ErrorOr<ClothResult>> GetClothResult(Profile profile, ClothId clothId, CancellationToken cancellationToken = default)
+    {
+        // verify if profile is allowed to access cloth
+        if (!await _profileRepository.CanProfileAccessCloth(profile.Id, clothId, cancellationToken))
+        {
+            return Errors.Cloth.CannotAccessBucket;
+        }
+        
+        var cloth = await _clothRepository.GetByIdAsync(clothId, cancellationToken);
+
+        if (cloth is null)
+        {
+            return Errors.Cloth.InvalidClothName;
+        }
+
+        return cloth.Adapt<ClothResult>();
+    }
+
     public async Task<BucketResult> GetBucketResult(Bucket bucket, CancellationToken cancellationToken = default)
     {
         var cloths = await
