@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Api.Extensions;
+using BeatEcoprove.Application.Closet.Commands.AddClothToBucket;
 using BeatEcoprove.Application.Closet.Commands.CreateBucket;
 using BeatEcoprove.Application.Closet.Commands.CreateCloth;
 using BeatEcoprove.Application.Closet.Queries.GetCloset;
@@ -15,12 +16,12 @@ namespace BeatEcoprove.Api.Controllers;
 
 [Authorize]
 [Route("profiles")]
-public class ProfileController : ApiController
+public class ClosetController : ApiController
 {
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public ProfileController(
+    public ClosetController(
         ISender sender, 
         IMapper mapper)
     {
@@ -84,6 +85,27 @@ public class ProfileController : ApiController
                 request.Name,
                 ClothIds = request.ClothIds
             }.Adapt<CreateBucketCommand>());
+
+        return result.Match(
+            response => Created(
+                "",
+                _mapper.Map<BucketResponse>(response)),
+            Problem<BucketResponse>
+        );
+    }
+    
+    [HttpPut("closet/bucket/{bucketId:guid}")]
+    public async Task<ActionResult<BucketResponse>> AddClothsToBucket(AddClothsToBucketRequest request, [FromQuery] Guid profileId, Guid bucketId)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var result = 
+            await _sender.Send(new{
+                    AuthId = authId,
+                    ProfileId = profileId,
+                    BucketId = bucketId,
+                    request.ClothToAdd
+                }.Adapt<AddClothToBucketCommand>());
 
         return result.Match(
             response => Created(

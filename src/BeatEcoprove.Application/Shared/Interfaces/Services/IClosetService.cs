@@ -11,6 +11,8 @@ public interface IClosetService
 {
     Task<ClothResult> AddClothToCloset(Profile profile, Cloth cloth, string brandName, string colorHex, Stream clothAvatar, CancellationToken cancellationToken = default);
     Task<ErrorOr<Bucket>> AddBucketToCloset(Profile profile, Bucket bucket, List<ClothId> clothToAdd,CancellationToken cancellationToken = default);
+    Task<ErrorOr<Bucket>> AddClothToBucket(Profile profile, Bucket bucket, List<ClothId> cloths, CancellationToken cancellationToken = default);
+    Task<BucketResult> GetBucketResult(Bucket bucket, CancellationToken cancellationToken = default);
     ErrorOr<ClothType> GetClothType(string type);
     ErrorOr<ClothSize> GetClothSize(string size);
 }
