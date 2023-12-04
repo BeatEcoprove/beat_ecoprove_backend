@@ -12,6 +12,11 @@ public class BrandRepository : Repository<Brand, BrandId>, IBrandRepository
     {
     }
 
+    public async Task<List<Brand>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await DbContext.Set<Brand>().ToListAsync(cancellationToken);
+    }
+
     public async Task<BrandId?> GetBrandIdByNameAsync(string name, CancellationToken cancellationToken = default)
     {
         return await DbContext
