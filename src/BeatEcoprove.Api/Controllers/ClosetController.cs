@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BeatEcoprove.Api.Controllers;
 
 [Authorize]
-[Route("profiles")]
+[Route("profiles/closet")]
 public class ClosetController : ApiController
 {
     private readonly ISender _sender;
@@ -32,7 +32,7 @@ public class ClosetController : ApiController
         _mapper = mapper;
     }
 
-    [HttpGet("closet")]
+    [HttpGet()]
     public async Task<ActionResult<ClosetResponse>> GetCloset([FromQuery] Guid profileId)
     {
         var userEmail = HttpContext.User.GetEmail();
@@ -50,7 +50,7 @@ public class ClosetController : ApiController
         );
     }
     
-    [HttpPost("closet/cloth")]
+    [HttpPost("cloth")]
     public async Task<ActionResult<ClothResponse>> AddClothToCloset([FromForm] CreateClothRequest request, [FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
@@ -75,7 +75,7 @@ public class ClosetController : ApiController
         );
     }
     
-    [HttpGet("closet/cloth/{clothId:guid}")]
+    [HttpGet("cloth/{clothId:guid}")]
     public async Task<ActionResult<ClothResponse>> GetCloth([FromQuery] Guid profileId, Guid clothId)
     {
         var authId = HttpContext.User.GetUserId();
@@ -97,7 +97,7 @@ public class ClosetController : ApiController
         );
     }
     
-    [HttpPost("closet/bucket")]
+    [HttpPost("bucket")]
     public async Task<ActionResult<BucketResponse>> AddBucketToCloset(CreateBucketRequest request, [FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
@@ -119,7 +119,7 @@ public class ClosetController : ApiController
         );
     }
     
-    [HttpGet("closet/bucket/{bucketId:guid}")]
+    [HttpGet("bucket/{bucketId:guid}")]
     public async Task<ActionResult<BucketResponse>> GetBucket([FromQuery] Guid profileId, Guid bucketId)
     {
         var authId = HttpContext.User.GetUserId();
@@ -141,7 +141,7 @@ public class ClosetController : ApiController
         );
     }
     
-    [HttpPut("closet/bucket/{bucketId:guid}/add")]
+    [HttpPut("bucket/{bucketId:guid}/add")]
     public async Task<ActionResult<BucketResponse>> AddClothsToBucket(AddClothToBucketRequest request, [FromQuery] Guid profileId, Guid bucketId)
     {
         var authId = HttpContext.User.GetUserId();
@@ -162,7 +162,7 @@ public class ClosetController : ApiController
         );
     }
     
-    [HttpPut("closet/bucket/{bucketId:guid}/remove")]
+    [HttpPut("bucket/{bucketId:guid}/remove")]
     public async Task<ActionResult<BucketResponse>> RemoveClothFromBucket(RemoveClothFromBucketRequest request, [FromQuery] Guid profileId, Guid bucketId)
     {
         var authId = HttpContext.User.GetUserId();

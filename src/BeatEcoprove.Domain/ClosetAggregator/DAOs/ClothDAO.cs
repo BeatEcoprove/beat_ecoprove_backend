@@ -9,5 +9,6 @@ public record ClothDao
     string Brand,
     string Color,
     int EcoScore,
+    string ClothState,
     string ClothAvatar
 );

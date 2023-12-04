@@ -1,6 +1,7 @@
 ﻿using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.Shared.ValueObjects;
@@ -29,6 +30,8 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         Brand = brand;
         Color = color;
         EcoScore = ecoScore;
+        
+        State = ClothState.Idle;
     }
 
     public string Name { get; private set; } = null!;
@@ -37,6 +40,7 @@ public class Cloth : AggregateRoot<ClothId, Guid>
     public BrandId Brand { get; private set; } = null!;
     public ColorId Color { get; private set; } = null!;
     public int EcoScore { get; private set; }
+    public ClothState State { get; private set; }
     public string ClothAvatar { get; private set; } = null!;
     public IReadOnlyList<Activity> Activities => _activities.AsReadOnly();
 
@@ -65,5 +69,43 @@ public class Cloth : AggregateRoot<ClothId, Guid>
     public void SetClothPicture(string clothAvatar)
     {
         ClothAvatar = clothAvatar;
+    }
+
+    public ErrorOr<DailyUseActivity> UseCloth(Profile profile)
+    {
+        if (this.State == ClothState.InUse)
+        {
+            return Errors.Cloth.CannotUseCloth;
+        }
+        
+        var activity = DailyUseActivity.Create(
+            profile.Id,
+            this.Id,
+            0,
+            0
+            );
+        
+        _activities.Add(activity);
+        this.State = ClothState.InUse;
+        
+        return activity;
+    }
+
+    public ErrorOr<bool> DisposeCloth(DailyUseActivity activity)
+    {
+        if (State != ClothState.InUse)
+        {
+            return Errors.Cloth.CannotDisposeCloth;
+        }
+
+        if (!activity.IsRunning())
+        {
+            return Errors.Cloth.CannotDisposeCloth;
+        }
+        
+        activity.EndActivity();
+        this.State = ClothState.Idle;
+        
+        return true;
     }
 }

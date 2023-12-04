@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Domain.ClosetAggregator;
 using ErrorOr;
 
@@ -15,4 +16,4 @@ public record CreateClothCommand
     string Brand,
     string Color,
     Stream ClothAvatar
-) : ICommand<ErrorOr<ClothResult>>;
+) : ICommand<ErrorOr<ClothResult>>, IAuthorization;

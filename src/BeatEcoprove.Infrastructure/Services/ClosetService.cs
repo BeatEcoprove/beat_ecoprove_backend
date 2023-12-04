@@ -59,6 +59,7 @@ public class ClosetService : IClosetService
             brandName,
             colorHex,
             cloth.EcoScore,
+            cloth.State.ToString(),
             cloth.ClothAvatar
         );
     }
@@ -151,15 +152,31 @@ public class ClosetService : IClosetService
         return bucket;
     }
 
-    public async Task<ErrorOr<ClothResult>> GetClothResult(Profile profile, ClothId clothId, CancellationToken cancellationToken = default)
+    public async Task<ErrorOr<Cloth>> GetCloth(Profile profile, ClothId clothId, CancellationToken cancellationToken = default)
     {
-        // verify if profile is allowed to access cloth
         if (!await _profileRepository.CanProfileAccessCloth(profile.Id, clothId, cancellationToken))
         {
             return Errors.Cloth.CannotAccessBucket;
         }
         
         var cloth = await _clothRepository.GetByIdAsync(clothId, cancellationToken);
+
+        if (cloth is null)
+        {
+            return Errors.Cloth.InvalidClothName;
+        }
+
+        return cloth;
+    }
+    
+    public async Task<ErrorOr<ClothResult>> GetClothResult(Profile profile, ClothId clothId, CancellationToken cancellationToken = default)
+    {
+        if (!await _profileRepository.CanProfileAccessCloth(profile.Id, clothId, cancellationToken))
+        {
+            return Errors.Cloth.CannotAccessBucket;
+        }
+        
+        var cloth = await _clothRepository.GetClothDaoByIdAsync(clothId, cancellationToken);
 
         if (cloth is null)
         {

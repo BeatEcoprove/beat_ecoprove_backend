@@ -11,7 +11,6 @@ public class DailyUseActivityConfiguration : IEntityTypeConfiguration<DailyUseAc
     public void Configure(EntityTypeBuilder<DailyUseActivity> builder)
     {
         builder.ToTable(DailyUseActivityTableName);
-        builder.HasBaseType<Activity>();
         
         builder.Property(daily => daily.DailySequence)
             .HasColumnName("daily_sequence")

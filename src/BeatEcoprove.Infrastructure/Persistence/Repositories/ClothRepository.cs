@@ -15,21 +15,7 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
     {
     }
 
-    public async Task<List<Cloth>> GetClothOfProfile(ProfileId profileId, CancellationToken cancellationToken = default)
-    {
-        return await
-            DbContext.Profiles
-                .Include(profile => profile.ClothEntries)
-                .Where(profile => profile.Id == profileId)
-                .SelectMany(profile => profile.ClothEntries)
-                .Join(DbContext.Cloths,
-                    clothEntry => clothEntry.ClothId,
-                    cloth => cloth.Id,
-                    (clothEntry, cloth) => cloth)
-                .ToListAsync(cancellationToken);
-    }
-
-    public new async Task<ClothDao?> GetByIdAsync(ClothId id, CancellationToken cancellationToken = default)
+    public async Task<ClothDao?> GetClothDaoByIdAsync(ClothId id, CancellationToken cancellationToken = default)
     {
         var getCloth = 
             from cloth in DbContext.Cloths
@@ -38,14 +24,15 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
             where cloth.Id == id && cloth.Color == color.Id && cloth.Brand == brand.Id
             select new ClothDao
             (
-               cloth.Id,
-               cloth.Name,
+                cloth.Id,
+                cloth.Name,
                 cloth.Type.ToString(),
                 cloth.Size.ToString(),
                 brand.Name,
                 color.Hex,
                 cloth.EcoScore,
-               cloth.ClothAvatar
+                cloth.State.ToString(),
+                cloth.ClothAvatar
             );
         
         return await getCloth.SingleOrDefaultAsync(cancellationToken);

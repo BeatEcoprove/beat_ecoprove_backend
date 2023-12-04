@@ -108,6 +108,10 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("size");
 
+                    b.Property<int>("State")
+                        .HasColumnType("integer")
+                        .HasColumnName("state");
+
                     b.Property<int>("Type")
                         .HasColumnType("integer")
                         .HasColumnName("type");
@@ -139,6 +143,9 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnType("real")
                         .HasColumnName("delta_score");
 
+                    b.Property<DateTime>("EndAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uuid")
                         .HasColumnName("profile_id");
@@ -153,9 +160,9 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("Activity");
+                    b.ToTable("activities", (string)null);
 
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", b =>
@@ -445,6 +452,15 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.Navigation("ClothEntries");
 
                     b.Navigation("Phone")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Entities.DailyUseActivity", b =>
+                {
+                    b.HasOne("BeatEcoprove.Domain.ClosetAggregator.Entities.Activity", null)
+                        .WithOne()
+                        .HasForeignKey("BeatEcoprove.Domain.ClosetAggregator.Entities.DailyUseActivity", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

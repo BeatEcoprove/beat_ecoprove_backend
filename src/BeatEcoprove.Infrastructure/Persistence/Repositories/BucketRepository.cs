@@ -56,6 +56,7 @@ public class BucketRepository : Repository<Bucket, BucketId>, IBucketRepository
                 brand.Name,
                 color.Hex,
                 cloth.EcoScore,
+                cloth.State.ToString(),
                 cloth.ClothAvatar
                 );
         

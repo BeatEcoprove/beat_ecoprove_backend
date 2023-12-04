@@ -9,5 +9,6 @@ public record ClothResult
     string Brand,
     string Color,
     int EcoScore,
+    string ClothState,
     string ClothAvatar
 );

@@ -104,6 +104,7 @@ public static class DependencyInjection
         services.AddScoped<IBucketRepository, BucketRepository>();
         services.AddScoped<IColorRepository, ColorRepository>();
         services.AddScoped<IBrandRepository, BrandRepository>();
+        services.AddScoped<IActivityRepository, ActionRepository>();
 
         return services;
     }

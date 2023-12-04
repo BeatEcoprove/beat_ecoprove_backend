@@ -5,6 +5,8 @@ namespace BeatEcoprove.Domain.ClosetAggregator.Entities;
 
 public class DailyUseActivity : Activity
 {
+    private const int CoolDownInHours = 10;
+    
     private DailyUseActivity() { }
     
     private DailyUseActivity(

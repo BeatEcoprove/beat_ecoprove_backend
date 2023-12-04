@@ -13,6 +13,7 @@ public interface IClosetService
     Task<ErrorOr<Bucket>> AddBucketToCloset(Profile profile, Bucket bucket, List<ClothId> clothToAdd,CancellationToken cancellationToken = default);
     Task<ErrorOr<Bucket>> AddClothToBucket(Profile profile, Bucket bucket, List<ClothId> cloths, CancellationToken cancellationToken = default);
     Task<ErrorOr<Bucket>> RemoveClothFromBucket(Profile profile, Bucket bucket, List<ClothId> clothToRemove, CancellationToken cancellationToken);
+    Task<ErrorOr<Cloth>> GetCloth(Profile profile, ClothId clothId, CancellationToken cancellationToken = default);
     Task<ErrorOr<ClothResult>> GetClothResult(Profile profile, ClothId clothId, CancellationToken cancellationToken = default);
     Task<BucketResult> GetBucketResult(Bucket bucket, CancellationToken cancellationToken = default);
     ErrorOr<ClothType> GetClothType(string type);

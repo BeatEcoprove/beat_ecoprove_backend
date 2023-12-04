@@ -1,4 +1,5 @@
-﻿using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+﻿using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
+using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
 
@@ -8,14 +9,18 @@ public abstract class Activity : Entity<ActivityId>
 {
     protected Activity() { }
     
-    protected Activity(ProfileId profileId, ClothId clothId, float xp = 0, float deltaScore = 0)
+    protected Activity(
+        ProfileId profileId, 
+        ClothId clothId, 
+        float xp = 0, 
+        float deltaScore = 0)
     {
         Id = ActivityId.CreateUnique();
         ClothId = clothId;
         ProfileId = profileId;
         XP = xp;
         DeltaScore = deltaScore;
-        CreatedAt = DateTime.Now;
+        CreatedAt = DateTime.UtcNow;
     }
     
     public ClothId ClothId { get; protected set; }
@@ -23,4 +28,15 @@ public abstract class Activity : Entity<ActivityId>
     public float XP { get; protected set; }
     public float DeltaScore { get; protected set; }
     public DateTime CreatedAt { get; private set; }
+    public DateTime EndAt { get; private set; }
+    
+    public void EndActivity()
+    {
+        EndAt = DateTime.UtcNow;
+    }
+    
+    public bool IsRunning()
+    {
+        return EndAt == default;
+    }
 }

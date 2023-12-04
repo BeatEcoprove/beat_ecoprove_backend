@@ -1,5 +1,4 @@
 ﻿using BeatEcoprove.Domain.ClosetAggregator;
-using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.Shared.ValueObjects;
@@ -41,6 +40,10 @@ public class ClothConfiguration : IEntityTypeConfiguration<Cloth>
 
         builder.Property(c => c.Type)
             .HasColumnName("type")
+            .IsRequired();
+
+        builder.Property(c => c.State)
+            .HasColumnName("state")
             .IsRequired();
 
         builder.Property(c => c.Size)

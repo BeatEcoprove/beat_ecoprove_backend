@@ -49,6 +49,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                 brand.Name,
                 color.Hex,
                 cloth.EcoScore,
+                cloth.State.ToString(),
                 cloth.ClothAvatar
             );
 

@@ -11,8 +11,15 @@ namespace BeatEcoprove.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<int>(
+                name: "state",
+                table: "cloths",
+                type: "integer",
+                nullable: false,
+                defaultValue: 0);
+
             migrationBuilder.CreateTable(
-                name: "Activity",
+                name: "activities",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -20,19 +27,20 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     profile_id = table.Column<Guid>(type: "uuid", nullable: false),
                     xp = table.Column<float>(type: "real", nullable: false),
                     delta_score = table.Column<float>(type: "real", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Activity", x => x.id);
+                    table.PrimaryKey("PK_activities", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Activity_cloths_cloth_id",
+                        name: "FK_activities_cloths_cloth_id",
                         column: x => x.cloth_id,
                         principalTable: "cloths",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Activity_profiles_profile_id",
+                        name: "FK_activities_profiles_profile_id",
                         column: x => x.profile_id,
                         principalTable: "profiles",
                         principalColumn: "Id",
@@ -50,16 +58,22 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_daily_use_activities", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_daily_use_activities_activities_id",
+                        column: x => x.id,
+                        principalTable: "activities",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Activity_cloth_id",
-                table: "Activity",
+                name: "IX_activities_cloth_id",
+                table: "activities",
                 column: "cloth_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Activity_profile_id",
-                table: "Activity",
+                name: "IX_activities_profile_id",
+                table: "activities",
                 column: "profile_id");
         }
 
@@ -67,10 +81,14 @@ namespace BeatEcoprove.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Activity");
+                name: "daily_use_activities");
 
             migrationBuilder.DropTable(
-                name: "daily_use_activities");
+                name: "activities");
+
+            migrationBuilder.DropColumn(
+                name: "state",
+                table: "cloths");
         }
     }
 }
