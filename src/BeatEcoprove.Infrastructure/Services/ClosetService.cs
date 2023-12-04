@@ -79,7 +79,7 @@ public class ClosetService : IClosetService
             return Errors.Bucket.InvalidClothToAdd;
         }
         
-        if (!await _bucketRepository.CanAddClothsAsync(clothToAdd, cancellationToken))
+        if (await _bucketRepository.AreClothAlreadyOnBucket(clothToAdd, cancellationToken))
         {
             return Errors.Bucket.CanAddClothToBucket;
         }
@@ -109,7 +109,7 @@ public class ClosetService : IClosetService
             return Errors.Bucket.CannotAccessBucket;
         }
         
-        if (!await _bucketRepository.CanAddClothsAsync(cloths, cancellationToken))
+        if (await _bucketRepository.AreClothAlreadyOnBucket(cloths, cancellationToken))
         {
             return Errors.Bucket.CanAddClothToBucket;
         }
@@ -119,6 +119,33 @@ public class ClosetService : IClosetService
         if (shouldAddAllCloth.IsError)
         {
             return shouldAddAllCloth.Errors;
+        }
+        
+        return bucket;
+    }
+
+    public async Task<ErrorOr<Bucket>> RemoveClothFromBucket(Profile profile, Bucket bucket, List<ClothId> clothToRemove, CancellationToken cancellationToken)
+    {
+        if (!await _clothRepository.ClothExists(clothToRemove, cancellationToken))
+        {
+            return Errors.Bucket.InvalidClothToAdd;
+        }
+        
+        if (!await _profileRepository.CanProfileAccessBucket(profile.Id, bucket.Id, cancellationToken))
+        {
+            return Errors.Bucket.CannotAccessBucket;
+        }
+        
+        if (!await _bucketRepository.AreClothAlreadyOnBucket(clothToRemove, cancellationToken))
+        {
+            return Errors.Bucket.CannotRemoveCloth;
+        }
+        
+        var shouldRemoveCloth = bucket.RemoveCloths(clothToRemove);
+
+        if (shouldRemoveCloth.IsError)
+        {
+            return shouldRemoveCloth.Errors;
         }
         
         return bucket;

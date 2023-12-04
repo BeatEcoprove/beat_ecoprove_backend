@@ -2,6 +2,7 @@
 using BeatEcoprove.Application.Closet.Commands.AddClothToBucket;
 using BeatEcoprove.Application.Closet.Commands.CreateBucket;
 using BeatEcoprove.Application.Closet.Commands.CreateCloth;
+using BeatEcoprove.Application.Closet.Commands.RemoveClothFromBucket;
 using BeatEcoprove.Application.Closet.Queries.GetCloset;
 using BeatEcoprove.Contracts.Closet;
 using BeatEcoprove.Contracts.Closet.Bucket;
@@ -94,8 +95,8 @@ public class ClosetController : ApiController
         );
     }
     
-    [HttpPut("closet/bucket/{bucketId:guid}")]
-    public async Task<ActionResult<BucketResponse>> AddClothsToBucket(AddClothsToBucketRequest request, [FromQuery] Guid profileId, Guid bucketId)
+    [HttpPut("closet/bucket/{bucketId:guid}/add")]
+    public async Task<ActionResult<BucketResponse>> AddClothsToBucket(AddClothToBucketRequest request, [FromQuery] Guid profileId, Guid bucketId)
     {
         var authId = HttpContext.User.GetUserId();
         
@@ -106,6 +107,27 @@ public class ClosetController : ApiController
                     BucketId = bucketId,
                     request.ClothToAdd
                 }.Adapt<AddClothToBucketCommand>());
+
+        return result.Match(
+            response => Created(
+                "",
+                _mapper.Map<BucketResponse>(response)),
+            Problem<BucketResponse>
+        );
+    }
+    
+    [HttpPut("closet/bucket/{bucketId:guid}/remove")]
+    public async Task<ActionResult<BucketResponse>> RemoveClothFromBucket(RemoveClothFromBucketRequest request, [FromQuery] Guid profileId, Guid bucketId)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var result = 
+            await _sender.Send(new{
+                AuthId = authId,
+                ProfileId = profileId,
+                BucketId = bucketId,
+                request.ClothToRemove
+            }.Adapt<RemoveClothFromBucketCommand>());
 
         return result.Match(
             response => Created(

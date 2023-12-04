@@ -28,7 +28,7 @@ public class BucketRepository : Repository<Bucket, BucketId>, IBucketRepository
         return await bucketNameAlreadyUsed.AnyAsync(cancellationToken);
     }
 
-    public async Task<bool> CanAddClothsAsync(List<ClothId> clothIds, CancellationToken cancellationToken)
+    public async Task<bool> AreClothAlreadyOnBucket(List<ClothId> clothIds, CancellationToken cancellationToken)
     {
         var clothAlreadyAddedToBucket =
             from bucket in DbContext.Buckets
@@ -36,7 +36,7 @@ public class BucketRepository : Repository<Bucket, BucketId>, IBucketRepository
             where clothIds.Contains(bucketEntry.ClothId)
             select bucketEntry.ClothId;
 
-        return !await clothAlreadyAddedToBucket.AnyAsync(cancellationToken);
+        return await clothAlreadyAddedToBucket.AnyAsync(cancellationToken);
     }
 
     public Task<List<ClothDao>> GetClothsAsync(BucketId bucketId, CancellationToken cancellationToken)

@@ -1,6 +1,6 @@
 ﻿namespace BeatEcoprove.Contracts.Closet.Bucket;
 
-public record AddClothsToBucketRequest
+public record AddClothToBucketRequest
 (
     List<Guid> ClothToAdd
 );
