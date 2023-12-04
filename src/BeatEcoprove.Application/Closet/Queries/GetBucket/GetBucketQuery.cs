@@ -2,11 +2,11 @@
 using BeatEcoprove.Application.Shared;
 using ErrorOr;
 
-namespace BeatEcoprove.Application.Closet.Queries.GetCloth;
+namespace BeatEcoprove.Application.Closet.Queries.GetBucket;
 
-public record GetClothQuery
+public record GetBucketQuery
 (
     Guid AuthId,
     Guid ProfileId,
-    Guid ClothId
-) : IQuery<ErrorOr<ClothResult>>;
+    Guid BucketId
+) : IQuery<ErrorOr<BucketResult>>;
