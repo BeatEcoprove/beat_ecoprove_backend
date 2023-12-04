@@ -40,6 +40,6 @@ public static partial class Errors
         
         public static Error CannotAccessBucket => Error.Validation(
             "Bucket.CannotAccessBucket",
-            "Este ceste não lhe pertence.");
+            "Este cesto não lhe pertence.");
     }
 }

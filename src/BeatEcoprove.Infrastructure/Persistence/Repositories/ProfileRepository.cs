@@ -76,4 +76,15 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
         
         return canAccessBucket.AnyAsync(cancellationToken);
     }
+
+    public Task<bool> CanProfileAccessCloth(ProfileId profileId, ClothId clothId, CancellationToken cancellationToken = default)
+    {
+        var canAccessCloth =
+            from profile in DbContext.Profiles
+            from clothEntry in profile.ClothEntries
+            where clothEntry.ClothId == clothId && profile.Id == profileId
+            select clothEntry;
+        
+        return canAccessCloth.AnyAsync(cancellationToken);
+    }
 }

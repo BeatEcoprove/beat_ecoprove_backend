@@ -1,7 +1,9 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.ClosetAggregator;
+using BeatEcoprove.Domain.ClosetAggregator.DAOs;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,9 +29,26 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
                 .ToListAsync(cancellationToken);
     }
 
-    public Task<List<Cloth>> GetAllCloth(ProfileId currentProfile, CancellationToken cancellationToken)
+    public new async Task<ClothDao?> GetByIdAsync(ClothId id, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var getCloth = 
+            from cloth in DbContext.Cloths
+            from color in DbContext.Set<Color>()
+            from brand in DbContext.Set<Brand>()
+            where cloth.Id == id && cloth.Color == color.Id && cloth.Brand == brand.Id
+            select new ClothDao
+            (
+               cloth.Id,
+               cloth.Name,
+                cloth.Type.ToString(),
+                cloth.Size.ToString(),
+                brand.Name,
+                color.Hex,
+                cloth.EcoScore,
+               cloth.ClothAvatar
+            );
+        
+        return await getCloth.SingleOrDefaultAsync(cancellationToken);
     }
 
     public async Task<bool> ClothExists(List<ClothId> cloths, CancellationToken cancellationToken = default)
