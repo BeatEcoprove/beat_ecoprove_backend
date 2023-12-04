@@ -103,6 +103,7 @@ public static class DependencyInjection
         services.AddScoped<IClothRepository, ClothRepository>();
         services.AddScoped<IBucketRepository, BucketRepository>();
         services.AddScoped<IColorRepository, ColorRepository>();
+        services.AddScoped<IBrandRepository, BrandRepository>();
 
         return services;
     }

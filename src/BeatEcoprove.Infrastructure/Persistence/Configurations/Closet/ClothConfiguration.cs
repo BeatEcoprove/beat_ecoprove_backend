@@ -35,10 +35,18 @@ public class ClothConfiguration : IEntityTypeConfiguration<Domain.ClosetAggregat
         builder.Property(c => c.Size)
             .HasColumnName("size")
             .IsRequired();
+        
+        builder
+            .HasOne<Brand>()
+            .WithMany()
+            .HasForeignKey(c => c.Brand);
 
         builder.Property(c => c.Brand)
             .HasColumnName("brand")
-            .HasMaxLength(50)
+            .HasConversion(
+                id => id.Value,
+                value => BrandId.Create(value)
+            )
             .IsRequired();
 
         builder

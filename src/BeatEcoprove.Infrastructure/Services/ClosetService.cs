@@ -1,6 +1,5 @@
 ﻿using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared.Helpers;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
@@ -8,11 +7,9 @@ using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
-using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Infrastructure.Extensions;
 using ErrorOr;
-using Mapster;
 
 namespace BeatEcoprove.Infrastructure.Services;
 
@@ -32,7 +29,13 @@ public class ClosetService : IClosetService
         _bucketRepository = bucketRepository;
     }
 
-    public async Task<ClothResult> AddClothToCloset(Profile profile, Cloth cloth, string colorHex, Stream clothAvatar, CancellationToken cancellationToken = default)
+    public async Task<ClothResult> AddClothToCloset(
+        Profile profile, 
+        Cloth cloth,
+        string brandName,
+        string colorHex, 
+        Stream clothAvatar, 
+        CancellationToken cancellationToken = default)
     {
         var clothPicture = profile.Id.Value + "-" + cloth.Id.Value;
         var clothPictureUrl = await _fileStorageProvider
@@ -49,7 +52,7 @@ public class ClosetService : IClosetService
             cloth.Name,
             cloth.Type.ToString(),
             cloth.Size.ToString(),
-            cloth.Brand,
+            brandName,
             colorHex,
             cloth.EcoScore,
             cloth.ClothAvatar

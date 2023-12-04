@@ -1,6 +1,5 @@
 ﻿using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
-using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.Shared.ValueObjects;
@@ -17,7 +16,7 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         string name,
         ClothType type,
         ClothSize size,
-        string brand,
+        BrandId brand,
         ColorId color,
         int ecoScore)
     {
@@ -33,7 +32,7 @@ public class Cloth : AggregateRoot<ClothId, Guid>
     public string Name { get; private set; } = null!;
     public ClothType Type { get; private set; }
     public ClothSize Size { get; private set; }
-    public string Brand { get; private set; } = null!;
+    public BrandId Brand { get; private set; } = null!;
     public ColorId Color { get; private set; } = null!;
     public int EcoScore { get; private set; }
     public string ClothAvatar { get; private set; } = null!;
@@ -42,7 +41,7 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         string name,
         ClothType type,
         ClothSize size,
-        string brand,
+        BrandId brand,
         ColorId color)
     {
         if (string.IsNullOrWhiteSpace(name))

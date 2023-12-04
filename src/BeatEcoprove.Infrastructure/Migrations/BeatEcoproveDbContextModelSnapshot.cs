@@ -80,10 +80,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Brand")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                    b.Property<Guid>("Brand")
+                        .HasColumnType("uuid")
                         .HasColumnName("brand");
 
                     b.Property<string>("ClothAvatar")
@@ -115,6 +113,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnName("type");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Brand");
 
                     b.HasIndex("Color");
 
@@ -168,6 +168,29 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasDiscriminator<int>("Type");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("BeatEcoprove.Domain.Shared.Entities.Brand", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("BrandAvatar")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("brand_avatar");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("brands", (string)null);
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.Shared.Entities.Color", b =>
@@ -252,6 +275,12 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Cloth", b =>
                 {
+                    b.HasOne("BeatEcoprove.Domain.Shared.Entities.Brand", null)
+                        .WithMany()
+                        .HasForeignKey("Brand")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BeatEcoprove.Domain.Shared.Entities.Color", null)
                         .WithMany()
                         .HasForeignKey("Color")
