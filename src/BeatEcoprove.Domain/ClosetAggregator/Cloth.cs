@@ -1,4 +1,5 @@
-﻿using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
+﻿using BeatEcoprove.Domain.ClosetAggregator.Entities;
+using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
@@ -9,6 +10,7 @@ namespace BeatEcoprove.Domain.ClosetAggregator;
 
 public class Cloth : AggregateRoot<ClothId, Guid>
 {
+    private readonly List<Activity> _activities = new();
     private Cloth() { }
 
     private Cloth(
@@ -36,6 +38,7 @@ public class Cloth : AggregateRoot<ClothId, Guid>
     public ColorId Color { get; private set; } = null!;
     public int EcoScore { get; private set; }
     public string ClothAvatar { get; private set; } = null!;
+    public IReadOnlyList<Activity> Activities => _activities.AsReadOnly();
 
     public static ErrorOr<Cloth> Create(
         string name,

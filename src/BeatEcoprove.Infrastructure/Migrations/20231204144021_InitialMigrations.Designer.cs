@@ -3,6 +3,7 @@ using System;
 using BeatEcoprove.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     [DbContext(typeof(BeatEcoproveDbContext))]
-    partial class BeatEcoproveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231204144021_InitialMigrations")]
+    partial class InitialMigrations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,43 +124,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.ToTable("cloths", (string)null);
                 });
 
-            modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Entities.Activity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("ClothId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("cloth_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<float>("DeltaScore")
-                        .HasColumnType("real")
-                        .HasColumnName("delta_score");
-
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("profile_id");
-
-                    b.Property<float>("XP")
-                        .HasColumnType("real")
-                        .HasColumnName("xp");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClothId");
-
-                    b.HasIndex("ProfileId");
-
-                    b.ToTable("Activity");
-
-                    b.UseTphMappingStrategy();
-                });
-
             modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", b =>
                 {
                     b.Property<Guid>("Id")
@@ -253,21 +219,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.ToTable("colors", (string)null);
                 });
 
-            modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Entities.DailyUseActivity", b =>
-                {
-                    b.HasBaseType("BeatEcoprove.Domain.ClosetAggregator.Entities.Activity");
-
-                    b.Property<int>("DailySequence")
-                        .HasColumnType("integer")
-                        .HasColumnName("daily_sequence");
-
-                    b.Property<int>("PointsOfSustentability")
-                        .HasColumnType("integer")
-                        .HasColumnName("points_of_sustainability");
-
-                    b.ToTable("daily_use_activities", (string)null);
-                });
-
             modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Consumer", b =>
                 {
                     b.HasBaseType("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile");
@@ -336,21 +287,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasOne("BeatEcoprove.Domain.Shared.Entities.Color", null)
                         .WithMany()
                         .HasForeignKey("Color")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Entities.Activity", b =>
-                {
-                    b.HasOne("BeatEcoprove.Domain.ClosetAggregator.Cloth", null)
-                        .WithMany("Activities")
-                        .HasForeignKey("ClothId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", null)
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -503,11 +439,6 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                     b.Navigation("Address")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Cloth", b =>
-                {
-                    b.Navigation("Activities");
                 });
 #pragma warning restore 612, 618
         }

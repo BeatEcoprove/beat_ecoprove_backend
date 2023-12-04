@@ -9,7 +9,6 @@ using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
 using ErrorOr;
 
@@ -17,21 +16,15 @@ namespace BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccou
 
 internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<SignInEnterpriseAccountCommand, ErrorOr<AuthenticationResult>>
 {
-    private readonly IAuthRepository _authRepository;
-    private readonly IProfileRepository _profileRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtProvider _jwtProvider;
     private readonly IAccountService _accountService;
 
     public SignInEnterpriseAccountCommandHandler(
-        IAuthRepository authRepository,
-        IProfileRepository profileRepository,
         IUnitOfWork unitOfWork,
         IJwtProvider jwtProvider,
         IAccountService accountService)
     {
-        _authRepository = authRepository;
-        _profileRepository = profileRepository;
         _unitOfWork = unitOfWork;
         _jwtProvider = jwtProvider;
         _accountService = accountService;
@@ -93,7 +86,7 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
 
         payload.Type = Tokens.Refresh;
         var refreshToken = _jwtProvider.GenerateToken(payload);
-
+        
         return new AuthenticationResult(
             accessToken,
             refreshToken);

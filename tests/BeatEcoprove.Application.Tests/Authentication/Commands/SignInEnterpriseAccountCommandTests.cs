@@ -24,8 +24,6 @@ public class SignInEnterpriseAccountCommandTests
     public SignInEnterpriseAccountCommandTests()
     {
         _sut = new SignInEnterpriseAccountCommandHandler(
-            _authRepository,
-            _profileRepository,
             _unitOfWork,
             _jwtProvider,
             _accountService

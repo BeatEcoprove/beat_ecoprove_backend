@@ -1,4 +1,6 @@
-﻿using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+﻿using BeatEcoprove.Domain.ClosetAggregator;
+using BeatEcoprove.Domain.ClosetAggregator.Entities;
+using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.Shared.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -6,11 +8,20 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Closet;
 
-public class ClothConfiguration : IEntityTypeConfiguration<Domain.ClosetAggregator.Cloth>
+public class ClothConfiguration : IEntityTypeConfiguration<Cloth>
 {
     private const string ClothTable = "cloths";
 
-    public void Configure(EntityTypeBuilder<Domain.ClosetAggregator.Cloth> builder)
+    public void Configure(EntityTypeBuilder<Cloth> builder)
+    {
+        ConfigureClothEntity(builder);
+
+        builder.HasMany(cloth => cloth.Activities)
+            .WithOne()
+            .HasForeignKey(activity => activity.ClothId);
+    }
+
+    private static void ConfigureClothEntity(EntityTypeBuilder<Cloth> builder)
     {
         builder.ToTable(ClothTable);
         builder.HasKey(c => c.Id);
@@ -35,7 +46,7 @@ public class ClothConfiguration : IEntityTypeConfiguration<Domain.ClosetAggregat
         builder.Property(c => c.Size)
             .HasColumnName("size")
             .IsRequired();
-        
+
         builder
             .HasOne<Brand>()
             .WithMany()
