@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Extensions;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
@@ -42,7 +43,7 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         var email = Email.Create(request.Email);
         var password = Password.Create(request.Password);
         var phone = Phone.Create(request.CountryCode, request.Phone);
-        var userName = UserName.Create(request.UserName);
+        var userName = UserName.Create(request.UserName.Capitalize());
         var gender = _accountService.GetGender(request.Gender);
 
         var shouldBeValid = ValidateConstraints(email, password, phone, gender);
@@ -51,21 +52,9 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         {
             return shouldBeValid.Errors;
         }
-
-        // Check if user exists
-        if (await _authRepository.ExistsUserByEmailAsync(email.Value, cancellationToken))
-        {
-            return Errors.User.EmailAlreadyExists;
-        }
-
-        // Check if user exists
-        if (await _profileRepository.ExistsUserByUserNameAsync(userName, cancellationToken))
-        {
-            return Errors.User.UserNameAlreadyExists;
-        }
         
         var personalProfile = Consumer.Create(
-                userName,
+                userName.Value,
                 phone.Value,
                 request.BornDate,
                 gender.Value
@@ -79,11 +68,16 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
             cancellationToken
         );
 
+        if (account.IsError)
+        {
+            return account.Errors;
+        }
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var payload = new AuthTokenPayload(
-            account.Id,
-            account.Email,
+            account.Value.Id,
+            account.Value.Email,
             personalProfile.UserName,
             personalProfile.AvatarUrl,
             10,

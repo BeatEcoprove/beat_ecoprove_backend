@@ -22,25 +22,16 @@ public class Bucket : AggregateRoot<BucketId, Guid>
     public IReadOnlyList<BucketClothEntry> BucketClothEntries => _bucketClothEntries.AsReadOnly();
 
     public static ErrorOr<Bucket> Create(
-        string name,
-        List<ClothId> cloths)
+        string name)
     {
-        Bucket bucket = new(
-            BucketId.CreateUnique(), 
-            name);
-
-        if (HasZeroCloth(cloths))
+        if (string.IsNullOrWhiteSpace(name))
         {
-            return Errors.Bucket.EmptyClothIds;
-        }
-
-        if (!CheckIfClothAreDiferent(cloths))
-        {
-            return Errors.Bucket.ClothAreNotUnique;
+            return Errors.Bucket.InvalidBucketName;
         }
         
-        bucket.AddCloths(cloths);
-        return bucket;
+        return new Bucket(
+            BucketId.CreateUnique(),
+            name);
     }
 
     private static bool CheckIfClothAreDiferent(List<ClothId> cloths)
@@ -53,12 +44,24 @@ public class Bucket : AggregateRoot<BucketId, Guid>
         return cloths.Count == 0;
     }
 
-    public void AddCloths(List<ClothId> cloths)
+    public ErrorOr<bool> AddCloths(List<ClothId> cloths)
     {
+        if (HasZeroCloth(cloths))
+        {
+            return Errors.Bucket.EmptyClothIds;
+        }
+
+        if (!CheckIfClothAreDiferent(cloths))
+        {
+            return Errors.Bucket.ClothAreNotUnique;
+        }
+        
         foreach (var cloth in cloths)
         {
             AddCloth(cloth);
         }
+
+        return true;
     }
     
     public void AddCloth(ClothId clothId)

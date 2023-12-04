@@ -41,7 +41,7 @@ public class ValidationService : IValidationFieldService
     {
         var userName = UserName.Create(validationValue);
 
-        return !await _profileRepository.ExistsUserByUserNameAsync(userName, default);
+        return !await _profileRepository.ExistsUserByUserNameAsync(userName.Value, default);
     }
 
     public Task<bool> IsFieldAvailable(string fieldName, string value)

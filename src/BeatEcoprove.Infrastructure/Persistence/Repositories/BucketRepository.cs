@@ -2,6 +2,7 @@
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,19 @@ public class BucketRepository : Repository<Bucket, BucketId>, IBucketRepository
 {
     public BucketRepository(IApplicationDbContext dbContext) : base(dbContext)
     {
+    }
+
+    public async Task<bool> IsBucketNameAlreadyUsed(ProfileId profileId, BucketId bucketId, string name,
+        CancellationToken cancellationToken = default)
+    {
+        var bucketNameAlreadyUsed =
+            from bucket in DbContext.Buckets
+            from profile in DbContext.Profiles
+            from bucketEntry in profile.BucketEntries
+            where bucketEntry.BucketId != bucketId && bucketEntry.ProfileId == profileId && bucket.Name == name
+            select bucket.Name;
+        
+        return await bucketNameAlreadyUsed.AnyAsync(cancellationToken);
     }
 
     public async Task<bool> CanAddClothsAsync(List<ClothId> clothIds, CancellationToken cancellationToken)

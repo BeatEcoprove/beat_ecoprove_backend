@@ -31,4 +31,10 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
     {
         throw new NotImplementedException();
     }
+
+    public async Task<bool> ClothExists(List<ClothId> cloths, CancellationToken cancellationToken = default)
+    {
+        return await DbContext.Cloths
+            .AnyAsync(cloth => cloths.Contains(cloth.Id), cancellationToken);
+    }
 }

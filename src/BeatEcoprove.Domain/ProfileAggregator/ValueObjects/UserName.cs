@@ -1,4 +1,6 @@
-﻿using BeatEcoprove.Domain.Shared.Models;
+﻿using BeatEcoprove.Domain.Shared.Errors;
+using BeatEcoprove.Domain.Shared.Models;
+using ErrorOr;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
@@ -10,8 +12,14 @@ public class UserName : ValueObject
 
     public string Value { get; private set; } = null!;
 
-    public static UserName Create(string value)
+    public static ErrorOr<UserName> Create(string value)
     {
+        // verify if is null or empty
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return Errors.Username.InvalidUsername;
+        }
+        
         return new UserName(value);
     }
 

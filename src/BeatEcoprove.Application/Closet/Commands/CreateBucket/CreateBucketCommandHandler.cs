@@ -1,12 +1,13 @@
 ﻿using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Extensions;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
+using Mapster;
 
 namespace BeatEcoprove.Application.Closet.Commands.CreateBucket;
 
@@ -15,15 +16,18 @@ internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketC
     private readonly IProfileManager _profileManager;
     private readonly IBucketRepository _bucketRepository;
     private readonly IClosetService _closetService;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CreateBucketCommandHandler(
         IProfileManager profileManager,
         IBucketRepository bucketRepository,
-        IClosetService closetService)
+        IClosetService closetService, 
+        IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
         _bucketRepository = bucketRepository;
         _closetService = closetService;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<ErrorOr<BucketResult>> Handle(CreateBucketCommand request, CancellationToken cancellationToken)
@@ -35,16 +39,8 @@ internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketC
             return profile.Errors;
         }
         
-        var convertToClothId = request.ClothIds.Select(ClothId.Create).ToList();
-        
-        if (!await _bucketRepository.CanAddClothsAsync(null, cancellationToken))
-        {
-            return Errors.Bucket.CanAddClothToBucket;
-        }
-
         var bucket = Bucket.Create(
-            request.Name,
-            convertToClothId
+            request.Name.Capitalize()
         );
 
         if (bucket.IsError)
@@ -52,8 +48,29 @@ internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketC
             return bucket.Errors;
         }
 
-        var bucketResult = await _closetService.AddBucketToCloset(profile.Value, bucket.Value, cancellationToken);
+        var shouldAddBucketToCloset = await _closetService.AddBucketToCloset(
+            profile.Value, 
+            bucket.Value, 
+            ToClothIdList(request), 
+            cancellationToken);
         
-        return bucketResult;
+        if (shouldAddBucketToCloset.IsError)
+        {
+            return shouldAddBucketToCloset.Errors;
+        }
+        
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        var cloths = await
+            _bucketRepository.GetClothsAsync(bucket.Value.Id, cancellationToken);
+        
+        return new BucketResult(
+            bucket.Value,
+            cloths.Adapt<List<ClothResult>>());
+    }
+
+    private static List<ClothId> ToClothIdList(CreateBucketCommand request)
+    {
+        return request.ClothIds.Select(ClothId.Create).ToList();
     }
 }

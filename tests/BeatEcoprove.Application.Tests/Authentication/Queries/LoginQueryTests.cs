@@ -60,7 +60,7 @@ public class LoginQueryTests
 
         return new Faker<Organization>()
             .CustomInstantiator(f => Organization.Create(
-                UserName.Create(f.Person.UserName),
+                UserName.Create(f.Person.UserName).Value,
                 Phone.Create("+351", "915682123").Value,
                 address
                 ))

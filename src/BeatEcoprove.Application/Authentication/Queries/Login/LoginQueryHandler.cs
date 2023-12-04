@@ -64,7 +64,7 @@ internal sealed class LoginQueryHandler : IQueryHandler<LoginQuery, ErrorOr<Auth
             auth.Id,
             auth.Email,
             profile.UserName,
-            "https://github.com/DiogoCC7.png",
+            profile.AvatarUrl,
             10,
             10,
             10,

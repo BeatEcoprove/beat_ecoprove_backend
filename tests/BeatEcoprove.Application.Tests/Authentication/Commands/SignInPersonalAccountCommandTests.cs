@@ -84,7 +84,7 @@ public class SignInPersonalAccountCommandTests
         var command = await GetSutCommand();
 
         _profileRepository.ExistsUserByUserNameAsync(
-            UserName.Create(command.UserName),
+            UserName.Create(command.UserName).Value,
             default).Returns(true);
 
         // Act

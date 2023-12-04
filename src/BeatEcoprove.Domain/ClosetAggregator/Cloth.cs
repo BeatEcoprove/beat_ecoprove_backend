@@ -1,8 +1,10 @@
 ﻿using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
+using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.Shared.ValueObjects;
+using ErrorOr;
 
 namespace BeatEcoprove.Domain.ClosetAggregator;
 
@@ -36,13 +38,18 @@ public class Cloth : AggregateRoot<ClothId, Guid>
     public int EcoScore { get; private set; }
     public string ClothAvatar { get; private set; } = null!;
 
-    public static Cloth Create(
+    public static ErrorOr<Cloth> Create(
         string name,
         ClothType type,
         ClothSize size,
         string brand,
         ColorId color)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return Errors.Cloth.InvalidClothType;
+        }
+        
         return new Cloth(
             ClothId.CreateUnique(),
             name,

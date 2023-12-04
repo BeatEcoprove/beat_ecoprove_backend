@@ -9,4 +9,5 @@ public interface IClothRepository : IRepository<Cloth, ClothId>
 {
     Task<List<Cloth>> GetClothOfProfile(ProfileId profileId, CancellationToken cancellationToken = default);
     Task<List<Cloth>> GetAllCloth(ProfileId currentProfile, CancellationToken cancellationToken);
+    Task<bool> ClothExists(List<ClothId> cloths, CancellationToken cancellationToken = default);
 }
