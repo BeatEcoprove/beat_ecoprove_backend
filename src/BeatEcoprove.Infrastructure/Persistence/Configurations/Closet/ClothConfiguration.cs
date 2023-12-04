@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.Shared.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +50,11 @@ public class ClothConfiguration : IEntityTypeConfiguration<Cloth>
         builder.Property(c => c.Size)
             .HasColumnName("size")
             .IsRequired();
+        
+        builder
+            .HasOne<Brand>()
+            .WithMany()
+            .HasForeignKey(c => c.Brand);
 
         builder
             .HasOne<Brand>()

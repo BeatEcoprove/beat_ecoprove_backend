@@ -2,6 +2,7 @@
 using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.Shared.ValueObjects;
