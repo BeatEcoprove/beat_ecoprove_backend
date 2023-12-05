@@ -2,7 +2,9 @@
 
 public enum ClothType
 {
-    Male = 0,
-    Female = 1,
-    Unisex = 2
+    Jeans = 0,
+    Jackets = 1,
+    TShirts = 2,
+    Shirts = 3,
+    Skirts = 4
 }
