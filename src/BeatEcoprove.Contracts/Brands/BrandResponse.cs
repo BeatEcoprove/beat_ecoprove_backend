@@ -2,5 +2,5 @@
 
 public record BrandResponse
 (
-    string Name
+    List<BrandResult> Brands
 );

@@ -7,10 +7,12 @@ using BeatEcoprove.Contracts.Closet.Cloth;
 using Mapster;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
+[Authorize]
 [Route("profiles/closet")]
 public class OutfitController : ApiController
 {
