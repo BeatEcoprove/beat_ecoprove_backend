@@ -28,5 +28,8 @@ public class MaintenanceConfiguration : IEntityTypeConfiguration<MaintenanceActi
         builder.Property(maintenance => maintenance.PointsOfSustentability)
             .HasColumnName("points_of_sustainability")
             .IsRequired();
+        
+        builder.Property(maintenance => maintenance.DeletedAt)
+            .HasColumnName("deleted_at");
     }
 }

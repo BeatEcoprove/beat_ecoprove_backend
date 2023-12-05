@@ -25,6 +25,9 @@ public class MaintenanceServiceConfiguration : IEntityTypeConfiguration<Maintena
                 id => id.Value,
                 value => MaintenanceServiceId.Create(value));
         
+        builder.Property(maintenanceService => maintenanceService.DeletedAt)
+            .HasColumnName("deleted_at");
+        
         builder.Property(maintenanceService => maintenanceService.MaintenanceActivityId)
             .HasColumnName("maintenance_activity_id")
             .ValueGeneratedNever()

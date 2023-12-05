@@ -165,7 +165,7 @@ public class ClosetService : IClosetService
         {
             return Errors.Cloth.InvalidClothName;
         }
-
+        
         return cloth;
     }
     
@@ -182,7 +182,7 @@ public class ClosetService : IClosetService
         {
             return Errors.Cloth.InvalidClothName;
         }
-
+        
         return cloth.Adapt<ClothResult>();
     }
 

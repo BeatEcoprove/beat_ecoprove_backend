@@ -32,6 +32,9 @@ public class ClothConfiguration : IEntityTypeConfiguration<Cloth>
                 id => id.Value,
                 value => ClothId.Create(value))
             .IsRequired();
+        
+        builder.Property(cloth => cloth.DeletedAt)
+            .HasColumnName("deleted_at");
 
         builder.Property(c => c.Name)
             .HasColumnName("name")

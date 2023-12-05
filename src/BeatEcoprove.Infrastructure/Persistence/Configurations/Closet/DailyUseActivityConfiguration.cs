@@ -19,5 +19,8 @@ public class DailyUseActivityConfiguration : IEntityTypeConfiguration<DailyUseAc
         builder.Property(daily => daily.PointsOfSustentability)
             .HasColumnName("points_of_sustainability")
             .IsRequired();
+        
+        builder.Property(daily => daily.DeletedAt)
+            .HasColumnName("deleted_at");
     }
 }

@@ -25,6 +25,9 @@ public class BucketConfiguration : IEntityTypeConfiguration<Bucket>
             .HasColumnName("name")
             .HasMaxLength(50)
             .IsRequired();
+        
+        builder.Property(bucket => bucket.DeletedAt)
+            .HasColumnName("deleted_at");
 
         builder.OwnsMany(b => b.BucketClothEntries, clothEntries =>
         {

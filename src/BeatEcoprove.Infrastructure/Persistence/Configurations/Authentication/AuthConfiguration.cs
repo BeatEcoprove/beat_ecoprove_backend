@@ -40,6 +40,9 @@ public class AuthConfiguration : IEntityTypeConfiguration<Auth>
 
         builder.Property(auth => auth.IsEnabled)
             .HasColumnName("is_enabled");
+        
+        builder.Property(auth => auth.DeletedAt)
+            .HasColumnName("deleted_at");
 
         builder.Property(auth => auth.MainProfileId)
             .HasColumnName("main_profile_id")

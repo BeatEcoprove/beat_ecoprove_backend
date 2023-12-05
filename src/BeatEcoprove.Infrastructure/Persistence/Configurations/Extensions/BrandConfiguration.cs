@@ -26,6 +26,9 @@ public class BrandConfiguration : IEntityTypeConfiguration<Brand>
             .HasColumnName("name")
             .HasMaxLength(30)
             .IsRequired();
+        
+        builder.Property(brand => brand.DeletedAt)
+            .HasColumnName("deleted_at");
 
         builder.Property(brand => brand.BrandAvatar)
             .HasColumnName("brand_avatar")

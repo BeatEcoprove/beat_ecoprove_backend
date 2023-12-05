@@ -2,6 +2,9 @@
 using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.Shared.Models;
+using BeatEcoprove.Infrastructure.Extensions;
+using BeatEcoprove.Infrastructure.Persistence.Interceptors;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -11,10 +14,13 @@ namespace BeatEcoprove.Infrastructure.Persistence;
 public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWork
 {
     private readonly DbSettings _dbSettings;
+    private readonly SoftDeleteInterceptor _softDeleteInterceptor;
     
     public BeatEcoproveDbContext(
-        IOptions<DbSettings> dbSettings)
+        IOptions<DbSettings> dbSettings, 
+        SoftDeleteInterceptor softDeleteInterceptor)
     {
+        _softDeleteInterceptor = softDeleteInterceptor;
         _dbSettings = dbSettings.Value;
     }
 
@@ -25,6 +31,8 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        optionsBuilder.AddInterceptors(_softDeleteInterceptor);
+        
         optionsBuilder.UseNpgsql(_dbSettings.ConnectionString, builder =>
         {
             builder.MigrationsAssembly("BeatEcoprove.Infrastructure");
@@ -35,7 +43,13 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(BeatEcoproveDbContext).Assembly);
+        modelBuilder
+            .Ignore<List<IDomainEvent>>()
+            .ApplyConfigurationsFromAssembly(typeof(BeatEcoproveDbContext).Assembly);
+        
+        modelBuilder
+            .SetUpGlobalQueryFilters<ISoftDelete>((entity) => entity.DeletedAt == null);
+
         base.OnModelCreating(modelBuilder);
     }
 

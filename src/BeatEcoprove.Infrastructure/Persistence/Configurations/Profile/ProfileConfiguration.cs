@@ -87,6 +87,9 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
     {
         builder.ToTable(ProfileTable);
         builder.HasKey(profile => profile.Id);
+        
+        builder.Property(profile => profile.DeletedAt)
+            .HasColumnName("deleted_at");
 
         builder.Property(profile => profile.Id)
             .HasColumnName("Id")

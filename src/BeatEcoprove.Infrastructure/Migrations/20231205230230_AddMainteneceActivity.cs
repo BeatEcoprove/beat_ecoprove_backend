@@ -11,6 +11,48 @@ namespace BeatEcoprove.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<DateTimeOffset>(
+                name: "deleted_at",
+                table: "profiles",
+                type: "timestamp with time zone",
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTimeOffset>(
+                name: "deleted_at",
+                table: "colors",
+                type: "timestamp with time zone",
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTimeOffset>(
+                name: "deleted_at",
+                table: "cloths",
+                type: "timestamp with time zone",
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTimeOffset>(
+                name: "deleted_at",
+                table: "buckets",
+                type: "timestamp with time zone",
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTimeOffset>(
+                name: "deleted_at",
+                table: "brands",
+                type: "timestamp with time zone",
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTimeOffset>(
+                name: "deleted_at",
+                table: "auths",
+                type: "timestamp with time zone",
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTimeOffset>(
+                name: "deleted_at",
+                table: "activities",
+                type: "timestamp with time zone",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "maintenance_activities",
                 columns: table => new
@@ -39,7 +81,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     maintenance_activity_id = table.Column<Guid>(type: "uuid", nullable: false),
                     badge = table.Column<string>(type: "text", nullable: false),
                     title = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
-                    description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                    description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    deleted_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -66,6 +109,34 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "maintenance_activities");
+
+            migrationBuilder.DropColumn(
+                name: "deleted_at",
+                table: "profiles");
+
+            migrationBuilder.DropColumn(
+                name: "deleted_at",
+                table: "colors");
+
+            migrationBuilder.DropColumn(
+                name: "deleted_at",
+                table: "cloths");
+
+            migrationBuilder.DropColumn(
+                name: "deleted_at",
+                table: "buckets");
+
+            migrationBuilder.DropColumn(
+                name: "deleted_at",
+                table: "brands");
+
+            migrationBuilder.DropColumn(
+                name: "deleted_at",
+                table: "auths");
+
+            migrationBuilder.DropColumn(
+                name: "deleted_at",
+                table: "activities");
         }
     }
 }

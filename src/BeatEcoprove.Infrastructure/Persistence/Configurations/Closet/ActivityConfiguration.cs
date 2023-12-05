@@ -36,6 +36,9 @@ public class ActivityConfiguration : IEntityTypeConfiguration<Activity>
             .WithMany()
             .HasForeignKey(b => b.ProfileId);
         
+        builder.Property(activity => activity.DeletedAt)
+            .HasColumnName("deleted_at");
+        
         builder.Property(activity => activity.ProfileId)
             .HasColumnName("profile_id")
             .ValueGeneratedNever()

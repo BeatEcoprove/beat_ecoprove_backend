@@ -7,6 +7,7 @@ using BeatEcoprove.Infrastructure.Authentication;
 using BeatEcoprove.Infrastructure.EmailSender;
 using BeatEcoprove.Infrastructure.FileStorage;
 using BeatEcoprove.Infrastructure.Persistence;
+using BeatEcoprove.Infrastructure.Persistence.Interceptors;
 using BeatEcoprove.Infrastructure.Persistence.Repositories;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 using BeatEcoprove.Infrastructure.Providers;
@@ -97,6 +98,8 @@ public static class DependencyInjection
         services.AddDbContext<BeatEcoproveDbContext>();
         services.AddScoped<IApplicationDbContext>(provider => provider.GetService<BeatEcoproveDbContext>()!);
         services.AddScoped<IUnitOfWork>(provider => provider.GetService<BeatEcoproveDbContext>()!);
+        
+        services.AddScoped<SoftDeleteInterceptor>();
 
         services.AddScoped<IAuthRepository, AuthRepository>();
         services.AddScoped<IProfileRepository, ProfileRepository>();
