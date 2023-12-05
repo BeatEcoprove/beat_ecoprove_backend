@@ -2,10 +2,12 @@
 using BeatEcoprove.Contracts.Colors;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
+[Authorize]
 [Route("extension/colors")]
 public class ColorController : ApiController
 {
@@ -18,14 +20,14 @@ public class ColorController : ApiController
         _mapper = mapper;
     }
 
-    public async Task<ActionResult<List<ColorResponse>>> GetAllColors()
+    public async Task<ActionResult<ColorResponse>> GetAllColors()
     {
         var getAllColorsResult = 
             await _sender.Send(new GetColorsQuery());
         
         return getAllColorsResult.Match(
-            colorResponse => Ok(_mapper.Map<List<ColorResponse>>(colorResponse)),
-            Problem<List<ColorResponse>>
+            colorResponse => Ok(_mapper.Map<ColorResponse>(colorResponse)),
+            Problem<ColorResponse>
         );
     }
 }

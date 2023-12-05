@@ -2,6 +2,5 @@
 
 public record ColorResponse
 (
-    string Name,
-    string Hex
+    List<ColorResult> Colors
 );
