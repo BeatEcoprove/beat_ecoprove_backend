@@ -1,6 +1,5 @@
 ﻿using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared.Helpers;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
@@ -21,20 +20,17 @@ public class ClosetService : IClosetService
     private readonly IClothRepository _clothRepository;
     private readonly IBucketRepository _bucketRepository;
     private readonly IProfileRepository _profileRepository;
-    private readonly IUnitOfWork _unitOfWork;
 
     public ClosetService(
         IFileStorageProvider fileStorageProvider, 
         IClothRepository clothRepository, 
         IBucketRepository bucketRepository, 
-        IProfileRepository profileRepository, 
-        IUnitOfWork unitOfWork)
+        IProfileRepository profileRepository)
     {
         _fileStorageProvider = fileStorageProvider;
         _clothRepository = clothRepository;
         _bucketRepository = bucketRepository;
         _profileRepository = profileRepository;
-        _unitOfWork = unitOfWork;
     }
 
     public async Task<ClothResult> AddClothToCloset(
@@ -184,14 +180,19 @@ public class ClosetService : IClosetService
 
         if (cloth is null)
         {
-            return Errors.Cloth.InvalidClothName;
+            return Errors.Cloth.ClothNotFound;
         }
         
         return cloth.Adapt<ClothResult>();
     }
 
-    public async Task<BucketResult> GetBucketResult(Bucket bucket, CancellationToken cancellationToken = default)
+    public async Task<ErrorOr<BucketResult>> GetBucketResult(Profile profile, Bucket bucket, CancellationToken cancellationToken = default)
     {
+        if (!await _profileRepository.CanProfileAccessBucket(profile.Id, bucket.Id, cancellationToken))
+        {
+            return Errors.Bucket.CannotAccessBucket;
+        }
+        
         var cloths = await
             _bucketRepository.GetClothsAsync(bucket.Id, cancellationToken);
         
@@ -255,7 +256,33 @@ public class ClosetService : IClosetService
         }
         
         await _clothRepository.RemoveByIdAsync(clothId, cancellationToken);
-
         return clothResult;
+    }
+
+    public async Task<ErrorOr<BucketResult>> RemoveBucketFromCloset(Profile profile, BucketId bucketId, CancellationToken cancellationToken)
+    {
+        var bucket = await _bucketRepository.GetByIdAsync(bucketId, cancellationToken);
+
+        if (bucket is null)
+        {
+            return Errors.Bucket.BucketDoesNotExists;
+        }
+        
+        var bucketResult = await GetBucketResult(profile, bucket, cancellationToken);
+
+        if (bucketResult.IsError)
+        {
+            return bucketResult.Errors;
+        }
+        
+        var shouldRemoveBucket = profile.RemoveBucket(bucketId);
+
+        if (shouldRemoveBucket.IsError)
+        {
+            return shouldRemoveBucket.Errors;
+        }
+        
+        await _bucketRepository.RemoveByIdAsync(bucketId, cancellationToken);
+        return bucketResult;
     }
 }

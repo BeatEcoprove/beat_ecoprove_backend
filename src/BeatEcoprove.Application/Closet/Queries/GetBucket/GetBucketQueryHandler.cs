@@ -44,12 +44,7 @@ internal sealed class GetBucketQueryHandler : IQueryHandler<GetBucketQuery, Erro
         {
             return Errors.Bucket.BucketDoesNotExists;
         }
-        
-        if (!await _profileRepository.CanProfileAccessBucket(profile.Value.Id, bucket.Id, cancellationToken))
-        {
-            return Errors.Bucket.CannotAccessBucket;
-        }
 
-        return await _closetService.GetBucketResult(bucket, cancellationToken);
+        return await _closetService.GetBucketResult(profile.Value, bucket, cancellationToken);
     }
 }

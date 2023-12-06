@@ -8,6 +8,10 @@ public static partial class Errors
     {
         public static Error CannotFindCloth => Error.Validation(
             "Profile.CannotFindCloth",
-            "Não foi possível encontrar a peça de roupa."); 
+            "Não foi possível encontrar a peça de roupa.");
+        
+        public static Error CannotFindBucket => Error.Validation(
+            "Profile.CannotFindCloth",
+            "Não foi possível encontrar o cesto."); 
     }
 }

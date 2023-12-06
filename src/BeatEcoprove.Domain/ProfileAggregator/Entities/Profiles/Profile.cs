@@ -82,4 +82,17 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
         
         return _clothEntries.Remove(clothEntry);
     }
+
+    public ErrorOr<bool> RemoveBucket(BucketId bucketId)
+    {
+        var bucketEntry = _bucketEntries
+            .SingleOrDefault(bucketEntry => bucketEntry.BucketId == bucketId);
+
+        if (bucketEntry is null)
+        {
+            return Errors.Profile.CannotFindCloth;
+        }
+        
+        return _bucketEntries.Remove(bucketEntry);
+    }
 }

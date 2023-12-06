@@ -61,7 +61,7 @@ internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketC
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return await _closetService.GetBucketResult(bucket.Value, cancellationToken);
+        return await _closetService.GetBucketResult(profile.Value, bucket.Value, cancellationToken);
     }
 
     private static List<ClothId> ToClothIdList(List<Guid> clothIds)

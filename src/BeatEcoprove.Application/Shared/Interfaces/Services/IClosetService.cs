@@ -15,8 +15,9 @@ public interface IClosetService
     Task<ErrorOr<Bucket>> RemoveClothFromBucket(Profile profile, Bucket bucket, List<ClothId> clothToRemove, CancellationToken cancellationToken);
     Task<ErrorOr<Cloth>> GetCloth(Profile profile, ClothId clothId, CancellationToken cancellationToken = default);
     Task<ErrorOr<ClothResult>> GetClothResult(Profile profile, ClothId clothId, CancellationToken cancellationToken = default);
-    Task<BucketResult> GetBucketResult(Bucket bucket, CancellationToken cancellationToken = default);
+    Task<ErrorOr<BucketResult>> GetBucketResult(Profile profile, Bucket bucket, CancellationToken cancellationToken = default);
     ErrorOr<ClothType> GetClothType(string type);
     ErrorOr<ClothSize> GetClothSize(string size);
     Task<ErrorOr<ClothResult>> RemoveClothFromCloset(Profile profile, ClothId clothId, CancellationToken cancellationToken);
+    Task<ErrorOr<BucketResult>> RemoveBucketFromCloset(Profile profile, BucketId bucketId, CancellationToken cancellationToken);
 }

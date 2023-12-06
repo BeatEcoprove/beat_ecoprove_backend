@@ -2,6 +2,7 @@
 using BeatEcoprove.Application.Closet.Commands.AddClothToBucket;
 using BeatEcoprove.Application.Closet.Commands.CreateBucket;
 using BeatEcoprove.Application.Closet.Commands.CreateCloth;
+using BeatEcoprove.Application.Closet.Commands.RemoveBucketFromCloset;
 using BeatEcoprove.Application.Closet.Commands.RemoveClothFromBucket;
 using BeatEcoprove.Application.Closet.Commands.RemoveClothFromCloset;
 using BeatEcoprove.Application.Closet.Queries.GetBucket;
@@ -154,6 +155,28 @@ public class ClosetController : ApiController
                 ProfileId = profileId,
                 BucketId = bucketId
             }.Adapt<GetBucketQuery>());
+
+        return result.Match(
+            response => Created(
+                "",
+                _mapper.Map<BucketResponse>(response)
+            ),
+            Problem<BucketResponse>
+        );
+    }
+    
+    [HttpDelete("bucket/{bucketId:guid}")]
+    public async Task<ActionResult<BucketResponse>> RemoveBucketFromCloset([FromQuery] Guid profileId, Guid bucketId)
+    {
+        var authId = HttpContext.User.GetUserId();
+
+        var result = 
+            await _sender.Send(new
+            {
+                AuthId = authId,
+                ProfileId = profileId,
+                BucketId = bucketId
+            }.Adapt<RemoveBucketFromClosetCommand>());
 
         return result.Match(
             response => Created(

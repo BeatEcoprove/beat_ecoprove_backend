@@ -59,7 +59,7 @@ internal sealed class RemoveClothFromBucketCommandHandler : ICommandHandler<Remo
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return await _closetService.GetBucketResult(bucket, cancellationToken);
+        return await _closetService.GetBucketResult(profile.Value, bucket, cancellationToken);
     }
     
     private static List<ClothId> ToClothIdList(List<Guid> clothIds)
