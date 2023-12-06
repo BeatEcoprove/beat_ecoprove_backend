@@ -37,6 +37,20 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
         return await getCloth.SingleOrDefaultAsync(cancellationToken);
     }
 
+    public async Task RemoveByIdAsync(ClothId clothId, CancellationToken cancellationToken)
+    {
+        var cloth = await DbContext
+            .Cloths
+            .SingleOrDefaultAsync(cloth => cloth.Id == clothId, cancellationToken);
+
+        if (cloth is null)
+        {
+            throw new Exception("Cloth not found");
+        }
+
+        DbContext.Cloths.Remove(cloth);
+    }
+
     public async Task<bool> ClothExists(List<ClothId> cloths, CancellationToken cancellationToken = default)
     {
         return await DbContext.Cloths

@@ -11,6 +11,11 @@ namespace BeatEcoprove.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.RenameColumn(
+                name: "EndAt",
+                table: "activities",
+                newName: "end_at");
+
             migrationBuilder.AddColumn<DateTimeOffset>(
                 name: "deleted_at",
                 table: "profiles",
@@ -31,7 +36,25 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.AddColumn<DateTimeOffset>(
                 name: "deleted_at",
+                table: "cloth_entries",
+                type: "timestamp with time zone",
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTimeOffset>(
+                name: "deleted_at",
                 table: "buckets",
+                type: "timestamp with time zone",
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTimeOffset>(
+                name: "deleted_at",
+                table: "bucket_entries",
+                type: "timestamp with time zone",
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTimeOffset>(
+                name: "deleted_at",
+                table: "bucket_cloths",
                 type: "timestamp with time zone",
                 nullable: true);
 
@@ -124,7 +147,19 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             migrationBuilder.DropColumn(
                 name: "deleted_at",
+                table: "cloth_entries");
+
+            migrationBuilder.DropColumn(
+                name: "deleted_at",
                 table: "buckets");
+
+            migrationBuilder.DropColumn(
+                name: "deleted_at",
+                table: "bucket_entries");
+
+            migrationBuilder.DropColumn(
+                name: "deleted_at",
+                table: "bucket_cloths");
 
             migrationBuilder.DropColumn(
                 name: "deleted_at",
@@ -137,6 +172,11 @@ namespace BeatEcoprove.Infrastructure.Migrations
             migrationBuilder.DropColumn(
                 name: "deleted_at",
                 table: "activities");
+
+            migrationBuilder.RenameColumn(
+                name: "end_at",
+                table: "activities",
+                newName: "EndAt");
         }
     }
 }

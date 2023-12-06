@@ -62,4 +62,31 @@ public class BucketRepository : Repository<Bucket, BucketId>, IBucketRepository
         
         return getBucketCloths.ToListAsync(cancellationToken);
     }
+
+    public async Task<(bool, Bucket)> CheckIfClothBelongsToAnBucket(ClothId clothId, CancellationToken cancellationToken = default)
+    {
+        var checkIfClothBelongsToBucket =
+            from bucketEntry in DbContext.Buckets
+            from bucketClothEntry in bucketEntry.BucketClothEntries
+            where bucketClothEntry.ClothId == clothId
+            select bucketEntry;
+        
+        var result = await checkIfClothBelongsToBucket.FirstOrDefaultAsync(cancellationToken);
+        
+        return (result is not null, result!);
+    }
+
+    public async Task RemoveByIdAsync(BucketId bucketId, CancellationToken cancellationToken)
+    {
+        var bucket = await DbContext
+            .Buckets
+            .SingleOrDefaultAsync(bucket => bucket.Id == bucketId, cancellationToken);
+
+        if (bucket is null)
+        {
+            throw new Exception("Cloth not found");
+        }
+
+        DbContext.Buckets.Remove(bucket);
+    }
 }

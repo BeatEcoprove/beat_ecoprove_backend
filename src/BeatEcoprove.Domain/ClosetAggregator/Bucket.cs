@@ -19,6 +19,7 @@ public class Bucket : AggregateRoot<BucketId, Guid>
     }
 
     public string Name { get; private set; }
+    public int ClothNumber => _bucketClothEntries.Count(entry => entry.DeletedAt == null);
     public IReadOnlyList<BucketClothEntry> BucketClothEntries => _bucketClothEntries.AsReadOnly();
 
     public static ErrorOr<Bucket> Create(

@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared.Helpers;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
@@ -20,17 +21,20 @@ public class ClosetService : IClosetService
     private readonly IClothRepository _clothRepository;
     private readonly IBucketRepository _bucketRepository;
     private readonly IProfileRepository _profileRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public ClosetService(
         IFileStorageProvider fileStorageProvider, 
         IClothRepository clothRepository, 
         IBucketRepository bucketRepository, 
-        IProfileRepository profileRepository)
+        IProfileRepository profileRepository, 
+        IUnitOfWork unitOfWork)
     {
         _fileStorageProvider = fileStorageProvider;
         _clothRepository = clothRepository;
         _bucketRepository = bucketRepository;
         _profileRepository = profileRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<ClothResult> AddClothToCloset(
@@ -214,5 +218,44 @@ public class ClosetService : IClosetService
         }
 
         return Errors.Cloth.InvalidClothSize;
+    }
+
+    public async Task<ErrorOr<ClothResult>> RemoveClothFromCloset(Profile profile, ClothId clothId, CancellationToken cancellationToken)
+    {
+        // TODO: Move this to an Domain Event
+        var clothResult = await GetClothResult(profile, clothId, cancellationToken);
+
+        if (clothResult.IsError)
+        {
+            return clothResult.Errors;
+        }
+        
+        var shouldRemoveCloth = profile.RemoveCloth(clothId);
+        
+        if (shouldRemoveCloth.IsError)
+        {
+            return shouldRemoveCloth.Errors;
+        }
+        
+        var (clothShouldBelongToBucket, bucket) = await _bucketRepository.CheckIfClothBelongsToAnBucket(clothId, cancellationToken);
+
+        if (clothShouldBelongToBucket)
+        {
+            var shouldRemoveClothFromBucket = bucket.RemoveCloths(new List<ClothId>() { clothId });
+
+            if (shouldRemoveClothFromBucket.IsError)
+            {
+                return shouldRemoveClothFromBucket.Errors;
+            }
+            
+            if (bucket.ClothNumber == 0)
+            {
+                await _bucketRepository.RemoveByIdAsync(bucket.Id, cancellationToken);
+            }
+        }
+        
+        await _clothRepository.RemoveByIdAsync(clothId, cancellationToken);
+
+        return clothResult;
     }
 }

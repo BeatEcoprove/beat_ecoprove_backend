@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     [DbContext(typeof(BeatEcoproveDbContext))]
-    [Migration("20231205230230_AddMainteneceActivity")]
+    [Migration("20231206010054_AddMainteneceActivity")]
     partial class AddMainteneceActivity
     {
         /// <inheritdoc />
@@ -163,7 +163,8 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnName("delta_score");
 
                     b.Property<DateTime>("EndAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("end_at");
 
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uuid")
@@ -404,6 +405,10 @@ namespace BeatEcoprove.Infrastructure.Migrations
                                 .HasColumnType("uuid")
                                 .HasColumnName("cloth_id");
 
+                            b1.Property<DateTimeOffset?>("DeletedAt")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("deleted_at");
+
                             b1.HasKey("BucketId", "ClothId");
 
                             b1.HasIndex("ClothId");
@@ -480,6 +485,10 @@ namespace BeatEcoprove.Infrastructure.Migrations
                                 .HasColumnType("uuid")
                                 .HasColumnName("bucket_id");
 
+                            b1.Property<DateTimeOffset?>("DeletedAt")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("deleted_at");
+
                             b1.Property<bool>("IsBlocked")
                                 .HasColumnType("boolean")
                                 .HasColumnName("is_blocked");
@@ -501,6 +510,10 @@ namespace BeatEcoprove.Infrastructure.Migrations
                             b1.Property<Guid>("ClothId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("cloth_id");
+
+                            b1.Property<DateTimeOffset?>("DeletedAt")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("deleted_at");
 
                             b1.Property<bool>("IsBlocked")
                                 .HasColumnType("boolean")

@@ -17,4 +17,5 @@ public class BucketEntry
     public ProfileId ProfileId { get; private set; }
     public BucketId BucketId { get; private set; }
     public bool IsBlocked { get; private set; }
+    public DateTimeOffset? DeletedAt { get; set; }
 }

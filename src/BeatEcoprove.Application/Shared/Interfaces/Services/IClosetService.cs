@@ -18,4 +18,5 @@ public interface IClosetService
     Task<BucketResult> GetBucketResult(Bucket bucket, CancellationToken cancellationToken = default);
     ErrorOr<ClothType> GetClothType(string type);
     ErrorOr<ClothSize> GetClothSize(string size);
+    Task<ErrorOr<ClothResult>> RemoveClothFromCloset(Profile profile, ClothId clothId, CancellationToken cancellationToken);
 }

@@ -38,6 +38,9 @@ public class BucketConfiguration : IEntityTypeConfiguration<Bucket>
                 .WithOwner()
                 .HasForeignKey(b => b.BucketId);
             
+            clothEntries.Property(b => b.DeletedAt)
+                .HasColumnName("deleted_at");
+            
             clothEntries.Property(b => b.BucketId)
                 .HasColumnName("bucket_id")
                 .HasConversion(
@@ -54,5 +57,7 @@ public class BucketConfiguration : IEntityTypeConfiguration<Bucket>
                 .WithMany()
                 .HasForeignKey(b => b.ClothId);
         });
+        
+        builder.HasQueryFilter(b => b.BucketClothEntries.All(be => be.DeletedAt == null));
     }
 }

@@ -38,6 +38,9 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
                     profileId => profileId.Value,
                     value => ProfileId.Create(value));
             
+            bucketEntry.Property(b => b.DeletedAt)
+                .HasColumnName("deleted_at");
+            
             bucketEntry.Property(b => b.BucketId)
                 .HasColumnName("bucket_id")
                 .ValueGeneratedNever()
@@ -65,6 +68,9 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
                 .HasConversion(
                     profileId => profileId.Value,
                     value => ProfileId.Create(value));
+            
+            clothEntry.Property(c => c.DeletedAt)
+                .HasColumnName("deleted_at");
 
             clothEntry.Property(c => c.ClothId)
                 .HasColumnName("cloth_id")
@@ -152,5 +158,8 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
             .HasColumnName("avatar_url")
             .HasMaxLength(256)
             .IsRequired();
+        
+        builder.HasQueryFilter(b => b.BucketEntries.All(be => be.DeletedAt == null));
+        builder.HasQueryFilter(b => b.ClothEntries.All(be => be.DeletedAt == null));
     }
 }

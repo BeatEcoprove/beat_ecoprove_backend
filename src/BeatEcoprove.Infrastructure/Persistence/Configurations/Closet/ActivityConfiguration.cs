@@ -58,5 +58,9 @@ public class ActivityConfiguration : IEntityTypeConfiguration<Activity>
         builder.Property(activity => activity.CreatedAt)
             .HasColumnName("created_at")
             .IsRequired();
+        
+        builder.Property(activity => activity.EndAt)
+            .HasColumnName("end_at")
+            .IsRequired();
     }
 }

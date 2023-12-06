@@ -34,10 +34,10 @@ public class SoftDeleteInterceptor: SaveChangesInterceptor
         
         foreach (var entry in deletedEntities)
         {
-            if (entry is not { State: EntityState.Deleted, Entity: ISoftDelete delete }) continue;
+            if (entry is not { State: EntityState.Deleted}) continue;
 
             entry.State = EntityState.Modified;
-            delete.DeletedAt = DateTimeOffset.UtcNow;
+            entry.Property("DeletedAt").CurrentValue = DateTimeOffset.UtcNow;
         }
     }
 }

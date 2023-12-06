@@ -1,9 +1,12 @@
 ﻿using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator;
+using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
+using ErrorOr;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
@@ -65,5 +68,18 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
     {
         _bucketEntries.Add(
             new BucketEntry(this.Id, bucket.Id));
+    }
+
+    public ErrorOr<bool> RemoveCloth(ClothId clothId)
+    {
+        var clothEntry = _clothEntries
+            .SingleOrDefault(clothEntry => clothEntry.ClothId == clothId);
+
+        if (clothEntry is null)
+        {
+            return Errors.Profile.CannotFindCloth;
+        }
+        
+        return _clothEntries.Remove(clothEntry);
     }
 }
