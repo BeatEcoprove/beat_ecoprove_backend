@@ -68,7 +68,7 @@ public static class DependencyInjection
     {
         var mailSenderSettings = new LocalFileStorageSettings
         {
-            BaseUrl = "http://localhost:5182",
+            BaseUrl = "http://0.0.0.0:5182",
             FolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "public"),
             PublicFolder = "public"
         };
