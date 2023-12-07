@@ -26,10 +26,7 @@ public class LocalFileStorageProvider : IFileStorageProvider
 
         await using var fileStream = new FileStream(path, stream.CanSeek ? FileMode.Create : FileMode.CreateNew);
         await stream.CopyToAsync(fileStream, cancellationToken);
-        
-        return new UriBuilder(_settings.BaseUrl)
-        {
-            Path = Path.Combine(_settings.PublicFolder, pointerName)
-        }.ToString();
+
+        return Path.Combine(_settings.PublicFolder, pointerName);
     }
 }

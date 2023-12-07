@@ -18,15 +18,11 @@ namespace BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount
 
 internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<SignInPersonalAccountCommand, ErrorOr<AuthenticationResult>>
 {
-    private readonly IAuthRepository _authRepository;
-    private readonly IProfileRepository _profileRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtProvider _jwtProvider;
     private readonly IAccountService _accountService;
 
     public SignInPersonalAccountCommandHandler(
-        IAuthRepository authRepository,
-        IProfileRepository profileRepository,
         IUnitOfWork unitOfWork,
         IJwtProvider jwtProvider, 
         IAccountService accountService)
@@ -34,8 +30,6 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         _unitOfWork = unitOfWork;
         _jwtProvider = jwtProvider;
         _accountService = accountService;
-        _authRepository = authRepository;
-        _profileRepository = profileRepository;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(SignInPersonalAccountCommand request, CancellationToken cancellationToken)

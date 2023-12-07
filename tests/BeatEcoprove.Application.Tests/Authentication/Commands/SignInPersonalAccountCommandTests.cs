@@ -24,8 +24,6 @@ public class SignInPersonalAccountCommandTests
     public SignInPersonalAccountCommandTests()
     {
         _sut = new SignInPersonalAccountCommandHandler(
-            _authRepository,
-            _profileRepository,
             _unitOfWork,
             _jwtProvider,
             _accountService);
