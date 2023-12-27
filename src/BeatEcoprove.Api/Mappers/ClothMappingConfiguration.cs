@@ -30,8 +30,6 @@ public class ClothMappingConfiguration : IRegister
             .Where(cloth => bucket.BucketClothEntries.Any(entry => entry.ClothId == cloth.Id))
             .ToList();
 
-        cloths.RemoveAll(cloth => clothesInBucket.Any(clothInBucket => clothInBucket.Id == cloth.Id));
-
         return clothesInBucket.Select(cloth => cloth.Adapt<ClothResponse>()).ToList();
     }
 

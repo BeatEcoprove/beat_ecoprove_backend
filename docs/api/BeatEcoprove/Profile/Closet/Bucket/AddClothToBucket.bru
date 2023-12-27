@@ -1,0 +1,25 @@
+meta {
+  name: AddClothToBucket
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{url}}/profiles/closet/bucket/9a1b5d07-be05-48bb-9b08-8217677eeaf4/add
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNGVmYzVhZC1mYjJlLTQzNjMtOTNkMy0wMzhmODZiMjZjZmUiLCJlbWFpbCI6ImpvaG5kb2VAZXhhbXBsZS5jb20iLCJnaXZlbl9uYW1lIjoiSm9obmRvZSIsImF2YXRhcl91cmwiOiJodHRwOi8vbG9jYWxob3N0OjUxODIvcHVibGljL3Byb2ZpbGUvOWMzZWQ2MGMtMjFmYi00ZDMxLTgxMTEtYjliNTNlZjIwMTIxLnBuZyIsImxldmVsIjoiMTAiLCJsZXZlbF9wZXJjZW50YWdlIjoiMTAiLCJzdXN0YWluYWJsZV9wb2ludHMiOiIxMCIsImV4cCI6MTcwNDQxODE0MSwiaXNzIjoiSW52ZXN0bWVudEJhbmtTeXN0ZW1zIiwiYXVkIjoiSW52ZXN0bWVudCBCYW5rIFN5c3RlbXMifQ.i3zHqdL9cqMmsxXZ_eXzcTl2mWDn3u-ynknavuz1JXI
+}
+
+body:json {
+  {
+      "clothToAdd" : [
+          "22c9ff0e-459c-462e-bc4a-848bff27af35",
+          "b9c3c98e-e4c1-4785-8f7e-f6228dd9e54f",
+          "6aae8c4e-c820-454a-ad94-61d377dcf5db"
+      ]
+  }
+}

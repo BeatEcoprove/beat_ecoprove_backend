@@ -1,0 +1,23 @@
+meta {
+  name: SignInPersonalRequest
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/auth/signIn/personal
+  body: multipartForm
+  auth: none
+}
+
+body:form-urlencoded {
+  name: John%20Doe
+  bornDate: 1990-01-15
+  userName: johndoe
+  gender: male
+  countryCode: %2B351
+  phone: 914653128
+  email: johndoe%40example.com
+  password: Password12
+  AvatarPicture: undefined
+}
