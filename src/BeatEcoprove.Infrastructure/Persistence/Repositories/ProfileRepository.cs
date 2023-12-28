@@ -40,7 +40,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             from color in DbContext.Set<Color>()
             from brand in DbContext.Set<Brand>()
             join cloth in DbContext.Cloths on clothEntry.ClothId equals cloth.Id
-            where cloth.Color == color.Id && cloth.Brand == brand.Id
+            where cloth.Color == color.Id && cloth.Brand == brand.Id && profile.Id == profileId
             select new ClothDao(
                 cloth.Id,
                 cloth.Name,
@@ -62,6 +62,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             from profile in DbContext.Profiles
             from bucketEntry in profile.BucketEntries
             join bucket in DbContext.Buckets on bucketEntry.BucketId equals bucket.Id
+            where profile.Id == profileId
             select bucket;
 
         return await getAllBuckets.ToListAsync(cancellationToken);

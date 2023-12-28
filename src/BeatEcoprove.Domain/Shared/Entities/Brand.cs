@@ -9,8 +9,9 @@ public class Brand : Entity<BrandId>
 {
     private Brand() { }
     
-    private Brand(string name, string brandAvatar)
+    private Brand(BrandId id, string name, string brandAvatar)
     {
+        Id = id;
         Name = name;
         BrandAvatar = brandAvatar;
     }
@@ -31,6 +32,7 @@ public class Brand : Entity<BrandId>
         }
         
         return new Brand(
+            BrandId.CreateUnique(),
             name,
             brandAvatar
         );

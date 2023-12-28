@@ -37,13 +37,13 @@ public class ClosetController : ApiController
     [HttpGet()]
     public async Task<ActionResult<ClosetResponse>> GetCloset([FromQuery] Guid profileId)
     {
-        var userEmail = HttpContext.User.GetEmail();
+        var authId = HttpContext.User.GetUserId();
 
         var result = 
             await _sender.Send(new
             {
                 ProfileId = profileId,
-                Email = userEmail,
+                AuthId = authId,
             }.Adapt<GetClosetQuery>());
 
         return result.Match(

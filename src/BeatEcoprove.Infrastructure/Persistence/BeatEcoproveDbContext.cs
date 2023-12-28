@@ -49,7 +49,8 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
         
         modelBuilder
             .SetUpGlobalQueryFilters<ISoftDelete>((entity) => entity.DeletedAt == null);
-
+        
+        BeatEcoproveSeeder.Seed(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
 

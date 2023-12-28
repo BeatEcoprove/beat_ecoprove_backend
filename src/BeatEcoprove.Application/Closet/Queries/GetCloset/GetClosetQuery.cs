@@ -6,6 +6,6 @@ namespace BeatEcoprove.Application.Closet.Queries.GetCloset;
 
 public record GetClosetQuery
 (
-    Guid ProfileId,
-    string Email
-) : IQuery<ErrorOr<MixedClothBucketList>>;
+    Guid AuthId,
+    Guid ProfileId
+) : IQuery<ErrorOr<MixedClothBucketList>>, IAuthorization;

@@ -3,6 +3,7 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
+using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Extensions;
@@ -13,17 +14,14 @@ namespace BeatEcoprove.Application.Closet.Queries.GetCloset;
 
 internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, ErrorOr<MixedClothBucketList>>
 {
-    private readonly IAuthorizationFacade _authorizationFacade;
-    private readonly IClothRepository _clothRepository;
+    private readonly IProfileManager _profileManager;
     private readonly IProfileRepository _profileRepository;
 
     public GetClosetQueryHandler(
-        IAuthorizationFacade authorizationFacade,
-        IClothRepository clothRepository, 
+        IProfileManager profileManager, 
         IProfileRepository profileRepository)
     {
-        _authorizationFacade = authorizationFacade;
-        _clothRepository = clothRepository;
+        _profileManager = profileManager;
         _profileRepository = profileRepository;
     }
 
@@ -31,28 +29,21 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         GetClosetQuery request, 
         CancellationToken cancellationToken)
     {
-        var email = Email.Create(request.Email);
-        
-        var profile = await _authorizationFacade.GetAuthProfileByEmailAsync(request.Email, cancellationToken);
+        var authId = AuthId.Create(request.AuthId);
+        var profileId = ProfileId.Create(request.ProfileId);
 
-        var validationResult = profile
-            .AddValidate(email);
-        
-        if (validationResult.IsError)
+        var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
+
+        if (profile.IsError)
         {
-            return validationResult.Errors;
+            return profile.Errors;
         }
-
+        
         var clothList = await _profileRepository.GetClosetCloth(profile.Value.Id, cancellationToken);
         var bucketList = await _profileRepository.GetBucketCloth(profile.Value.Id, cancellationToken);
 
         return new MixedClothBucketList(
             clothList.Adapt<List<ClothResult>>(), 
             bucketList);
-    }
-
-    private static bool IsMainProfile(ProfileId currentProfile, ErrorOr<Profile> profile)
-    {
-        return currentProfile == profile.Value.Id;
     }
 }

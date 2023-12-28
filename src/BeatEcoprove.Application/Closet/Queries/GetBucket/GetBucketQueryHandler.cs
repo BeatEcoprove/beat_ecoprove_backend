@@ -13,18 +13,15 @@ internal sealed class GetBucketQueryHandler : IQueryHandler<GetBucketQuery, Erro
     private readonly IProfileManager _profileManager;
     private readonly IClosetService _closetService;
     private readonly IBucketRepository _bucketRepository;
-    private readonly IProfileRepository _profileRepository;
     
     public GetBucketQueryHandler(
         IProfileManager profileManager, 
         IClosetService closetService, 
-        IBucketRepository bucketRepository, 
-        IProfileRepository profileRepository)
+        IBucketRepository bucketRepository)
     {
         _profileManager = profileManager;
         _closetService = closetService;
         _bucketRepository = bucketRepository;
-        _profileRepository = profileRepository;
     }
 
     public async Task<ErrorOr<BucketResult>> Handle(GetBucketQuery request, CancellationToken cancellationToken)
