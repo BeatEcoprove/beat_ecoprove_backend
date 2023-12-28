@@ -8,11 +8,13 @@ public class MaintenanceService : Entity<MaintenanceServiceId>
     private MaintenanceService() { }
 
     private MaintenanceService(
+        MaintenanceServiceId id,
         ActivityId maintenanceActivityId, 
         string badge, 
         string title, 
         string description)
     {
+        Id = id;
         MaintenanceActivityId = maintenanceActivityId;
         Badge = badge;
         Title = title;
@@ -31,6 +33,7 @@ public class MaintenanceService : Entity<MaintenanceServiceId>
         string description)
     {
         return new MaintenanceService(
+            MaintenanceServiceId.CreateUnique(), 
             maintenanceId, 
             badge, 
             title, 

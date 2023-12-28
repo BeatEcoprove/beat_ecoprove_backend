@@ -16,4 +16,6 @@ public class MaintenanceServiceId : ValueObject
     {
         yield return Value;
     }
+    
+    public static implicit operator Guid(MaintenanceServiceId id) => id.Value;
 }

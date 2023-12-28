@@ -1,6 +1,7 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
+using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
@@ -49,6 +50,16 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
         }
 
         DbContext.Cloths.Remove(cloth);
+    }
+
+    public Task<List<MaintenanceService>> GetAvailableMaintenanceServices(ClothId id, CancellationToken cancellationToken)
+    {
+        // TODO: Get the last maintenance activity, if is ended, then all services are unlocked
+        // TODO: Else, get the all locked services, and the unlocked one (processing...)
+        
+        return DbContext
+            .Set<MaintenanceService>()
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<bool> ClothExists(List<ClothId> cloths, CancellationToken cancellationToken = default)
