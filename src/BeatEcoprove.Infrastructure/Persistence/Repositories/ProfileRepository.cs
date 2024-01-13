@@ -3,6 +3,7 @@ using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.DAOS;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
@@ -88,5 +89,19 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             select clothEntry;
         
         return canAccessCloth.AnyAsync(cancellationToken);
+    }
+
+    public Task<List<ProfileDao>> GetAllProfilesOfAuthIdAsync(AuthId authId, CancellationToken cancellationToken)
+    {
+        var profiles =
+            from auth in DbContext.Auths
+            join profile in DbContext.Profiles on auth.Id equals profile.AuthId
+            where auth.Id == authId
+            select new ProfileDao(
+                profile,
+                auth.MainProfileId == profile.Id
+            );
+
+        return profiles.ToListAsync(cancellationToken);
     }
 }

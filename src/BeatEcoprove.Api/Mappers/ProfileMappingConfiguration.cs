@@ -7,6 +7,7 @@ using BeatEcoprove.Contracts;
 using BeatEcoprove.Contracts.Authentication;
 using BeatEcoprove.Contracts.Authentication.SignIn;
 using BeatEcoprove.Contracts.Profile;
+using BeatEcoprove.Domain.ProfileAggregator.DAOS;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using Mapster;
 
@@ -21,6 +22,7 @@ public class ProfileMappingConfiguration : IRegister
         config.NewConfig<Profile, ProfileResponse>()
             .MapWith((src) =>
                 new ProfileResponse(
+                    src.Id.Value,
                     src.UserName.Value,
                     0,
                     0,
@@ -28,6 +30,9 @@ public class ProfileMappingConfiguration : IRegister
                     src.AvatarUrl
                 )
             );
+
+        config.NewConfig<List<ProfileDao>, MyProfilesResponse>()
+            .MapWith(src => ToMyProfilesResponse(src));
 
         config.NewConfig<SignInPersonalAccountRequest, SignInPersonalAccountCommand>()
             .MapWith((source) =>
@@ -58,5 +63,27 @@ public class ProfileMappingConfiguration : IRegister
                     src.Email,
                     src.Password)
                 );
+    }
+    
+    private MyProfilesResponse ToMyProfilesResponse(List<ProfileDao> profiles)
+    {
+        var mainProfile = 
+            profiles.SingleOrDefault(profile => profile.IsNested);
+
+        if (mainProfile is null)
+        {
+            throw new Exception("Main profile not found");
+        }
+
+        var nestedProfiles =
+            profiles
+                .Where(profile => !profile.IsNested)
+                .Select(profile => profile.Profile)
+                .ToList();
+        
+        return new MyProfilesResponse(
+            mainProfile.Profile.Adapt<ProfileResponse>(),
+            nestedProfiles.Adapt<List<ProfileResponse>>()
+        );
     }
 }
