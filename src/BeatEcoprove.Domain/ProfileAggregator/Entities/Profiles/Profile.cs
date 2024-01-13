@@ -34,12 +34,16 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
         SustainabilityPoints = sustainabilityPoints;
         EcoScore = ecoScore;
         Type = type;
+        Level = 0;
+        EcoCoins = 0;
     }
 
     public AuthId AuthId { get; protected set; } = null!;
     public UserName UserName { get; protected set; } = null!;
     public Phone Phone { get; protected set; } = null!;
     public double XP { get; protected set; }
+    public int Level { get; protected set; }
+    public int EcoCoins { get; protected set; }
     public int SustainabilityPoints { get; protected set; }
     public int EcoScore { get; protected set; }
     public string AvatarUrl { get; protected set; } = null!;

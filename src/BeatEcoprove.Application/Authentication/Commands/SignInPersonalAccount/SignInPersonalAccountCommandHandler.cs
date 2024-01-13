@@ -1,16 +1,12 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Extensions;
-using BeatEcoprove.Application.Shared.Helpers;
-using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
 using ErrorOr;
 
@@ -69,22 +65,10 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var payload = new AuthTokenPayload(
-            account.Value.Id,
-            account.Value.Email,
-            personalProfile.UserName,
-            personalProfile.AvatarUrl,
-            10,
-            10,
-            10,
-            Tokens.Access);
+        var ( accessToken, refreshToken ) =
+            _jwtProvider
+                .GenerateAuthenticationTokens(account.Value, personalProfile);
 
-        var accessToken = _jwtProvider.GenerateToken(payload);
-
-        payload.Type = Tokens.Refresh;
-        var refreshToken = _jwtProvider.GenerateToken(payload);
-
-        // Return Tokens
         return new AuthenticationResult(
             accessToken,
             refreshToken);

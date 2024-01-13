@@ -124,6 +124,14 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
             .HasColumnName("type")
             .HasConversion(new UserTypeConverter())
             .IsRequired();
+        
+        builder.Property(profile => profile.Level)
+            .HasColumnName("level")
+            .IsRequired();
+        
+        builder.Property(profile => profile.EcoCoins)
+            .HasColumnName("eco_coins")
+            .IsRequired();
 
         builder.Property(profile => profile.UserName)
             .HasColumnName("user_name")

@@ -52,7 +52,7 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
             return address.Errors;
         }
         
-        var enterpriseAccount = Organization.Create(
+        var enterpriseProfile = Organization.Create(
             userName.Value,
             phone.Value,
             address.Value
@@ -61,7 +61,7 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
         var account = await _accountService.CreateAccount(
             email.Value, 
             password.Value, 
-            enterpriseAccount, 
+            enterpriseProfile, 
             request.AvatarPicture, 
             cancellationToken);
 
@@ -72,20 +72,9 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var payload = new AuthTokenPayload(
-            account.Value.Id,
-            account.Value.Email,
-            enterpriseAccount.UserName,
-            enterpriseAccount.AvatarUrl,
-            10,
-            10,
-            10,
-            Tokens.Access);
-
-        var accessToken = _jwtProvider.GenerateToken(payload);
-
-        payload.Type = Tokens.Refresh;
-        var refreshToken = _jwtProvider.GenerateToken(payload);
+        var ( accessToken, refreshToken ) =
+            _jwtProvider
+                .GenerateAuthenticationTokens(account.Value, enterpriseProfile);
         
         return new AuthenticationResult(
             accessToken,

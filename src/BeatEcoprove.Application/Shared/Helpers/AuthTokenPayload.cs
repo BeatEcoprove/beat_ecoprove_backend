@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 namespace BeatEcoprove.Application.Shared.Helpers;
 
@@ -12,6 +14,8 @@ public class AuthTokenPayload : TokenPayload
     private readonly int _level;
     private readonly double _levelPercentage;
     private readonly int _sustainablePoints;
+    private readonly int _ecoScore;
+    private readonly int _ecoCoins;
 
     public AuthTokenPayload(
         Guid accountId,
@@ -21,6 +25,8 @@ public class AuthTokenPayload : TokenPayload
         int level,
         double levelPercentage,
         int sustainablePoints,
+        int ecoScore,
+        int ecoCoins,
         Tokens tokenType) : base(tokenType)
     {
         _accountId = accountId;
@@ -30,6 +36,8 @@ public class AuthTokenPayload : TokenPayload
         _level = level;
         _levelPercentage = levelPercentage;
         _sustainablePoints = sustainablePoints;
+        _ecoScore = ecoScore;
+        _ecoCoins = ecoCoins;
     }
 
     public string AccountId => _accountId.ToString();
@@ -39,6 +47,8 @@ public class AuthTokenPayload : TokenPayload
     public string Level => _level.ToString();
     public string LevelPercentage => _levelPercentage.ToString(CultureInfo.CurrentCulture);
     public string SustainablePoints => _sustainablePoints.ToString();
+    public string EcoScore => _ecoScore.ToString();
+    public string EcoCoins => _ecoCoins.ToString();
 
     public override IDictionary<string, string> GetPayload()
     {
@@ -50,7 +60,9 @@ public class AuthTokenPayload : TokenPayload
             { UserClaims.AvatarUrl, AvatarUrl },
             { UserClaims.Level, Level },
             { UserClaims.LevelPercentage, LevelPercentage },
-            { UserClaims.SustainablePoints, SustainablePoints }
+            { UserClaims.SustainablePoints, SustainablePoints },
+            { UserClaims.EcoScore, EcoScore },
+            { UserClaims.EcoCoins, EcoCoins }
         };
     }
 }

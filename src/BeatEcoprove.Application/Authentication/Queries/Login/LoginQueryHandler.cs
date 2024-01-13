@@ -60,20 +60,9 @@ internal sealed class LoginQueryHandler : IQueryHandler<LoginQuery, ErrorOr<Auth
         }
 
         // Generate Tokens
-        var payload = new AuthTokenPayload(
-            auth.Id,
-            auth.Email,
-            profile.UserName,
-            profile.AvatarUrl,
-            10,
-            10,
-            10,
-            Tokens.Access);
-
-        var accessToken = _jwtProvider.GenerateToken(payload);
-
-        payload.Type = Tokens.Refresh;
-        var refreshToken = _jwtProvider.GenerateToken(payload);
+        var ( accessToken, refreshToken ) =
+            _jwtProvider
+                .GenerateAuthenticationTokens(auth, profile);
 
         return new AuthenticationResult(
             accessToken,

@@ -1,10 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using BeatEcoprove.Application;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Application.Shared.Interfaces.Services;
+using BeatEcoprove.Domain.AuthAggregator;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,10 +17,14 @@ public class JwtProvider : IJwtProvider
     private const string Algorithm = SecurityAlgorithms.HmacSha256;
     private readonly JwtSettings _jwtSettings;
     private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
+    private readonly IGamingService _gamingService;
 
-    public JwtProvider(IOptions<JwtSettings> jwtSettings)
+    public JwtProvider(
+        IOptions<JwtSettings> jwtSettings, 
+        IGamingService gamingService)
     {
         _jwtSettings = jwtSettings.Value;
+        _gamingService = gamingService;
     }
 
     public string GenerateToken(TokenPayload payload)
@@ -62,6 +68,50 @@ public class JwtProvider : IJwtProvider
             .Claims
             .Select(claim => new KeyValuePair<string, string>(claim.Type, claim.Value))
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+
+    public (string, string) GenerateAuthenticationTokens(Auth account, Profile profile)
+    {
+        var payload = new AuthTokenPayload(
+            account.Id,
+            account.Email,
+            profile.UserName,
+            profile.AvatarUrl,
+            profile.Level,
+            _gamingService.CalculateLevelProgress(profile.Level, profile.XP),
+            profile.SustainabilityPoints,
+            profile.EcoScore,
+            profile.EcoCoins,
+            Tokens.Access);
+        
+       return GenerateAuthenticationTokens(payload);
+    }
+    
+    public (string, string) MapClaimsToAuthToken(IDictionary<string, string> claims)
+    {
+        var payload = new AuthTokenPayload(
+            Guid.Parse(claims[UserClaims.AccountId]),
+            claims[UserClaims.Email],
+            claims[UserClaims.UserName],
+            claims[UserClaims.AvatarUrl],
+            int.Parse(claims[UserClaims.Level]),
+            double.Parse(claims[UserClaims.LevelPercentage]),
+            int.Parse(claims[UserClaims.SustainablePoints]),
+            int.Parse(claims[UserClaims.EcoScore]),
+            int.Parse(claims[UserClaims.EcoCoins]),
+            Tokens.Access);
+        
+        return GenerateAuthenticationTokens(payload);
+    }
+
+    private (string, string) GenerateAuthenticationTokens(AuthTokenPayload payload)
+    {
+        var accessToken = GenerateToken(payload);
+
+        payload.Type = Tokens.Refresh;
+        var refreshToken = GenerateToken(payload);
+
+        return (accessToken, refreshToken);
     }
 
     public async Task<bool> ValidateToken(string token)

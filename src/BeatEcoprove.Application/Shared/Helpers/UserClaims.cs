@@ -10,4 +10,6 @@ public struct UserClaims
     public const string LevelPercentage = "level_percentage";
     public const string SustainablePoints = "sustainable_points";
     public const string TokenType = "token_type";
+    public static string EcoScore = "eco_score";
+    public static string EcoCoins = "eco_coins";
 }

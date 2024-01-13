@@ -31,20 +31,9 @@ internal sealed class RefreshTokensQueryHandler : IQueryHandler<RefreshTokensQue
             return Errors.Token.InvalidRefreshToken;
         }
 
-        var payload = new AuthTokenPayload(
-            Guid.Parse(claims[UserClaims.AccountId]),
-            claims[UserClaims.Email],
-            claims[UserClaims.UserName],
-            claims[UserClaims.AvatarUrl],
-            10,
-            10,
-            10,
-            Tokens.Access);
-
-        var accessToken = _jwtProvider.GenerateToken(payload);
-
-        payload.Type = Tokens.Refresh;
-        var refreshToken = _jwtProvider.GenerateToken(payload);
+        var ( accessToken, refreshToken ) =
+            _jwtProvider
+                .MapClaimsToAuthToken(claims);
 
         return new AuthenticationResult(
             accessToken,

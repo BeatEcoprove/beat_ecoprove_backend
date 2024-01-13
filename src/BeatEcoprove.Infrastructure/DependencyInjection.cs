@@ -119,6 +119,7 @@ public static class DependencyInjection
         services.AddScoped<IProfileManager, ProfileManager>();
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IClosetService, ClosetService>();
+        services.AddScoped<IGamingService, GamingService>();
 
         return services;
     }
