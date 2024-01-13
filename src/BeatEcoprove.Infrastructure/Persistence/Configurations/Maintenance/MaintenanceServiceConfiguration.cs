@@ -8,15 +8,20 @@ namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Closet;
 public class MaintenanceServiceConfiguration : IEntityTypeConfiguration<MaintenanceService>
 {
     private const string MaintenanceServiceTableName = "maintenance_services";
+    private const string MaintenanceServiceActionTableName = "maintenance_service_actions";
     
     public void Configure(EntityTypeBuilder<MaintenanceService> builder)
     {
+        ConfigureMaintenanceServicesTable(builder);
+        
+        // 
+
+    }
+
+    private static void ConfigureMaintenanceServicesTable(EntityTypeBuilder<MaintenanceService> builder)
+    {
         builder.ToTable(MaintenanceServiceTableName);
         builder.HasKey(maintenanceService => maintenanceService.Id);
-        
-        // builder.HasOne<MaintenanceActivity>()
-        //     .WithMany()
-        //     .HasForeignKey(a => a.MaintenanceActivityId);
         
         builder.Property(maintenanceService => maintenanceService.Id)
             .HasColumnName("id")
@@ -27,13 +32,6 @@ public class MaintenanceServiceConfiguration : IEntityTypeConfiguration<Maintena
         
         builder.Property(maintenanceService => maintenanceService.DeletedAt)
             .HasColumnName("deleted_at");
-        
-        builder.Property(maintenanceService => maintenanceService.MaintenanceActivityId)
-            .HasColumnName("maintenance_activity_id")
-            .ValueGeneratedNever()
-            .HasConversion(
-                id => id.Value,
-                value => ActivityId.Create(value));
         
         builder.Property(maintenanceService => maintenanceService.Title)
             .HasColumnName("title")
@@ -49,4 +47,5 @@ public class MaintenanceServiceConfiguration : IEntityTypeConfiguration<Maintena
             .HasColumnName("badge")
             .IsRequired();
     }
+    
 }

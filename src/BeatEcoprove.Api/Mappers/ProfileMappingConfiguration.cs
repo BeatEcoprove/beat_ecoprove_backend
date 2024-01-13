@@ -6,6 +6,8 @@ using BeatEcoprove.Application.Authentication.Queries.Login;
 using BeatEcoprove.Contracts;
 using BeatEcoprove.Contracts.Authentication;
 using BeatEcoprove.Contracts.Authentication.SignIn;
+using BeatEcoprove.Contracts.Profile;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using Mapster;
 
 namespace BeatEcoprove.Api.Mappers;
@@ -16,6 +18,16 @@ public class ProfileMappingConfiguration : IRegister
     {
         config.NewConfig<LoginRequest, LoginQuery>();
         config.NewConfig<ForgotPasswordRequest, ForgotPasswordCommand>();
+        config.NewConfig<Profile, ProfileResponse>()
+            .MapWith((src) =>
+                new ProfileResponse(
+                    src.UserName.Value,
+                    0,
+                    0,
+                    src.SustainabilityPoints,
+                    src.AvatarUrl
+                )
+            );
 
         config.NewConfig<SignInPersonalAccountRequest, SignInPersonalAccountCommand>()
             .MapWith((source) =>

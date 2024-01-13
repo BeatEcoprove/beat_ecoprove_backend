@@ -1,0 +1,45 @@
+using BeatEcoprove.Api.Extensions;
+using BeatEcoprove.Application.Profiles.Commands.CreateNestedProfile;
+using BeatEcoprove.Contracts.Activities;
+using BeatEcoprove.Contracts.Profile;
+using MapsterMapper;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BeatEcoprove.Api.Controllers;
+
+[Authorize]
+[Route("profiles")]
+public class ProfileController : ApiController
+{
+    private readonly ISender _sender;
+    private readonly IMapper _mapper;
+    
+    public ProfileController(ISender sender, IMapper mapper)
+    {
+        _sender = sender;
+        _mapper = mapper;
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<ProfileResponse>> CreateNestedProfile([FromForm] CreateNestedProfileRequest request, CancellationToken cancellation = default)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var addNestedProfile = await _sender
+            .Send(new CreateNestedProfileCommand(
+                    authId,
+                    request.Name,
+                    request.BornDate,
+                    request.Gender,
+                    request.UserName,
+                    request.Avatar.OpenReadStream()
+                ), cancellation);
+        
+        return addNestedProfile.Match(
+            response => Ok(_mapper.Map<ProfileResponse>(response)),
+            Problem<ProfileResponse>
+        );
+    }
+}

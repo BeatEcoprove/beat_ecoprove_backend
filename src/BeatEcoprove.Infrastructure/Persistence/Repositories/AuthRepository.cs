@@ -1,7 +1,6 @@
 ﻿using BeatEcoprove.Application;
 using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
-using BeatEcoprove.Domain.ProfileAggregator.Entities;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
@@ -33,7 +32,7 @@ public class AuthRepository : Repository<Auth, AuthId>, IAuthRepository
         var getMainProfile =
             from auth in DbContext.Auths
             join profile in DbContext.Profiles on auth.Id equals profile.AuthId
-            where auth.Id == id
+            where auth.MainProfileId == profile.Id && auth.Id == id
             select profile;
 
         return await getMainProfile.SingleOrDefaultAsync(cancellationToken);
