@@ -1,7 +1,7 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Profiles.Commands.CreateNestedProfile;
+using BeatEcoprove.Application.Profiles.Commands.DeleteNestedProfile;
 using BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
-using BeatEcoprove.Contracts.Activities;
 using BeatEcoprove.Contracts.Profile;
 using MapsterMapper;
 using MediatR;
@@ -34,6 +34,23 @@ public class ProfileController : ApiController
         return profiles.Match(
             response => Ok(_mapper.Map<MyProfilesResponse>(response)),
             Problem<MyProfilesResponse>
+        );
+    }
+
+    [HttpDelete("{profileId:guid}")]
+    public async Task<ActionResult<ProfileResponse>> DeletePNestedProfile(Guid profileId, CancellationToken cancellationToken = default)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var profiles = await _sender
+            .Send(new DeleteNestedProfileCommand(
+                authId,
+                profileId
+            ), cancellationToken);
+        
+        return profiles.Match(
+            response => Ok(_mapper.Map<ProfileResponse>(response)),
+            Problem<ProfileResponse>
         );
     }
     

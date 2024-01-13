@@ -104,4 +104,15 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
 
         return profiles.ToListAsync(cancellationToken);
     }
+
+    public Task DeleteAsync(ProfileId id, CancellationToken cancellationToken)
+    {
+        var searchProfile =
+            from profile in DbContext.Profiles
+            where profile.Id == id
+            select profile;
+
+
+        return searchProfile.ExecuteDeleteAsync(cancellationToken);
+    }
 }

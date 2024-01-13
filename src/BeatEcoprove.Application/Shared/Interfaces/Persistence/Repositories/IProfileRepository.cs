@@ -17,4 +17,5 @@ public interface IProfileRepository : IRepository<Profile, ProfileId>
     Task<bool> CanProfileAccessBucket(ProfileId profileId, BucketId bucketId, CancellationToken cancellationToken = default);
     Task<bool> CanProfileAccessCloth(ProfileId profileId, ClothId clothId, CancellationToken cancellationToken = default);
     Task<List<ProfileDao>> GetAllProfilesOfAuthIdAsync(AuthId authId, CancellationToken cancellationToken);
+    Task DeleteAsync(ProfileId id, CancellationToken cancellationToken);
 }
