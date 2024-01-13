@@ -35,7 +35,16 @@ public class ClosetController : ApiController
     }
 
     [HttpGet()]
-    public async Task<ActionResult<ClosetResponse>> GetCloset([FromQuery] Guid profileId)
+    public async Task<ActionResult<ClosetResponse>> GetCloset(
+        [FromQuery] Guid profileId,
+        [FromQuery] string? size,
+        [FromQuery] string? category,
+        [FromQuery] string? color,
+        [FromQuery] string? brand,
+        [FromQuery] string? orderBy,
+        [FromQuery] string? sortBy,
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize)
     {
         var authId = HttpContext.User.GetUserId();
 
@@ -44,6 +53,14 @@ public class ClosetController : ApiController
             {
                 ProfileId = profileId,
                 AuthId = authId,
+                Categories = category,
+                Size = size,
+                Color = color,
+                Brand = brand,
+                OrderBy = orderBy,
+                SortBy = sortBy,
+                Page = page,
+                PageSize = pageSize
             }.Adapt<GetClosetQuery>());
 
         return result.Match(

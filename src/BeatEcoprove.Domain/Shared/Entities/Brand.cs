@@ -15,6 +15,12 @@ public class Brand : Entity<BrandId>
         Name = name;
         BrandAvatar = brandAvatar;
     }
+    
+    private Brand(BrandId id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
 
     public string Name { get; private set; }
     public string BrandAvatar { get; private set; }
@@ -35,6 +41,19 @@ public class Brand : Entity<BrandId>
             BrandId.CreateUnique(),
             name,
             brandAvatar
+        );
+    }
+    
+    public static ErrorOr<Brand> FromName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return Errors.Errors.Brand.MustProvideBrandName;
+        }
+        
+        return new Brand(
+            BrandId.CreateUnique(),
+            name
         );
     }
 }

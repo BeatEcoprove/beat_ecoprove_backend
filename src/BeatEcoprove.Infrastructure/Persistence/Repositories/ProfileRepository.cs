@@ -2,6 +2,7 @@
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
+using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.DAOS;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
@@ -33,7 +34,17 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             .SingleOrDefaultAsync(p => p.AuthId == id, cancellationToken);
     }
 
-    public async Task<List<ClothDao>> GetClosetCloth(ProfileId profileId, CancellationToken cancellationToken = default)
+    public async Task<List<ClothDao>> GetClosetCloth(
+        ProfileId profileId,
+        List<ClothType>? category = null,
+        ClothSize? size = null,
+        Guid? colorValue = null,
+        Guid? brandValue = null,
+        string? order = null,
+        string? sortBy = null,
+        int pageSize = 10,
+        int page = 1,
+        CancellationToken cancellationToken = default)
     {
         var getAllCloth =
             from profile in DbContext.Profiles
@@ -41,7 +52,14 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             from color in DbContext.Set<Color>()
             from brand in DbContext.Set<Brand>()
             join cloth in DbContext.Cloths on clothEntry.ClothId equals cloth.Id
-            where cloth.Color == color.Id && cloth.Brand == brand.Id && profile.Id == profileId
+            where 
+                cloth.Color == color.Id && 
+                cloth.Brand == brand.Id && 
+                profile.Id == profileId &&
+                (size == null || cloth.Size == size) &&
+                (brandValue == null || brand.Id == brandValue) &&
+                (colorValue == null || color.Id == colorValue) &&
+                (category == null || category.Contains(cloth.Type))
             select new ClothDao(
                 cloth.Id,
                 cloth.Name,
@@ -53,17 +71,30 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                 cloth.State.ToString(),
                 cloth.ClothAvatar
             );
-
-        return await getAllCloth.ToListAsync(cancellationToken);
+    
+        getAllCloth = getAllCloth
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
+            
+        return await getAllCloth
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<Bucket>> GetBucketCloth(ProfileId profileId, CancellationToken cancellationToken = default)
+    public async Task<List<Bucket>> GetBucketCloth(
+        ProfileId profileId,
+        List<Guid> clothIds,
+        CancellationToken cancellationToken = default)
     {
         var getAllBuckets =
             from profile in DbContext.Profiles
             from bucketEntry in profile.BucketEntries
-            join bucket in DbContext.Buckets on bucketEntry.BucketId equals bucket.Id
-            where profile.Id == profileId
+            from bucket in DbContext.Buckets
+            from clothEntry in bucket.BucketClothEntries
+            where 
+                profile.Id == profileId && 
+                bucketEntry.BucketId == bucket.Id &&
+                clothEntry.BucketId == bucket.Id &&
+                clothIds.Contains(clothEntry.ClothId)
             select bucket;
 
         return await getAllBuckets.ToListAsync(cancellationToken);
