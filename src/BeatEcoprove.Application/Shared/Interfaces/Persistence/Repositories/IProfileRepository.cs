@@ -18,9 +18,10 @@ public interface IProfileRepository : IRepository<Profile, ProfileId>
     Task<bool> CanProfileAccessCloth(ProfileId profileId, ClothId clothId, CancellationToken cancellationToken = default);
     Task<List<ProfileDao>> GetAllProfilesOfAuthIdAsync(AuthId authId, CancellationToken cancellationToken);
     Task DeleteAsync(ProfileId id, CancellationToken cancellationToken);
+    Task<List<ProfileId>> GetNestedProfileIds(AuthId authId, CancellationToken cancellationToken);
     Task<List<Bucket>> GetBucketCloth(ProfileId profileId, List<Guid> clothIds, CancellationToken cancellationToken = default);
     Task<List<ClothDao>> GetClosetCloth(
-        ProfileId profileId, 
+        List<ProfileId> profileId, 
         List<ClothType>? category = null,
         ClothSize? size = null,
         Guid? color = null,
@@ -30,4 +31,5 @@ public interface IProfileRepository : IRepository<Profile, ProfileId>
         int pageSize = 10,  
         int page = 1,
         CancellationToken cancellationToken = default);
+
 }

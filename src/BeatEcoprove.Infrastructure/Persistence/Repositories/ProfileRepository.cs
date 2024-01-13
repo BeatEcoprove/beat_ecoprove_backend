@@ -35,7 +35,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
     }
 
     public async Task<List<ClothDao>> GetClosetCloth(
-        ProfileId profileId,
+        List<ProfileId> queryProfiles,
         List<ClothType>? category = null,
         ClothSize? size = null,
         Guid? colorValue = null,
@@ -55,7 +55,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             where 
                 cloth.Color == color.Id && 
                 cloth.Brand == brand.Id && 
-                profile.Id == profileId &&
+                queryProfiles.Contains(profile.Id) &&
                 (size == null || cloth.Size == size) &&
                 (brandValue == null || brand.Id == brandValue) &&
                 (colorValue == null || color.Id == colorValue) &&
@@ -78,6 +78,17 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             
         return await getAllCloth
             .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<ProfileId>> GetNestedProfileIds(AuthId authId, CancellationToken cancellationToken)
+    {
+        var getNestedProfileIds =
+            from auth in DbContext.Auths
+            join profile in DbContext.Profiles on auth.Id equals profile.AuthId
+            where auth.Id == authId
+            select profile.Id;
+
+        return getNestedProfileIds.ToListAsync(cancellationToken);
     }
 
     public async Task<List<Bucket>> GetBucketCloth(

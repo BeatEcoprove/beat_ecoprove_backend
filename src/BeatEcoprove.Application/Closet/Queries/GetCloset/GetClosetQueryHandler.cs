@@ -143,9 +143,17 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         {
             return profile.Errors;
         }
+
+        var nestedProfiles = await
+            _profileManager.GetNestedProfileIds(authId, profile.Value.Id, cancellationToken);
+        
+        if (nestedProfiles.IsError)
+        {
+            return nestedProfiles.Errors;
+        }
         
         var clothList = await _profileRepository.GetClosetCloth(
-            profile.Value.Id,
+            nestedProfiles.Value,
             categories?.Value,
             size?.Value,
             colorId?.Value,

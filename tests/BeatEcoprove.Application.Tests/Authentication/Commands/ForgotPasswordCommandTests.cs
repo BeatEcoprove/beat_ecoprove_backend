@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;

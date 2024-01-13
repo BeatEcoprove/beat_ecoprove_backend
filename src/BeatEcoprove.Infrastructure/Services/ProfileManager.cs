@@ -48,4 +48,31 @@ public class ProfileManager : IProfileManager
         
         return profile;
     }
+
+    public async Task<ErrorOr<List<ProfileId>>> GetNestedProfileIds(Guid id, Guid mainProfileId, CancellationToken cancellationToken = default)
+    {
+        var authId = AuthId.Create(id);
+        var profileId = ProfileId.Create(mainProfileId);
+        
+        if (!await _authRepository.ExistsUserByIdAsync(authId, cancellationToken))
+        {
+            return Errors.Auth.InvalidAuth;
+        }
+
+        var profile = await _authRepository.GetMainProfile(authId, cancellationToken);
+        
+        if (profile is null)
+        {
+            return Errors.User.ProfileDoesNotExists;
+        }
+        
+        // If not main, then return only the profileId
+        if (profile.Id != profileId)
+        {
+            return new List<ProfileId>() { profileId };
+        }
+        
+        // if main, then return all nested profileIds
+        return await _profileRepository.GetNestedProfileIds(authId, cancellationToken);
+    }
 }

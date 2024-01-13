@@ -2,6 +2,7 @@
 using System.Text.Json;
 using BeatEcoprove.Application;
 using BeatEcoprove.Application.Shared.Helpers;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
