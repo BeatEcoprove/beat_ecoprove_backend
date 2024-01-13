@@ -1,6 +1,7 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Profiles.Commands.CreateNestedProfile;
 using BeatEcoprove.Application.Profiles.Commands.DeleteNestedProfile;
+using BeatEcoprove.Application.Profiles.Commands.PromoteProfileToAccount;
 using BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
 using BeatEcoprove.Contracts.Profile;
 using MapsterMapper;
@@ -34,6 +35,25 @@ public class ProfileController : ApiController
         return profiles.Match(
             response => Ok(_mapper.Map<MyProfilesResponse>(response)),
             Problem<MyProfilesResponse>
+        );
+    }
+    
+    [HttpPut("{profileId:guid}/promote")]
+    public async Task<ActionResult<ProfileResponse>> PromoteProfileToAccount(Guid profileId, [FromBody] PromoteProfileRequest request, CancellationToken cancellationToken = default)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var profiles = await _sender
+            .Send(new PromoteProfileToAccountCommand(
+                authId,
+                profileId,
+                request.Email,
+                request.Password
+            ), cancellationToken);
+        
+        return profiles.Match(
+            response => Ok(_mapper.Map<ProfileResponse>(response)),
+            Problem<ProfileResponse>
         );
     }
 

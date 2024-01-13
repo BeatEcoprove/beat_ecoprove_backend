@@ -59,7 +59,7 @@ public class AccountService : IAccountService
         
         profile.SetAuthPointer(auth.Id);
         auth.SetMainProfileId(profile.Id);
-        
+
         var avatarUrl = 
             await _fileProvider
                 .UploadFileAsync(
@@ -67,11 +67,38 @@ public class AccountService : IAccountService
                     ((Guid)profile.Id).ToString(), 
                     avatarStream, 
                     cancellationToken);
-        
+    
         profile.SetProfileAvatar(avatarUrl);
         
         await _authRepository.AddAsync(auth, cancellationToken);
         await _profileRepository.AddAsync(profile, cancellationToken);
+
+        return auth;
+    }
+    
+    public async Task<ErrorOr<Auth>> CreateAccountFromProfile(
+        Email email, 
+        Password password, 
+        Profile profile, 
+        CancellationToken cancellationToken = default)
+    {
+        if (await _authRepository.ExistsUserByEmailAsync(email, cancellationToken))
+        {
+            return Errors.User.EmailAlreadyExists;
+        }
+
+        var passwordHash = Password.FromHash(_passwordProvider.HashPassword(password.Value));
+        
+        var auth = Auth.Create
+        (
+            email,
+            passwordHash
+        );
+        
+        profile.SetAuthPointer(auth.Id);
+        auth.SetMainProfileId(profile.Id);
+        
+        await _authRepository.AddAsync(auth, cancellationToken);
 
         return auth;
     }

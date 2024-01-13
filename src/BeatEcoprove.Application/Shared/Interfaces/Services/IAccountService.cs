@@ -8,6 +8,12 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Services;
 
 public interface IAccountService
 {
-    Task<ErrorOr<Auth>> CreateAccount(Email email, Password password, Profile profile, Stream AvatarStream, CancellationToken cancellationToken);
+    Task<ErrorOr<Auth>> CreateAccount(Email email, Password password, Profile profile, Stream avatarStream, CancellationToken cancellationToken);
+
+    Task<ErrorOr<Auth>> CreateAccountFromProfile(
+        Email email,
+        Password password,
+        Profile profile,
+        CancellationToken cancellationToken = default);
     ErrorOr<Gender> GetGender(string gender);
 }
