@@ -61,6 +61,11 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
             .HasColumnName("is_public")
             .IsRequired();
         
+        builder.Property(g => g.AvatarPicture)  
+            .HasColumnName("avatar_picture")
+            .HasMaxLength(256)
+            .IsRequired();
+
         builder.HasMany(group => group.Members)
             .WithOne()
             .HasForeignKey(groupMember => groupMember.Group);       

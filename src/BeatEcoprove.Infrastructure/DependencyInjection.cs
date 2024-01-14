@@ -110,6 +110,7 @@ public static class DependencyInjection
         services.AddScoped<IColorRepository, ColorRepository>();
         services.AddScoped<IBrandRepository, BrandRepository>();
         services.AddScoped<IActivityRepository, ActionRepository>();
+        services.AddScoped<IGroupRepository, GroupRepository>();
 
         return services;
     }
@@ -122,6 +123,7 @@ public static class DependencyInjection
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IClosetService, ClosetService>();
         services.AddScoped<IGamingService, GamingService>();
+        services.AddScoped<IGroupService, GroupService>();
 
         return services;
     }

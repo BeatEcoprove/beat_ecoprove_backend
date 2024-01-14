@@ -10,12 +10,11 @@ public class GroupMember : Entity<GroupMemberId>
     private GroupMember() {}
 
     public GroupMember(
-        GroupMemberId id,
         ProfileId profile,
         GroupId group,
         MemberPermission permission = MemberPermission.Member)
     {
-        Id = id;
+        Id = GroupMemberId.CreateUnique();
         Profile = profile;
         Group = group;
         Permission = permission;

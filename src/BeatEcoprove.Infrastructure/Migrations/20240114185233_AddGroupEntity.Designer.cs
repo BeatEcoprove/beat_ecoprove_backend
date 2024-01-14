@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     [DbContext(typeof(BeatEcoproveDbContext))]
-    [Migration("20240114170451_AddGroupEntity")]
+    [Migration("20240114185233_AddGroupEntity")]
     partial class AddGroupEntity
     {
         /// <inheritdoc />
@@ -326,6 +326,12 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<string>("AvatarPicture")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("avatar_picture");
 
                     b.Property<Guid>("CreatorId")
                         .HasColumnType("uuid")

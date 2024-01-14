@@ -50,6 +50,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     sustainable_points = table.Column<int>(type: "integer", nullable: false),
                     xp = table.Column<double>(type: "double precision", nullable: false),
                     is_public = table.Column<bool>(type: "boolean", nullable: false),
+                    avatar_picture = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     creator_id = table.Column<Guid>(type: "uuid", nullable: false),
                     DeletedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },

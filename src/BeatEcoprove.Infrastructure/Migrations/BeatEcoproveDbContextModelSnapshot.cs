@@ -324,6 +324,12 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("AvatarPicture")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("avatar_picture");
+
                     b.Property<Guid>("CreatorId")
                         .HasColumnType("uuid")
                         .HasColumnName("creator_id");
