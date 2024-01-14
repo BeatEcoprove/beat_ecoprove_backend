@@ -3,19 +3,15 @@ using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Closet;
+namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Maintenance;
 
 public class MaintenanceServiceConfiguration : IEntityTypeConfiguration<MaintenanceService>
 {
     private const string MaintenanceServiceTableName = "maintenance_services";
-    private const string MaintenanceServiceActionTableName = "maintenance_service_actions";
     
     public void Configure(EntityTypeBuilder<MaintenanceService> builder)
     {
         ConfigureMaintenanceServicesTable(builder);
-        
-        // 
-
     }
 
     private static void ConfigureMaintenanceServicesTable(EntityTypeBuilder<MaintenanceService> builder)
@@ -37,7 +33,7 @@ public class MaintenanceServiceConfiguration : IEntityTypeConfiguration<Maintena
             .HasColumnName("title")
             .HasMaxLength(30)
             .IsRequired();
-        
+                
         builder.Property(maintenanceService => maintenanceService.Description)
             .HasColumnName("description")
             .HasMaxLength(100)
@@ -46,6 +42,10 @@ public class MaintenanceServiceConfiguration : IEntityTypeConfiguration<Maintena
         builder.Property(maintenanceService => maintenanceService.Badge)
             .HasColumnName("badge")
             .IsRequired();
+        
+        builder.HasMany(ms => ms.MaintenanceActions)
+            .WithOne()
+            .HasForeignKey(ma => ma.MaintenanceService);
     }
     
 }

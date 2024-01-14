@@ -28,6 +28,10 @@ public class MaintenanceActionConfiguration : IEntityTypeConfiguration<Maintenan
                 id => id.Value,
                 value => MaintenanceServiceId.Create(value));
         
+        builder.Property(ms => ms.SustainablePoints)
+            .HasColumnName("sustainable_points")
+            .IsRequired();
+        
         builder.Property(ms => ms.Title)
             .HasColumnName("title")
             .HasMaxLength(30)

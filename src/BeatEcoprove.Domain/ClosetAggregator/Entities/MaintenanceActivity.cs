@@ -5,44 +5,41 @@ namespace BeatEcoprove.Domain.ClosetAggregator.Entities;
 
 public class MaintenanceActivity : Activity
 {
-    private readonly List<MaintenanceService> _maintenanceServices = new();
-    
     private MaintenanceActivity() { }
     
     private MaintenanceActivity(
+        MaintenanceServiceId serviceId,
+        MaintenanceActionId actionId,
         ProfileId profileId, 
         ClothId clothId,
-        string title,
-        string badge,
-        int pointsOfSustentability,
+        int sustainablePoints,
         float xp = 0, 
         float deltaScore = 0) : base(profileId, clothId, xp, deltaScore)
     {
-        Title = title;
-        Badge = badge;
-        PointsOfSustentability = pointsOfSustentability;
+        ServiceId = serviceId;
+        ActionId = actionId;
+        SustainablePoints = sustainablePoints;
     }
 
-    public string Title { get; private set; }
-    public string Badge { get; private set; }
-    public int PointsOfSustentability { get; private set; }
-    public IReadOnlyList<MaintenanceService> MaintenanceServices => _maintenanceServices;
-    
+    public MaintenanceServiceId ServiceId { get; private set; } = null!;
+    public MaintenanceActionId ActionId { get; private set; } = null!;
+    public int SustainablePoints { get; private set; }
+
     public static MaintenanceActivity Create(
+        MaintenanceServiceId serviceId,
+        MaintenanceActionId actionId,
         ProfileId profileId, 
         ClothId clothId,
-        string title,
-        string badge,
-        int pointsOfSustentability,
-        float xp = 0, 
+        int sustainablePoints = 0,
+        float xp = 0,
         float deltaScore = 0)
     {
         return new MaintenanceActivity(
+            serviceId,
+            actionId,
             profileId, 
             clothId, 
-            title,
-            badge,
-            pointsOfSustentability,
+            sustainablePoints,
             xp, 
             deltaScore);
     }
