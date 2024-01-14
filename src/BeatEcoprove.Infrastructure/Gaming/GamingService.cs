@@ -1,6 +1,6 @@
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 
-namespace BeatEcoprove.Infrastructure.Services;
+namespace BeatEcoprove.Infrastructure.Gaming;
 
 public class GamingService : IGamingService
 {
@@ -26,5 +26,4 @@ public class GamingService : IGamingService
 
         return progressPercentage;
     }
-
 }

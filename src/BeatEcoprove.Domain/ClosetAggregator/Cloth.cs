@@ -1,6 +1,7 @@
 ﻿using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+using BeatEcoprove.Domain.Events;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
@@ -39,7 +40,7 @@ public class Cloth : AggregateRoot<ClothId, Guid>
     public ClothSize Size { get; private set; }
     public BrandId Brand { get; private set; } = null!;
     public ColorId Color { get; private set; } = null!;
-    public int EcoScore { get; private set; }
+    public int EcoScore { get; set; }
     public ClothState State { get; private set; }
     public string ClothAvatar { get; private set; } = null!;
     public IReadOnlyList<Activity> Activities => _activities.AsReadOnly();
@@ -88,6 +89,7 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         _activities.Add(activity);
         this.State = ClothState.InUse;
         
+        this.AddDomainEvent(new UseClothDomainEvent(profile, this));
         return activity;
     }
 
