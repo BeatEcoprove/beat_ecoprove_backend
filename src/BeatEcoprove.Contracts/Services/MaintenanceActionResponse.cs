@@ -6,9 +6,10 @@ namespace BeatEcoprove.Contracts.Services;
 /// <param name="Id"></param>
 /// <param name="Title"></param>
 /// <param name="Badge"></param>
-public record MaintenanceAction
+public record MaintenanceActionResponse
 (
     Guid Id,
     string Title,
-    string Badge
+    string Badge,
+    int SustainablePoints
 );

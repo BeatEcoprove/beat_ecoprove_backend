@@ -51,15 +51,19 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
 
         DbContext.Cloths.Remove(cloth);
     }
-
-    public Task<List<MaintenanceService>> GetAvailableMaintenanceServices(ClothId id, CancellationToken cancellationToken)
+    
+    public async Task<List<MaintenanceService>> GetAvailableMaintenanceServices(ClothId id, CancellationToken cancellationToken)
     {
-        // TODO: Get the last maintenance activity, if is ended, then all services are unlocked
-        // TODO: Else, get the all locked services, and the unlocked one (processing...)
+        var getAvailableServices =
+            from services in DbContext.Set<MaintenanceService>()
+            where (
+                from cloth in DbContext.Cloths
+                from mainActivity in DbContext.Set<MaintenanceActivity>()
+                where mainActivity.ClothId == cloth.Id && cloth.Id == id && mainActivity.EndAt < DateTime.UtcNow
+                select mainActivity).FirstOrDefault() != null
+            select services;
         
-        return DbContext
-            .Set<MaintenanceService>()
-            .ToListAsync(cancellationToken);
+        return await getAvailableServices.ToListAsync(cancellationToken);
     }
 
     public async Task<bool> ClothExists(List<ClothId> cloths, CancellationToken cancellationToken = default)

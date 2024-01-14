@@ -111,6 +111,7 @@ public static class DependencyInjection
         services.AddScoped<IBrandRepository, BrandRepository>();
         services.AddScoped<IActivityRepository, ActionRepository>();
         services.AddScoped<IGroupRepository, GroupRepository>();
+        services.AddScoped<IMaintenanceServiceRepository, MaintenanceServiceRepository>();
 
         return services;
     }

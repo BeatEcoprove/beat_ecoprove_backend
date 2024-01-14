@@ -9,6 +9,12 @@ public class ActivityMappingConfiguration : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<MaintenanceService, MaintenanceServiceResponse>()
-            .Map(src => src.IsBeingUsed, dest => false);
+            .MapWith(src => new MaintenanceServiceResponse(
+                src.Id,
+                src.Title,
+                src.Badge,
+                src.Description,
+                src.MaintenanceActions.Adapt<List<MaintenanceActionResponse>>()
+            ));
     }
 }

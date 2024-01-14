@@ -6,6 +6,5 @@ public record MaintenanceServiceResponse
     string Title,
     string Badge,
     string Description,
-    List<MaintenanceAction> Actions, // TODO: Map Endpoint to Service Action to persist data
-    bool IsBeingUsed // Is this this service selected?
+    List<MaintenanceActionResponse> Actions
 );
