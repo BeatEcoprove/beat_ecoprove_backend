@@ -12,31 +12,36 @@ public class MaintenanceAction : Entity<MaintenanceActionId>
         MaintenanceServiceId maintenanceServiceId,
         string title, 
         string description, 
-        string badge)
+        string badge,
+        int sustainablePoints = 0)
     {
         Id = id;
         Title = title;
         Description = description;
         Badge = badge;
         MaintenanceService = maintenanceServiceId;
+        SustainablePoints = sustainablePoints;
     }
 
-    public MaintenanceServiceId MaintenanceService { get; private set; }
-    public string Title { get; private set; }
-    public string Description { get; private set; }
-    public string Badge { get; private set; }
-    
+    public MaintenanceServiceId MaintenanceService { get; private set; } = null!;
+    public string Title { get; private set; } = null!;
+    public string Description { get; private set; } = null!;
+    public string Badge { get; private set; } = null!;
+    public int SustainablePoints { get; private set; }
+
     public static MaintenanceAction Create(
         MaintenanceServiceId maintenanceServiceId,
         string title, 
         string description, 
-        string badge)
+        string badge,
+        int sustainablePoints = 0)
     {
         return new MaintenanceAction(
             MaintenanceActionId.CreateUnique(), 
             maintenanceServiceId,
             title, 
             description, 
-            badge);
+            badge,
+            sustainablePoints);
     }
 }

@@ -1,5 +1,4 @@
-﻿using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
-using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+﻿using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
 
@@ -23,8 +22,8 @@ public abstract class Activity : Entity<ActivityId>
         CreatedAt = DateTime.UtcNow;
     }
     
-    public ClothId ClothId { get; protected set; }
-    public ProfileId ProfileId { get; protected set; }
+    public ClothId ClothId { get; protected set; } = null!;
+    public ProfileId ProfileId { get; protected set; } = null!;
     public float XP { get; protected set; }
     public float DeltaScore { get; protected set; }
     public DateTime CreatedAt { get; private set; }
