@@ -46,7 +46,7 @@ internal sealed class LoginQueryHandler : IQueryHandler<LoginQuery, ErrorOr<Auth
             return Errors.User.EmailDoesNotExists;
         }
 
-        var profile = await _profileRepository.GetProfileByAuthId(auth.Id, cancellationToken);
+        var profile = await _authRepository.GetMainProfile(auth.Id, cancellationToken);
 
         if (profile is null)
         {

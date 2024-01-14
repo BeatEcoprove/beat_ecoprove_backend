@@ -31,7 +31,7 @@ public class ProfileManager : IProfileManager
         {
             return Errors.Auth.InvalidAuth;
         }
-
+        
         if (profileId == Guid.Empty)
         {
             profile = await _authRepository.GetMainProfile(strongAuthId, cancellationToken);
@@ -44,6 +44,11 @@ public class ProfileManager : IProfileManager
         if (profile is null)
         {
             return Errors.User.ProfileDoesNotExists;
+        }
+        
+        if (!await _authRepository.DoesProfileBelongToAuth(strongAuthId, profile.Id, cancellationToken))
+        {
+            return Errors.User.ProfileDoesNotBelongToAuth;
         }
         
         return profile;
