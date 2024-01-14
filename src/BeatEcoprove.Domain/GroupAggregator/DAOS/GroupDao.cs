@@ -1,3 +1,4 @@
+using BeatEcoprove.Domain.GroupAggregator.Enumerators;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
@@ -14,5 +15,6 @@ public record GroupDao
     bool IsPublic,
     string AvatarPicture,
     Profile Creator,
-    List<Profile> Members
+    List<Profile> Members,
+    List<Profile> Admins
 );
