@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     [DbContext(typeof(BeatEcoproveDbContext))]
-    [Migration("20240113173552_AddLevelAndEcoCoinsToProfileTable")]
-    partial class AddLevelAndEcoCoinsToProfileTable
+    [Migration("20240114170451_AddGroupEntity")]
+    partial class AddGroupEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -254,6 +254,119 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasIndex("MaintenanceActivityId");
 
                     b.ToTable("maintenance_services", (string)null);
+                });
+
+            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Entities.GroupMember", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Group")
+                        .HasColumnType("uuid")
+                        .HasColumnName("group_id");
+
+                    b.Property<int>("Permission")
+                        .HasColumnType("integer")
+                        .HasColumnName("permission");
+
+                    b.Property<Guid>("Profile")
+                        .HasColumnType("uuid")
+                        .HasColumnName("profile_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Group");
+
+                    b.HasIndex("Profile");
+
+                    b.ToTable("group_members", (string)null);
+                });
+
+            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Entities.TextMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("content");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Group")
+                        .HasColumnType("uuid")
+                        .HasColumnName("group_id");
+
+                    b.Property<Guid>("Sender")
+                        .HasColumnType("uuid")
+                        .HasColumnName("sender_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Group");
+
+                    b.HasIndex("Sender");
+
+                    b.ToTable("group_text_messages", (string)null);
+                });
+
+            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Group", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("creator_id");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_public");
+
+                    b.Property<int>("MembersCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("members_count");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
+
+                    b.Property<int>("SustainablePoints")
+                        .HasColumnType("integer")
+                        .HasColumnName("sustainable_points");
+
+                    b.Property<double>("Xp")
+                        .HasColumnType("double precision")
+                        .HasColumnName("xp");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.ToTable("groups", (string)null);
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", b =>
@@ -508,6 +621,45 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Entities.GroupMember", b =>
+                {
+                    b.HasOne("BeatEcoprove.Domain.GroupAggregator.Group", null)
+                        .WithMany("Members")
+                        .HasForeignKey("Group")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", null)
+                        .WithMany()
+                        .HasForeignKey("Profile")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Entities.TextMessage", b =>
+                {
+                    b.HasOne("BeatEcoprove.Domain.GroupAggregator.Group", null)
+                        .WithMany("TextMessages")
+                        .HasForeignKey("Group")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BeatEcoprove.Domain.GroupAggregator.Entities.GroupMember", null)
+                        .WithMany()
+                        .HasForeignKey("Sender")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Group", b =>
+                {
+                    b.HasOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", null)
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile", b =>
                 {
                     b.HasOne("BeatEcoprove.Domain.AuthAggregator.Auth", null)
@@ -687,6 +839,13 @@ namespace BeatEcoprove.Infrastructure.Migrations
             modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Cloth", b =>
                 {
                     b.Navigation("Activities");
+                });
+
+            modelBuilder.Entity("BeatEcoprove.Domain.GroupAggregator.Group", b =>
+                {
+                    b.Navigation("Members");
+
+                    b.Navigation("TextMessages");
                 });
 
             modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Entities.MaintenanceActivity", b =>
