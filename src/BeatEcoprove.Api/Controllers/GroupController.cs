@@ -1,5 +1,7 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Groups.Commands.CreateGroup;
+using BeatEcoprove.Application.Groups.Queries.GetGroups;
+using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Contracts.Groups;
 using MapsterMapper;
 using MediatR;
@@ -39,6 +41,25 @@ public class GroupController : ApiController
         return createGroupResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>
+        );
+    }
+    
+    [HttpGet]
+    public async Task<ActionResult<GetGroupsResponse>> GetGroups(
+        [FromQuery] Guid profileId
+    )
+    {
+        var authId = HttpContext.User.GetUserId();
+
+        var getGroupResult = await _sender.Send(
+            new GetGroupsQuery(
+                authId,
+                profileId
+            ));
+        
+        return getGroupResult.Match(
+            result => Ok(_mapper.Map<GetGroupsResponse>(result)),
+            Problem<GetGroupsResponse>
         );
     }
 }
