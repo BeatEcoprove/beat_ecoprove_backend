@@ -46,7 +46,6 @@ public class ClosetService : IClosetService
             .UploadFileAsync(Buckets.ClothBucket, clothPicture, clothAvatar, cancellationToken);
 
         cloth.SetClothPicture(clothPictureUrl);
-
         profile.AddCloth(cloth);
 
         await _clothRepository.AddAsync(cloth, cancellationToken);
