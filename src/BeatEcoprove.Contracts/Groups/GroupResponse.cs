@@ -6,6 +6,7 @@ public record GroupResponse
 (
     Guid Id,
     string Name,
+    string AvatarPicture,
     string Description,
     int MembersCount,
     int SustainablePoints,

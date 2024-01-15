@@ -40,8 +40,8 @@ public class Group : AggregateRoot<GroupId, Guid>
     public int SustainablePoints { get; private set; }
     public double Xp { get; private set; }
     public bool IsPublic { get; private set; }
-    public string AvatarPicture { get; private set; }
-    public ProfileId CreatorId { get; private set; }
+    public string AvatarPicture { get; private set; } = null!;
+    public ProfileId CreatorId { get; private set; } = null!;
     public IReadOnlyList<TextMessage> TextMessages => _textMessages.AsReadOnly();
     public IReadOnlyList<GroupMember> Members => _members.AsReadOnly();
 
