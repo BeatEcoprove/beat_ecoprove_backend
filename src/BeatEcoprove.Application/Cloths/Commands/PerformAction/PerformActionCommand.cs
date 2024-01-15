@@ -1,3 +1,4 @@
+using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Domain.ClosetAggregator;
@@ -12,4 +13,4 @@ public record PerformActionCommand
     Guid ClothId,
     Guid ServiceId,
     Guid ActionId
-) : ICommand<ErrorOr<Cloth>>, IAuthorization;
+) : ICommand<ErrorOr<ClothResult>>, IAuthorization;

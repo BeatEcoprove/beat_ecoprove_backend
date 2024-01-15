@@ -78,6 +78,19 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
         return await getAvailableServices.ToListAsync(cancellationToken);
     }
 
+    public async Task<MaintenanceActivity?> GetLatestMaintenanceActivity(ClothId id, CancellationToken cancellationToken)
+    {
+        var getLastMaintenanceActivity =
+            from cloth in DbContext.Cloths
+            from mainActivity in DbContext.Set<MaintenanceActivity>()
+            where
+                cloth.Id == id && mainActivity.ClothId == cloth.Id && ( mainActivity.EndAt == null || mainActivity.EndAt < DateTime.UtcNow )
+                orderby mainActivity.EndAt descending
+            select mainActivity;
+        
+        return await getLastMaintenanceActivity.FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<bool> ClothExists(List<ClothId> cloths, CancellationToken cancellationToken = default)
     {
         return await DbContext.Cloths

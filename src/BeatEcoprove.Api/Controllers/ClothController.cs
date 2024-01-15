@@ -2,6 +2,7 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Cloths.Commands.CloseMaintenanceActivity;
 using BeatEcoprove.Application.Cloths.Commands.PerformAction;
 using BeatEcoprove.Application.Cloths.Queries.GetAvailableServices;
+using BeatEcoprove.Application.Cloths.Queries.GetClothMaintenanceStatus;
 using BeatEcoprove.Contracts.Closet.Cloth;
 using BeatEcoprove.Contracts.Services;
 using Mapster;
@@ -88,6 +89,28 @@ public class ClothController : ApiController
         return result.Match(
             response => Ok(_mapper.Map<ClothResponse>(response)),
             Problem<ClothResponse>
+        );
+    }
+    
+    // Status response
+    [HttpGet("current")]
+    public async Task<ActionResult<ClothMaintenanceStatusResponse>> GetClothMaintenanceStatus(
+        [FromRoute] Guid profileId,
+        [FromRoute] Guid clothId)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var currentStatus = await _sender.Send(new
+            GetClothMaintenanceStatusQuery(
+                authId,
+                profileId,
+                clothId
+                )
+        );
+        
+        return currentStatus.Match(
+            response => Ok(_mapper.Map<ClothMaintenanceStatusResponse>(response)),
+            Problem<ClothMaintenanceStatusResponse>
         );
     }
 }

@@ -11,4 +11,5 @@ public interface IClothRepository : IRepository<Cloth, ClothId>
     new Task<ClothDao?> GetClothDaoByIdAsync(ClothId id, CancellationToken cancellationToken = default);
     Task RemoveByIdAsync(ClothId clothId, CancellationToken cancellationToken);
     Task<List<MaintenanceService>> GetAvailableMaintenanceServices(ClothId id, CancellationToken cancellationToken);
+    Task<MaintenanceActivity?> GetLatestMaintenanceActivity(ClothId id, CancellationToken cancellationToken);
 }

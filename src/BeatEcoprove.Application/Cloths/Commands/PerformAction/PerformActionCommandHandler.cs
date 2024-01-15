@@ -1,3 +1,4 @@
+using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
@@ -12,7 +13,7 @@ using ErrorOr;
 
 namespace BeatEcoprove.Application.Cloths.Commands.PerformAction;
 
-internal sealed class PerformActionCommandHandler : ICommandHandler<PerformActionCommand, ErrorOr<Cloth>>
+internal sealed class PerformActionCommandHandler : ICommandHandler<PerformActionCommand, ErrorOr<ClothResult>>
 {
     private readonly IProfileManager _profileManager;
     private readonly IMaintenanceServiceRepository _maintenanceServiceRepository;
@@ -34,7 +35,7 @@ internal sealed class PerformActionCommandHandler : ICommandHandler<PerformActio
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ErrorOr<Cloth>> Handle(PerformActionCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<ClothResult>> Handle(PerformActionCommand request, CancellationToken cancellationToken)
     {
         var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
@@ -90,6 +91,6 @@ internal sealed class PerformActionCommandHandler : ICommandHandler<PerformActio
         await _activityRepository.AddAsync(activity, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return cloth;
+        return (await _closetService.GetClothResult(profile.Value, clothId, cancellationToken)).Value;
     }
 }

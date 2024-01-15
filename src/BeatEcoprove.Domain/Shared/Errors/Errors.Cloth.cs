@@ -9,10 +9,14 @@ public partial class Errors
         public static Error InvalidClothName => Error.Validation(
             "Cloth.InvalidClothName",
             "Por favor, introduz um nome válido.");
-        
+
         public static Error ClothNotFound => Error.Validation(
             "Cloth.ClothNotFound",
             "A peça que tentou aceder não existe.");
+        
+        public static Error MaintenanceActivityNotFound => Error.Conflict(
+            "Cloth.MaintenanceActivityNotFound",
+            "Esta peça não possui nenhum registo de manutenções anteriores.");
         
         public static Error InvalidClothType => Error.Validation(
             "Cloth.InvalidClothType",

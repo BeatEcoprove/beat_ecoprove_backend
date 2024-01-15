@@ -1,9 +1,11 @@
 ﻿using BeatEcoprove.Application.Closet.Commands.CreateBucket;
 using BeatEcoprove.Application.Closet.Common;
+using BeatEcoprove.Application.Cloths.Queries.Common;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Contracts.Closet;
 using BeatEcoprove.Contracts.Closet.Bucket;
 using BeatEcoprove.Contracts.Closet.Cloth;
+using BeatEcoprove.Contracts.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
 using Mapster;
 
@@ -16,7 +18,21 @@ public class ClothMappingConfiguration : IRegister
         config.NewConfig<Cloth, ClothResult>();
         
         config.NewConfig<CreateBucketRequest, CreateBucketCommand>();
-
+        
+        config.NewConfig<ClothMaintenanceStatus, ClothMaintenanceStatusResponse>()
+            .MapWith(src => new ClothMaintenanceStatusResponse(
+                src.Cloth.Adapt<ClothResponse>(),
+                new MaintenanceSelectorResponse(
+                    src.Service.Id,
+                    src.Service.Title,
+                    src.Service.Badge,
+                    src.Service.Description,
+                    src.Action.Adapt<MaintenanceActionResponse>()
+                ),
+                src.MaintenanceActivityId,
+                src.Status
+            ));
+        
         config.NewConfig<BucketResult, BucketResponse>()
             .MapWith(src => ToBucketResponse(src.Bucket, src.Cloths));
         
