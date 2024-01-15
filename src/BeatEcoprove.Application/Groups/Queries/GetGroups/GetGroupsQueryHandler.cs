@@ -35,7 +35,7 @@ internal sealed class GetGroupsQueryHandler : IQueryHandler<GetGroupsQuery, Erro
         
         var publicGroups = await _groupRepository.GetPublicGroupsAsync(cancellationToken);
         var privateGroups = await _groupRepository.GetPrivateGroupsAsync(profile.Value.Id, cancellationToken);
-        
+
         return new GetGroupList(
             publicGroups,
             privateGroups);
