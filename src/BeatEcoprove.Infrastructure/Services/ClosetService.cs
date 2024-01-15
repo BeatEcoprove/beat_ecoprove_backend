@@ -79,11 +79,6 @@ public class ClosetService : IClosetService
             return Errors.Bucket.InvalidClothToAdd;
         }
         
-        if (await _bucketRepository.AreClothAlreadyOnBucket(clothToAdd, cancellationToken))
-        {
-            return Errors.Bucket.CanAddClothToBucket;
-        }
-
         var shouldAddClothToBucket = bucket.AddCloths(clothToAdd);
 
         if (shouldAddClothToBucket.IsError)
@@ -107,11 +102,6 @@ public class ClosetService : IClosetService
         if (!await _profileRepository.CanProfileAccessBucket(profile.Id, bucket.Id, cancellationToken))
         {
             return Errors.Bucket.CannotAccessBucket;
-        }
-        
-        if (await _bucketRepository.AreClothAlreadyOnBucket(cloths, cancellationToken))
-        {
-            return Errors.Bucket.CanAddClothToBucket;
         }
         
         var shouldAddAllCloth = bucket.AddCloths(cloths);
