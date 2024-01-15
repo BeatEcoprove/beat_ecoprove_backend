@@ -48,7 +48,9 @@ public class GroupController : ApiController
     
     [HttpGet]
     public async Task<ActionResult<GetGroupsResponse>> GetGroups(
-        [FromQuery] Guid profileId
+        [FromQuery] Guid profileId,
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize
     )
     {
         var authId = HttpContext.User.GetUserId();
@@ -56,7 +58,9 @@ public class GroupController : ApiController
         var getGroupResult = await _sender.Send(
             new GetGroupsQuery(
                 authId,
-                profileId
+                profileId,
+                page ?? 1,
+                pageSize ?? 10
             ));
         
         return getGroupResult.Match(

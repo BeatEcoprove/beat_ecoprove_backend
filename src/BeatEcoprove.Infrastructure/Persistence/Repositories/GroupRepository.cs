@@ -3,7 +3,6 @@ using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.DAOS;
 using BeatEcoprove.Domain.GroupAggregator.Enumerators;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -16,17 +15,28 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
     {
     }
 
-    public async Task<List<Group>> GetPublicGroupsAsync(CancellationToken cancellationToken = default)
+    public async Task<List<Group>> GetPublicGroupsAsync(
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
     {
         var getPublicGroups =
             from groupEntity in DbContext.Set<Group>()
             where groupEntity.IsPublic
             select groupEntity;
         
+        getPublicGroups = getPublicGroups
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
+        
         return await getPublicGroups.ToListAsync(cancellationToken);
     }
 
-    public async Task<List<Group>> GetPrivateGroupsAsync(ProfileId profileId, CancellationToken cancellationToken = default)
+    public async Task<List<Group>> GetPrivateGroupsAsync(
+        ProfileId profileId, 
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
     {
         var getPrivateGroups =
             from groupEntity in DbContext.Set<Group>()
@@ -37,6 +47,10 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
                 groupEntity.IsPublic == false &&
                 profile.Id == profileId
             select groupEntity;
+        
+        getPrivateGroups = getPrivateGroups
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
         
         return await getPrivateGroups.ToListAsync(cancellationToken);
     }

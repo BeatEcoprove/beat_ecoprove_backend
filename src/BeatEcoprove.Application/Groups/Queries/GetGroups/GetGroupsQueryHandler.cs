@@ -33,8 +33,16 @@ internal sealed class GetGroupsQueryHandler : IQueryHandler<GetGroupsQuery, Erro
             return profile.Errors;
         }
         
-        var publicGroups = await _groupRepository.GetPublicGroupsAsync(cancellationToken);
-        var privateGroups = await _groupRepository.GetPrivateGroupsAsync(profile.Value.Id, cancellationToken);
+        var publicGroups = await _groupRepository.GetPublicGroupsAsync(
+            request.Page, 
+            request.PageSize, 
+            cancellationToken);
+        
+        var privateGroups = await _groupRepository.GetPrivateGroupsAsync(
+            profile.Value.Id,
+            request.Page, 
+            request.PageSize, 
+            cancellationToken);
         
         return new GetGroupList(
             publicGroups,

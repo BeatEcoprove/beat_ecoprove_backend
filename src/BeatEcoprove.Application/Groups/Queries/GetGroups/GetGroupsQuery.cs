@@ -8,5 +8,7 @@ namespace BeatEcoprove.Application.Groups.Queries.GetGroups;
 public record GetGroupsQuery
 (
     Guid AuthId,
-    Guid ProfileId
+    Guid ProfileId,
+     int Page = 1,
+     int PageSize = 10
 ) : IQuery<ErrorOr<GetGroupList>>, IAuthorization;

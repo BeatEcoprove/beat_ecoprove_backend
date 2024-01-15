@@ -10,7 +10,6 @@ using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
-using BeatEcoprove.Domain.Shared.ValueObjects;
 using ErrorOr;
 using Mapster;
 
@@ -33,14 +32,6 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         _profileRepository = profileRepository;
         _colorRepository = colorRepository;
         _brandRepository = brandRepository;
-    }
-
-    private ErrorOr<Color> ValidateQueryParams(Color color, string brand)
-    {
-        var validColor = Color.FromHex(color);
-        var validBrand = Brand.FromName(brand);
-
-        return validColor.AddValidate(validBrand);
     }
 
     private ErrorOr<List<ClothType>>? GetCategory(string categories)
