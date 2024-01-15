@@ -32,6 +32,10 @@ public class MaintenanceActionConfiguration : IEntityTypeConfiguration<Maintenan
             .HasColumnName("sustainable_points")
             .IsRequired();
         
+        builder.Property(ms => ms.EcoScore)   
+            .HasColumnName("eco_score")
+            .IsRequired();
+        
         builder.Property(ms => ms.Title)
             .HasColumnName("title")
             .HasMaxLength(30)

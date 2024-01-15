@@ -1,5 +1,8 @@
 using BeatEcoprove.Api.Extensions;
+using BeatEcoprove.Application.Cloths.Commands.CloseMaintenanceActivity;
+using BeatEcoprove.Application.Cloths.Commands.PerformAction;
 using BeatEcoprove.Application.Cloths.Queries.GetAvailableServices;
+using BeatEcoprove.Contracts.Closet.Cloth;
 using BeatEcoprove.Contracts.Services;
 using Mapster;
 using MapsterMapper;
@@ -10,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BeatEcoprove.Api.Controllers;
 
 [Authorize]
-[Route("/profiles/closet/cloth/{clothId:guid}")]
+[Route("/profiles/closet/cloth/{clothId:guid}/services")]
 public class ClothController : ApiController
 {
     private readonly IMapper _mapper;
@@ -22,7 +25,7 @@ public class ClothController : ApiController
         _sender = sender;
     }
 
-    [HttpGet("services")]
+    [HttpGet]
     public async Task<ActionResult<List<MaintenanceServiceResponse>>> GetAvailableServices([FromRoute] Guid clothId, [FromQuery] Guid profileId, CancellationToken cancellationToken = default)
     {
         var userId = HttpContext.User.GetUserId();
@@ -37,6 +40,54 @@ public class ClothController : ApiController
         return result.Match(
             response => Ok(_mapper.Map<List<MaintenanceServiceResponse>>(response)),
             Problem<List<MaintenanceServiceResponse>>
+        );
+    }
+    
+    [HttpPost("{serviceId:guid}/perform/{actionId:guid}")]
+    public async Task<ActionResult<ClothResponse>> PerformService(
+        [FromRoute] Guid clothId, 
+        [FromRoute] Guid serviceId, 
+        [FromRoute] Guid actionId, 
+        [FromQuery] Guid profileId, 
+        CancellationToken cancellationToken = default)
+    {
+        var userId = HttpContext.User.GetUserId();
+
+        var result = await _sender.Send(new
+        {
+            AuthId = userId,
+            ProfileId = profileId,
+            ClothId = clothId,
+            ServiceId = serviceId,
+            ActionId = actionId
+        }.Adapt<PerformActionCommand>(), cancellationToken);
+
+        return result.Match(
+            response => Ok(_mapper.Map<ClothResponse>(response)),
+            Problem<ClothResponse>
+        );
+    }
+    
+    [HttpPost("{maintenanceActivityId:guid}/finish")]
+    public async Task<ActionResult<ClothResponse>> CloseAction(
+        [FromRoute] Guid clothId, 
+        [FromRoute] Guid maintenanceActivityId, 
+        [FromQuery] Guid profileId, 
+        CancellationToken cancellationToken = default)
+    {
+        var userId = HttpContext.User.GetUserId();
+
+        var result = await _sender.Send(new
+        CloseMaintenanceActivityCommand(
+            userId,
+            profileId,
+            clothId,
+            maintenanceActivityId
+        ), cancellationToken);
+
+        return result.Match(
+            response => Ok(_mapper.Map<ClothResponse>(response)),
+            Problem<ClothResponse>
         );
     }
 }

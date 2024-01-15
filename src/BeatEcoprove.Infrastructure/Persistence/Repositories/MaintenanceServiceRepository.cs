@@ -19,4 +19,22 @@ public class MaintenanceServiceRepository : Repository<MaintenanceService, Maint
                 .Include(service => service.MaintenanceActions)
                 .ToListAsync(cancellationToken);
     }
+
+    public async Task<bool> ExistServiceByIdAsync(MaintenanceServiceId serviceId, CancellationToken cancellationToken)
+    {
+        return await DbContext.Set<MaintenanceService>()
+            .AnyAsync(service => service.Id == serviceId, cancellationToken);
+    }
+
+    public async Task<bool> ExistActionByIdAsync(MaintenanceActionId actionId, CancellationToken cancellationToken)
+    {
+        return await DbContext.Set<MaintenanceAction>()
+            .AnyAsync(action => action.Id == actionId, cancellationToken);
+    }
+
+    public Task<MaintenanceAction?> GetActionByIdAsync(MaintenanceActionId actionId, CancellationToken cancellationToken)
+    {
+        return DbContext.Set<MaintenanceAction>()
+            .FirstOrDefaultAsync(action => action.Id == actionId, cancellationToken);
+    }
 }

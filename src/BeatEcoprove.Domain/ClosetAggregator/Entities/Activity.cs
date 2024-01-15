@@ -27,7 +27,7 @@ public abstract class Activity : Entity<ActivityId>
     public float XP { get; protected set; }
     public float DeltaScore { get; protected set; }
     public DateTime CreatedAt { get; private set; }
-    public DateTime EndAt { get; private set; }
+    public DateTime? EndAt { get; private set; }
     
     public void EndActivity()
     {

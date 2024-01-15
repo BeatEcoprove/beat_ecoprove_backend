@@ -37,6 +37,13 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 newName: "sustainable_points");
 
             migrationBuilder.AddColumn<int>(
+                name: "eco_score",
+                table: "maintenance_service_actions",
+                type: "integer",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AddColumn<int>(
                 name: "sustainable_points",
                 table: "maintenance_service_actions",
                 type: "integer",
@@ -56,6 +63,14 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 type: "uuid",
                 nullable: false,
                 defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "end_at",
+                table: "activities",
+                type: "timestamp with time zone",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "timestamp with time zone");
 
             migrationBuilder.CreateIndex(
                 name: "IX_maintenance_service_actions_maintenance_service_id",
@@ -125,6 +140,10 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 table: "maintenance_activities");
 
             migrationBuilder.DropColumn(
+                name: "eco_score",
+                table: "maintenance_service_actions");
+
+            migrationBuilder.DropColumn(
                 name: "sustainable_points",
                 table: "maintenance_service_actions");
 
@@ -162,6 +181,16 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 maxLength: 30,
                 nullable: false,
                 defaultValue: "");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "end_at",
+                table: "activities",
+                type: "timestamp with time zone",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                oldClrType: typeof(DateTime),
+                oldType: "timestamp with time zone",
+                oldNullable: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_maintenance_services_MaintenanceActivityId",

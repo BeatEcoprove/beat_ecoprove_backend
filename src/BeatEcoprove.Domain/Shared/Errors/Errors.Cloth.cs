@@ -26,9 +26,17 @@ public partial class Errors
             "Cloth.CannotUseCloth",
             "Esta peça já está em uso.");
         
+        public static Error IsBeingMaintain => Error.Conflict(
+            "Cloth.IsBeingMaintain",
+            "Esta peça já se encontra em manutenção.");
+        
         public static Error CannotDisposeCloth => Error.Validation(
             "Cloth.CannotDisposeCloth",
             "Não é possível demarcar esta peça, porque não está em uso.");
+        
+        public static Error CannotFinishMaintenanceActivity => Error.Conflict(
+            "Cloth.CannotFinishMaintenanceActivity",
+            "Não é possível terminar a terefa de manutenção.");
         
         public static Error CannotAccessBucket => Error.Validation(
             "Cloth.CannotAccessBucket",

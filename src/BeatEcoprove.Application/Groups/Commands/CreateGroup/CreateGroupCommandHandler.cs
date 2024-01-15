@@ -1,12 +1,8 @@
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
-using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.GroupAggregator;
-using BeatEcoprove.Domain.GroupAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using ErrorOr;
 

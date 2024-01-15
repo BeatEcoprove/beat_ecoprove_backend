@@ -3,6 +3,7 @@ using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Events;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.Shared.ValueObjects;
@@ -70,6 +71,35 @@ public class Cloth : AggregateRoot<ClothId, Guid>
     public void SetClothPicture(string clothAvatar)
     {
         ClothAvatar = clothAvatar;
+    }
+    
+    public ErrorOr<bool> MaintainCloth(
+        MaintenanceActivity activity, 
+        MaintenanceAction action,
+        Profile profile)
+    {
+        if (_activities.Any(a => a.EndAt == null))
+        {
+            return Errors.Cloth.IsBeingMaintain;
+        }
+        
+        _activities.Add(activity);
+
+        this.AddDomainEvent(new MaintainClothDomainEvent(action, profile));
+        return true;
+    }
+
+    public ErrorOr<bool> CloseMaintenance(MaintenanceActivity activity, MaintenanceAction action)
+    {
+        EcoScore += action.EcoScore;
+        
+        if (!activity.IsRunning())
+        {
+            return Errors.Cloth.CannotFinishMaintenanceActivity;
+        }
+        
+        activity.EndActivity();
+        return true;
     }
 
     public ErrorOr<DailyUseActivity> UseCloth(Profile profile)

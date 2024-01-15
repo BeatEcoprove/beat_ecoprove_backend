@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     [DbContext(typeof(BeatEcoproveDbContext))]
-    [Migration("20240114215155_SwitchSustaineblePointsFromActionToService")]
+    [Migration("20240115001139_SwitchSustaineblePointsFromActionToService")]
     partial class SwitchSustaineblePointsFromActionToService
     {
         /// <inheritdoc />
@@ -162,7 +162,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .HasColumnType("real")
                         .HasColumnName("delta_score");
 
-                    b.Property<DateTime>("EndAt")
+                    b.Property<DateTime?>("EndAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_at");
 
@@ -203,6 +203,10 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("EcoScore")
+                        .HasColumnType("integer")
+                        .HasColumnName("eco_score");
 
                     b.Property<Guid>("MaintenanceService")
                         .HasColumnType("uuid")

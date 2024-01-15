@@ -13,7 +13,8 @@ public class MaintenanceAction : Entity<MaintenanceActionId>
         string title, 
         string description, 
         string badge,
-        int sustainablePoints = 0)
+        int sustainablePoints = 0,
+        int ecoScore = 0)
     {
         Id = id;
         Title = title;
@@ -21,6 +22,7 @@ public class MaintenanceAction : Entity<MaintenanceActionId>
         Badge = badge;
         MaintenanceService = maintenanceServiceId;
         SustainablePoints = sustainablePoints;
+        EcoScore = ecoScore;
     }
 
     public MaintenanceServiceId MaintenanceService { get; private set; } = null!;
@@ -28,13 +30,15 @@ public class MaintenanceAction : Entity<MaintenanceActionId>
     public string Description { get; private set; } = null!;
     public string Badge { get; private set; } = null!;
     public int SustainablePoints { get; private set; }
+    public int EcoScore { get; private set; }
 
     public static MaintenanceAction Create(
         MaintenanceServiceId maintenanceServiceId,
         string title, 
         string description, 
         string badge,
-        int sustainablePoints = 0)
+        int sustainablePoints = 0,
+        int ecoScore = 0)
     {
         return new MaintenanceAction(
             MaintenanceActionId.CreateUnique(), 
@@ -42,6 +46,7 @@ public class MaintenanceAction : Entity<MaintenanceActionId>
             title, 
             description, 
             badge,
-            sustainablePoints);
+            sustainablePoints,
+            ecoScore);
     }
 }

@@ -15,6 +15,14 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
     {
     }
 
+    public new async Task<Cloth?> GetByIdAsync(ClothId id, CancellationToken cancellationToken = default)
+    {
+        return await DbContext
+            .Cloths
+            .Include(cloth => cloth.Activities)
+            .SingleOrDefaultAsync(cloth => cloth.Id == id, cancellationToken);
+    }
+
     public async Task<ClothDao?> GetClothDaoByIdAsync(ClothId id, CancellationToken cancellationToken = default)
     {
         var getCloth = 
@@ -56,11 +64,15 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
     {
         var getAvailableServices =
             from services in DbContext.Set<MaintenanceService>()
-            where (
+                .Include(service => service.MaintenanceActions)
+            where
+            (
                 from cloth in DbContext.Cloths
                 from mainActivity in DbContext.Set<MaintenanceActivity>()
-                where mainActivity.ClothId == cloth.Id && cloth.Id == id && mainActivity.EndAt < DateTime.UtcNow
-                select mainActivity).FirstOrDefault() != null
+                where
+                    cloth.Id == id && mainActivity.ClothId == cloth.Id
+                select mainActivity
+            ).All(mainActivity => mainActivity == null || mainActivity.EndAt != null)
             select services;
         
         return await getAvailableServices.ToListAsync(cancellationToken);
@@ -71,4 +83,5 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
         return await DbContext.Cloths
             .AnyAsync(cloth => cloths.Contains(cloth.Id), cancellationToken);
     }
+    
 }
