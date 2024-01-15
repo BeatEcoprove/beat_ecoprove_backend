@@ -23,9 +23,9 @@ public interface IProfileRepository : IRepository<Profile, ProfileId>
     Task<List<ClothDao>> GetClosetCloth(
         List<ProfileId> profileId, 
         List<ClothType>? category = null,
-        ClothSize? size = null,
-        Guid? color = null,
-        Guid? brand = null,
+        List<ClothSize>? size = null,
+        List<Guid>? color = null,
+        List<Guid>? brand = null,
         string? order = null,
         string? sortBy = null,
         int pageSize = 10,  

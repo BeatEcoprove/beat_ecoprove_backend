@@ -37,9 +37,9 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
     public async Task<List<ClothDao>> GetClosetCloth(
         List<ProfileId> queryProfiles,
         List<ClothType>? category = null,
-        ClothSize? size = null,
-        Guid? colorValue = null,
-        Guid? brandValue = null,
+        List<ClothSize>? size = null,
+        List<Guid>? colorValue = null,
+        List<Guid>? brandValue = null,
         string? order = null,
         string? sortBy = null,
         int pageSize = 10,
@@ -56,9 +56,9 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                 cloth.Color == color.Id && 
                 cloth.Brand == brand.Id && 
                 queryProfiles.Contains(profile.Id) &&
-                (size == null || cloth.Size == size) &&
-                (brandValue == null || brand.Id == brandValue) &&
-                (colorValue == null || color.Id == colorValue) &&
+                (brandValue == null || brandValue.Contains(brand.Id)) &&
+                (colorValue == null || colorValue.Contains(color.Id) ) &&
+                (size == null || size.Contains(cloth.Size)) &&
                 (category == null || category.Contains(cloth.Type))
             select new ClothDao(
                 cloth.Id,

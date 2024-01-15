@@ -7,9 +7,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.Shared.Errors;
-using BeatEcoprove.Domain.Shared.Extensions;
 using ErrorOr;
 using Mapster;
 
@@ -51,14 +49,22 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         return clothTypes;
     }
     
-    private ErrorOr<ClothSize>? GetSize(string size)
+    private ErrorOr<List<ClothSize>>? GetSize(string size)
     {
-        if (size.CanConvertToEnum(out ClothSize result))
-        {
-            return result;
-        }
+        List<ClothSize> clothSizes = new();
         
-        return Errors.Filters.Size;
+        
+        foreach (var category in size.Split(','))
+        {
+            if (!category.CanConvertToEnum(out ClothSize result))
+            {
+                return Errors.Filters.Category;
+            }
+
+            clothSizes.Add(result);
+        }
+
+        return clothSizes;
     }
     
     private ErrorOr<string>? GetOrderBy(string orderBy)
@@ -72,35 +78,49 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         };
     }
 
-    private async Task<ErrorOr<Guid>> GetClothId(string hex, CancellationToken cancellationToken = default)
+    private async Task<ErrorOr<List<Guid>>> GetClothId(string hexs, CancellationToken cancellationToken = default)
     {
-        var colorId = await _colorRepository.GetByHexValueAsync(hex, cancellationToken);
+        List<Guid> colorIds = new();
 
-        if (colorId is null)
+        foreach (var hex in hexs.Split(','))
         {
-            return Errors.Color.BadHexValue;
+            var colorId = await _colorRepository.GetByHexValueAsync(hex, cancellationToken);
+
+            if (colorId is null)
+            {
+                return Errors.Color.BadHexValue;
+            }
+
+            colorIds.Add(colorId.Value);
         }
 
-        return colorId.Value;
+        return colorIds;
     }
-    private async Task<ErrorOr<Guid>> GetBrandId(string brand, CancellationToken cancellationToken = default)
+    private async Task<ErrorOr<List<Guid>>> GetBrandId(string brands, CancellationToken cancellationToken = default)
     {
-        var brandId = await _brandRepository.GetBrandIdByNameAsync(brand, cancellationToken);
+        List<Guid> brandIds = new();
 
-        if (brandId is null)
+        foreach (var brand in brands.Split(','))
         {
-            return Errors.Brand.ThereIsNoBrandName;
+            var brandId = await _brandRepository.GetBrandIdByNameAsync(brand, cancellationToken);
+
+            if (brandId is null)
+            {
+                return Errors.Brand.ThereIsNoBrandName;
+            }
+
+            brandIds.Add(brandId.Value);
         }
-        
-        return brandId.Value;
+
+        return brandIds;
     }
 
     public async Task<ErrorOr<MixedClothBucketList>> Handle(
         GetClosetQuery request, 
         CancellationToken cancellationToken)
     {
-        ErrorOr<Guid>? colorId = null;
-        ErrorOr<Guid>? brandId = null;
+        ErrorOr<List<Guid>>? colorId = null;
+        ErrorOr<List<Guid>>? brandId = null;
         
         var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
@@ -109,18 +129,36 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         var order = request.OrderBy is null ? null : GetOrderBy(request.OrderBy);
 
         var result = 
-            ValidateParams(size, order);
+            ValidateParams(order);
+        
+        if (size is not null && size.Value.IsError)
+        {
+            result = size.Value.Errors;
+        }
+        
+        if (categories is not null && categories.Value.IsError)
+        {
+            result = categories.Value.Errors;
+        }
         
         if (request.Color != null)
         {
             colorId = await GetClothId(request.Color, cancellationToken);
-            result = colorId?.AddValidate(result)!;
+            
+            if (colorId.Value.IsError)
+            {
+                result = colorId.Value.Errors;
+            }
         }
 
         if (request.Brand != null)
         {
             brandId = await GetBrandId(request.Brand, cancellationToken);
-            result = brandId?.AddValidate(result)!;
+            
+            if (brandId.Value.IsError)
+            {
+                result = brandId.Value.Errors;
+            }
         }
         
         if (result.IsError)
@@ -165,15 +203,8 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
             bucketList);
     }
 
-    private ErrorOr<dynamic> ValidateParams(
-        ErrorOr<ClothSize>? size, 
-        ErrorOr<string>? order)
+    private ErrorOr<dynamic> ValidateParams(ErrorOr<string>? order)
     {
-        if (size is not null && size.Value.IsError)
-        {
-            return size.Value.Errors;
-        }
-      
         if (order is not null && order.Value.IsError)
         {
             return order.Value.Errors;
