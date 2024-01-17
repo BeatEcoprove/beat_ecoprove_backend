@@ -9,4 +9,4 @@ public record GetCurrentOutfitQuery
 (
     Guid AuthId,
     Guid ProfileId
-) : IQuery<ErrorOr<List<ClothResult>>>, IAuthorization;
+) : IQuery<ErrorOr<BucketResult>>, IAuthorization;

@@ -108,6 +108,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                 clothIds.Contains(clothEntry.ClothId)
             select bucket;
 
+        getAllBuckets = getAllBuckets.Distinct();
         return await getAllBuckets.ToListAsync(cancellationToken);
     }
 

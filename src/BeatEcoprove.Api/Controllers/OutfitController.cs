@@ -3,6 +3,7 @@ using BeatEcoprove.Application.Closet.Commands.RegisterClothUsage;
 using BeatEcoprove.Application.Closet.Commands.RemoveClothFromOutfit;
 using BeatEcoprove.Application.Closet.Queries.GetCurrentOutfit;
 using BeatEcoprove.Contracts.Activities;
+using BeatEcoprove.Contracts.Closet.Bucket;
 using BeatEcoprove.Contracts.Closet.Cloth;
 using Mapster;
 using MapsterMapper;
@@ -62,7 +63,7 @@ public class OutfitController : ApiController
     }
     
     [HttpGet("outfit")]
-    public async Task<ActionResult<List<ClothResponse>>> GetCurrentOutfit([FromQuery] Guid profileId)
+    public async Task<ActionResult<BucketResponse>> GetCurrentOutfit([FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
 
@@ -73,8 +74,8 @@ public class OutfitController : ApiController
         }.Adapt<GetCurrentOutfitQuery>());
 
         return registerClothUsageResult.Match(
-            response => Ok(_mapper.Map<List<ClothResponse>>(response)),
-            Problem<List<ClothResponse>>
+            response => Ok(_mapper.Map<BucketResponse>(response)),
+            Problem<BucketResponse>
         );
     }
 }

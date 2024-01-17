@@ -18,12 +18,10 @@ public class GamingService : IGamingService
         double xpRequiredForCurrentLevel = CalculateXp(level);
         double xpRequiredForNextLevel = CalculateXp(level + 1);
 
-        double xpRange = xpRequiredForNextLevel - xpRequiredForCurrentLevel;
-        double xpProgress = xp - xpRequiredForCurrentLevel;
-
-        // Calculate progress percentage
-        double progressPercentage = (xpRange == 0) ? 100 : xpProgress / xpRange * 100;
-
-        return progressPercentage;
+        double xpRange = Math.Abs(xpRequiredForNextLevel - xpRequiredForCurrentLevel);
+        double xpProgress = xpRequiredForCurrentLevel - xp;
+        
+        // Calculate percentage
+        return (xpRange == 0) ? 100 : xpProgress / xpRange * 100;
     }
 }
