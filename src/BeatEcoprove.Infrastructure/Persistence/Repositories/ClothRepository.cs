@@ -91,6 +91,19 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
         return await getLastMaintenanceActivity.FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<List<Bucket>> GetBuckets(ClothId id, CancellationToken cancellationToken)
+    {
+        var getBucketsOfCloth =
+            from cloth in DbContext.Cloths
+            from bucket in DbContext.Buckets
+            from bucketClothEntry in bucket.BucketClothEntries
+            where
+                cloth.Id == id && bucketClothEntry.ClothId == cloth.Id
+            select bucket;
+        
+        return await getBucketsOfCloth.ToListAsync(cancellationToken);
+    }
+
     public async Task<bool> ClothExists(List<ClothId> cloths, CancellationToken cancellationToken = default)
     {
         return await DbContext.Cloths
