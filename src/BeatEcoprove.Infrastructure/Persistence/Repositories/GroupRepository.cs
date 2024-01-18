@@ -16,13 +16,14 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
     }
 
     public async Task<List<Group>> GetPublicGroupsAsync(
+        ProfileId profileId, 
         int page,
         int pageSize,
         CancellationToken cancellationToken = default)
     {
         var getPublicGroups =
             from groupEntity in DbContext.Set<Group>()
-            where groupEntity.IsPublic
+            where groupEntity.IsPublic && groupEntity.CreatorId != profileId
             select groupEntity;
         
         getPublicGroups = getPublicGroups
@@ -44,7 +45,6 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
             join profile in DbContext.Profiles 
                 on groupMember.Profile equals profile.Id
             where 
-                groupEntity.IsPublic == false &&
                 profile.Id == profileId
             select groupEntity;
         
