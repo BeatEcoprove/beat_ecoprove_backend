@@ -16,7 +16,10 @@ public class MaintenanceServiceRepository : Repository<MaintenanceService, Maint
     {
         return await
             DbContext.Set<MaintenanceService>()
-                .Include(service => service.MaintenanceActions)
+                .Include(service => 
+                    service.MaintenanceActions
+                        .OrderBy(a => a.Title))
+                .OrderBy(a => a.Title)
                 .ToListAsync(cancellationToken);
     }
 
