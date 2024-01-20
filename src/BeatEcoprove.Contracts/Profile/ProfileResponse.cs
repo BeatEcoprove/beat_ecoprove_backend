@@ -7,5 +7,7 @@ public record ProfileResponse
     int Level,
     float LevelPercentage,
     int SustainabilityPoints,
+    int EcoScore,
+    int EcoCoins,
     string AvatarUrl
 );

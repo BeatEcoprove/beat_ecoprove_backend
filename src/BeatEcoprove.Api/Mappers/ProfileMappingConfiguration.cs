@@ -26,6 +26,8 @@ public class ProfileMappingConfiguration : IRegister
                     src.UserName.Value,
                     0,
                     0,
+                    src.EcoScore,
+                    src.EcoCoins,
                     src.SustainabilityPoints,
                     src.AvatarUrl
                 )
