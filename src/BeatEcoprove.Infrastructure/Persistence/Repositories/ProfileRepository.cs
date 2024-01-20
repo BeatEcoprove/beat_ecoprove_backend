@@ -128,7 +128,10 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
         var canAccessCloth =
             from profile in DbContext.Profiles
             from clothEntry in profile.ClothEntries
-            where clothEntry.ClothId == clothId && profile.Id == profileId
+            join auth in DbContext.Auths on profile.AuthId equals auth.Id
+            where
+                (clothEntry.ClothId == clothId && profile.Id == profileId)
+                || (auth.MainProfileId == profileId)
             select clothEntry;
         
         return canAccessCloth.AnyAsync(cancellationToken);
