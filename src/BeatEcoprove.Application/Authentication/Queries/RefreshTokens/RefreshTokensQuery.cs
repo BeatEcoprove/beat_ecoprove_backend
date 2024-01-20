@@ -6,5 +6,6 @@ namespace BeatEcoprove.Application.Authentication.Queries.RefreshTokens;
 
 public record RefreshTokensQuery
 (
-    string RefreshToken
+    string RefreshToken,
+    Guid ProfileId
 ) : IQuery<ErrorOr<AuthenticationResult>>;

@@ -80,10 +80,12 @@ public class AuthenticationController : ApiController
     }
 
     [HttpGet("refresh_tokens")]
-    public async Task<ActionResult<AuthenticationResult>> RefreshTokens([FromQuery] string token)
+    public async Task<ActionResult<AuthenticationResult>> RefreshTokens(
+        [FromQuery] string token,
+        [FromQuery] Guid profileId)
     {
         var resultTokens =
-            await _sender.Send(new RefreshTokensQuery(token));
+            await _sender.Send(new RefreshTokensQuery(token, profileId));
 
         return resultTokens.Match(
             tokens => Ok(tokens),
