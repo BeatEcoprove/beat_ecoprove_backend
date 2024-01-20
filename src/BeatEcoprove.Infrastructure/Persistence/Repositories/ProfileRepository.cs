@@ -117,7 +117,10 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
         var canAccessBucket =
             from profile in DbContext.Profiles
             from bucketEntry in profile.BucketEntries
-            where bucketEntry.BucketId == bucketId && profile.Id == profileId
+            join auth in DbContext.Auths on profile.AuthId equals auth.Id
+            where
+                (bucketEntry.BucketId == bucketId && profile.Id == profileId)
+                || (auth.MainProfileId == profileId)
             select bucketEntry;
         
         return canAccessBucket.AnyAsync(cancellationToken);
