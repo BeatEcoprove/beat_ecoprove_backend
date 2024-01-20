@@ -24,15 +24,21 @@
         <ProjectReference Include="..\BeatEcoprove.Domain\BeatEcoprove.Domain.csproj" />
         <ProjectReference Include="..\BeatEcoprove.Infrastructure\BeatEcoprove.Infrastructure.csproj" />
     </ItemGroup>
-        
+
     <Target Name="CreateAppDataFolder" BeforeTargets="CoreCompile">
         <MakeDir Directories="$(OutputPath)public\default" Condition="!Exists('$(OutputPath)public\default')" />
-        <Copy SourceFiles="Assets\default.png" DestinationFolder="$(OutputPath)public\default" Condition="!Exists('$(OutputPath)public\default\default.png')" />
+        <ItemGroup>
+            <FilesToCopy Include="Assets\**\*.*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutputPath)public\default\%(RecursiveDir)" />
     </Target>
-        
+
     <Target Name="CreateAppDataFolderPublish" AfterTargets="Publish" Condition="'$(Configuration)' == 'Release'">
         <MakeDir Directories="$(PublishDir)public\default" Condition="!Exists('$(PublishDir)public\default')" />
-        <Copy SourceFiles="Assets\default.png" DestinationFolder="$(PublishDir)public\default" Condition="!Exists('$(PublishDir)public\default.png')" />
+        <ItemGroup>
+            <FilesToCopyPublish Include="Assets\**\*.*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(FilesToCopyPublish)" DestinationFolder="$(PublishDir)public\default\%(RecursiveDir)" />
     </Target>
 
 </Project>
