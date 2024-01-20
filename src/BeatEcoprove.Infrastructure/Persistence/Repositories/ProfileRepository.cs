@@ -106,7 +106,9 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                 profile.Id == profileId && 
                 bucketEntry.BucketId == bucket.Id &&
                 clothEntry.BucketId == bucket.Id &&
-                clothIds.Contains(clothEntry.ClothId)
+                clothIds.Contains(clothEntry.ClothId) &&
+                bucketEntry.DeletedAt == null &&
+                clothEntry.DeletedAt == null
             select bucket;
 
         getAllBuckets = getAllBuckets.Distinct();
