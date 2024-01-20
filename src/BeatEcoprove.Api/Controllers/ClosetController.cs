@@ -84,7 +84,7 @@ public class ClosetController : ApiController
                 request.ClothSize,
                 request.Brand,
                 request.Color,
-                request.ClothAvatar.OpenReadStream()));
+                request.PictureStream));
 
         return result.Match(
             response => Created(

@@ -1,10 +1,12 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using Microsoft.Extensions.Options;
+using Npgsql.Replication.PgOutput.Messages;
 
 namespace BeatEcoprove.Infrastructure.FileStorage;
 
 public class LocalFileStorageProvider : IFileStorageProvider
 {
+    private const string DefaultImagePath = "default\\default.png";
     private readonly LocalFileStorageSettings _settings;
 
     public LocalFileStorageProvider(IOptions<LocalFileStorageSettings> settings)
@@ -20,6 +22,11 @@ public class LocalFileStorageProvider : IFileStorageProvider
         if (!Directory.Exists(bucketPath))
         {
             Directory.CreateDirectory(bucketPath);
+        }
+
+        if (stream == Stream.Null)
+        {
+            return Path.Combine(_settings.PublicFolder, DefaultImagePath);
         }
         
         var path = Path.Combine(_settings.FolderPath, pointerName);

@@ -2,8 +2,7 @@
 
 namespace BeatEcoprove.Contracts.Authentication.SignIn;
 
-public record SignInEnterpriseAccountRequest
-(
+public record SignInEnterpriseAccountRequest(
     string Name,
     string TypeOption,
     string Phone,
@@ -13,7 +12,10 @@ public record SignInEnterpriseAccountRequest
     string Locality,
     string PostalCode,
     string UserName,
-    IFormFile AvatarPicture,
+    IFormFile? AvatarPicture,
     string Email,
     string Password
-);
+) : IPictureRequest
+{
+    public Stream PictureStream => AvatarPicture != null ? AvatarPicture.OpenReadStream() : Stream.Null;
+};

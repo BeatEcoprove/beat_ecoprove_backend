@@ -2,9 +2,7 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Groups.Commands.CreateGroup;
 using BeatEcoprove.Application.Groups.Queries.GetGroupDetail;
 using BeatEcoprove.Application.Groups.Queries.GetGroups;
-using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Contracts.Groups;
-using BeatEcoprove.Domain.GroupAggregator.DAOS;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -34,7 +32,7 @@ public class GroupController : ApiController
             new CreateGroupCommand(
                 authId,
                 profileId,
-                request.AvatarPicture.OpenReadStream(),
+                request.PictureStream,
                 request.Name,
                 request.Description,
                 request.IsPublic

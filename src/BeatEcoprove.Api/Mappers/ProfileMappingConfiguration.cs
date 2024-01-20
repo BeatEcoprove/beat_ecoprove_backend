@@ -44,17 +44,17 @@ public class ProfileMappingConfiguration : IRegister
             .MapWith(src => ToMyProfilesResponse(src));
 
         config.NewConfig<SignInPersonalAccountRequest, SignInPersonalAccountCommand>()
-            .MapWith((source) =>
+            .MapWith((src) => 
                 new SignInPersonalAccountCommand(
-                    source.Name,
-                    source.BornDate,
-                    source.UserName,
-                    source.Gender,
-                    source.CountryCode,
-                    source.Phone,
-                    source.AvatarPicture.OpenReadStream(),
-                    source.Email,
-                    source.Password));
+                    src.Name,
+                    src.BornDate,
+                    src.UserName,
+                    src.Gender,
+                    src.CountryCode,
+                    src.Phone,
+                    src.PictureStream,
+                    src.Email,
+                    src.Password));
 
         config.NewConfig<SignInEnterpriseAccountRequest, SignInEnterpriseAccountCommand>()
             .MapWith((src) =>
@@ -68,7 +68,7 @@ public class ProfileMappingConfiguration : IRegister
                     src.Locality,
                     src.PostalCode,
                     src.UserName,
-                    src.AvatarPicture.OpenReadStream(),
+                    src.PictureStream,
                     src.Email,
                     src.Password)
                 );

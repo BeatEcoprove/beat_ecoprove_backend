@@ -10,7 +10,10 @@ public record SignInPersonalAccountRequest
     string Gender,
     string CountryCode,
     string Phone,
-    IFormFile AvatarPicture,
+    IFormFile? AvatarPicture,
     string Email,
     string Password
-);
+) : IPictureRequest
+{
+    public Stream PictureStream => AvatarPicture != null ? AvatarPicture.OpenReadStream() : Stream.Null;
+};
