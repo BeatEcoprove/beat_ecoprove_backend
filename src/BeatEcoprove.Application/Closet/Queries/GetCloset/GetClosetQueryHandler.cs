@@ -199,7 +199,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
             cancellationToken);
 
         return new MixedClothBucketList(
-            clothList.Adapt<List<ClothResult>>(), 
+            clothList.Adapt<List<ClothResultExtension>>(), 
             bucketList);
     }
 

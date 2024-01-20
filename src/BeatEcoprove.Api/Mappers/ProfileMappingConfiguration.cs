@@ -30,6 +30,15 @@ public class ProfileMappingConfiguration : IRegister
                     src.AvatarUrl
                 )
             );
+        
+        config.NewConfig<Profile, ProfileClosetResponse>()
+            .MapWith((src) =>
+                new ProfileClosetResponse(
+                    src.Id.Value,
+                    src.UserName.Value,
+                    src.AvatarUrl
+                )
+            );
 
         config.NewConfig<List<ProfileDao>, MyProfilesResponse>()
             .MapWith(src => ToMyProfilesResponse(src));

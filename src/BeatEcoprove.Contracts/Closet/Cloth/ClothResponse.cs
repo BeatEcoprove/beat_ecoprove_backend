@@ -1,7 +1,10 @@
-﻿namespace BeatEcoprove.Contracts.Closet.Cloth;
+﻿
+using System.Text.Json.Serialization;
+using BeatEcoprove.Contracts.Profile;
 
-public record ClothResponse
-(
+namespace BeatEcoprove.Contracts.Closet.Cloth;
+
+public record ClothResponse(
     Guid Id,
     string Name,
     string Type,
@@ -10,5 +13,9 @@ public record ClothResponse
     string Color,
     int EcoScore,
     string ClothState,
-    string ClothAvatar
-);
+    string ClothAvatar,
+    ProfileClosetResponse Profile)
+{
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ProfileClosetResponse Profile { get; private init; } = Profile;
+}

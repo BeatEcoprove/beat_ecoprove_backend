@@ -1,7 +1,8 @@
-﻿namespace BeatEcoprove.Domain.ClosetAggregator.DAOs;
+﻿using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
-public record ClothDao
-(
+namespace BeatEcoprove.Domain.ClosetAggregator.DAOs;
+
+public record ClothDao(
     Guid Id,
     string Name,
     string Type,

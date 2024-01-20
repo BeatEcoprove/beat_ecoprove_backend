@@ -20,7 +20,7 @@ public interface IProfileRepository : IRepository<Profile, ProfileId>
     Task DeleteAsync(ProfileId id, CancellationToken cancellationToken);
     Task<List<ProfileId>> GetNestedProfileIds(AuthId authId, CancellationToken cancellationToken);
     Task<List<Bucket>> GetBucketCloth(ProfileId profileId, List<Guid> clothIds, CancellationToken cancellationToken = default);
-    Task<List<ClothDao>> GetClosetCloth(
+    Task<List<ClothDaoWithProfile>> GetClosetCloth(
         List<ProfileId> profileId, 
         List<ClothType>? category = null,
         List<ClothSize>? size = null,

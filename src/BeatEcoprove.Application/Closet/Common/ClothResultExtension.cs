@@ -1,8 +1,8 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
 namespace BeatEcoprove.Application.Closet.Common;
 
-public record ClothResult
+public record ClothResultExtension
 (
     Guid Id,
     string Name,
@@ -12,5 +12,6 @@ public record ClothResult
     string Color,
     int EcoScore,
     string ClothState,
-    string ClothAvatar
+    string ClothAvatar,
+    Profile Profile
 ) : IClothResult;

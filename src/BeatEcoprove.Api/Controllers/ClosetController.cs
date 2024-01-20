@@ -152,7 +152,7 @@ public class ClosetController : ApiController
         return result.Match(
             response => Created(
                 "",
-                _mapper.Map<ClothResponse>(response)
+                response.Adapt<ClothResponse>()
             ),
             Problem<ClothResponse>
         );
