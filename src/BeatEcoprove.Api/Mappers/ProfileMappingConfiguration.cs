@@ -24,11 +24,11 @@ public class ProfileMappingConfiguration : IRegister
                 new ProfileResponse(
                     src.Id.Value,
                     src.UserName.Value,
+                    src.Level,
                     0,
-                    0,
+                    src.SustainabilityPoints,
                     src.EcoScore,
                     src.EcoCoins,
-                    src.SustainabilityPoints,
                     src.AvatarUrl
                 )
             );
