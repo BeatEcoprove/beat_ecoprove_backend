@@ -138,6 +138,11 @@ public class ClosetService : IClosetService
             return shouldRemoveCloth.Errors;
         }
         
+        if (bucket.ClothNumber == 0)
+        {
+            await _bucketRepository.RemoveByIdAsync(bucket.Id, cancellationToken);
+        }
+        
         return bucket;
     }
 
