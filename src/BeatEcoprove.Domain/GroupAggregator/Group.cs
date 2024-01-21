@@ -102,4 +102,9 @@ public class Group : AggregateRoot<GroupId, Guid>
             .Where(member => member.Permission == MemberPermission.Admin)
             .ToList();
     }
+
+    public bool KickMember(GroupMember member)
+    {
+        return this._members.Remove(member);
+    }
 }

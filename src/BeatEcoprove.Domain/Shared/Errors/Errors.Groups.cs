@@ -19,6 +19,10 @@ public partial class Errors
             "Group.MemberNotFound",
             "Este membro não pertence ao grupo.");
         
+        public static Error DontBelongToGroup => Error.Conflict(
+            "Group.MemberNotFound",
+            "Não pertences a este grupo.");
+        
         public static Error PermissionNotValid => Error.Conflict(
             "Group.PermissionNotValid",
             "Permissão invalida.");
@@ -30,5 +34,9 @@ public partial class Errors
         public static Error CannotPromoteYourself => Error.Conflict(
             "Group.CannotPromoteYourself",
             "Não pode promover-se a si mesmo");
+        
+        public static Error CannotKickMember => Error.Conflict(
+            "Group.CannotKickMember",
+            "Não foi possuível remover o membro do grupo."); 
     }
 }

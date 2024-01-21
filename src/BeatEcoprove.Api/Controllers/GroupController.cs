@@ -1,5 +1,6 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Groups.Commands.CreateGroup;
+using BeatEcoprove.Application.Groups.Commands.KickMember;
 using BeatEcoprove.Application.Groups.Commands.PromoteMember;
 using BeatEcoprove.Application.Groups.Queries.GetGroupDetail;
 using BeatEcoprove.Application.Groups.Queries.GetGroups;
@@ -108,6 +109,28 @@ public class GroupController : ApiController
                 role
             )
         );
+        
+        return promoteUserResult.Match(
+            result => Ok(_mapper.Map<GroupResponse>(result)),
+            Problem<GroupResponse>
+        );
+    }
+    
+    [HttpPatch("{groupId:guid}/kick/{memberId:guid}")]
+    public async Task<ActionResult<GroupResponse>> PromoteUser(
+        [FromRoute] Guid groupId,
+        [FromRoute] Guid memberId,
+        [FromQuery] Guid profileId)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var promoteUserResult = await _sender.Send(
+            new KickMemberCommand(
+                authId,
+                profileId,
+                groupId,
+                memberId
+        ));
         
         return promoteUserResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
