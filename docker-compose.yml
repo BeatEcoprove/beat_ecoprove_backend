@@ -35,6 +35,8 @@ services:
       - MailSenderSettings:SmtpPort=${BEAT_MAIL_SMTP_PORT}
       - MailSenderSettings:SmtpUser=${BEAT_MAIL_SMTP_USER}
       - MailSenderSettings:SmtpPassword=${BEAT_MAIL_SMTP_PASSWORD}
+      - SmtpUser=${BEAT_MAIL_SMTP_USER}
+      - SmtpPassword=${BEAT_MAIL_SMTP_PASSWORD}
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=5182
     depends_on:

@@ -37,8 +37,8 @@ public static class DependencyInjection
             .AddSmtpSender(
                 mailSenderSettings.SmtpServer,
                 mailSenderSettings.SmtpPort,
-                mailSenderSettings.SmtpUser,
-                mailSenderSettings.SmtpPassword);
+                Environment.GetEnvironmentVariable("SmtpUser") ?? mailSenderSettings.SmtpUser,
+                Environment.GetEnvironmentVariable("SmtpPassword") ?? mailSenderSettings.SmtpPassword);
 
         return services;
     }
