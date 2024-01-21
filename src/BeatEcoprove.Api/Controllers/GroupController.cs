@@ -1,8 +1,10 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Groups.Commands.CreateGroup;
+using BeatEcoprove.Application.Groups.Commands.PromoteMember;
 using BeatEcoprove.Application.Groups.Queries.GetGroupDetail;
 using BeatEcoprove.Application.Groups.Queries.GetGroups;
 using BeatEcoprove.Contracts.Groups;
+using BeatEcoprove.Domain.GroupAggregator.Enumerators;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -85,6 +87,31 @@ public class GroupController : ApiController
         return getDetailGroup.Match(
             result => Ok(_mapper.Map<GetGroupDetailResponse>(result)),
             Problem<GetGroupDetailResponse>
+        );
+    }
+
+    [HttpPatch("{groupId:guid}/promote/{memberId:guid}/{role}")]
+    public async Task<ActionResult<GroupResponse>> PromoteUser(
+        [FromRoute] Guid groupId,
+        [FromRoute] Guid memberId,
+        [FromRoute] string role,
+        [FromQuery] Guid profileId)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var promoteUserResult = await _sender.Send(
+            new PromoteMemberCommand(
+                authId,
+                profileId,
+                groupId,
+                memberId,
+                role
+            )
+        );
+        
+        return promoteUserResult.Match(
+            result => Ok(_mapper.Map<GroupResponse>(result)),
+            Problem<GroupResponse>
         );
     }
 }

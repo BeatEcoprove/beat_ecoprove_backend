@@ -3,7 +3,9 @@ using BeatEcoprove.Domain.GroupAggregator.Enumerators;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
+using ErrorOr;
 
 namespace BeatEcoprove.Domain.GroupAggregator;
 
@@ -77,6 +79,23 @@ public class Group : AggregateRoot<GroupId, Guid>
         MembersCount = _members.Count;
     }
 
+    public GroupMember? GetMemberByProfileId(ProfileId profileId)
+    {
+        return this._members.FirstOrDefault(member => member.Profile == profileId);
+    }
+    
+    public ErrorOr<bool> PromoteMember(GroupMemberId memberId, MemberPermission role)
+    {
+        var member = this._members.FirstOrDefault(member => member.Id == memberId);
+
+        if (member is null)
+        {
+            return Errors.Groups.MemberNotFound;
+        }
+
+        return member.Promote(role);
+    }
+    
     public List<GroupMember> GetAdmins()
     {
         return this._members

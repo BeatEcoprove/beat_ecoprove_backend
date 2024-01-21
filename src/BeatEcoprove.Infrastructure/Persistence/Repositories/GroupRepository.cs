@@ -15,6 +15,13 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
     {
     }
 
+    public new Task<Group?> GetByIdAsync(GroupId id, CancellationToken cancellationToken = default)
+    {
+        return DbContext.Set<Group>()
+            .Include(group => group.Members)
+            .FirstOrDefaultAsync(group => group.Id == id, cancellationToken);
+    }
+
     public async Task<List<Group>> GetPublicGroupsAsync(
         ProfileId profileId, 
         int page,
@@ -108,5 +115,19 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
 
 
         return await getGroupDao.FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<bool> IsProfileAdminOrOwnerAsync(GroupId groupId, ProfileId profileId, CancellationToken cancellationToken)
+    {
+        var isAdminOrOwnerOfGroup =
+            from groupEntity in DbContext.Set<Group>()
+            from groupMember in groupEntity.Members
+            join profile in DbContext.Profiles 
+                on groupMember.Profile equals profile.Id
+                where groupEntity.CreatorId == profileId || 
+                      (groupMember.Permission == MemberPermission.Admin && groupEntity.Id == groupId)
+            select profile;
+
+        return await isAdminOrOwnerOfGroup.AnyAsync(cancellationToken);
     }
 }

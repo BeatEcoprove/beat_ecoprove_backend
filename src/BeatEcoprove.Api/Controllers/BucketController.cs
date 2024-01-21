@@ -1,8 +1,6 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.ClosetBuckets.Commands;
-using BeatEcoprove.Application.Cloths.Queries.GetAvailableServices;
 using BeatEcoprove.Contracts.Closet.Bucket;
-using BeatEcoprove.Contracts.Services;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
