@@ -92,4 +92,9 @@ public class Bucket : AggregateRoot<BucketId, Guid>
 
         return true;
     }
+    
+    public void SetName(string name)
+    {
+        Name = name;
+    }
 }

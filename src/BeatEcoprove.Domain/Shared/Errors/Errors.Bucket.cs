@@ -41,5 +41,9 @@ public static partial class Errors
         public static Error CannotAccessBucket => Error.Validation(
             "Bucket.CannotAccessBucket",
             "Este cesto não lhe pertence.");
+        
+        public static Error NameCannotBeEmpty => Error.Validation(
+            "Bucket.NameCannotBeEmpty",
+            "Por favor preencha um nome para o cesto.");
     }
 }
