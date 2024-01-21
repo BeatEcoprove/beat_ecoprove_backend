@@ -12,4 +12,6 @@ public struct UserClaims
     public const string TokenType = "token_type";
     public static string EcoScore = "eco_score";
     public static string EcoCoins = "eco_coins";
+    public static string CurrentXp = "current_xp";
+    public static string NextLevelXp = "next_level_xp";
 }
