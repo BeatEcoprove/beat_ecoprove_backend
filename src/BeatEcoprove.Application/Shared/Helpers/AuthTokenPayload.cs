@@ -16,6 +16,8 @@ public class AuthTokenPayload : TokenPayload
     private readonly int _sustainablePoints;
     private readonly int _ecoScore;
     private readonly int _ecoCoins;
+    private readonly double _currentXp;
+    private readonly double _nextLevelXp;
 
     public AuthTokenPayload(
         Guid accountId,
@@ -27,6 +29,8 @@ public class AuthTokenPayload : TokenPayload
         int sustainablePoints,
         int ecoScore,
         int ecoCoins,
+        double currentXp,
+        double nextLevelXp,
         Tokens tokenType) : base(tokenType)
     {
         _accountId = accountId;
@@ -37,7 +41,9 @@ public class AuthTokenPayload : TokenPayload
         _levelPercentage = levelPercentage;
         _sustainablePoints = sustainablePoints;
         _ecoScore = ecoScore;
-        _ecoCoins = ecoCoins;
+        _ecoCoins = ecoCoins;   
+        _currentXp = currentXp;
+        _nextLevelXp = nextLevelXp;
     }
 
     public string AccountId => _accountId.ToString();
@@ -49,6 +55,8 @@ public class AuthTokenPayload : TokenPayload
     public string SustainablePoints => _sustainablePoints.ToString();
     public string EcoScore => _ecoScore.ToString();
     public string EcoCoins => _ecoCoins.ToString();
+    public string CurrentXp => _currentXp.ToString(CultureInfo.InvariantCulture);
+    public string NextLevelXp => _nextLevelXp.ToString(CultureInfo.InvariantCulture);
 
     public override IDictionary<string, string> GetPayload()
     {
@@ -62,7 +70,9 @@ public class AuthTokenPayload : TokenPayload
             { UserClaims.LevelPercentage, LevelPercentage },
             { UserClaims.SustainablePoints, SustainablePoints },
             { UserClaims.EcoScore, EcoScore },
-            { UserClaims.EcoCoins, EcoCoins }
+            { UserClaims.EcoCoins, EcoCoins },
+            { UserClaims.CurrentXp, CurrentXp },
+            { UserClaims.NextLevelXp, NextLevelXp }
         };
     }
 }

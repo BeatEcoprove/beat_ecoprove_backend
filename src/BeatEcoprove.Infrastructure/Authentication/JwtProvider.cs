@@ -83,6 +83,8 @@ public class JwtProvider : IJwtProvider
             profile.SustainabilityPoints,
             profile.EcoScore,
             profile.EcoCoins,
+            profile.XP,
+            _gamingService.GetNextLevelXp(profile),
             Tokens.Access);
         
        return GenerateAuthenticationTokens(payload);
@@ -100,6 +102,8 @@ public class JwtProvider : IJwtProvider
             int.Parse(claims[UserClaims.SustainablePoints]),
             int.Parse(claims[UserClaims.EcoScore]),
             int.Parse(claims[UserClaims.EcoCoins]),
+            double.Parse(claims[UserClaims.CurrentXp]),
+            double.Parse(claims[UserClaims.NextLevelXp]),
             Tokens.Access);
         
         return GenerateAuthenticationTokens(payload);

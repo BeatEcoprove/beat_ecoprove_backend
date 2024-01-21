@@ -24,7 +24,10 @@ public class GamingService : IGamingService
         return xpProgress / xpRange * 100;
     }
 
-
+    public double GetNextLevelXp(Profile profile)
+    {
+        return BaseXp * (profile.Level + 1);
+    }
 
     public void GainXp(Profile profile, double xp)
     {

@@ -6,4 +6,5 @@ public interface IGamingService
 {
     double GetLevelProgress(Profile profile);
     void GainXp(Profile profile, double xp);
+    double GetNextLevelXp(Profile profile);
 }
