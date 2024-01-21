@@ -29,7 +29,7 @@ public class UseClothDomainEventHandler : INotificationHandler<UseClothDomainEve
         // TODO: Calculate the right amount of points and xp
         profile.SustainabilityPoints += SustainablePoints.UsePieceOfCloth;
         profile.EcoScore += cloth.EcoScore;
-        profile.XP += _gamingService.CalculateXp(profile.Level);
+        _gamingService.GainXp(profile, 250);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }

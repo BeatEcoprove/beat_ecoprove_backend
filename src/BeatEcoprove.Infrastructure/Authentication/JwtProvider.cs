@@ -72,13 +72,14 @@ public class JwtProvider : IJwtProvider
 
     public (string, string) GenerateAuthenticationTokens(Auth account, Profile profile)
     {
+        var ola = _gamingService.GetLevelProgress(profile);
         var payload = new AuthTokenPayload(
             account.Id,
             account.Email,
             profile.UserName,
             profile.AvatarUrl,
             profile.Level,
-            _gamingService.CalculateLevelProgress(profile.Level, profile.XP),
+            ola,
             profile.SustainabilityPoints,
             profile.EcoScore,
             profile.EcoCoins,

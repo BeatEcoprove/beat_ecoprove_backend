@@ -30,7 +30,7 @@ public class CreateClothDomainEventHandler : INotificationHandler<CreateClothDom
         // Add points to profile
         profile.SustainabilityPoints += SustainablePoints.InsertPieceOfCloth;
         profile.EcoScore += cloth.EcoScore;
-        profile.XP += _gamingService.CalculateXp(profile.Level);
+        _gamingService.GainXp(profile, 2500);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }

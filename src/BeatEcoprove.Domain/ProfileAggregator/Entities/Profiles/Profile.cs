@@ -35,7 +35,7 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
         SustainabilityPoints = sustainabilityPoints;
         EcoScore = ecoScore;
         Type = type;
-        Level = 1;
+        Level = 0;
         EcoCoins = 0;
     }
 
@@ -43,7 +43,7 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
     public UserName UserName { get; protected set; } = null!;
     public Phone Phone { get; protected set; } = null!;
     public double XP { get; set; }
-    public int Level { get; protected set; }
+    public int Level { get; set; }
     public int EcoCoins { get; protected set; }
     public int SustainabilityPoints { get; set; }
     public int EcoScore { get; set; }

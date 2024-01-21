@@ -1,7 +1,9 @@
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+
 namespace BeatEcoprove.Application.Shared.Interfaces.Services;
 
 public interface IGamingService
 {
-    double CalculateXp(int level);
-    double CalculateLevelProgress(int level, double xp);
+    double GetLevelProgress(Profile profile);
+    void GainXp(Profile profile, double xp);
 }
