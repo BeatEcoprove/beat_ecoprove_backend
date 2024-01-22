@@ -261,20 +261,122 @@ public class BeatEcoproveSeeder
                 new
                 {
                     Id = ColorId.Create(Guid.NewGuid()),
-                    Name = "Red",
-                    Hex = "FFFF0000"
+                    Name = "Amarelo",
+                    Hex = "FFFFE69F"
                 },
                 new
                 {
                     Id = ColorId.Create(Guid.NewGuid()),
-                    Name = "Blue",
-                    Hex = "FF0000FF"
+                    Name = "Azul Claro",
+                    Hex = "FF98B3C8"
                 },
                 new
                 {
                     Id = ColorId.Create(Guid.NewGuid()),
-                    Name = "Green",
-                    Hex = "FF00FF00"
+                    Name = "Azul Escuro",
+                    Hex = "FF29394A"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Amarelo Bebê",
+                    Hex = "FFF2E7D4"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Amarelo Claro",
+                    Hex = "FFC3A572"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Vermelho Claro",
+                    Hex = "FFFF6D6D"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Castanho Claro",
+                    Hex = "FF948066"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Castanho",
+                    Hex = "FF4A2D16"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Cinzento Claro",
+                    Hex = "FF4C4C4C"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Rosa",
+                    Hex = "FFBE5967"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Castanho Bebê",
+                    Hex = "FF8B5F3C"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Laranja",
+                    Hex = "FFF58221"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Roxo Claro",
+                    Hex = "FFD2AAC5"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Cinzento Bebê",
+                    Hex = "FFC0C0C0"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Preto",
+                    Hex = "FF000000"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Rosa Claro",
+                    Hex = "FFF9C7C4"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Roxo",
+                    Hex = "FFD62598"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Verde",
+                    Hex = "FF509C75"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Verde Lima",
+                    Hex = "FFC2BC8B"
+                },
+                new
+                {
+                    Id = ColorId.Create(Guid.NewGuid()),
+                    Name = "Vermelho",
+                    Hex = "FFDA252E"
                 }
             );
     }

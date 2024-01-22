@@ -25,7 +25,7 @@ public class ColorConfiguration : IEntityTypeConfiguration<Color>
 
         builder.Property(color => color.Hex)
             .HasColumnName("hex")
-            .HasMaxLength(8)
+            .HasMaxLength(10)
             .IsRequired();
 
         builder.Property(color => color.Name)

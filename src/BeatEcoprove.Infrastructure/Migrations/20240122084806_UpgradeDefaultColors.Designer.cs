@@ -3,6 +3,7 @@ using System;
 using BeatEcoprove.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     [DbContext(typeof(BeatEcoproveDbContext))]
-    partial class BeatEcoproveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240122084806_UpgradeDefaultColors")]
+    partial class UpgradeDefaultColors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,161 +231,161 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("472a0b25-5b5a-4bf1-b5da-96c7d0d675b8"),
+                            Id = new Guid("00c42d18-d815-4920-ad25-4b7de9226c56"),
                             Badge = "public/default/wash/hand.png",
                             Description = "Lavar à mão com água e sabão",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"),
                             SustainablePoints = 100,
                             Title = "Lavar à mão"
                         },
                         new
                         {
-                            Id = new Guid("a11a1abc-1ec4-4587-8c35-07a93371cd0a"),
+                            Id = new Guid("d49b732d-153f-462d-9cdf-2ea17436c1a1"),
                             Badge = "public/default/wash/less30.png",
                             Description = "Lavar a menos de 30ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"),
                             SustainablePoints = 100,
                             Title = "A menos de 30ºC"
                         },
                         new
                         {
-                            Id = new Guid("0b98243f-f4ec-4ec4-9126-56c59a6b804d"),
+                            Id = new Guid("0d6c0c43-5e0c-4931-bcab-ab1bc0820f92"),
                             Badge = "public/default/wash/less50.png",
                             Description = "Lavar a menos de 50ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"),
                             SustainablePoints = 100,
                             Title = "A menos de 50ºC"
                         },
                         new
                         {
-                            Id = new Guid("f2802726-d963-409e-a9ed-caed80a4637c"),
+                            Id = new Guid("59f9aa2b-e799-40ea-975b-c6f378c93993"),
                             Badge = "public/default/wash/less70.png",
                             Description = "Lavar a menos de 70ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"),
                             SustainablePoints = 100,
                             Title = "A menos de 70ºC"
                         },
                         new
                         {
-                            Id = new Guid("a3898f19-4de1-414f-991f-357ce0000fac"),
+                            Id = new Guid("e140a577-8df8-4c98-81e3-8ad541e81b62"),
                             Badge = "public/default/wash/less95.png",
                             Description = "Lavar a menos de 95ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"),
                             SustainablePoints = 100,
                             Title = "A menos de 95ºC"
                         },
                         new
                         {
-                            Id = new Guid("5116d81b-2c83-427e-bcef-8c70c6f33668"),
+                            Id = new Guid("faf2903a-3343-4959-9e31-598695fc3c02"),
                             Badge = "public/default/wash/dry.png",
                             Description = "Lavar a seco",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"),
                             SustainablePoints = 100,
                             Title = "A seco"
                         },
                         new
                         {
-                            Id = new Guid("3ebad7bb-2b9b-452d-8a1d-fba0ad195a2e"),
+                            Id = new Guid("8aa7231f-6e7f-4660-aa1d-06e55b75535c"),
                             Badge = "public/default/service.png",
                             Description = "Escolhe uma lavandaria",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"),
                             SustainablePoints = 100,
                             Title = "Serviço de lavandaria"
                         },
                         new
                         {
-                            Id = new Guid("3460d900-15ef-471a-9a06-f45a8086195e"),
+                            Id = new Guid("1fc31dc2-1f67-47b7-a126-624b72cb3ded"),
                             Badge = "public/default/dry/air.png",
                             Description = "Secar ao ar livre",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("b6a455d6-593c-4941-969d-13d21705b92f"),
+                            MaintenanceService = new Guid("477a1fc5-de28-43f5-9206-e8e1ed754f32"),
                             SustainablePoints = 100,
                             Title = "Ao ar livre"
                         },
                         new
                         {
-                            Id = new Guid("e64f1fc9-f2d4-4492-b548-3c163a1257dc"),
+                            Id = new Guid("d98eef09-c5cd-4a37-ad23-9200eff7228b"),
                             Badge = "public/default/dry/machine.png",
                             Description = "Secar na máquina",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("b6a455d6-593c-4941-969d-13d21705b92f"),
+                            MaintenanceService = new Guid("477a1fc5-de28-43f5-9206-e8e1ed754f32"),
                             SustainablePoints = 100,
                             Title = "Na máquina"
                         },
                         new
                         {
-                            Id = new Guid("b525aa7a-8999-4480-8a03-d10e6b27a3a0"),
+                            Id = new Guid("8a9b8b99-8fa5-4158-a239-927c3bdfba27"),
                             Badge = "public/default/service.png",
                             Description = "Escolhe um serviço de secagem",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("b6a455d6-593c-4941-969d-13d21705b92f"),
+                            MaintenanceService = new Guid("477a1fc5-de28-43f5-9206-e8e1ed754f32"),
                             SustainablePoints = 100,
                             Title = "Serviço de Secagem"
                         },
                         new
                         {
-                            Id = new Guid("2981afd0-c8aa-4926-8bda-bf71eb21892c"),
+                            Id = new Guid("1de8b5d4-f158-44b7-9dc7-ead2da7f520d"),
                             Badge = "public/default/iron/less110.png",
                             Description = "Engomar a menos de 110ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("973dadb9-b07a-46c2-91cc-55389686f2f2"),
+                            MaintenanceService = new Guid("5ba116b4-8745-4fec-8703-cd887f8bda94"),
                             SustainablePoints = 100,
                             Title = "A menos de 110ºC"
                         },
                         new
                         {
-                            Id = new Guid("8eed3bef-0fd6-4c88-ac8c-078ef81ba4e4"),
+                            Id = new Guid("b5847d9e-09cc-4303-9558-26a72b818cf1"),
                             Badge = "public/default/iron/less150.png",
                             Description = "Engomar a menos de 150ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("973dadb9-b07a-46c2-91cc-55389686f2f2"),
+                            MaintenanceService = new Guid("5ba116b4-8745-4fec-8703-cd887f8bda94"),
                             SustainablePoints = 100,
                             Title = "A menos de 150ºC"
                         },
                         new
                         {
-                            Id = new Guid("b33c19da-363f-46c5-9353-71540f65b8f3"),
+                            Id = new Guid("945e5b91-b9ff-4d84-9499-bef56b8a56c7"),
                             Badge = "public/default/iron/less200.png",
                             Description = "Engomar a menos de 200ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("973dadb9-b07a-46c2-91cc-55389686f2f2"),
+                            MaintenanceService = new Guid("5ba116b4-8745-4fec-8703-cd887f8bda94"),
                             SustainablePoints = 100,
                             Title = "A menos de 200ºC"
                         },
                         new
                         {
-                            Id = new Guid("87ddae47-fd57-45a3-85e1-d15f125765b0"),
+                            Id = new Guid("1a021f97-aed6-4d29-af98-c0d3ac5e8d2d"),
                             Badge = "public/default/service.png",
                             Description = "Escolhe um serviço de engomadoria",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("973dadb9-b07a-46c2-91cc-55389686f2f2"),
+                            MaintenanceService = new Guid("5ba116b4-8745-4fec-8703-cd887f8bda94"),
                             SustainablePoints = 100,
                             Title = "Serviço de Engomadoria"
                         },
                         new
                         {
-                            Id = new Guid("7f15774a-6a78-425e-bf94-60acf1258e74"),
+                            Id = new Guid("1ccf9e3e-b12e-4419-a45f-4ce27a3085c9"),
                             Badge = "public/default/repair.png",
                             Description = "Arranjar a peça pelo próprio",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("aa883287-24ee-42e9-b1cb-3122e99f4d8a"),
+                            MaintenanceService = new Guid("b2c0074a-7b1c-4646-ae06-af2c6f8faba3"),
                             SustainablePoints = 100,
                             Title = "Pelo Próprio"
                         },
                         new
                         {
-                            Id = new Guid("5af4f66a-a8e2-457d-a9d7-79d84cf1c909"),
+                            Id = new Guid("87c91f1c-8a86-4f82-a744-bc43cfc44c19"),
                             Badge = "public/default/service.png",
                             Description = "Escolhe um serviço de Reparação",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("aa883287-24ee-42e9-b1cb-3122e99f4d8a"),
+                            MaintenanceService = new Guid("b2c0074a-7b1c-4646-ae06-af2c6f8faba3"),
                             SustainablePoints = 100,
                             Title = "Serviço de Reparação"
                         });
@@ -422,28 +425,28 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            Id = new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"),
                             Badge = "public/default/wash.png",
                             Description = "De que forma pertende lavar?",
                             Title = "Lavar"
                         },
                         new
                         {
-                            Id = new Guid("b6a455d6-593c-4941-969d-13d21705b92f"),
+                            Id = new Guid("477a1fc5-de28-43f5-9206-e8e1ed754f32"),
                             Badge = "public/default/dry.png",
                             Description = "De que forma pertende secar?",
                             Title = "Secar"
                         },
                         new
                         {
-                            Id = new Guid("973dadb9-b07a-46c2-91cc-55389686f2f2"),
+                            Id = new Guid("5ba116b4-8745-4fec-8703-cd887f8bda94"),
                             Badge = "public/default/iron.png",
                             Description = "De que forma pertende engomar?",
                             Title = "Engomar"
                         },
                         new
                         {
-                            Id = new Guid("aa883287-24ee-42e9-b1cb-3122e99f4d8a"),
+                            Id = new Guid("b2c0074a-7b1c-4646-ae06-af2c6f8faba3"),
                             Badge = "public/default/repair.png",
                             Description = "De que forma pertende arranjar a peça?",
                             Title = "Engomar"
@@ -659,19 +662,19 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7f386d60-27b9-4c0d-b13b-c01ba2729693"),
+                            Id = new Guid("d994952a-cb26-4eee-a54d-f7b0306561a7"),
                             BrandAvatar = "...",
                             Name = "Salsa"
                         },
                         new
                         {
-                            Id = new Guid("dc7fba3d-231b-4ef8-931f-c93c82a95365"),
+                            Id = new Guid("c1ff09d0-6bf1-45a9-83cf-77c717e796c6"),
                             BrandAvatar = "...",
                             Name = "MO"
                         },
                         new
                         {
-                            Id = new Guid("b32b05ac-1531-4d8c-b6b9-f0b554ab557b"),
+                            Id = new Guid("6ad7e93f-7ea3-456c-bd89-1b8a0dc0bbd3"),
                             BrandAvatar = "...",
                             Name = "Tifosi"
                         });
@@ -706,13 +709,13 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d2111157-54e8-4ee2-a3be-373a93451793"),
+                            Id = new Guid("fb28fbe7-f227-427f-872f-29b5ecec7715"),
                             Hex = "FF000000",
                             Name = "Black"
                         },
                         new
                         {
-                            Id = new Guid("278fee68-f717-4b1e-b693-65dd5eb3b7d2"),
+                            Id = new Guid("d63341a2-6322-49d1-9477-aff90e0c13ad"),
                             Hex = "FFFFFFFF",
                             Name = "White"
                         },
