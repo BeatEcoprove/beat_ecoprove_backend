@@ -86,7 +86,7 @@ public class ProfileController : ApiController
                     request.BornDate,
                     request.Gender,
                     request.UserName,
-                    request.Avatar.OpenReadStream()
+                    request.PictureStream
                 ), cancellation);
         
         return addNestedProfile.Match(
