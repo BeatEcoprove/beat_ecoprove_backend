@@ -5,6 +5,7 @@ using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
+using BeatEcoprove.Domain.ClosetAggregator.DAOs;
 using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
@@ -182,6 +183,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         }
         
         var clothList = await _profileRepository.GetClosetCloth(
+            profile.Value.Id,
             nestedProfiles.Value,
             request.Search?.ToLower(),
             categories?.Value,
@@ -198,9 +200,19 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
             profile.Value.Id, 
             clothList.Select(cloth => cloth.Id).ToList(),
             cancellationToken);
+        
+        var mapList = clothList.Select((cloth) =>
+        {
+            if (cloth is ClothDaoWithProfile clothDao)
+            {
+                return clothDao.Adapt<ClothResultExtension>();
+            }
+            
+            return cloth.Adapt<ClothResult>();
+        }).ToList();
 
         return new MixedClothBucketList(
-            clothList.Adapt<List<ClothResultExtension>>(), 
+            mapList, 
             bucketList);
     }
 

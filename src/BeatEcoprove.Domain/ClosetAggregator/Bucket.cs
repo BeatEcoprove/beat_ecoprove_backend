@@ -22,7 +22,7 @@ public class Bucket : AggregateRoot<BucketId, Guid>
     public int ClothNumber => _bucketClothEntries.Count(entry => entry.DeletedAt == null);
     public IReadOnlyList<BucketClothEntry> BucketClothEntries => _bucketClothEntries
         .AsReadOnly()
-        .Where(clothEntry => clothEntry.DeletedAt != null)
+        .Where(clothEntry => clothEntry.DeletedAt == null)
         .ToList();
 
     public static ErrorOr<Bucket> Create(

@@ -14,4 +14,4 @@ public record ClothResultExtension
     string ClothState,
     string ClothAvatar,
     Profile Profile
-) : IClothResult;
+) : ClothResult(Id, Name, Type, Size, Brand, Color, EcoScore, ClothState, ClothAvatar);

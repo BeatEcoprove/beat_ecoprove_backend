@@ -1,5 +1,4 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
-
+﻿
 namespace BeatEcoprove.Domain.ClosetAggregator.DAOs;
 
 public record ClothDao(

@@ -7,7 +7,7 @@ namespace BeatEcoprove.Application.Shared.Helpers;
 public class MixedClothBucketList
 {
     public MixedClothBucketList(
-        List<ClothResultExtension> cloths, 
+        List<ClothResult> cloths, 
         List<Bucket> buckets
     )
     {
@@ -15,6 +15,6 @@ public class MixedClothBucketList
         Buckets = buckets;
     }
 
-    public List<ClothResultExtension> Cloths { get; set; }
+    public List<ClothResult> Cloths { get; set; }
     public List<Bucket> Buckets { get; set; }
 }
