@@ -228,161 +228,161 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("472a0b25-5b5a-4bf1-b5da-96c7d0d675b8"),
+                            Id = new Guid("467ab08c-d8c0-471d-88f2-9d35c1613cf2"),
                             Badge = "public/default/wash/hand.png",
                             Description = "Lavar à mão com água e sabão",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"),
                             SustainablePoints = 100,
                             Title = "Lavar à mão"
                         },
                         new
                         {
-                            Id = new Guid("a11a1abc-1ec4-4587-8c35-07a93371cd0a"),
+                            Id = new Guid("904067b4-676c-4966-b5ec-c91d391f300b"),
                             Badge = "public/default/wash/less30.png",
                             Description = "Lavar a menos de 30ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"),
                             SustainablePoints = 100,
                             Title = "A menos de 30ºC"
                         },
                         new
                         {
-                            Id = new Guid("0b98243f-f4ec-4ec4-9126-56c59a6b804d"),
+                            Id = new Guid("3c8a7bf0-99bc-414d-9d34-c9797bf8b8fa"),
                             Badge = "public/default/wash/less50.png",
                             Description = "Lavar a menos de 50ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"),
                             SustainablePoints = 100,
                             Title = "A menos de 50ºC"
                         },
                         new
                         {
-                            Id = new Guid("f2802726-d963-409e-a9ed-caed80a4637c"),
+                            Id = new Guid("c9266531-a232-4e79-b368-7d57dc15caae"),
                             Badge = "public/default/wash/less70.png",
                             Description = "Lavar a menos de 70ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"),
                             SustainablePoints = 100,
                             Title = "A menos de 70ºC"
                         },
                         new
                         {
-                            Id = new Guid("a3898f19-4de1-414f-991f-357ce0000fac"),
+                            Id = new Guid("3288aeb1-f78c-47db-9ac0-fe6a0b35e77a"),
                             Badge = "public/default/wash/less95.png",
                             Description = "Lavar a menos de 95ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"),
                             SustainablePoints = 100,
                             Title = "A menos de 95ºC"
                         },
                         new
                         {
-                            Id = new Guid("5116d81b-2c83-427e-bcef-8c70c6f33668"),
+                            Id = new Guid("98edd1da-b0b8-4994-8ae8-507fae36d79b"),
                             Badge = "public/default/wash/dry.png",
                             Description = "Lavar a seco",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"),
                             SustainablePoints = 100,
                             Title = "A seco"
                         },
                         new
                         {
-                            Id = new Guid("3ebad7bb-2b9b-452d-8a1d-fba0ad195a2e"),
+                            Id = new Guid("8fc36728-f524-4166-86dd-1d68f264520e"),
                             Badge = "public/default/service.png",
                             Description = "Escolhe uma lavandaria",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            MaintenanceService = new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"),
                             SustainablePoints = 100,
                             Title = "Serviço de lavandaria"
                         },
                         new
                         {
-                            Id = new Guid("3460d900-15ef-471a-9a06-f45a8086195e"),
+                            Id = new Guid("c7744c97-44c3-4817-a7f2-0308db1dbced"),
                             Badge = "public/default/dry/air.png",
                             Description = "Secar ao ar livre",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("b6a455d6-593c-4941-969d-13d21705b92f"),
+                            MaintenanceService = new Guid("039ad0a0-d245-4a9a-8e77-0af7ca025bf4"),
                             SustainablePoints = 100,
                             Title = "Ao ar livre"
                         },
                         new
                         {
-                            Id = new Guid("e64f1fc9-f2d4-4492-b548-3c163a1257dc"),
+                            Id = new Guid("b0d49301-91c8-498d-ae27-fd0facf49763"),
                             Badge = "public/default/dry/machine.png",
                             Description = "Secar na máquina",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("b6a455d6-593c-4941-969d-13d21705b92f"),
+                            MaintenanceService = new Guid("039ad0a0-d245-4a9a-8e77-0af7ca025bf4"),
                             SustainablePoints = 100,
                             Title = "Na máquina"
                         },
                         new
                         {
-                            Id = new Guid("b525aa7a-8999-4480-8a03-d10e6b27a3a0"),
+                            Id = new Guid("d7a1abd6-e947-4ff5-a743-c4e4f4ad5c30"),
                             Badge = "public/default/service.png",
                             Description = "Escolhe um serviço de secagem",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("b6a455d6-593c-4941-969d-13d21705b92f"),
+                            MaintenanceService = new Guid("039ad0a0-d245-4a9a-8e77-0af7ca025bf4"),
                             SustainablePoints = 100,
                             Title = "Serviço de Secagem"
                         },
                         new
                         {
-                            Id = new Guid("2981afd0-c8aa-4926-8bda-bf71eb21892c"),
+                            Id = new Guid("b77e9adb-7806-49d7-a0da-953cd5969f5f"),
                             Badge = "public/default/iron/less110.png",
                             Description = "Engomar a menos de 110ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("973dadb9-b07a-46c2-91cc-55389686f2f2"),
+                            MaintenanceService = new Guid("211847d3-346d-4692-961b-293587fc5ed1"),
                             SustainablePoints = 100,
                             Title = "A menos de 110ºC"
                         },
                         new
                         {
-                            Id = new Guid("8eed3bef-0fd6-4c88-ac8c-078ef81ba4e4"),
+                            Id = new Guid("8ebb45b1-975f-47b5-82db-b4803b6d5814"),
                             Badge = "public/default/iron/less150.png",
                             Description = "Engomar a menos de 150ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("973dadb9-b07a-46c2-91cc-55389686f2f2"),
+                            MaintenanceService = new Guid("211847d3-346d-4692-961b-293587fc5ed1"),
                             SustainablePoints = 100,
                             Title = "A menos de 150ºC"
                         },
                         new
                         {
-                            Id = new Guid("b33c19da-363f-46c5-9353-71540f65b8f3"),
+                            Id = new Guid("ab11baf1-c6db-4d25-a0df-fd0155426226"),
                             Badge = "public/default/iron/less200.png",
                             Description = "Engomar a menos de 200ºC",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("973dadb9-b07a-46c2-91cc-55389686f2f2"),
+                            MaintenanceService = new Guid("211847d3-346d-4692-961b-293587fc5ed1"),
                             SustainablePoints = 100,
                             Title = "A menos de 200ºC"
                         },
                         new
                         {
-                            Id = new Guid("87ddae47-fd57-45a3-85e1-d15f125765b0"),
+                            Id = new Guid("f425487a-acb2-47cf-90c9-d1be4ff3d7f1"),
                             Badge = "public/default/service.png",
                             Description = "Escolhe um serviço de engomadoria",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("973dadb9-b07a-46c2-91cc-55389686f2f2"),
+                            MaintenanceService = new Guid("211847d3-346d-4692-961b-293587fc5ed1"),
                             SustainablePoints = 100,
                             Title = "Serviço de Engomadoria"
                         },
                         new
                         {
-                            Id = new Guid("7f15774a-6a78-425e-bf94-60acf1258e74"),
+                            Id = new Guid("7426d055-e4bb-4a5c-9103-e757ebdb5782"),
                             Badge = "public/default/repair.png",
                             Description = "Arranjar a peça pelo próprio",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("aa883287-24ee-42e9-b1cb-3122e99f4d8a"),
+                            MaintenanceService = new Guid("f59193cd-a717-466b-b5ff-ffdfd5206419"),
                             SustainablePoints = 100,
                             Title = "Pelo Próprio"
                         },
                         new
                         {
-                            Id = new Guid("5af4f66a-a8e2-457d-a9d7-79d84cf1c909"),
+                            Id = new Guid("65e96587-39a2-4bdf-9fa1-b585ae0daf56"),
                             Badge = "public/default/service.png",
                             Description = "Escolhe um serviço de Reparação",
                             EcoScore = 10,
-                            MaintenanceService = new Guid("aa883287-24ee-42e9-b1cb-3122e99f4d8a"),
+                            MaintenanceService = new Guid("f59193cd-a717-466b-b5ff-ffdfd5206419"),
                             SustainablePoints = 100,
                             Title = "Serviço de Reparação"
                         });
@@ -422,28 +422,28 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"),
+                            Id = new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"),
                             Badge = "public/default/wash.png",
                             Description = "De que forma pertende lavar?",
                             Title = "Lavar"
                         },
                         new
                         {
-                            Id = new Guid("b6a455d6-593c-4941-969d-13d21705b92f"),
+                            Id = new Guid("039ad0a0-d245-4a9a-8e77-0af7ca025bf4"),
                             Badge = "public/default/dry.png",
                             Description = "De que forma pertende secar?",
                             Title = "Secar"
                         },
                         new
                         {
-                            Id = new Guid("973dadb9-b07a-46c2-91cc-55389686f2f2"),
+                            Id = new Guid("211847d3-346d-4692-961b-293587fc5ed1"),
                             Badge = "public/default/iron.png",
                             Description = "De que forma pertende engomar?",
                             Title = "Engomar"
                         },
                         new
                         {
-                            Id = new Guid("aa883287-24ee-42e9-b1cb-3122e99f4d8a"),
+                            Id = new Guid("f59193cd-a717-466b-b5ff-ffdfd5206419"),
                             Badge = "public/default/repair.png",
                             Description = "De que forma pertende arranjar a peça?",
                             Title = "Engomar"
@@ -659,19 +659,19 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7f386d60-27b9-4c0d-b13b-c01ba2729693"),
+                            Id = new Guid("41dab51d-748b-4ac8-a381-bf962b59c753"),
                             BrandAvatar = "...",
                             Name = "Salsa"
                         },
                         new
                         {
-                            Id = new Guid("dc7fba3d-231b-4ef8-931f-c93c82a95365"),
+                            Id = new Guid("b772688c-e78d-44a3-9477-37af1345cdf6"),
                             BrandAvatar = "...",
                             Name = "MO"
                         },
                         new
                         {
-                            Id = new Guid("b32b05ac-1531-4d8c-b6b9-f0b554ab557b"),
+                            Id = new Guid("d3cddb6b-0565-4e34-9c79-c2dbe0459381"),
                             BrandAvatar = "...",
                             Name = "Tifosi"
                         });
@@ -706,133 +706,127 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d2111157-54e8-4ee2-a3be-373a93451793"),
+                            Id = new Guid("e0170db6-31bb-4fae-b5d2-cef16cacaffb"),
                             Hex = "FF000000",
                             Name = "Black"
                         },
                         new
                         {
-                            Id = new Guid("278fee68-f717-4b1e-b693-65dd5eb3b7d2"),
+                            Id = new Guid("cf07615d-d51c-4961-82cd-b8e12a9eb5a8"),
                             Hex = "FFFFFFFF",
                             Name = "White"
                         },
                         new
                         {
-                            Id = new Guid("56766df7-05a5-4b84-b2e0-d9c61cb4002b"),
+                            Id = new Guid("5d56098e-8a05-40a3-83d2-2c5d08659698"),
                             Hex = "FFFFE69F",
                             Name = "Amarelo"
                         },
                         new
                         {
-                            Id = new Guid("492665d6-9f00-44be-a787-82f9e4d6c82f"),
+                            Id = new Guid("c885b72c-8d20-4288-8aea-153e41b93820"),
                             Hex = "FF98B3C8",
                             Name = "Azul Claro"
                         },
                         new
                         {
-                            Id = new Guid("08824efc-8b28-4c9f-a968-a837972e201c"),
+                            Id = new Guid("7040ae59-2f30-4dd4-8a01-be5d40f7f4f8"),
                             Hex = "FF29394A",
                             Name = "Azul Escuro"
                         },
                         new
                         {
-                            Id = new Guid("718fab40-796d-4e36-8d6e-2a29afd8eabb"),
+                            Id = new Guid("742002f8-545a-4561-8b58-f55387d871b4"),
                             Hex = "FFF2E7D4",
                             Name = "Amarelo Bebê"
                         },
                         new
                         {
-                            Id = new Guid("88f170b3-40dd-4cda-bebd-ff2c7107b96a"),
+                            Id = new Guid("a00bbcb7-5d48-4762-a0bd-e8fa4264e2f1"),
                             Hex = "FFC3A572",
                             Name = "Amarelo Claro"
                         },
                         new
                         {
-                            Id = new Guid("b0a80794-75e9-45b9-9665-3bf5e39b944a"),
+                            Id = new Guid("16f4a625-d158-4148-a57e-7fb1e03c8313"),
                             Hex = "FFFF6D6D",
                             Name = "Vermelho Claro"
                         },
                         new
                         {
-                            Id = new Guid("ef27693c-b9bf-4536-bf4f-447c88c5c2b5"),
+                            Id = new Guid("0bb4f382-fb84-4d61-b9f3-4b879274995e"),
                             Hex = "FF948066",
                             Name = "Castanho Claro"
                         },
                         new
                         {
-                            Id = new Guid("5b2a37f1-ecee-4235-9ad5-612cc158bfe7"),
+                            Id = new Guid("890b0144-6f80-4658-83fa-ab05b2fd8314"),
                             Hex = "FF4A2D16",
                             Name = "Castanho"
                         },
                         new
                         {
-                            Id = new Guid("41d86caa-0310-4476-acbb-2f11521ee173"),
+                            Id = new Guid("899f20c0-17b6-4af4-a268-66d96819821b"),
                             Hex = "FF4C4C4C",
                             Name = "Cinzento Claro"
                         },
                         new
                         {
-                            Id = new Guid("63831e89-41fe-4da8-b0be-8bd82654fd4c"),
+                            Id = new Guid("2f948822-9df6-47ae-8668-23cd3fa1e147"),
                             Hex = "FFBE5967",
                             Name = "Rosa"
                         },
                         new
                         {
-                            Id = new Guid("9313b0a8-ed2f-4522-9ee9-73be4484e941"),
+                            Id = new Guid("dc2d72b0-6c97-4717-beee-214e412c9050"),
                             Hex = "FF8B5F3C",
                             Name = "Castanho Bebê"
                         },
                         new
                         {
-                            Id = new Guid("ae1a50eb-d4af-41db-b205-86f5f825a9ce"),
+                            Id = new Guid("6bf1c442-8356-4942-bf7f-504d68a448f8"),
                             Hex = "FFF58221",
                             Name = "Laranja"
                         },
                         new
                         {
-                            Id = new Guid("a420bb7a-d021-4727-8d1d-63e1941efc38"),
+                            Id = new Guid("d51a8cb1-b848-4262-a7fa-2c4b91fd094a"),
                             Hex = "FFD2AAC5",
                             Name = "Roxo Claro"
                         },
                         new
                         {
-                            Id = new Guid("4ac5d271-e1b4-40e9-8e8d-65b3505719ff"),
+                            Id = new Guid("56332dc3-4854-45bc-bc35-d40777398fb8"),
                             Hex = "FFC0C0C0",
                             Name = "Cinzento Bebê"
                         },
                         new
                         {
-                            Id = new Guid("bbc99374-e207-4d63-98dd-e481c2bd54a0"),
-                            Hex = "FF000000",
-                            Name = "Preto"
-                        },
-                        new
-                        {
-                            Id = new Guid("53ad2b6e-be0b-4900-92d8-9a3b6f6ec000"),
+                            Id = new Guid("7224e010-9d45-44d2-a0d9-ae3776800f42"),
                             Hex = "FFF9C7C4",
                             Name = "Rosa Claro"
                         },
                         new
                         {
-                            Id = new Guid("57a2cb42-f24c-4c24-8e9e-19e4161c0583"),
+                            Id = new Guid("f789dd8b-8f57-47ba-96e4-84daa1a199b6"),
                             Hex = "FFD62598",
                             Name = "Roxo"
                         },
                         new
                         {
-                            Id = new Guid("3922fc75-ede4-446f-a4ae-db00f7271fb9"),
+                            Id = new Guid("447366c9-1e2b-44d6-bca6-5aa4be27deba"),
                             Hex = "FF509C75",
                             Name = "Verde"
                         },
                         new
                         {
-                            Id = new Guid("1496ef74-1693-4ea2-9489-5ba07fdc7529"),
+                            Id = new Guid("5fa03383-3de8-4eca-a274-ee6793652c83"),
                             Hex = "FFC2BC8B",
                             Name = "Verde Lima"
                         },
                         new
                         {
-                            Id = new Guid("661af01d-5c35-460b-8c8f-59c6d3d4ee59"),
+                            Id = new Guid("ab117e50-fbb6-454d-8617-d8ae354866c3"),
                             Hex = "FFDA252E",
                             Name = "Vermelho"
                         });

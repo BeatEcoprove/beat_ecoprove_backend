@@ -345,12 +345,6 @@ public class BeatEcoproveSeeder
                 new
                 {
                     Id = ColorId.Create(Guid.NewGuid()),
-                    Name = "Preto",
-                    Hex = "FF000000"
-                },
-                new
-                {
-                    Id = ColorId.Create(Guid.NewGuid()),
                     Name = "Rosa Claro",
                     Hex = "FFF9C7C4"
                 },
