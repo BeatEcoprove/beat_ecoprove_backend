@@ -22,6 +22,7 @@ public interface IProfileRepository : IRepository<Profile, ProfileId>
     Task<List<Bucket>> GetBucketCloth(ProfileId profileId, List<Guid> clothIds, CancellationToken cancellationToken = default);
     Task<List<ClothDaoWithProfile>> GetClosetCloth(
         List<ProfileId> profileId, 
+        string? search,
         List<ClothType>? category = null,
         List<ClothSize>? size = null,
         List<Guid>? color = null,

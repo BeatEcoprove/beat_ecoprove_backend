@@ -183,6 +183,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         
         var clothList = await _profileRepository.GetClosetCloth(
             nestedProfiles.Value,
+            request.Search?.ToLower(),
             categories?.Value,
             size?.Value,
             colorId?.Value,

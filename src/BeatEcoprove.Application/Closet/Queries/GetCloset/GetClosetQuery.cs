@@ -8,6 +8,7 @@ public record GetClosetQuery
 (
     Guid AuthId,
     Guid ProfileId,
+    string? Search,
     string? Categories,
     string? Size,
     string? Color,
