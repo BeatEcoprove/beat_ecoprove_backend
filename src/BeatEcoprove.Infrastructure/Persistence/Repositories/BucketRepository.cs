@@ -14,6 +14,14 @@ public class BucketRepository : Repository<Bucket, BucketId>, IBucketRepository
     public BucketRepository(IApplicationDbContext dbContext) : base(dbContext)
     {
     }
+    
+    public async Task<Bucket?> GetByIdWithClothAsync(BucketId bucketId, CancellationToken cancellationToken)
+    {
+        return await DbContext
+            .Buckets
+            .Include(bucket => bucket.BucketClothEntries)
+            .SingleOrDefaultAsync(bucket => bucket.Id == bucketId, cancellationToken);
+    }
 
     public async Task<bool> IsBucketNameAlreadyUsed(ProfileId profileId, BucketId bucketId, string name,
         CancellationToken cancellationToken = default)

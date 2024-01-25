@@ -50,6 +50,10 @@ public class Bucket : AggregateRoot<BucketId, Guid>
 
     public ErrorOr<bool> AddCloths(List<ClothId> cloths)
     {
+        var alreadyDeletedCloth = _bucketClothEntries
+            .Where(entry => cloths.Contains(entry.ClothId) && entry.DeletedAt != null)
+            .ToList();
+
         if (HasZeroCloth(cloths))
         {
             return Errors.Bucket.EmptyClothIds;
@@ -62,6 +66,17 @@ public class Bucket : AggregateRoot<BucketId, Guid>
         
         foreach (var cloth in cloths)
         {
+            if (_bucketClothEntries.Any(entry => entry.ClothId == cloth && entry.DeletedAt == null))
+            {
+                return Errors.Bucket.CanAddClothToBucket;
+            }
+            
+            if (alreadyDeletedCloth.Any(entry => entry.ClothId == cloth))
+            {
+                _bucketClothEntries.First(entry => entry.ClothId == cloth).DeletedAt = null;
+                continue;
+            }
+            
             AddCloth(cloth);
         }
 
