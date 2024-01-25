@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BeatEcoprove.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UpgradeDefaultColors : Migration
+    public partial class CorrectDefaultColors : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -168,9 +168,9 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
                 values: new object[,]
                 {
-                    { new Guid("6ad7e93f-7ea3-456c-bd89-1b8a0dc0bbd3"), "...", null, "Tifosi" },
-                    { new Guid("c1ff09d0-6bf1-45a9-83cf-77c717e796c6"), "...", null, "MO" },
-                    { new Guid("d994952a-cb26-4eee-a54d-f7b0306561a7"), "...", null, "Salsa" }
+                    { new Guid("41dab51d-748b-4ac8-a381-bf962b59c753"), "...", null, "Salsa" },
+                    { new Guid("b772688c-e78d-44a3-9477-37af1345cdf6"), "...", null, "MO" },
+                    { new Guid("d3cddb6b-0565-4e34-9c79-c2dbe0459381"), "...", null, "Tifosi" }
                 });
 
             migrationBuilder.InsertData(
@@ -178,28 +178,27 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 columns: new[] { "id", "deleted_at", "hex", "name" },
                 values: new object[,]
                 {
-                    { new Guid("08824efc-8b28-4c9f-a968-a837972e201c"), null, "FF29394A", "Azul Escuro" },
-                    { new Guid("1496ef74-1693-4ea2-9489-5ba07fdc7529"), null, "FFC2BC8B", "Verde Lima" },
-                    { new Guid("3922fc75-ede4-446f-a4ae-db00f7271fb9"), null, "FF509C75", "Verde" },
-                    { new Guid("41d86caa-0310-4476-acbb-2f11521ee173"), null, "FF4C4C4C", "Cinzento Claro" },
-                    { new Guid("492665d6-9f00-44be-a787-82f9e4d6c82f"), null, "FF98B3C8", "Azul Claro" },
-                    { new Guid("4ac5d271-e1b4-40e9-8e8d-65b3505719ff"), null, "FFC0C0C0", "Cinzento Bebê" },
-                    { new Guid("53ad2b6e-be0b-4900-92d8-9a3b6f6ec000"), null, "FFF9C7C4", "Rosa Claro" },
-                    { new Guid("56766df7-05a5-4b84-b2e0-d9c61cb4002b"), null, "FFFFE69F", "Amarelo" },
-                    { new Guid("57a2cb42-f24c-4c24-8e9e-19e4161c0583"), null, "FFD62598", "Roxo" },
-                    { new Guid("5b2a37f1-ecee-4235-9ad5-612cc158bfe7"), null, "FF4A2D16", "Castanho" },
-                    { new Guid("63831e89-41fe-4da8-b0be-8bd82654fd4c"), null, "FFBE5967", "Rosa" },
-                    { new Guid("661af01d-5c35-460b-8c8f-59c6d3d4ee59"), null, "FFDA252E", "Vermelho" },
-                    { new Guid("718fab40-796d-4e36-8d6e-2a29afd8eabb"), null, "FFF2E7D4", "Amarelo Bebê" },
-                    { new Guid("88f170b3-40dd-4cda-bebd-ff2c7107b96a"), null, "FFC3A572", "Amarelo Claro" },
-                    { new Guid("9313b0a8-ed2f-4522-9ee9-73be4484e941"), null, "FF8B5F3C", "Castanho Bebê" },
-                    { new Guid("a420bb7a-d021-4727-8d1d-63e1941efc38"), null, "FFD2AAC5", "Roxo Claro" },
-                    { new Guid("ae1a50eb-d4af-41db-b205-86f5f825a9ce"), null, "FFF58221", "Laranja" },
-                    { new Guid("b0a80794-75e9-45b9-9665-3bf5e39b944a"), null, "FFFF6D6D", "Vermelho Claro" },
-                    { new Guid("bbc99374-e207-4d63-98dd-e481c2bd54a0"), null, "FF000000", "Preto" },
-                    { new Guid("d63341a2-6322-49d1-9477-aff90e0c13ad"), null, "FFFFFFFF", "White" },
-                    { new Guid("ef27693c-b9bf-4536-bf4f-447c88c5c2b5"), null, "FF948066", "Castanho Claro" },
-                    { new Guid("fb28fbe7-f227-427f-872f-29b5ecec7715"), null, "FF000000", "Black" }
+                    { new Guid("0bb4f382-fb84-4d61-b9f3-4b879274995e"), null, "FF948066", "Castanho Claro" },
+                    { new Guid("16f4a625-d158-4148-a57e-7fb1e03c8313"), null, "FFFF6D6D", "Vermelho Claro" },
+                    { new Guid("2f948822-9df6-47ae-8668-23cd3fa1e147"), null, "FFBE5967", "Rosa" },
+                    { new Guid("447366c9-1e2b-44d6-bca6-5aa4be27deba"), null, "FF509C75", "Verde" },
+                    { new Guid("56332dc3-4854-45bc-bc35-d40777398fb8"), null, "FFC0C0C0", "Cinzento Bebê" },
+                    { new Guid("5d56098e-8a05-40a3-83d2-2c5d08659698"), null, "FFFFE69F", "Amarelo" },
+                    { new Guid("5fa03383-3de8-4eca-a274-ee6793652c83"), null, "FFC2BC8B", "Verde Lima" },
+                    { new Guid("6bf1c442-8356-4942-bf7f-504d68a448f8"), null, "FFF58221", "Laranja" },
+                    { new Guid("7040ae59-2f30-4dd4-8a01-be5d40f7f4f8"), null, "FF29394A", "Azul Escuro" },
+                    { new Guid("7224e010-9d45-44d2-a0d9-ae3776800f42"), null, "FFF9C7C4", "Rosa Claro" },
+                    { new Guid("742002f8-545a-4561-8b58-f55387d871b4"), null, "FFF2E7D4", "Amarelo Bebê" },
+                    { new Guid("890b0144-6f80-4658-83fa-ab05b2fd8314"), null, "FF4A2D16", "Castanho" },
+                    { new Guid("899f20c0-17b6-4af4-a268-66d96819821b"), null, "FF4C4C4C", "Cinzento Claro" },
+                    { new Guid("a00bbcb7-5d48-4762-a0bd-e8fa4264e2f1"), null, "FFC3A572", "Amarelo Claro" },
+                    { new Guid("ab117e50-fbb6-454d-8617-d8ae354866c3"), null, "FFDA252E", "Vermelho" },
+                    { new Guid("c885b72c-8d20-4288-8aea-153e41b93820"), null, "FF98B3C8", "Azul Claro" },
+                    { new Guid("cf07615d-d51c-4961-82cd-b8e12a9eb5a8"), null, "FFFFFFFF", "White" },
+                    { new Guid("d51a8cb1-b848-4262-a7fa-2c4b91fd094a"), null, "FFD2AAC5", "Roxo Claro" },
+                    { new Guid("dc2d72b0-6c97-4717-beee-214e412c9050"), null, "FF8B5F3C", "Castanho Bebê" },
+                    { new Guid("e0170db6-31bb-4fae-b5d2-cef16cacaffb"), null, "FF000000", "Black" },
+                    { new Guid("f789dd8b-8f57-47ba-96e4-84daa1a199b6"), null, "FFD62598", "Roxo" }
                 });
 
             migrationBuilder.InsertData(
@@ -207,10 +206,10 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 columns: new[] { "id", "badge", "deleted_at", "description", "title" },
                 values: new object[,]
                 {
-                    { new Guid("477a1fc5-de28-43f5-9206-e8e1ed754f32"), "public/default/dry.png", null, "De que forma pertende secar?", "Secar" },
-                    { new Guid("5ba116b4-8745-4fec-8703-cd887f8bda94"), "public/default/iron.png", null, "De que forma pertende engomar?", "Engomar" },
-                    { new Guid("b2c0074a-7b1c-4646-ae06-af2c6f8faba3"), "public/default/repair.png", null, "De que forma pertende arranjar a peça?", "Engomar" },
-                    { new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"), "public/default/wash.png", null, "De que forma pertende lavar?", "Lavar" }
+                    { new Guid("039ad0a0-d245-4a9a-8e77-0af7ca025bf4"), "public/default/dry.png", null, "De que forma pertende secar?", "Secar" },
+                    { new Guid("211847d3-346d-4692-961b-293587fc5ed1"), "public/default/iron.png", null, "De que forma pertende engomar?", "Engomar" },
+                    { new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"), "public/default/wash.png", null, "De que forma pertende lavar?", "Lavar" },
+                    { new Guid("f59193cd-a717-466b-b5ff-ffdfd5206419"), "public/default/repair.png", null, "De que forma pertende arranjar a peça?", "Engomar" }
                 });
 
             migrationBuilder.InsertData(
@@ -218,22 +217,22 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 columns: new[] { "id", "badge", "deleted_at", "Description", "eco_score", "maintenance_service_id", "sustainable_points", "title" },
                 values: new object[,]
                 {
-                    { new Guid("00c42d18-d815-4920-ad25-4b7de9226c56"), "public/default/wash/hand.png", null, "Lavar à mão com água e sabão", 10, new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"), 100, "Lavar à mão" },
-                    { new Guid("0d6c0c43-5e0c-4931-bcab-ab1bc0820f92"), "public/default/wash/less50.png", null, "Lavar a menos de 50ºC", 10, new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"), 100, "A menos de 50ºC" },
-                    { new Guid("1a021f97-aed6-4d29-af98-c0d3ac5e8d2d"), "public/default/service.png", null, "Escolhe um serviço de engomadoria", 10, new Guid("5ba116b4-8745-4fec-8703-cd887f8bda94"), 100, "Serviço de Engomadoria" },
-                    { new Guid("1ccf9e3e-b12e-4419-a45f-4ce27a3085c9"), "public/default/repair.png", null, "Arranjar a peça pelo próprio", 10, new Guid("b2c0074a-7b1c-4646-ae06-af2c6f8faba3"), 100, "Pelo Próprio" },
-                    { new Guid("1de8b5d4-f158-44b7-9dc7-ead2da7f520d"), "public/default/iron/less110.png", null, "Engomar a menos de 110ºC", 10, new Guid("5ba116b4-8745-4fec-8703-cd887f8bda94"), 100, "A menos de 110ºC" },
-                    { new Guid("1fc31dc2-1f67-47b7-a126-624b72cb3ded"), "public/default/dry/air.png", null, "Secar ao ar livre", 10, new Guid("477a1fc5-de28-43f5-9206-e8e1ed754f32"), 100, "Ao ar livre" },
-                    { new Guid("59f9aa2b-e799-40ea-975b-c6f378c93993"), "public/default/wash/less70.png", null, "Lavar a menos de 70ºC", 10, new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"), 100, "A menos de 70ºC" },
-                    { new Guid("87c91f1c-8a86-4f82-a744-bc43cfc44c19"), "public/default/service.png", null, "Escolhe um serviço de Reparação", 10, new Guid("b2c0074a-7b1c-4646-ae06-af2c6f8faba3"), 100, "Serviço de Reparação" },
-                    { new Guid("8a9b8b99-8fa5-4158-a239-927c3bdfba27"), "public/default/service.png", null, "Escolhe um serviço de secagem", 10, new Guid("477a1fc5-de28-43f5-9206-e8e1ed754f32"), 100, "Serviço de Secagem" },
-                    { new Guid("8aa7231f-6e7f-4660-aa1d-06e55b75535c"), "public/default/service.png", null, "Escolhe uma lavandaria", 10, new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"), 100, "Serviço de lavandaria" },
-                    { new Guid("945e5b91-b9ff-4d84-9499-bef56b8a56c7"), "public/default/iron/less200.png", null, "Engomar a menos de 200ºC", 10, new Guid("5ba116b4-8745-4fec-8703-cd887f8bda94"), 100, "A menos de 200ºC" },
-                    { new Guid("b5847d9e-09cc-4303-9558-26a72b818cf1"), "public/default/iron/less150.png", null, "Engomar a menos de 150ºC", 10, new Guid("5ba116b4-8745-4fec-8703-cd887f8bda94"), 100, "A menos de 150ºC" },
-                    { new Guid("d49b732d-153f-462d-9cdf-2ea17436c1a1"), "public/default/wash/less30.png", null, "Lavar a menos de 30ºC", 10, new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"), 100, "A menos de 30ºC" },
-                    { new Guid("d98eef09-c5cd-4a37-ad23-9200eff7228b"), "public/default/dry/machine.png", null, "Secar na máquina", 10, new Guid("477a1fc5-de28-43f5-9206-e8e1ed754f32"), 100, "Na máquina" },
-                    { new Guid("e140a577-8df8-4c98-81e3-8ad541e81b62"), "public/default/wash/less95.png", null, "Lavar a menos de 95ºC", 10, new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"), 100, "A menos de 95ºC" },
-                    { new Guid("faf2903a-3343-4959-9e31-598695fc3c02"), "public/default/wash/dry.png", null, "Lavar a seco", 10, new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"), 100, "A seco" }
+                    { new Guid("3288aeb1-f78c-47db-9ac0-fe6a0b35e77a"), "public/default/wash/less95.png", null, "Lavar a menos de 95ºC", 10, new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"), 100, "A menos de 95ºC" },
+                    { new Guid("3c8a7bf0-99bc-414d-9d34-c9797bf8b8fa"), "public/default/wash/less50.png", null, "Lavar a menos de 50ºC", 10, new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"), 100, "A menos de 50ºC" },
+                    { new Guid("467ab08c-d8c0-471d-88f2-9d35c1613cf2"), "public/default/wash/hand.png", null, "Lavar à mão com água e sabão", 10, new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"), 100, "Lavar à mão" },
+                    { new Guid("65e96587-39a2-4bdf-9fa1-b585ae0daf56"), "public/default/service.png", null, "Escolhe um serviço de Reparação", 10, new Guid("f59193cd-a717-466b-b5ff-ffdfd5206419"), 100, "Serviço de Reparação" },
+                    { new Guid("7426d055-e4bb-4a5c-9103-e757ebdb5782"), "public/default/repair.png", null, "Arranjar a peça pelo próprio", 10, new Guid("f59193cd-a717-466b-b5ff-ffdfd5206419"), 100, "Pelo Próprio" },
+                    { new Guid("8ebb45b1-975f-47b5-82db-b4803b6d5814"), "public/default/iron/less150.png", null, "Engomar a menos de 150ºC", 10, new Guid("211847d3-346d-4692-961b-293587fc5ed1"), 100, "A menos de 150ºC" },
+                    { new Guid("8fc36728-f524-4166-86dd-1d68f264520e"), "public/default/service.png", null, "Escolhe uma lavandaria", 10, new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"), 100, "Serviço de lavandaria" },
+                    { new Guid("904067b4-676c-4966-b5ec-c91d391f300b"), "public/default/wash/less30.png", null, "Lavar a menos de 30ºC", 10, new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"), 100, "A menos de 30ºC" },
+                    { new Guid("98edd1da-b0b8-4994-8ae8-507fae36d79b"), "public/default/wash/dry.png", null, "Lavar a seco", 10, new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"), 100, "A seco" },
+                    { new Guid("ab11baf1-c6db-4d25-a0df-fd0155426226"), "public/default/iron/less200.png", null, "Engomar a menos de 200ºC", 10, new Guid("211847d3-346d-4692-961b-293587fc5ed1"), 100, "A menos de 200ºC" },
+                    { new Guid("b0d49301-91c8-498d-ae27-fd0facf49763"), "public/default/dry/machine.png", null, "Secar na máquina", 10, new Guid("039ad0a0-d245-4a9a-8e77-0af7ca025bf4"), 100, "Na máquina" },
+                    { new Guid("b77e9adb-7806-49d7-a0da-953cd5969f5f"), "public/default/iron/less110.png", null, "Engomar a menos de 110ºC", 10, new Guid("211847d3-346d-4692-961b-293587fc5ed1"), 100, "A menos de 110ºC" },
+                    { new Guid("c7744c97-44c3-4817-a7f2-0308db1dbced"), "public/default/dry/air.png", null, "Secar ao ar livre", 10, new Guid("039ad0a0-d245-4a9a-8e77-0af7ca025bf4"), 100, "Ao ar livre" },
+                    { new Guid("c9266531-a232-4e79-b368-7d57dc15caae"), "public/default/wash/less70.png", null, "Lavar a menos de 70ºC", 10, new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"), 100, "A menos de 70ºC" },
+                    { new Guid("d7a1abd6-e947-4ff5-a743-c4e4f4ad5c30"), "public/default/service.png", null, "Escolhe um serviço de secagem", 10, new Guid("039ad0a0-d245-4a9a-8e77-0af7ca025bf4"), 100, "Serviço de Secagem" },
+                    { new Guid("f425487a-acb2-47cf-90c9-d1be4ff3d7f1"), "public/default/service.png", null, "Escolhe um serviço de engomadoria", 10, new Guid("211847d3-346d-4692-961b-293587fc5ed1"), 100, "Serviço de Engomadoria" }
                 });
         }
 
@@ -243,227 +242,222 @@ namespace BeatEcoprove.Infrastructure.Migrations
             migrationBuilder.DeleteData(
                 table: "brands",
                 keyColumn: "id",
-                keyValue: new Guid("6ad7e93f-7ea3-456c-bd89-1b8a0dc0bbd3"));
+                keyValue: new Guid("41dab51d-748b-4ac8-a381-bf962b59c753"));
 
             migrationBuilder.DeleteData(
                 table: "brands",
                 keyColumn: "id",
-                keyValue: new Guid("c1ff09d0-6bf1-45a9-83cf-77c717e796c6"));
+                keyValue: new Guid("b772688c-e78d-44a3-9477-37af1345cdf6"));
 
             migrationBuilder.DeleteData(
                 table: "brands",
                 keyColumn: "id",
-                keyValue: new Guid("d994952a-cb26-4eee-a54d-f7b0306561a7"));
+                keyValue: new Guid("d3cddb6b-0565-4e34-9c79-c2dbe0459381"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("08824efc-8b28-4c9f-a968-a837972e201c"));
+                keyValue: new Guid("0bb4f382-fb84-4d61-b9f3-4b879274995e"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("1496ef74-1693-4ea2-9489-5ba07fdc7529"));
+                keyValue: new Guid("16f4a625-d158-4148-a57e-7fb1e03c8313"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("3922fc75-ede4-446f-a4ae-db00f7271fb9"));
+                keyValue: new Guid("2f948822-9df6-47ae-8668-23cd3fa1e147"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("41d86caa-0310-4476-acbb-2f11521ee173"));
+                keyValue: new Guid("447366c9-1e2b-44d6-bca6-5aa4be27deba"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("492665d6-9f00-44be-a787-82f9e4d6c82f"));
+                keyValue: new Guid("56332dc3-4854-45bc-bc35-d40777398fb8"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("4ac5d271-e1b4-40e9-8e8d-65b3505719ff"));
+                keyValue: new Guid("5d56098e-8a05-40a3-83d2-2c5d08659698"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("53ad2b6e-be0b-4900-92d8-9a3b6f6ec000"));
+                keyValue: new Guid("5fa03383-3de8-4eca-a274-ee6793652c83"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("56766df7-05a5-4b84-b2e0-d9c61cb4002b"));
+                keyValue: new Guid("6bf1c442-8356-4942-bf7f-504d68a448f8"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("57a2cb42-f24c-4c24-8e9e-19e4161c0583"));
+                keyValue: new Guid("7040ae59-2f30-4dd4-8a01-be5d40f7f4f8"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("5b2a37f1-ecee-4235-9ad5-612cc158bfe7"));
+                keyValue: new Guid("7224e010-9d45-44d2-a0d9-ae3776800f42"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("63831e89-41fe-4da8-b0be-8bd82654fd4c"));
+                keyValue: new Guid("742002f8-545a-4561-8b58-f55387d871b4"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("661af01d-5c35-460b-8c8f-59c6d3d4ee59"));
+                keyValue: new Guid("890b0144-6f80-4658-83fa-ab05b2fd8314"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("718fab40-796d-4e36-8d6e-2a29afd8eabb"));
+                keyValue: new Guid("899f20c0-17b6-4af4-a268-66d96819821b"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("88f170b3-40dd-4cda-bebd-ff2c7107b96a"));
+                keyValue: new Guid("a00bbcb7-5d48-4762-a0bd-e8fa4264e2f1"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("9313b0a8-ed2f-4522-9ee9-73be4484e941"));
+                keyValue: new Guid("ab117e50-fbb6-454d-8617-d8ae354866c3"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("a420bb7a-d021-4727-8d1d-63e1941efc38"));
+                keyValue: new Guid("c885b72c-8d20-4288-8aea-153e41b93820"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("ae1a50eb-d4af-41db-b205-86f5f825a9ce"));
+                keyValue: new Guid("cf07615d-d51c-4961-82cd-b8e12a9eb5a8"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("b0a80794-75e9-45b9-9665-3bf5e39b944a"));
+                keyValue: new Guid("d51a8cb1-b848-4262-a7fa-2c4b91fd094a"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("bbc99374-e207-4d63-98dd-e481c2bd54a0"));
+                keyValue: new Guid("dc2d72b0-6c97-4717-beee-214e412c9050"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("d63341a2-6322-49d1-9477-aff90e0c13ad"));
+                keyValue: new Guid("e0170db6-31bb-4fae-b5d2-cef16cacaffb"));
 
             migrationBuilder.DeleteData(
                 table: "colors",
                 keyColumn: "id",
-                keyValue: new Guid("ef27693c-b9bf-4536-bf4f-447c88c5c2b5"));
-
-            migrationBuilder.DeleteData(
-                table: "colors",
-                keyColumn: "id",
-                keyValue: new Guid("fb28fbe7-f227-427f-872f-29b5ecec7715"));
+                keyValue: new Guid("f789dd8b-8f57-47ba-96e4-84daa1a199b6"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("00c42d18-d815-4920-ad25-4b7de9226c56"));
+                keyValue: new Guid("3288aeb1-f78c-47db-9ac0-fe6a0b35e77a"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("0d6c0c43-5e0c-4931-bcab-ab1bc0820f92"));
+                keyValue: new Guid("3c8a7bf0-99bc-414d-9d34-c9797bf8b8fa"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("1a021f97-aed6-4d29-af98-c0d3ac5e8d2d"));
+                keyValue: new Guid("467ab08c-d8c0-471d-88f2-9d35c1613cf2"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("1ccf9e3e-b12e-4419-a45f-4ce27a3085c9"));
+                keyValue: new Guid("65e96587-39a2-4bdf-9fa1-b585ae0daf56"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("1de8b5d4-f158-44b7-9dc7-ead2da7f520d"));
+                keyValue: new Guid("7426d055-e4bb-4a5c-9103-e757ebdb5782"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("1fc31dc2-1f67-47b7-a126-624b72cb3ded"));
+                keyValue: new Guid("8ebb45b1-975f-47b5-82db-b4803b6d5814"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("59f9aa2b-e799-40ea-975b-c6f378c93993"));
+                keyValue: new Guid("8fc36728-f524-4166-86dd-1d68f264520e"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("87c91f1c-8a86-4f82-a744-bc43cfc44c19"));
+                keyValue: new Guid("904067b4-676c-4966-b5ec-c91d391f300b"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("8a9b8b99-8fa5-4158-a239-927c3bdfba27"));
+                keyValue: new Guid("98edd1da-b0b8-4994-8ae8-507fae36d79b"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("8aa7231f-6e7f-4660-aa1d-06e55b75535c"));
+                keyValue: new Guid("ab11baf1-c6db-4d25-a0df-fd0155426226"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("945e5b91-b9ff-4d84-9499-bef56b8a56c7"));
+                keyValue: new Guid("b0d49301-91c8-498d-ae27-fd0facf49763"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("b5847d9e-09cc-4303-9558-26a72b818cf1"));
+                keyValue: new Guid("b77e9adb-7806-49d7-a0da-953cd5969f5f"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("d49b732d-153f-462d-9cdf-2ea17436c1a1"));
+                keyValue: new Guid("c7744c97-44c3-4817-a7f2-0308db1dbced"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("d98eef09-c5cd-4a37-ad23-9200eff7228b"));
+                keyValue: new Guid("c9266531-a232-4e79-b368-7d57dc15caae"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("e140a577-8df8-4c98-81e3-8ad541e81b62"));
+                keyValue: new Guid("d7a1abd6-e947-4ff5-a743-c4e4f4ad5c30"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_service_actions",
                 keyColumn: "id",
-                keyValue: new Guid("faf2903a-3343-4959-9e31-598695fc3c02"));
+                keyValue: new Guid("f425487a-acb2-47cf-90c9-d1be4ff3d7f1"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_services",
                 keyColumn: "id",
-                keyValue: new Guid("477a1fc5-de28-43f5-9206-e8e1ed754f32"));
+                keyValue: new Guid("039ad0a0-d245-4a9a-8e77-0af7ca025bf4"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_services",
                 keyColumn: "id",
-                keyValue: new Guid("5ba116b4-8745-4fec-8703-cd887f8bda94"));
+                keyValue: new Guid("211847d3-346d-4692-961b-293587fc5ed1"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_services",
                 keyColumn: "id",
-                keyValue: new Guid("b2c0074a-7b1c-4646-ae06-af2c6f8faba3"));
+                keyValue: new Guid("3fa3f6d7-0165-4daa-b00e-d09ce56c7e1c"));
 
             migrationBuilder.DeleteData(
                 table: "maintenance_services",
                 keyColumn: "id",
-                keyValue: new Guid("ba23272f-c136-40ce-a941-f3b924170cd6"));
+                keyValue: new Guid("f59193cd-a717-466b-b5ff-ffdfd5206419"));
 
             migrationBuilder.AlterColumn<string>(
                 name: "hex",
