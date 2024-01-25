@@ -13,4 +13,5 @@ public interface IGroupRepository : IRepository<Group, GroupId>
     Task<bool> IsMemberAsync(Guid groupId, ProfileId profileId, CancellationToken cancellationToken);
     Task<GroupDao?> GetGroupDaoAsync(GroupId groupId, CancellationToken cancellationToken);
     Task<bool> IsProfileAdminOrOwnerAsync(GroupId groupId, ProfileId profileId, CancellationToken cancellationToken);
+    Task RemoveGroupAsync(Group group, CancellationToken cancellationToken);
 }

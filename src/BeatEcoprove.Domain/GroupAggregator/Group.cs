@@ -105,6 +105,7 @@ public class Group : AggregateRoot<GroupId, Guid>
 
     public bool KickMember(GroupMember member)
     {
+        MembersCount--;
         return this._members.Remove(member);
     }
 }

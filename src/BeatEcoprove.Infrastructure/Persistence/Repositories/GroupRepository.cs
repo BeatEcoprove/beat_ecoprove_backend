@@ -135,4 +135,18 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
 
         return await isAdminOrOwnerOfGroup.AnyAsync(cancellationToken);
     }
+
+    public async Task RemoveGroupAsync(Group group, CancellationToken cancellationToken)
+    {
+        var groupEntity = await DbContext
+            .Set<Group>()
+            .SingleOrDefaultAsync(groupEntity => groupEntity.Id == group.Id, cancellationToken);
+
+        if (groupEntity is null)
+        {
+            throw new Exception("Cloth not found");
+        }
+
+        DbContext.Set<Group>().Remove(groupEntity);
+    }
 }
