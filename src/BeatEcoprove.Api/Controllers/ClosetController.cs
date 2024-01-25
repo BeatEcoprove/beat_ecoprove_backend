@@ -38,6 +38,7 @@ public class ClosetController : ApiController
     [HttpGet()]
     public async Task<ActionResult<ClosetResponse>> GetCloset(
         [FromQuery] Guid profileId,
+        [FromQuery] string? search,
         [FromQuery] string? size,
         [FromQuery] string? category,
         [FromQuery] string? color,
@@ -54,6 +55,7 @@ public class ClosetController : ApiController
             {
                 ProfileId = profileId,
                 AuthId = authId,
+                Search = search,
                 Categories = category,
                 Size = size,
                 Color = color,
