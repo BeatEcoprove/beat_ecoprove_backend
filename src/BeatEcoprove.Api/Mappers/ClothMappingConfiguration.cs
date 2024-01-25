@@ -8,7 +8,6 @@ using BeatEcoprove.Contracts.Profile;
 using BeatEcoprove.Contracts.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using Mapster;
 using ClothResponse = BeatEcoprove.Contracts.Closet.Cloth.ClothResponse;
 
@@ -19,6 +18,21 @@ public class ClothMappingConfiguration : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<Cloth, ClothResult>();
+        config.NewConfig<ClothResult, ClothResponse>();
+        config.NewConfig<ClothResultExtension, ClothResponse>()
+            .MapWith(src => new ClothResponse(
+                src.Id,
+                src.Name,
+                src.Type,
+                src.Size,
+                src.Brand,
+                src.Color,
+                src.EcoScore,
+                src.ClothState,
+                src.ClothAvatar,
+                src.Profile.Adapt<ProfileClosetResponse>()
+            ));
+        
         config.NewConfig<ClothDao, ClothResult>()
             .MapWith(src => new ClothResult(
                 src.Id,
@@ -96,7 +110,15 @@ public class ClothMappingConfiguration : IRegister
             .ToList();
 
         return new ClosetResponse(
-            source.Cloths.Adapt<List<ClothResponse>>(),
+            source.Cloths.Select(cloth =>
+            {
+                if (cloth is ClothResultExtension clothDao)
+                {
+                    return clothDao.Adapt<ClothResponse>();
+                }
+                
+                return cloth.Adapt<ClothResponse>();
+            }).ToList(),
             bucketResponses
         );
     }

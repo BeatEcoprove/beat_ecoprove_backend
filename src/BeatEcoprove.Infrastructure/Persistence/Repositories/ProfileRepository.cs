@@ -34,7 +34,8 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             .SingleOrDefaultAsync(p => p.AuthId == id, cancellationToken);
     }
 
-    public async Task<List<ClothDaoWithProfile>> GetClosetCloth(
+    public async Task<List<ClothDao>> GetClosetCloth(
+        Guid mainProfileId,
         List<ProfileId> queryProfiles,
         string? search,
         List<ClothType>? category = null,
@@ -62,7 +63,8 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                 (size == null || size.Contains(cloth.Size)) &&
                 (category == null || category.Contains(cloth.Type)) &&
                 (search == null || cloth.Name.ToLower().Contains(search) || brand.Name.ToLower().Contains(search))
-            select new ClothDaoWithProfile(
+            select mainProfileId != clothEntry.ProfileId ?
+                new ClothDaoWithProfile(
                 cloth.Id,
                 cloth.Name,
                 cloth.Type.ToString(),
@@ -73,7 +75,16 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                 cloth.State.ToString(),
                 cloth.ClothAvatar,
                 profile
-            );
+            ) : new ClothDao(
+                    cloth.Id,
+                    cloth.Name,
+                    cloth.Type.ToString(),
+                    cloth.Size.ToString(),
+                    brand.Name,
+                    color.Hex,
+                    cloth.EcoScore,
+                    cloth.State.ToString(),
+                    cloth.ClothAvatar);
     
         getAllCloth = getAllCloth
             .Skip((page - 1) * pageSize)
