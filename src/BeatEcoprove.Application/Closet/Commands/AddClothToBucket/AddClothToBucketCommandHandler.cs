@@ -39,7 +39,7 @@ internal sealed class AddClothToBucketCommandHandler : ICommandHandler<AddClothT
             return profile.Errors;
         }
 
-        var bucket = await _bucketRepository.GetByIdAsync(bucketId, cancellationToken);
+        var bucket = await _bucketRepository.GetByIdWithClothAsync(bucketId, cancellationToken);
 
         if (bucket is null)
         {
