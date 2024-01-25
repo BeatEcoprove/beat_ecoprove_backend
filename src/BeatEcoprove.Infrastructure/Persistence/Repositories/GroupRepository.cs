@@ -24,13 +24,16 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
 
     public async Task<List<Group>> GetPublicGroupsAsync(
         ProfileId profileId, 
+        string? search,
         int page,
         int pageSize,
         CancellationToken cancellationToken = default)
     {
         var getPublicGroups =
             from groupEntity in DbContext.Set<Group>()
-            where groupEntity.IsPublic && groupEntity.CreatorId != profileId
+            where 
+                groupEntity.IsPublic && groupEntity.CreatorId != profileId &&
+                ( search == null ||  groupEntity.Name.ToLower().Contains(search.ToLower()) )
             select groupEntity;
         
         getPublicGroups = getPublicGroups
@@ -42,6 +45,7 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
 
     public async Task<List<Group>> GetPrivateGroupsAsync(
         ProfileId profileId, 
+        string? search,
         int page,
         int pageSize,
         CancellationToken cancellationToken = default)
@@ -52,7 +56,8 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
             join profile in DbContext.Profiles 
                 on groupMember.Profile equals profile.Id
             where 
-                profile.Id == profileId
+                profile.Id == profileId && 
+                ( search == null ||  groupEntity.Name.ToLower().Contains(search.ToLower()) )
             select groupEntity;
         
         getPrivateGroups = getPrivateGroups

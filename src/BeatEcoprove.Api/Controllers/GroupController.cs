@@ -50,6 +50,7 @@ public class GroupController : ApiController
     [HttpGet]
     public async Task<ActionResult<GetGroupsResponse>> GetGroups(
         [FromQuery] Guid profileId,
+        [FromQuery] string? search,
         [FromQuery] int? page,
         [FromQuery] int? pageSize
     )
@@ -60,6 +61,7 @@ public class GroupController : ApiController
             new GetGroupsQuery(
                 authId,
                 profileId,
+                search,
                 page ?? 1,
                 pageSize ?? 10
             ));
