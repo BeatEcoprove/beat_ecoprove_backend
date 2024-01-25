@@ -35,12 +35,14 @@ internal sealed class GetGroupsQueryHandler : IQueryHandler<GetGroupsQuery, Erro
         
         var publicGroups = await _groupRepository.GetPublicGroupsAsync(
             profile.Value.Id,
+            request.Search?.ToLower(),
             request.Page, 
             request.PageSize, 
             cancellationToken);
         
         var privateGroups = await _groupRepository.GetPrivateGroupsAsync(
             profile.Value.Id,
+            request.Search?.ToLower(),
             request.Page, 
             request.PageSize, 
             cancellationToken);

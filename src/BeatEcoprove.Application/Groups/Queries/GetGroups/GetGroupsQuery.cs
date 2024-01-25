@@ -9,6 +9,7 @@ public record GetGroupsQuery
 (
     Guid AuthId,
     Guid ProfileId,
+    string? Search,
      int Page = 1,
      int PageSize = 10
 ) : IQuery<ErrorOr<GetGroupList>>, IAuthorization;
