@@ -6,5 +6,5 @@ namespace BeatEcoprove.Application.Authentication.Commands.ResetPassword;
 public record ResetPasswordCommand
 (
     string Password,
-    string ForgotToken
+    string Code
 ) : ICommand<ErrorOr<string>>;

@@ -17,11 +17,36 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 
 namespace BeatEcoprove.Infrastructure;
 
 public static class DependencyInjection
 {
+   private static IServiceCollection AddRedisConfiguration(
+       this IServiceCollection services, ConfigurationManager configuration)
+   {
+       var redisHost = Environment.GetEnvironmentVariable("REDIS_HOST") ?? "localhost";
+       var redisPort = Environment.GetEnvironmentVariable("REDIS_PORT") ?? "6379";
+   
+       services.AddScoped<IDatabase>(cfg =>
+       {
+           var options = new ConfigurationOptions
+           {
+               EndPoints = { $"{redisHost}:{redisPort}" },
+               AbortOnConnectFail = false,
+               ConnectTimeout = 5000,
+           };
+   
+           IConnectionMultiplexer multiplexer = ConnectionMultiplexer.Connect(options);
+           var database = multiplexer.GetDatabase(db: 0);
+           
+           return database;
+       });
+   
+       return services;
+   }
+    
     private static IServiceCollection AddEmailConfiguration(
         this IServiceCollection services,
         ConfigurationManager configuration)
@@ -131,6 +156,7 @@ public static class DependencyInjection
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
     {
+        services.AddRedisConfiguration(configuration);
         services.AddProviders();
         services.AddEmailConfiguration(configuration);
         services.AddFileStorageConfiguration(configuration);

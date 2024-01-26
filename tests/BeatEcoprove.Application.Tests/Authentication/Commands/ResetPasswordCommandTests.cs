@@ -7,6 +7,7 @@ using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using Bogus;
 using NSubstitute;
+using StackExchange.Redis;
 
 namespace BeatEcoprove.Application.Tests.Authentication.Commands;
 
@@ -17,6 +18,7 @@ public class ResetPasswordCommandTests
     private readonly IJwtProvider _jwtProvider = Substitute.For<IJwtProvider>();
     private readonly IAuthRepository _authRepository = Substitute.For<IAuthRepository>();
     private readonly IPasswordProvider _passwordProvider = Substitute.For<IPasswordProvider>();
+    private readonly IDatabase _redis = Substitute.For<IDatabase>();
 
     private readonly ResetPasswordCommandHandler _sut;
 
@@ -25,7 +27,8 @@ public class ResetPasswordCommandTests
         _sut = new ResetPasswordCommandHandler(
             _jwtProvider,
             _authRepository,
-            _passwordProvider
+            _passwordProvider,
+            _redis
         );
     }
 
@@ -46,7 +49,7 @@ public class ResetPasswordCommandTests
         var command = GetSutCommand("not_valid_token");
 
         _jwtProvider.ValidateToken(
-            command.ForgotToken).Returns(false);
+            command.Code).Returns(false);
 
         // Act
         var result = await _sut.Handle(command, default);
@@ -73,10 +76,10 @@ public class ResetPasswordCommandTests
         var command = GetSutCommand(CustomForgotToken);
 
         _jwtProvider.ValidateToken(
-            command.ForgotToken).Returns(true);
+            command.Code).Returns(true);
 
         _jwtProvider.GetClaims(
-            command.ForgotToken).Returns(new Dictionary<string, string>
+            command.Code).Returns(new Dictionary<string, string>
             {
                 { UserClaims.Email, auth.Email.Value }
             });

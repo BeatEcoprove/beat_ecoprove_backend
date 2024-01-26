@@ -1,6 +1,13 @@
 version: '3.1'
 
 services:
+  redis-broker:
+    container_name: redis
+    image: redis/redis-stack:latest
+    ports:
+      - "${REDIS_PORT}:6379"
+      - "${REDIS_UI_PORT}:8001"
+    
   beat_db:
     image: postgres:alpine3.18
     ports:
@@ -39,7 +46,11 @@ services:
       - SmtpPassword=${BEAT_MAIL_SMTP_PASSWORD}
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=5182
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
     depends_on:
       beat_db:
         condition: service_healthy
+      redis-broker:
+        condition: service_started
     restart: always

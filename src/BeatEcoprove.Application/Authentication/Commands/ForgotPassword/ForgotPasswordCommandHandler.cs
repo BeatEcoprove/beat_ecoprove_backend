@@ -5,50 +5,65 @@ using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
+using StackExchange.Redis;
 
 namespace BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
 
 internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordCommand, ErrorOr<string>>
 {
-    private readonly IJwtProvider _jwtProvider;
     private readonly IAuthRepository _authRepository;
     private readonly IMailSender _mailSender;
+    private readonly IDatabase _redis;
+    private readonly IJwtProvider _jwtProvider;
 
     public ForgotPasswordCommandHandler(
-        IJwtProvider jwtProvider,
         IAuthRepository authRepository,
-        IMailSender mailSender)
+        IMailSender mailSender, 
+        IDatabase redis, 
+        IJwtProvider jwtProvider)
     {
-        _jwtProvider = jwtProvider;
         _authRepository = authRepository;
         _mailSender = mailSender;
+        _redis = redis;
+        _jwtProvider = jwtProvider;
+    }
+
+    private static string GenerateRandomCode(int length)
+    {
+        var random = new Random();
+
+        var minValue = (int)Math.Pow(10, length - 1);
+        var maxValue = (int)Math.Pow(10, length) - 1;
+        var code = random.Next(minValue, maxValue + 1);
+
+        return code.ToString("D" + length);
     }
 
     public async Task<ErrorOr<string>> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
         var email = Email.Create(request.Email);
 
-        // get user by email
         var user = await _authRepository.GetAuthByEmail(email.Value, cancellationToken);
 
         if (user is null)
         {
             return Errors.User.EmailDoesNotExists;
         }
+        
+        var generatedCode = GenerateRandomCode(6);
 
-        // create token payload idictionary
         var payload = new ForgotTokenPayload(
             email.Value,
-            DateTime.Now.AddMinutes(10) // 10 minutes
+            DateTime.Now.AddMinutes(10)
         );
-
+        
         var forgotToken = _jwtProvider.GenerateToken(payload);
+        await _redis.StringAppendAsync(generatedCode, forgotToken);
 
-        // send email with token
         await _mailSender.SendMailAsync(
             user.Email.Value,
             "Forgot password",
-            $"Your forgot password token is: {forgotToken}"
+            $"Your forgot password token is: {generatedCode}"
         );
 
         return "Email sent";

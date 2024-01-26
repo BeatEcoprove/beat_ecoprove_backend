@@ -106,13 +106,13 @@ public class AuthenticationController : ApiController
     }
 
     [HttpPost("reset_password")]
-    public async Task<ActionResult<string>> ResetPassword(ResetPasswordRequest request, [FromQuery] string forgotToken)
+    public async Task<ActionResult<string>> ResetPassword(ResetPasswordRequest request, [FromQuery] string code)
     {
         var resultMessage =
             await _sender.Send(new
             {
                 request.Password,
-                ForgotToken = forgotToken,
+                Code = code,
             }.Adapt<ResetPasswordCommand>());
 
         return resultMessage.Match(
