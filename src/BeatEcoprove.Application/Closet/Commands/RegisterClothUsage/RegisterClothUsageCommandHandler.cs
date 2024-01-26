@@ -4,6 +4,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Closet.Commands.RegisterClothUsage;
@@ -14,17 +15,20 @@ internal sealed class RegisterClothUsageCommandHandler : ICommandHandler<Registe
     private readonly IClosetService _closetService;
     private readonly IActivityRepository _activityRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IClothRepository _clothRepository;
 
     public RegisterClothUsageCommandHandler(
         IProfileManager profileManager, 
         IClosetService closetService,
         IActivityRepository activityRepository, 
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork, 
+        IClothRepository clothRepository)
     {
         _profileManager = profileManager;
         _closetService = closetService;
         _activityRepository = activityRepository;
         _unitOfWork = unitOfWork;
+        _clothRepository = clothRepository;
     }
 
     public async Task<ErrorOr<DailyUseActivity>> Handle(RegisterClothUsageCommand request, CancellationToken cancellationToken)
@@ -43,6 +47,13 @@ internal sealed class RegisterClothUsageCommandHandler : ICommandHandler<Registe
         if (cloth.IsError)
         {
             return cloth.Errors;
+        }
+
+        var services = await _clothRepository.GetAvailableMaintenanceServices(clothId, cancellationToken);
+
+        if (services.Count == 0)
+        {
+            return Errors.Cloth.CannotUseClothBecauseIsOnMaintenance;
         }
         
         var activity = cloth.Value.UseCloth(profile.Value);
