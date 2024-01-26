@@ -28,17 +28,6 @@ internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPassw
         _jwtProvider = jwtProvider;
     }
 
-    private static string GenerateRandomCode(int length)
-    {
-        var random = new Random();
-
-        var minValue = (int)Math.Pow(10, length - 1);
-        var maxValue = (int)Math.Pow(10, length) - 1;
-        var code = random.Next(minValue, maxValue + 1);
-
-        return code.ToString("D" + length);
-    }
-
     public async Task<ErrorOr<string>> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
         var email = Email.Create(request.Email);
@@ -50,7 +39,7 @@ internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPassw
             return Errors.User.EmailDoesNotExists;
         }
         
-        var generatedCode = GenerateRandomCode(6);
+        var generatedCode = _jwtProvider.GenerateRandomCode(6);
 
         var payload = new ForgotTokenPayload(
             email.Value,

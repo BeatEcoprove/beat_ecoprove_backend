@@ -1,7 +1,6 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
-using BeatEcoprove.Infrastructure.WebSockets.Notifications;
+using BeatEcoprove.Application.Shared.Notifications;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Npgsql;

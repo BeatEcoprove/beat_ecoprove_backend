@@ -1,6 +1,7 @@
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.DAOS;
+using BeatEcoprove.Domain.GroupAggregator.Entities;
 using BeatEcoprove.Domain.GroupAggregator.Enumerators;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -19,6 +20,7 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
     {
         return DbContext.Set<Group>()
             .Include(group => group.Members)
+            .Include(group => group.Invites)
             .FirstOrDefaultAsync(group => group.Id == id, cancellationToken);
     }
 
@@ -148,5 +150,11 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
         }
 
         DbContext.Set<Group>().Remove(groupEntity);
+    }
+
+    public Task<bool> InvitationExists(InviteGroupId invitationId, CancellationToken cancellationToken)
+    {
+        return DbContext.Set<GroupInvite>()
+            .AnyAsync(invite => invite.Id == invitationId, cancellationToken);
     }
 }

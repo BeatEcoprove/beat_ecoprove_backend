@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace BeatEcoprove.Infrastructure.WebSockets.Notifications;
+namespace BeatEcoprove.Application.Shared.Notifications;
 
 public class LevelUpNotification
 {

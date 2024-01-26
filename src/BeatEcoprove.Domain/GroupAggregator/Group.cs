@@ -1,3 +1,4 @@
+using BeatEcoprove.Domain.Events;
 using BeatEcoprove.Domain.GroupAggregator.Entities;
 using BeatEcoprove.Domain.GroupAggregator.Enumerators;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
@@ -12,6 +13,7 @@ namespace BeatEcoprove.Domain.GroupAggregator;
 public class Group : AggregateRoot<GroupId, Guid>
 {
     private readonly List<GroupMember> _members = new();
+    private readonly List<GroupInvite> _invites = new();
     private readonly List<TextMessage> _textMessages = new();
     
     private Group() { }
@@ -46,6 +48,7 @@ public class Group : AggregateRoot<GroupId, Guid>
     public ProfileId CreatorId { get; private set; } = null!;
     public IReadOnlyList<TextMessage> TextMessages => _textMessages.AsReadOnly();
     public IReadOnlyList<GroupMember> Members => _members.AsReadOnly();
+    public IReadOnlyList<GroupInvite> Invites => _invites.AsReadOnly();
 
     public static Group Create(
         ProfileId creatorId,
@@ -122,5 +125,24 @@ public class Group : AggregateRoot<GroupId, Guid>
     public void SetDescription(string description)
     {
         Description = description;
+    }
+
+    public ErrorOr<GroupInvite> InviteMember(ProfileId from, Profile to)
+    {
+        if (this._members.Any(m => m.Profile == to.Id))
+        {
+            return Errors.Groups.MemberAlreadyExists;
+        }
+
+        var invite = new GroupInvite(
+            this.Id,
+            from,
+            to.Id
+        );
+        
+        this._invites.Add(invite);
+        this.AddDomainEvent(new InviteMemberDomainEvent(invite));
+        
+        return invite;
     }
 }

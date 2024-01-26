@@ -11,4 +11,5 @@ public interface IJwtProvider
     Task<Dictionary<string, string>> GetClaims(string token);
     (string, string) GenerateAuthenticationTokens(Auth account, Profile profile);
     (string, string) MapClaimsToAuthToken(IDictionary<string, string> claims);
+    string GenerateRandomCode(int length);
 }

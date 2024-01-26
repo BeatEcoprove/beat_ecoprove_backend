@@ -73,5 +73,9 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
         builder.HasMany(group => group.TextMessages)
             .WithOne()
             .HasForeignKey(textMessage => textMessage.Group);
+        
+        builder.HasMany(group => group.Invites)
+            .WithOne()
+            .HasForeignKey(invites => invites.Group);
     }
 }

@@ -109,6 +109,17 @@ public class JwtProvider : IJwtProvider
         return GenerateAuthenticationTokens(payload);
     }
 
+    public string GenerateRandomCode(int length)
+    {
+        var random = new Random();
+
+        var minValue = (int)Math.Pow(10, length - 1);
+        var maxValue = (int)Math.Pow(10, length) - 1;
+        var code = random.Next(minValue, maxValue + 1);
+
+        return code.ToString("D" + length);
+    }
+
     private (string, string) GenerateAuthenticationTokens(AuthTokenPayload payload)
     {
         var accessToken = GenerateToken(payload);

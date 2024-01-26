@@ -37,6 +37,10 @@ public partial class Errors
         
         public static Error CannotKickMember => Error.Conflict(
             "Group.CannotKickMember",
-            "Não foi possuível remover o membro do grupo."); 
+            "Não foi possível remover o membro do grupo.");
+        
+        public static Error MemberAlreadyExists => Error.Conflict(
+            "Group.MemberAlreadyExists",
+            "Este membro já pertence ao grupo.");
     }
 }

@@ -1,7 +1,7 @@
 using System.Text.Json;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 
-namespace BeatEcoprove.Infrastructure.WebSockets.Notifications;
+namespace BeatEcoprove.Application.Shared.Notifications;
 
 public class SendLevelNotification : SendNotification
 {
