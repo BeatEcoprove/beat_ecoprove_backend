@@ -108,4 +108,19 @@ public class Group : AggregateRoot<GroupId, Guid>
         MembersCount--;
         return this._members.Remove(member);
     }
+    
+    public void SetGroupState(bool isPublic)
+    {
+        IsPublic = isPublic;
+    }
+    
+    public void SetName(string name)
+    {
+        Name = name;
+    }
+    
+    public void SetDescription(string description)
+    {
+        Description = description;
+    }
 }

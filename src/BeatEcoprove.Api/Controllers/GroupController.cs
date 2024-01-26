@@ -3,6 +3,7 @@ using BeatEcoprove.Application.Groups.Commands.CreateGroup;
 using BeatEcoprove.Application.Groups.Commands.DeleteGroup;
 using BeatEcoprove.Application.Groups.Commands.KickMember;
 using BeatEcoprove.Application.Groups.Commands.PromoteMember;
+using BeatEcoprove.Application.Groups.Commands.UpdateGroup;
 using BeatEcoprove.Application.Groups.Queries.GetGroupDetail;
 using BeatEcoprove.Application.Groups.Queries.GetGroups;
 using BeatEcoprove.Contracts.Groups;
@@ -157,6 +158,34 @@ public class GroupController : ApiController
         );
         
         return deleteGroupResult.Match(
+            result => Ok(_mapper.Map<GroupResponse>(result)),
+            Problem<GroupResponse>
+        );
+    }
+    
+    [HttpPut("{groupId:guid}/update/{memberId:guid}")]
+    public async Task<ActionResult<GroupResponse>> UpdateGroup(
+        [FromRoute] Guid groupId,
+        [FromRoute] Guid memberId,
+        [FromQuery] Guid profileId,
+        [FromForm] UpdateGroupRequest request)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var updateGroupResult = await _sender.Send(
+            new UpdateGroupCommand(
+                authId,
+                profileId,
+                groupId,
+                memberId,
+                request.Name,
+                request.Description,
+                request.IsPublic,
+                request.PictureStream
+            )
+        );
+        
+        return updateGroupResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>
         );
