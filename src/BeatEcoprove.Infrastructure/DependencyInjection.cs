@@ -14,6 +14,7 @@ using BeatEcoprove.Infrastructure.Persistence.Repositories;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 using BeatEcoprove.Infrastructure.Providers;
 using BeatEcoprove.Infrastructure.Services;
+using BeatEcoprove.Infrastructure.WebSockets;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

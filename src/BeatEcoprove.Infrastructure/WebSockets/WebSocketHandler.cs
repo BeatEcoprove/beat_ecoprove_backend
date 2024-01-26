@@ -4,7 +4,7 @@ using System.Text;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 
-namespace BeatEcoprove.Infrastructure.Providers;
+namespace BeatEcoprove.Infrastructure.WebSockets;
 
 public class WebSocketHandler : IWebSocketsHandler
 {
@@ -12,6 +12,11 @@ public class WebSocketHandler : IWebSocketsHandler
 
     public async Task Handle(WebSocket webSocket, Guid userId)
     {
+        if (_connectedUsers.TryGetValue(userId, out var socket))
+        {
+            await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+        }
+        
         _connectedUsers.TryAdd(userId, webSocket);
         var buffer = new byte[1024 * 4];
 
