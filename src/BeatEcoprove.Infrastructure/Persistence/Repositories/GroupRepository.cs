@@ -152,6 +152,17 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
         DbContext.Set<Group>().Remove(groupEntity);
     }
 
+    public Task<GroupInvite?> GetGroupInviteAsync(GroupId groupId, InviteGroupId inviteId, CancellationToken cancellationToken)
+    {
+        var getGroupInvite =
+            from groupEntity in DbContext.Set<Group>()
+            from groupInvite in groupEntity.Invites
+            where groupEntity.Id == groupId && groupInvite.Id == inviteId
+            select groupInvite;
+        
+        return getGroupInvite.FirstOrDefaultAsync(cancellationToken);
+    }
+
     public Task<bool> InvitationExists(InviteGroupId invitationId, CancellationToken cancellationToken)
     {
         return DbContext.Set<GroupInvite>()

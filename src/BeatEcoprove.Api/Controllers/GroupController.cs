@@ -1,4 +1,5 @@
 using BeatEcoprove.Api.Extensions;
+using BeatEcoprove.Application.Groups.Commands.AcceptInvite;
 using BeatEcoprove.Application.Groups.Commands.CreateGroup;
 using BeatEcoprove.Application.Groups.Commands.DeleteGroup;
 using BeatEcoprove.Application.Groups.Commands.InviteMember;
@@ -210,6 +211,29 @@ public class GroupController : ApiController
         );
         
         return inviteUserResult.Match(
+            result => Ok(_mapper.Map<GroupResponse>(result)),
+            Problem<GroupResponse>
+        );
+    }
+    
+    [HttpPatch("{groupId:guid}/invite/{code:int}/accept")]
+    public async Task<ActionResult<GroupResponse>> AcceptInvite(
+        [FromRoute] Guid groupId,
+        [FromRoute] int code,
+        [FromQuery] Guid profileId)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var acceptInviteResult = await _sender.Send(
+            new AcceptInviteCommand(
+                authId,
+                profileId,
+                groupId,
+                code
+            )
+        );
+        
+        return acceptInviteResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>
         );

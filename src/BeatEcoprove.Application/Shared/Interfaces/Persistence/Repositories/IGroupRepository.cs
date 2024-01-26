@@ -1,5 +1,6 @@
 using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.DAOS;
+using BeatEcoprove.Domain.GroupAggregator.Entities;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using ErrorOr;
@@ -14,5 +15,5 @@ public interface IGroupRepository : IRepository<Group, GroupId>
     Task<GroupDao?> GetGroupDaoAsync(GroupId groupId, CancellationToken cancellationToken);
     Task<bool> IsProfileAdminOrOwnerAsync(GroupId groupId, ProfileId profileId, CancellationToken cancellationToken);
     Task RemoveGroupAsync(Group group, CancellationToken cancellationToken);
-    Task<bool> InvitationExists(InviteGroupId invitationId, CancellationToken cancellationToken);
+    Task<GroupInvite?> GetGroupInviteAsync(GroupId groupId, InviteGroupId inviteId, CancellationToken cancellationToken);
 }

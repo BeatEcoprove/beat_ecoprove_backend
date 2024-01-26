@@ -31,7 +31,7 @@ public class InviteMemberDomainEventHandler : INotificationHandler<InviteMemberD
         var invitation = notification.Invite;
 
         var inviteCode = _jwtProvider.GenerateRandomCode(6);
-        await _redis.StringAppendAsync(inviteCode, invitation.Id.ToString()!);
+        await _redis.StringAppendAsync(inviteCode, invitation.Id.Value.ToString());
 
         await _webSocketsHandler.SendNotificationToUser(
             notification.Invite.Target,

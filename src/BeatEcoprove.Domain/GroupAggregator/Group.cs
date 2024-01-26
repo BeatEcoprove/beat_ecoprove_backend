@@ -145,4 +145,33 @@ public class Group : AggregateRoot<GroupId, Guid>
         
         return invite;
     }
+
+    public ErrorOr<bool> AcceptInvite(GroupInvite invite, bool accept)
+    {
+        invite = this._invites
+            .First(i => i.Id == invite.Id);
+        
+        if (invite.AcceptedAt is not null || invite.DeclinedAt is not null)
+        {
+            return Errors.Groups.InviteAlreadyUsed;
+        }
+        
+        if (!accept)
+        {
+            invite.Decline();
+            return false;
+        }
+        
+        var member = new GroupMember(
+            invite.Target,
+            invite.Group,
+            invite.Permission
+        );
+        
+        invite.Accept();
+        this._members.Add(member);
+        this._invites.Remove(invite);
+        
+        return true;
+    }
 }

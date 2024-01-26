@@ -42,5 +42,13 @@ public partial class Errors
         public static Error MemberAlreadyExists => Error.Conflict(
             "Group.MemberAlreadyExists",
             "Este membro já pertence ao grupo.");
+        
+        public static Error InviteNotFound => Error.Conflict(
+            "Group.InviteNotFound",
+            "Este convite não existe.");
+        
+        public static Error InviteAlreadyUsed => Error.Conflict(
+            "Group.InviteAlreadyAccepted",
+            "Este convite já foi utilizado.");
     }
 }
