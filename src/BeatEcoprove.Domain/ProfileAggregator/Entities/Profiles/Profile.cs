@@ -102,5 +102,41 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
 
         return _bucketEntries.Remove(bucketEntry);
     }
+    
+    public ErrorOr<bool> ConvertEcoCoins(int ecoCoins, int sustainabilityPoints)
+    {
+        if (ecoCoins < 0)
+        {
+            return Errors.Profile.CannotConvertNegativeEcoCoins;
+        }
+
+        if (EcoCoins < ecoCoins)
+        {
+            return Errors.Profile.NotEnoughEcoCoins;
+        }
+
+        EcoCoins += ecoCoins;
+        SustainabilityPoints -= sustainabilityPoints;
+
+        return true;
+    }
+
+    public object ConvertSustainabilityPoints(int sustainabilityPoints, int ecoCoins)
+    {
+        if (sustainabilityPoints < 0)
+        {
+            return Errors.Profile.CannotConvertNegativeEcoCoins;
+        }
+        
+        if (SustainabilityPoints < sustainabilityPoints)
+        {
+            return Errors.Profile.NotEnoughEcoCoins;
+        }
+        
+        EcoCoins -= ecoCoins;
+        SustainabilityPoints += sustainabilityPoints;
+        
+        return true;
+    }
 
 }
