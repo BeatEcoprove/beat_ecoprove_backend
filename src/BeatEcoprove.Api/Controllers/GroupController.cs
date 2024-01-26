@@ -1,5 +1,6 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Groups.Commands.CreateGroup;
+using BeatEcoprove.Application.Groups.Commands.DeleteGroup;
 using BeatEcoprove.Application.Groups.Commands.KickMember;
 using BeatEcoprove.Application.Groups.Commands.PromoteMember;
 using BeatEcoprove.Application.Groups.Queries.GetGroupDetail;
@@ -135,6 +136,27 @@ public class GroupController : ApiController
         ));
         
         return promoteUserResult.Match(
+            result => Ok(_mapper.Map<GroupResponse>(result)),
+            Problem<GroupResponse>
+        );
+    }
+    
+    [HttpDelete("{groupId:guid}")]
+    public async Task<ActionResult<GroupResponse>> DeleteGroup(
+        [FromRoute] Guid groupId,
+        [FromQuery] Guid profileId)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var deleteGroupResult = await _sender.Send(
+            new DeleteGroupCommand(
+                authId,
+                profileId,
+                groupId
+            )
+        );
+        
+        return deleteGroupResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>
         );
