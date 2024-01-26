@@ -4,6 +4,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Infrastructure.Authentication;
+using BeatEcoprove.Infrastructure.BackgroundJobs;
 using BeatEcoprove.Infrastructure.EmailSender;
 using BeatEcoprove.Infrastructure.FileStorage;
 using BeatEcoprove.Infrastructure.Gaming;
@@ -23,6 +24,14 @@ namespace BeatEcoprove.Infrastructure;
 
 public static class DependencyInjection
 {
+    private static IServiceCollection AddBackgroundJobs(this IServiceCollection services)
+    {
+        services.AddSingleton<IWebSocketsHandler, WebSocketHandler>();
+        services.AddHostedService<PgNotificationListener>();
+
+        return services;
+    }
+    
    private static IServiceCollection AddRedisConfiguration(
        this IServiceCollection services, ConfigurationManager configuration)
    {
@@ -163,6 +172,7 @@ public static class DependencyInjection
         services.AddPersistence(configuration);
         services.AddAuth(configuration);
         services.AddServices();
+        services.AddBackgroundJobs();
 
         return services;
     }

@@ -1,4 +1,8 @@
-﻿using BeatEcoprove.Api.Middlewares;
+﻿using BeatEcoprove.Api.Extensions;
+using BeatEcoprove.Api.Middlewares;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using Microsoft.Extensions.FileProviders;
 
 namespace BeatEcoprove.Api;
@@ -33,6 +37,14 @@ public static class ApplicationConfiguration
         return app;
     }
     
+    private static IApplicationBuilder AddWebSockets(this IApplicationBuilder app)
+    {
+        app.UseWebSockets();
+        app.UseMiddleware<WebSocketsMiddleware>();
+        
+        return app;
+    }
+    
     public static WebApplication SetupConfiguration(this WebApplication app)
     {
         app.UseCors(policyBuilder => 
@@ -48,7 +60,8 @@ public static class ApplicationConfiguration
         app.AddCustomMiddlewares();
 
         app.AddLocalFileStorage();
-        
+        app.AddWebSockets();
+
         return app;
     }
 }

@@ -8,6 +8,7 @@ public static class DependencyInjection
     private static IServiceCollection AddMiddlewares(this IServiceCollection services)
     {
         services.AddTransient<ProfileCheckerMiddleware>();
+        services.AddTransient<WebSocketsMiddleware>();
         
         return services;
     }
