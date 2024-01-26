@@ -7,6 +7,7 @@ using BeatEcoprove.Domain.Shared.Errors;
 using Bogus;
 using ErrorOr;
 using NSubstitute;
+using StackExchange.Redis;
 
 namespace BeatEcoprove.Application.Tests.Authentication.Commands;
 
@@ -15,15 +16,17 @@ public class ForgotPasswordCommandTests
     private readonly IJwtProvider _jwtProvider = Substitute.For<IJwtProvider>();
     private readonly IAuthRepository _authRepository = Substitute.For<IAuthRepository>();
     private readonly IMailSender _mailSender = Substitute.For<IMailSender>();
+    private readonly IDatabase _redis = Substitute.For<IDatabase>();
 
     private readonly ForgotPasswordCommandHandler _sut;
 
     public ForgotPasswordCommandTests()
     {
         _sut = new ForgotPasswordCommandHandler(
-            _jwtProvider,
             _authRepository,
-            _mailSender
+            _mailSender,
+            _redis,
+            _jwtProvider
         );
     }
 

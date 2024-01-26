@@ -6,6 +6,7 @@ using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 
 namespace BeatEcoprove.Application.Authentication.Commands.ResetPassword;
 
@@ -14,15 +15,18 @@ internal sealed class ResetPasswordCommandHandler : ICommandHandler<ResetPasswor
     private readonly IJwtProvider _jwtProvider;
     private readonly IAuthRepository _authRepository;
     private readonly IPasswordProvider _passwordProvider;
+    private readonly IDatabase _redis;
 
     public ResetPasswordCommandHandler(
         IJwtProvider jwtProvider,
         IAuthRepository authRepository,
-        IPasswordProvider passwordProvider)
+        IPasswordProvider passwordProvider, 
+        IDatabase redis)
     {
         _jwtProvider = jwtProvider;
         _authRepository = authRepository;
         _passwordProvider = passwordProvider;
+        _redis = redis;
     }
 
     public async Task<ErrorOr<string>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
@@ -36,15 +40,28 @@ internal sealed class ResetPasswordCommandHandler : ICommandHandler<ResetPasswor
         {
             return password.Errors;
         }
+        
+        if (string.IsNullOrWhiteSpace(request.Code) || request.Code.Length < 6)
+        {
+            return Errors.ForgotPassword.ForgotTokenNotValid;
+        }
+        
+        // validate code
+        var forgotToken = _redis.StringGetDelete(request.Code);
+        
+        if (forgotToken.IsNull)
+        {
+            return Errors.ForgotPassword.ForgotTokenNotValid;
+        }
 
-        if (!await _jwtProvider.ValidateToken(request.ForgotToken))
+        if (!await _jwtProvider.ValidateToken(forgotToken!))
         {
             return Errors.ForgotPassword.ForgotTokenNotValid;
         }
 
         try
         {
-            claims = await _jwtProvider.GetClaims(request.ForgotToken);
+            claims = await _jwtProvider.GetClaims(forgotToken!);
         }
         catch (SecurityTokenException)
         {
