@@ -12,6 +12,15 @@ public static partial class Errors
         
         public static Error CannotFindBucket => Error.Validation(
             "Profile.CannotFindCloth",
-            "Não foi possível encontrar o cesto."); 
+            "Não foi possível encontrar o cesto.");
+
+        public static Error CannotConvertNegativeEcoCoins => Error.Validation(
+            "Profile.CannotConvertNegativeEcoCoins",
+            "Não é possível converter um número negativo de EcoCoins.");
+        
+        public static Error NotEnoughEcoCoins => Error.Validation(
+            "Profile.NotEnoughEcoCoins",
+            "Não tens EcoCoins suficientes.");
+
     }
 }
