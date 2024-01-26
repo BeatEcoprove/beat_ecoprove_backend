@@ -19,6 +19,23 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
     {
     }
 
+    public async Task<List<Profile>> GetAllProfilesAsync(string? search, int pageSize = 10, int page = 1,
+        CancellationToken cancellationToken = default)
+    {
+        var getAllProfiles =
+            from profile in DbContext.Profiles
+            where 
+                (search == null || search.ToLower().Contains(((string)profile.UserName).ToLower()))
+            select profile;
+        
+        getAllProfiles = getAllProfiles
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
+        
+        return await getAllProfiles
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<bool> ExistsUserByUserNameAsync(UserName userName, CancellationToken cancellationToken)
     {
         return await DbContext

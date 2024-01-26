@@ -2,6 +2,7 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Profiles.Commands.CreateNestedProfile;
 using BeatEcoprove.Application.Profiles.Commands.DeleteNestedProfile;
 using BeatEcoprove.Application.Profiles.Commands.PromoteProfileToAccount;
+using BeatEcoprove.Application.Profiles.Queries.GetAllProfiles;
 using BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
 using BeatEcoprove.Contracts.Profile;
 using MapsterMapper;
@@ -22,6 +23,32 @@ public class ProfileController : ApiController
     {
         _sender = sender;
         _mapper = mapper;
+    }
+
+    [HttpGet("all")]
+    public async Task<ActionResult<List<ProfileResponse>>> GetAllProfiles(
+        [FromQuery] Guid profileId,
+        [FromQuery] string? search,
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize = 10,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var profiles = await _sender
+            .Send(new GetAllProfilesQuery(
+                authId,
+                profileId,
+                search,
+                page ?? 1,
+                pageSize ?? 10
+                ), cancellationToken);
+        
+        return profiles.Match(
+            response => Ok(_mapper.Map<List<ProfileResponse>>(response)),
+            Problem<List<ProfileResponse>>
+        );
     }
 
     [HttpGet]

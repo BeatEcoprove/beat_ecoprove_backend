@@ -12,6 +12,10 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
 public interface IProfileRepository : IRepository<Profile, ProfileId>
 {
+    Task<List<Profile>> GetAllProfilesAsync(string? search,
+        int pageSize = 10,
+        int page = 1,
+        CancellationToken cancellationToken = default);
     Task<bool> ExistsUserByUserNameAsync(UserName userName, CancellationToken cancellationToken = default);
     Task<Profile?> GetProfileByAuthId(AuthId id, CancellationToken cancellationToken = default);
     Task<bool> CanProfileAccessBucket(ProfileId profileId, BucketId bucketId, CancellationToken cancellationToken = default);
