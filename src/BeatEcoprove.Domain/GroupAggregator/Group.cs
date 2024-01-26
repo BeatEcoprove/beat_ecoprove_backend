@@ -95,6 +95,11 @@ public class Group : AggregateRoot<GroupId, Guid>
         {
             return Errors.Groups.MemberNotFound;
         }
+        
+        if (member.Permission == role)
+        {
+            return Errors.Groups.CannotPromoteToSameRole;
+        }
 
         return member.Promote(role);
     }

@@ -63,7 +63,7 @@ internal sealed class KickMemberCommandHandler : ICommandHandler<KickMemberComma
             return Errors.Groups.MemberNotFound;
         }
         
-        if (actionMember.Permission != MemberPermission.Admin || removeMember.Id != actionMember.Id)
+        if (actionMember.Permission != MemberPermission.Admin && removeMember.Id != actionMember.Id)
         {
             return Errors.Groups.PermissionNotValid;
         }
@@ -75,7 +75,7 @@ internal sealed class KickMemberCommandHandler : ICommandHandler<KickMemberComma
             return Errors.Groups.CannotKickMember;
         }
         
-        if (group.MembersCount == 0)
+        if (group.Members.Count == 0)
         {
             await _groupRepository.RemoveGroupAsync(group, cancellationToken);
         }

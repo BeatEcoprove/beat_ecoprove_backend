@@ -41,11 +41,6 @@ internal sealed class PromoteMemberCommandHandler : ICommandHandler<PromoteMembe
             return Errors.Groups.PermissionNotValid;
         }
         
-        if (role != MemberPermission.Admin)
-        {
-            return Errors.Groups.CannotPromoteMember;
-        }
-        
         var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
 
         if (profile.IsError)
@@ -68,6 +63,18 @@ internal sealed class PromoteMemberCommandHandler : ICommandHandler<PromoteMembe
         if (!await _groupRepository.IsProfileAdminOrOwnerAsync(groupId, profile.Value.Id, cancellationToken))
         {
             return Errors.Groups.CannotAccess;
+        }
+        
+        var actionMember = group.GetMemberByProfileId(profile.Value.Id);
+        
+        if (actionMember is null)
+        {
+            return Errors.Groups.MemberNotFound;
+        }
+        
+        if (actionMember.Permission != MemberPermission.Admin)
+        {
+            return Errors.Groups.CannotPromoteMember;
         }
         
         var member = group.GetMemberByProfileId(memberId);

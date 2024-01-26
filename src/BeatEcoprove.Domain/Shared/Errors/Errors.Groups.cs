@@ -19,6 +19,10 @@ public partial class Errors
             "Group.MemberNotFound",
             "Este membro não pertence ao grupo.");
         
+        public static Error CannotPromoteToSameRole => Error.Conflict(
+            "Group.CannotPromoteToSameRole",
+            "Não pode promover um membro para o mesmo cargo.");
+        
         public static Error DontBelongToGroup => Error.Conflict(
             "Group.MemberNotFound",
             "Não pertences a este grupo.");
