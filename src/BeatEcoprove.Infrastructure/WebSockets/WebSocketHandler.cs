@@ -1,8 +1,10 @@
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Infrastructure.WebSockets.Contracts;
 
 namespace BeatEcoprove.Infrastructure.WebSockets;
 
@@ -23,11 +25,32 @@ public class WebSocketHandler : IWebSocketsHandler
         while (webSocket.State == WebSocketState.Open)
         {
             var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            if (result.MessageType != WebSocketMessageType.Close) continue;
             
-            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-            _connectedUsers.TryRemove(userId, out _);
+            if (result.MessageType == WebSocketMessageType.Close)
+            {
+                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+                _connectedUsers.TryRemove(userId, out _);
+                return;
+            }
+            
+            var jsonMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
+            var messageType = JsonSerializer.Deserialize<Message>(jsonMessage);
+
+            switch (messageType?.MessageType)
+            {
+                case MessageType.GroupMessage:
+                    var receivedData = JsonSerializer.Deserialize<MessageBody<ChatMessage>>(jsonMessage);
+                    HandleMessageGroup(receivedData?.Content!);
+                    break;
+                default:
+                    break;
+            }
         }
+    }
+
+    private void HandleMessageGroup(ChatMessage message)
+    {
+        Console.WriteLine($"Message received from {message.SenderId} to {message.GroupId}: {message.Message}");
     }
 
     public async Task SendNotificationToUser(Guid userId, SendNotification message)
