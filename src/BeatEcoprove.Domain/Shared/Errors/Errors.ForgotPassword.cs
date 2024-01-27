@@ -6,7 +6,7 @@ public partial class Errors
 {
     public class ForgotPassword
     {
-        public static Error ForgotTokenNotValid => Error.Validation(
+        public static Error ForgotTokenNotValid => Error.Conflict(
            "ForgotPassword.ForgotTokenNotValid",
            "O token fornecido já não se encontra válido.");
     }

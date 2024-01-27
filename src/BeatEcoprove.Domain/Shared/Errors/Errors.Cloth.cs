@@ -6,11 +6,11 @@ public partial class Errors
 {
     public class Cloth
     {
-        public static Error InvalidClothName => Error.Validation(
+        public static Error InvalidClothName => Error.Conflict(
             "Cloth.InvalidClothName",
             "Por favor, introduz um nome válido.");
 
-        public static Error ClothNotFound => Error.Validation(
+        public static Error ClothNotFound => Error.Conflict(
             "Cloth.ClothNotFound",
             "A peça que tentou aceder não existe.");
         
@@ -18,19 +18,19 @@ public partial class Errors
             "Cloth.MaintenanceActivityNotFound",
             "Esta peça não possui nenhum registo de manutenções anteriores.");
         
-        public static Error InvalidClothType => Error.Validation(
+        public static Error InvalidClothType => Error.Conflict(
             "Cloth.InvalidClothType",
             "Por favor, introduz um tipo de peça válido.");
         
-        public static Error InvalidClothSize => Error.Validation(
+        public static Error InvalidClothSize => Error.Conflict(
             "Cloth.InvalidClothSize",
             "Por favor, introduz um tamanho válido (xs, s, m, l, xl, xxl).");
 
-        public static Error CannotUseCloth => Error.Validation(
+        public static Error CannotUseCloth => Error.Conflict(
             "Cloth.CannotUseCloth",
             "Esta peça já está em uso.");
         
-        public static Error CannotUseClothBecauseIsOnMaintenance => Error.Validation(
+        public static Error CannotUseClothBecauseIsOnMaintenance => Error.Conflict(
             "Cloth.CannotUseCloth",
             "Esta peça está em manutenção.");
         
@@ -38,7 +38,7 @@ public partial class Errors
             "Cloth.IsBeingMaintain",
             "Esta peça já se encontra em manutenção.");
         
-        public static Error CannotDisposeCloth => Error.Validation(
+        public static Error CannotDisposeCloth => Error.Conflict(
             "Cloth.CannotDisposeCloth",
             "Não é possível demarcar esta peça, porque não está em uso.");
         
@@ -46,7 +46,7 @@ public partial class Errors
             "Cloth.CannotFinishMaintenanceActivity",
             "Não é possível terminar a terefa de manutenção.");
         
-        public static Error CannotAccessBucket => Error.Validation(
+        public static Error CannotAccessBucket => Error.Conflict(
             "Cloth.CannotAccessBucket",
             "Esta peça de roupa não lhe pertence.");
     }
