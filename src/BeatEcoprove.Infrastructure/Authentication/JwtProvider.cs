@@ -75,6 +75,7 @@ public class JwtProvider : IJwtProvider
         var ola = _gamingService.GetLevelProgress(profile);
         var payload = new AuthTokenPayload(
             account.Id,
+            profile.Id,
             account.Email,
             profile.UserName,
             profile.AvatarUrl,
@@ -94,6 +95,7 @@ public class JwtProvider : IJwtProvider
     {
         var payload = new AuthTokenPayload(
             Guid.Parse(claims[UserClaims.AccountId]),
+            Guid.Parse(claims[UserClaims.ProfileId]),
             claims[UserClaims.Email],
             claims[UserClaims.UserName],
             claims[UserClaims.AvatarUrl],

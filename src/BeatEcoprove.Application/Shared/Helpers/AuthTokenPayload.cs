@@ -1,13 +1,12 @@
 ﻿using System.Globalization;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 namespace BeatEcoprove.Application.Shared.Helpers;
 
 public class AuthTokenPayload : TokenPayload
 {
     private readonly Guid _accountId;
+    private readonly Guid _profileId;
     private readonly string _email;
     private readonly string _userName;
     private readonly string _avatarUrl;
@@ -21,6 +20,7 @@ public class AuthTokenPayload : TokenPayload
 
     public AuthTokenPayload(
         Guid accountId,
+        Guid profileId,
         string email,
         string userName,
         string avatarUrl,
@@ -34,6 +34,7 @@ public class AuthTokenPayload : TokenPayload
         Tokens tokenType) : base(tokenType)
     {
         _accountId = accountId;
+        _profileId = profileId;
         _email = email;
         _userName = userName;
         _avatarUrl = avatarUrl;
@@ -47,6 +48,7 @@ public class AuthTokenPayload : TokenPayload
     }
 
     public string AccountId => _accountId.ToString();
+    public string ProfileId => _profileId.ToString();
     public string Email => _email;
     public string UserName => _userName;
     public string AvatarUrl => _avatarUrl;
@@ -63,6 +65,7 @@ public class AuthTokenPayload : TokenPayload
         return new Dictionary<string, string>
         {
             { UserClaims.AccountId, AccountId },
+            { UserClaims.ProfileId, ProfileId },
             { UserClaims.Email, Email },
             { UserClaims.UserName, UserName },
             { UserClaims.AvatarUrl, AvatarUrl },
