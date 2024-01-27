@@ -1,8 +1,10 @@
+using BeatEcoprove.Application.Groups.Queries.GetGroupMessages.Common;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Contracts.Groups;
 using BeatEcoprove.Contracts.Profile;
 using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.DAOS;
+using BeatEcoprove.Domain.GroupAggregator.Entities;
 using Mapster;
 
 namespace BeatEcoprove.Api.Mappers;
@@ -12,6 +14,13 @@ public class GroupMappingConfiguration : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<Group, GroupResponse>();
+        config.NewConfig<MessageResult, MessageResponse>()
+            .MapWith(src => new MessageResponse(
+                src.GroupId,
+                src.Sender.Adapt<ProfileResponse>(),
+                src.Content,
+                src.CreatedAt
+            ));
         
         config.NewConfig<GetGroupList, GetGroupsResponse>()
             .MapWith(dest => new GetGroupsResponse(

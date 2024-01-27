@@ -1,3 +1,4 @@
+using BeatEcoprove.Application.Groups.Queries.GetGroupMessages.Common;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.DAOS;
@@ -161,6 +162,28 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
             select groupInvite;
         
         return getGroupInvite.FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<List<MessageResult>> GetGroupMessagesAsync(GroupId groupId, int requestPage, int requestPageSize,
+        CancellationToken cancellationToken)
+    {
+        var groupMessages =
+            from groupEntity in DbContext.Set<Group>()
+            from members in groupEntity.Members
+            from message in groupEntity.TextMessages
+            from profile in DbContext.Profiles
+            where 
+                groupEntity.Id == groupId && 
+                message.Sender == members.Id && 
+                members.Profile == profile.Id
+            select new MessageResult(
+                groupEntity.Id,
+                profile,
+                message.Content,
+                message.CreatedAt
+            );
+            
+        return await groupMessages.ToListAsync(cancellationToken);
     }
 
     public Task<bool> InvitationExists(InviteGroupId invitationId, CancellationToken cancellationToken)

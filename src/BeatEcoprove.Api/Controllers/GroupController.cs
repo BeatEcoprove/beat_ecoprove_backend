@@ -7,6 +7,7 @@ using BeatEcoprove.Application.Groups.Commands.KickMember;
 using BeatEcoprove.Application.Groups.Commands.PromoteMember;
 using BeatEcoprove.Application.Groups.Commands.UpdateGroup;
 using BeatEcoprove.Application.Groups.Queries.GetGroupDetail;
+using BeatEcoprove.Application.Groups.Queries.GetGroupMessages;
 using BeatEcoprove.Application.Groups.Queries.GetGroups;
 using BeatEcoprove.Contracts.Groups;
 using MapsterMapper;
@@ -47,6 +48,31 @@ public class GroupController : ApiController
         return createGroupResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>
+        );
+    }
+    
+    [HttpGet("{groupId:guid}/messages")]
+    public async Task<ActionResult<List<MessageResponse>>> GetGroupMessages(
+        [FromRoute] Guid groupId,
+        [FromQuery] Guid profileId,
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize
+    )
+    {
+        var authId = HttpContext.User.GetUserId();
+
+        var getGroupMessagesResult = await _sender.Send(
+            new GetGroupMessagesQuery(
+                authId,
+                profileId,
+                groupId,
+                page ?? 1,
+                pageSize ?? 10
+            ));
+        
+        return getGroupMessagesResult.Match(
+            result => Ok(_mapper.Map<List<MessageResponse>>(result)),
+            Problem<List<MessageResponse>>
         );
     }
     
