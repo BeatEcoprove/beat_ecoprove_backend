@@ -21,7 +21,12 @@ public class AuthenticationHandler : WebSocketHandler, INotificationSender
                 return;
             }
                 
-            await ConnectionManager.CloseByUserId(message.UserId, cancellationToken);
+            if (socket.State != WebSocketState.Closed)
+            { 
+                await ConnectionManager.CloseByUserId(message.UserId, cancellationToken);
+            }
+            
+            ConnectionManager.RemoveUser(message.UserId);
         }
         
         ConnectionManager.AddUser(message.UserId, message.Socket);

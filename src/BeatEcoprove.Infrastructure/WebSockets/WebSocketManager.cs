@@ -33,7 +33,7 @@ public class WebSocketManager : IWebSocketManager
             {
                 var receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
                 
-                if (webSocket.State == WebSocketState.Closed)
+                if (webSocket.State == WebSocketState.Closed || webSocket.State == WebSocketState.CloseReceived)
                 {
                     break;
                 }
@@ -52,8 +52,8 @@ public class WebSocketManager : IWebSocketManager
         {
             if (webSocket.State != WebSocketState.Closed)
                 await webSocket.CloseAsync(
-                    WebSocketCloseStatus.InternalServerError, 
-                    "Server error", 
+                    WebSocketCloseStatus.NormalClosure, 
+                    string.Empty, 
                     cancellationToken);
 
             webSocket.Dispose();

@@ -30,6 +30,11 @@ public class ConnectionManager
         _authUsers.TryRemove(userId, out _);
     }
     
+    public void RemoveUser(Guid userId)
+    {
+        _authUsers.TryRemove(userId, out _);
+    }
+    
     public List<GroupMember>? GetGroup(Guid groupId, CancellationToken cancellationToken)
     {
         return _groups.GetValueOrDefault(groupId);
@@ -63,7 +68,12 @@ public class ConnectionManager
                 return false;
             }
             
-            await CloseUserByGroupId(groupId, userId);
+            if (user.Socket.State != WebSocketState.Closed)
+            { 
+                await CloseUserByGroupId(groupId, userId);
+            }
+            
+            sockets.Remove(user);
         }
 
         sockets.Add(new GroupMember(userId, socket));
