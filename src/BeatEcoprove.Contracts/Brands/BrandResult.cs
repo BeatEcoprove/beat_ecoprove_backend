@@ -2,5 +2,6 @@
 
 public record BrandResult
 (
-    string Name
+    string Name,
+    string BrandAvatar
 );
