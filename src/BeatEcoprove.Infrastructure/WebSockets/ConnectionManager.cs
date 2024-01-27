@@ -6,10 +6,10 @@ namespace BeatEcoprove.Infrastructure.WebSockets;
 public class ConnectionManager
 {
     private readonly ConcurrentDictionary<Guid, WebSocket> _authUsers = new();
-    private readonly ConcurrentDictionary<Guid, List<WebSocket>> _groups = new();
+    private readonly ConcurrentDictionary<Guid, List<(Guid, WebSocket)>> _groups = new();
     
     public IReadOnlyDictionary<Guid, WebSocket> AuthUsers => _authUsers.AsReadOnly();
-    public IReadOnlyDictionary<Guid, List<WebSocket>> Groups => _groups.AsReadOnly();
+    public IReadOnlyDictionary<Guid, List<(Guid, WebSocket)>> Groups => _groups.AsReadOnly();
     
     public void AddUser(Guid userId, WebSocket socket)
     {
@@ -28,27 +28,37 @@ public class ConnectionManager
         _authUsers.TryRemove(userId, out _);
     }
     
-    public List<WebSocket>? GetGroup(Guid groupId, CancellationToken cancellationToken)
+    public List<(Guid, WebSocket)>? GetGroup(Guid groupId, CancellationToken cancellationToken)
     {
         return _groups.GetValueOrDefault(groupId);
     }
     
-    public List<WebSocket> RegisterGroup(Guid groupId)
+    public List<(Guid, WebSocket)> RegisterGroup(Guid groupId)
     {
         _groups.TryAdd(groupId, new ());
         
         return _groups[groupId];
     }
     
-    public void AddToGroup(Guid groupId, WebSocket socket)
+    public void AddToGroup(Guid groupId, Guid userId, WebSocket socket)
     {
         if (!_groups.TryGetValue(groupId, out var sockets))
         {
-            sockets = new List<WebSocket>();
-            _groups.TryAdd(groupId, sockets);
+            _groups.TryAdd(groupId, new());
         }
-        
-        sockets.Add(socket);
-    }
 
+        sockets?.Add((userId, socket));
+    }
+    
+    public async Task CloseUserByGroupId(Guid groupId, Guid userId, CancellationToken cancellationToken = default)
+    {
+        var user = _groups[groupId].First(x => x.Item1 == userId);
+        
+        await user.Item2.CloseAsync(
+            WebSocketCloseStatus.NormalClosure, 
+            string.Empty, 
+            cancellationToken);
+        
+        _groups[groupId].Remove(user);
+    }
 }

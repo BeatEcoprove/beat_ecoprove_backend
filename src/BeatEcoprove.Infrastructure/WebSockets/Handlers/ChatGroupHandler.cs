@@ -70,7 +70,7 @@ public class ChatGroupHandler
         }
         
         var responseBytes = Encoding.UTF8.GetBytes(notification);
-        await Task.WhenAll(users.Select(user => user.SendAsync(new ArraySegment<byte>(responseBytes, 0, responseBytes.Length),
+        await Task.WhenAll(users.Select(user => user.Item2.SendAsync(new ArraySegment<byte>(responseBytes, 0, responseBytes.Length),
             WebSocketMessageType.Text,
             true,
             cancellationToken)));
@@ -111,7 +111,8 @@ public class ChatGroupHandler
             _connectionManager.RegisterGroup(content.GroupId);
         }
         
-        _connectionManager.AddToGroup(content.GroupId, message.Socket);
+        // add user to group
+        _connectionManager.AddToGroup(content.GroupId, message.UserId, message.Socket);
         
         // announce to group that user is connected
         await SendEveryoneAsync(
