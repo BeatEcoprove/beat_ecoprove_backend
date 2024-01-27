@@ -27,6 +27,6 @@ public class UserName : ValueObject
     {
         yield return Value;
     }
-
+    
     public static implicit operator string(UserName userName) => userName.Value;
 }

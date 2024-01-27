@@ -25,7 +25,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
         var getAllProfiles =
             from profile in DbContext.Profiles
             where 
-                (search == null || search.ToLower().Contains(((string)profile.UserName).ToLower()))
+                (search == null || ((string)profile.UserName).ToLower().Contains(search))
             select profile;
         
         getAllProfiles = getAllProfiles
