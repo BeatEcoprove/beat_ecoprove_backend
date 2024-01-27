@@ -2,19 +2,24 @@ using System.Net.WebSockets;
 using System.Text;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Infrastructure.WebSockets.Handlers;
+using BeatEcoprove.Infrastructure.WebSockets.Handlers.ConnectToGroup;
+using BeatEcoprove.Infrastructure.WebSockets.Handlers.SendChatMessage;
 
 namespace BeatEcoprove.Infrastructure.WebSockets;
 public class WebSocketManager : IWebSocketManager
 {
     private readonly AuthenticationHandler _authenticationHandler;
-    private readonly ChatGroupHandler _chatGroupHandler;
+    private readonly ConnectToGroupHandler _connectToGroupHandler;
+    private readonly SendTextMessageHandler _sendTextMessageHandler;
 
     public WebSocketManager(
         AuthenticationHandler authenticationHandler, 
-        ChatGroupHandler chatGroupHandler)
+        ConnectToGroupHandler connectToGroupHandler, 
+        SendTextMessageHandler sendTextMessageHandler)
     {
         _authenticationHandler = authenticationHandler;
-        _chatGroupHandler = chatGroupHandler;
+        _connectToGroupHandler = connectToGroupHandler;
+        _sendTextMessageHandler = sendTextMessageHandler;
     }
 
     public async Task Handle(WebSocket webSocket, Guid userId, CancellationToken cancellationToken = default)
@@ -55,7 +60,9 @@ public class WebSocketManager : IWebSocketManager
         }
     }
 
-    private async Task HandleMessageAsync(WebSocketMessage message, CancellationToken cancellationToken = default)
+    private async Task HandleMessageAsync(
+        WebSocketMessage message, 
+        CancellationToken cancellationToken = default)
     {
         switch (message.Type)
         {
@@ -63,10 +70,10 @@ public class WebSocketManager : IWebSocketManager
                 await _authenticationHandler.Handle(message, cancellationToken);
                 break;
             case WbSocketType.ConnectToGroup:
-                await _chatGroupHandler.HandleConnectToGroup(message, cancellationToken);
+                await _connectToGroupHandler.Handle(message, cancellationToken);
                 break;
             case WbSocketType.SendTextMessage:
-                await _chatGroupHandler.HandleSendTextMessage(message, cancellationToken);
+                await _sendTextMessageHandler.Handle(message, cancellationToken);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

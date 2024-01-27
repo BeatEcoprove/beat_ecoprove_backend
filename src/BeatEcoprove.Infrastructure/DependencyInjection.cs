@@ -16,6 +16,8 @@ using BeatEcoprove.Infrastructure.Providers;
 using BeatEcoprove.Infrastructure.Services;
 using BeatEcoprove.Infrastructure.WebSockets;
 using BeatEcoprove.Infrastructure.WebSockets.Handlers;
+using BeatEcoprove.Infrastructure.WebSockets.Handlers.ConnectToGroup;
+using BeatEcoprove.Infrastructure.WebSockets.Handlers.SendChatMessage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +35,9 @@ public static class DependencyInjection
         
         services.AddScoped<IWebSocketManager, WebSocketManager>();
         services.AddScoped<AuthenticationHandler>();
-        services.AddScoped<ChatGroupHandler>();
+        services.AddScoped<ConnectToGroupHandler>();
+        services.AddScoped<SendTextMessageHandler>();
+        
         services.AddScoped<INotificationSender>(provider => provider.GetService<AuthenticationHandler>()!);
 
         return services;
