@@ -1,6 +1,7 @@
 using System.Text.Json;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Notifications;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Npgsql;
@@ -11,14 +12,14 @@ public class PgNotificationListener : BackgroundService
 {
     private const string Channel = "level_up";
     private readonly DbSettings _dbSettings;
-    private readonly INotificationSender _notificationSender;
+    private readonly IServiceProvider _serviceProvider;
 
     public PgNotificationListener(
-        IOptions<DbSettings> dbSettings, 
-        INotificationSender socketsHandler)
+        IOptions<DbSettings> dbSettings,
+        IServiceProvider serviceProvider)
     {
-        _notificationSender = socketsHandler;
         _dbSettings = dbSettings.Value;
+        _serviceProvider = serviceProvider;
     }
     
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -46,6 +47,9 @@ public class PgNotificationListener : BackgroundService
 
     private void HandleNotification(object sender, NpgsqlNotificationEventArgs e)
     {
+        using var scope = _serviceProvider.CreateScope();
+        var notificationSender = scope.ServiceProvider.GetRequiredService<INotificationSender>();
+        
         Console.WriteLine($"Received notification: {e.Payload}");
         var payload = JsonSerializer.Deserialize<LevelUpNotification>(e.Payload);
 
@@ -54,7 +58,7 @@ public class PgNotificationListener : BackgroundService
             return;
         }
 
-        Task.Run(() => _notificationSender.SendNotificationAsync(
+        Task.Run(() => notificationSender.SendNotificationAsync(
             Guid.Parse(payload!.Id!), 
             new SendLevelNotification
                 (

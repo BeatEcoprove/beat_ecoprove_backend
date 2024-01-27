@@ -29,13 +29,12 @@ public static class DependencyInjection
     private static IServiceCollection AddBackgroundJobs(this IServiceCollection services)
     {
         services.AddSingleton<ConnectionManager>();
-        services.AddSingleton<IWebSocketManager, WebSocketManager>();
-        
         services.AddHostedService<PgNotificationListener>();
         
-        services.AddSingleton<AuthenticationHandler>();
-        services.AddSingleton<ChatGroupHandler>();
-        services.AddSingleton<INotificationSender>(provider => provider.GetService<AuthenticationHandler>()!);
+        services.AddScoped<IWebSocketManager, WebSocketManager>();
+        services.AddScoped<AuthenticationHandler>();
+        services.AddScoped<ChatGroupHandler>();
+        services.AddScoped<INotificationSender>(provider => provider.GetService<AuthenticationHandler>()!);
 
         return services;
     }

@@ -131,6 +131,24 @@ public class Group : AggregateRoot<GroupId, Guid>
     {
         Description = description;
     }
+    
+    public ErrorOr<bool> AddTextMessage(ProfileId profileId, string message)
+    {
+        var groupMember = GetMemberByProfileId(profileId);
+        
+        if (groupMember is null)
+        {
+            return Errors.Groups.MemberNotFound;
+        }
+        
+        this._textMessages.Add(new TextMessage(
+            this.Id,
+            groupMember.Id,
+            message
+            ));
+
+        return true;
+    }
 
     public ErrorOr<GroupInvite> InviteMember(ProfileId from, Profile to)
     {

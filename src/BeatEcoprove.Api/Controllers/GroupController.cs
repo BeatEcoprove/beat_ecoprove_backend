@@ -9,7 +9,6 @@ using BeatEcoprove.Application.Groups.Commands.UpdateGroup;
 using BeatEcoprove.Application.Groups.Queries.GetGroupDetail;
 using BeatEcoprove.Application.Groups.Queries.GetGroups;
 using BeatEcoprove.Contracts.Groups;
-using BeatEcoprove.Domain.GroupAggregator.Enumerators;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

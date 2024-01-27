@@ -7,10 +7,10 @@ public class TextMessage : Message<string>
     private TextMessage() {}
 
     public TextMessage(
-        MessageId id, 
         GroupId group, 
         GroupMemberId sender, 
-        string content) : base(id, group, sender, content)
+        string content
+    ) : base(MessageId.CreateUnique(), group, sender, content)
     {
     }
 }

@@ -2,12 +2,15 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json.Serialization;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Notifications;
+using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using Microsoft.Extensions.DependencyInjection;
+using BeatEcoprove.Domain.Shared.Errors;
+using ErrorOr;
 
 namespace BeatEcoprove.Infrastructure.WebSockets.Handlers;
 
@@ -29,35 +32,41 @@ public class SendTextMessage
 public class ChatGroupHandler
 {
     private readonly ConnectionManager _connectionManager;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IGroupRepository _groupRepository;
+    private readonly IProfileRepository _profileRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public ChatGroupHandler(
         ConnectionManager connectionManager, 
-        IServiceProvider serviceProvider)
+        IGroupRepository groupRepository, 
+        IUnitOfWork unitOfWork, 
+        IProfileRepository profileRepository)
     {
         _connectionManager = connectionManager;
-        _serviceProvider = serviceProvider;
+        _groupRepository = groupRepository;
+        _unitOfWork = unitOfWork;
+        _profileRepository = profileRepository;
     }
     
-    private async Task<bool> CheckIfGroupExistsAsync(Guid id, CancellationToken cancellationToken = default)
+    private async Task<ErrorOr<Group>> GetGroupByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var groupId = GroupId.Create(id);
+
+        var group = await _groupRepository.GetByIdAsync(groupId, cancellationToken);
         
-        using var scope = _serviceProvider.CreateScope();
-        var groupRepository = scope.ServiceProvider.GetRequiredService<IGroupRepository>();
+        if (group is null)
+        {
+            return Errors.Groups.NotFound;
+        }
 
-        var group = await groupRepository.GetByIdAsync(groupId, cancellationToken);
-
-        return group != null;
+        return group;
     }
     
     public async Task<Profile?> GetProfileAsync(Guid userId, CancellationToken cancellationToken = default)
     {
         var profileId = ProfileId.Create(userId);
-        using var scope = _serviceProvider.CreateScope();
-        var profileRepository = scope.ServiceProvider.GetRequiredService<IProfileRepository>();
 
-        return await profileRepository.GetByIdAsync(profileId, cancellationToken);
+        return await _profileRepository.GetByIdAsync(profileId, cancellationToken);
     }
     
     public async Task SendEveryoneAsync(Guid groupId, SendNotification notification, CancellationToken cancellationToken = default)
@@ -78,13 +87,11 @@ public class ChatGroupHandler
     
     public async Task HandleConnectToGroup(WebSocketMessage message, CancellationToken cancellationToken = default)
     {
-        // Verify if user is authenticated
         if (!_connectionManager.AuthUsers.ContainsKey(message.UserId))
         {
             throw new Exception("Not Authenticated User");
         }
         
-        // Get ConnectToGroupMessage content
         var content = message.GetContent<ConnectToGroupMessage>();
         
         if (content is null)
@@ -99,19 +106,18 @@ public class ChatGroupHandler
             return;
         }
         
-        // Verify if group exists on database
-        if (!await CheckIfGroupExistsAsync(content.GroupId, cancellationToken))
+        var group = await GetGroupByIdAsync(content.GroupId, cancellationToken);
+        
+        if (group.IsError)
         {
             return;
         }
 
-        // register group with an user
         if (_connectionManager.GetGroup(content.GroupId, cancellationToken) == null)
         {
             _connectionManager.RegisterGroup(content.GroupId);
         }
         
-        // add user to group
         var shouldAddToGroup = await _connectionManager.AddToGroup(content.GroupId, message.UserId, message.Socket);
         
         if (!shouldAddToGroup)
@@ -119,7 +125,6 @@ public class ChatGroupHandler
             return;
         }
         
-        // announce to group that user is connected
         await SendEveryoneAsync(
             content.GroupId,
             new ServerChatTextMessage
@@ -134,13 +139,11 @@ public class ChatGroupHandler
 
     public async Task HandleSendTextMessage(WebSocketMessage message, CancellationToken cancellationToken)
     {
-        // Verify if user is authenticated
         if (!_connectionManager.AuthUsers.ContainsKey(message.UserId))
         {
             throw new Exception("Not Authenticated User");
         }
         
-        // Get SendTextMessage content
         var content = message.GetContent<SendTextMessage>();
         
         if (content is null)
@@ -155,13 +158,22 @@ public class ChatGroupHandler
             return;
         }
         
-        // Verify if group exists on database
-        if (!await CheckIfGroupExistsAsync(content.GroupId, cancellationToken))
+        var group = await GetGroupByIdAsync(content.GroupId, cancellationToken);
+        
+        if (group.IsError)
         {
             return;
         }
         
-        // announce to group that user is connected
+        var shouldAddMessage = group.Value.AddTextMessage(profile.Id, content.Message);
+        
+        if (shouldAddMessage.IsError)
+        {
+            return;
+        }
+        
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        
         await SendEveryoneAsync(
             content.GroupId,
             new ChatTextMessage
