@@ -6,7 +6,10 @@ namespace BeatEcoprove.Infrastructure.WebSockets;
 
 public enum WbSocketType
 {
-    Auth
+    Auth,
+    SendTextMessage,
+    SendTradeMessage,
+    ConnectToGroup,
 }
 
 public class WebSocketMessage
@@ -27,6 +30,7 @@ public class WebSocketMessage
         Type = decodedType.Type switch
         {
             "auth" => WbSocketType.Auth,
+            "connectToGroup" => WbSocketType.ConnectToGroup,
             _ => throw new ArgumentException("Unknown message type")
         };
     }

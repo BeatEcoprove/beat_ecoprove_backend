@@ -34,6 +34,7 @@ public static class DependencyInjection
         services.AddHostedService<PgNotificationListener>();
         
         services.AddSingleton<AuthenticationHandler>();
+        services.AddSingleton<ChatGroupHandler>();
         services.AddSingleton<INotificationSender>(provider => provider.GetService<AuthenticationHandler>()!);
 
         return services;

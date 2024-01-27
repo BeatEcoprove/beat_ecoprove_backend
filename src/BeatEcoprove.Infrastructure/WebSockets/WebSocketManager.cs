@@ -7,11 +7,14 @@ namespace BeatEcoprove.Infrastructure.WebSockets;
 public class WebSocketManager : IWebSocketManager
 {
     private readonly AuthenticationHandler _authenticationHandler;
+    private readonly ChatGroupHandler _chatGroupHandler;
 
     public WebSocketManager(
-        AuthenticationHandler authenticationHandler)
+        AuthenticationHandler authenticationHandler, 
+        ChatGroupHandler chatGroupHandler)
     {
         _authenticationHandler = authenticationHandler;
+        _chatGroupHandler = chatGroupHandler;
     }
 
     public async Task Handle(WebSocket webSocket, Guid userId, CancellationToken cancellationToken = default)
@@ -58,6 +61,9 @@ public class WebSocketManager : IWebSocketManager
         {
             case WbSocketType.Auth:
                 await _authenticationHandler.Handle(message, cancellationToken);
+                break;
+            case WbSocketType.ConnectToGroup:
+                await _chatGroupHandler.HandleConnectToGroup(message, cancellationToken);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

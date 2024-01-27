@@ -5,7 +5,8 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Helpers;
 public enum SendNotificationType
 {
     LevelUp,
-    InviteToGroup
+    InviteToGroup,
+    ServerChatMessage
 }
 
 public abstract class SendNotification
