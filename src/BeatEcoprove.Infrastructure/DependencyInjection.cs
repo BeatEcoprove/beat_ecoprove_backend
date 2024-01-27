@@ -15,6 +15,7 @@ using BeatEcoprove.Infrastructure.Persistence.Shared;
 using BeatEcoprove.Infrastructure.Providers;
 using BeatEcoprove.Infrastructure.Services;
 using BeatEcoprove.Infrastructure.WebSockets;
+using BeatEcoprove.Infrastructure.WebSockets.Handlers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,8 +28,13 @@ public static class DependencyInjection
 {
     private static IServiceCollection AddBackgroundJobs(this IServiceCollection services)
     {
-        services.AddSingleton<IWebSocketsHandler, WebSocketHandler>();
+        services.AddSingleton<ConnectionManager>();
+        services.AddSingleton<IWebSocketManager, WebSocketManager>();
+        
         services.AddHostedService<PgNotificationListener>();
+        
+        services.AddSingleton<AuthenticationHandler>();
+        services.AddSingleton<INotificationSender>(provider => provider.GetService<AuthenticationHandler>()!);
 
         return services;
     }

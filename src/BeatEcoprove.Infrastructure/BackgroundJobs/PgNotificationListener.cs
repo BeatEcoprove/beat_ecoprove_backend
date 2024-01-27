@@ -11,13 +11,13 @@ public class PgNotificationListener : BackgroundService
 {
     private const string Channel = "level_up";
     private readonly DbSettings _dbSettings;
-    private readonly IWebSocketsHandler _socketsHandler;
+    private readonly INotificationSender _notificationSender;
 
     public PgNotificationListener(
         IOptions<DbSettings> dbSettings, 
-        IWebSocketsHandler socketsHandler)
+        INotificationSender socketsHandler)
     {
-        _socketsHandler = socketsHandler;
+        _notificationSender = socketsHandler;
         _dbSettings = dbSettings.Value;
     }
     
@@ -54,8 +54,12 @@ public class PgNotificationListener : BackgroundService
             return;
         }
 
-        Task.Run(() =>
-            _socketsHandler.SendNotificationToUser(Guid.Parse(payload!.Id!), new SendLevelNotification
-                (payload.Id, payload.Level)));
+        Task.Run(() => _notificationSender.SendNotificationAsync(
+            Guid.Parse(payload!.Id!), 
+            new SendLevelNotification
+                (
+                    payload.Id, 
+                    payload.Level
+                )));
     }
 }

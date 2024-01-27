@@ -34,7 +34,7 @@ public class WebSocketsMiddleware  : ControllerBase, IMiddleware
         }
             
         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-        var webSocketHandler = context.RequestServices.GetService<IWebSocketsHandler>();
+        var webSocketHandler = context.RequestServices.GetService<IWebSocketManager>();
             
         await webSocketHandler?.Handle(webSocket, profile.Id)!;
     }
