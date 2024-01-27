@@ -17,6 +17,15 @@ public class ConnectToGroupMessage
     public Guid GroupId { get; init; }
 }
 
+public class SendTextMessage
+{
+    [JsonPropertyName("groupId")]
+    public Guid GroupId { get; init; }
+    
+    [JsonPropertyName("message")]
+    public string Message { get; init; } = string.Empty;
+}
+
 public class ChatGroupHandler
 {
     private readonly ConnectionManager _connectionManager;
@@ -99,8 +108,10 @@ public class ChatGroupHandler
         // register group with an user
         if (_connectionManager.GetGroup(content.GroupId, cancellationToken) == null)
         {
-            _connectionManager.RegisterGroup(content.GroupId, message.Socket);
+            _connectionManager.RegisterGroup(content.GroupId);
         }
+        
+        _connectionManager.AddToGroup(content.GroupId, message.Socket);
         
         // announce to group that user is connected
         await SendEveryoneAsync(
@@ -110,6 +121,49 @@ public class ChatGroupHandler
                     content.GroupId,
                     profile.Id,
                     $"O utilizador {(string)profile.UserName} entrou no grupo"
+                ),
+            cancellationToken
+        );
+    }
+
+    public async Task HandleSendTextMessage(WebSocketMessage message, CancellationToken cancellationToken)
+    {
+        // Verify if user is authenticated
+        if (!_connectionManager.AuthUsers.ContainsKey(message.UserId))
+        {
+            throw new Exception("Not Authenticated User");
+        }
+        
+        // Get SendTextMessage content
+        var content = message.GetContent<SendTextMessage>();
+        
+        if (content is null)
+        {
+            return;
+        }
+        
+        var profile = await GetProfileAsync(message.UserId, cancellationToken);
+        
+        if (profile is null)
+        {
+            return;
+        }
+        
+        // Verify if group exists on database
+        if (!await CheckIfGroupExistsAsync(content.GroupId, cancellationToken))
+        {
+            return;
+        }
+        
+        // announce to group that user is connected
+        await SendEveryoneAsync(
+            content.GroupId,
+            new ChatTextMessage
+                (
+                    content.GroupId,
+                    profile.UserName,
+                    profile.AvatarUrl,
+                    content.Message
                 ),
             cancellationToken
         );

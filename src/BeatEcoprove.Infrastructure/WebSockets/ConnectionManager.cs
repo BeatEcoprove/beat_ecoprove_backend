@@ -33,9 +33,9 @@ public class ConnectionManager
         return _groups.GetValueOrDefault(groupId);
     }
     
-    public List<WebSocket> RegisterGroup(Guid groupId, WebSocket incomingUser)
+    public List<WebSocket> RegisterGroup(Guid groupId)
     {
-        _groups.TryAdd(groupId, new List<WebSocket> { incomingUser });
+        _groups.TryAdd(groupId, new ());
         
         return _groups[groupId];
     }

@@ -31,6 +31,7 @@ public class WebSocketMessage
         {
             "auth" => WbSocketType.Auth,
             "connectToGroup" => WbSocketType.ConnectToGroup,
+            "sendTextMessage" => WbSocketType.SendTextMessage,
             _ => throw new ArgumentException("Unknown message type")
         };
     }

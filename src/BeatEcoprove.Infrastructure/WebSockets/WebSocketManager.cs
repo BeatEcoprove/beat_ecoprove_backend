@@ -65,6 +65,9 @@ public class WebSocketManager : IWebSocketManager
             case WbSocketType.ConnectToGroup:
                 await _chatGroupHandler.HandleConnectToGroup(message, cancellationToken);
                 break;
+            case WbSocketType.SendTextMessage:
+                await _chatGroupHandler.HandleSendTextMessage(message, cancellationToken);
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
