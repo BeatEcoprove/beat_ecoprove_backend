@@ -5,6 +5,7 @@ using BeatEcoprove.Application.Profiles.Commands.PromoteProfileToAccount;
 using BeatEcoprove.Application.Profiles.Commands.UpdateProfile;
 using BeatEcoprove.Application.Profiles.Queries.GetAllProfiles;
 using BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
+using BeatEcoprove.Application.Profiles.Queries.GetProfile;
 using BeatEcoprove.Contracts.Profile;
 using MapsterMapper;
 using MediatR;
@@ -49,6 +50,27 @@ public class ProfileController : ApiController
         return profiles.Match(
             response => Ok(_mapper.Map<List<ProfileResponse>>(response)),
             Problem<List<ProfileResponse>>
+        );
+    }
+    
+    [HttpGet("{username}")]
+    public async Task<ActionResult<ProfileResponse>> GetProfile(
+        string username,
+        [FromQuery] Guid profileId, 
+        CancellationToken cancellationToken = default)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var profiles = await _sender
+            .Send(new GetProfileQuery(
+                authId,
+                profileId,
+                username
+            ), cancellationToken);
+        
+        return profiles.Match(
+            response => Ok(_mapper.Map<ProfileResponse>(response)),
+            Problem<ProfileResponse>
         );
     }
 

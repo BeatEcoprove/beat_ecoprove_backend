@@ -111,6 +111,13 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             .ToListAsync(cancellationToken);
     }
 
+    public Task<Profile?> GetByUserNameAsync(UserName username, CancellationToken cancellationToken)
+    {
+        return DbContext
+            .Profiles
+            .SingleOrDefaultAsync(p => p.UserName == username, cancellationToken);
+    }
+
     public Task<List<ProfileId>> GetNestedProfileIds(AuthId authId, CancellationToken cancellationToken)
     {
         var getNestedProfileIds =

@@ -21,6 +21,8 @@ public static partial class Errors
         public static Error NotEnoughEcoCoins => Error.Conflict(
             "Profile.NotEnoughEcoCoins",
             "Não tens EcoCoins suficientes.");
-
+        public static Error NotFound => Error.Validation(
+            "Profile.NotFound",
+            "Não foi possível encontrar o perfil.");
     }
 }

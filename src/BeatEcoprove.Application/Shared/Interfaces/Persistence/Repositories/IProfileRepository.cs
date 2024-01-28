@@ -7,6 +7,7 @@ using BeatEcoprove.Domain.ProfileAggregator.DAOS;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
+using ErrorOr;
 
 namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
@@ -38,4 +39,5 @@ public interface IProfileRepository : IRepository<Profile, ProfileId>
         int page = 1,
         CancellationToken cancellationToken = default);
 
+    Task<Profile?> GetByUserNameAsync(UserName username, CancellationToken cancellationToken);
 }
