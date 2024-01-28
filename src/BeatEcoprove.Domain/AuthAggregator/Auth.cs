@@ -1,6 +1,7 @@
 ﻿using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
+using ErrorOr;
 
 namespace BeatEcoprove.Domain.AuthAggregator;
 
@@ -24,9 +25,9 @@ public class Auth : AggregateRoot<AuthId, Guid>
         IsEnabled = isEnabled;
     }
 
-    public Email Email { get; set; } = null!;
+    public Email Email { get; private set; } = null!;
     public Password Password { get; set; } = null!;
-    public ProfileId MainProfileId { get; private set; }
+    public ProfileId MainProfileId { get; private set; } = null!;
     public string Salt { get; set; } = null!;
     public bool IsEnabled { get; set; }
 
@@ -45,5 +46,10 @@ public class Auth : AggregateRoot<AuthId, Guid>
     public void SetMainProfileId(ProfileId profileId)
     {
         MainProfileId = profileId;
+    }
+
+    public void SetEmail(Email email)
+    {
+        Email = email;
     }
 }

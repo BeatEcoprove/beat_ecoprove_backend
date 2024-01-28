@@ -24,7 +24,7 @@ public class Phone : ValueObject
             return Errors.Phone.EmptyPhone;
         }
 
-        if (ValidateCountryCode(code))
+        if (!ValidateCountryCode(code))
         {
             return Errors.Phone.InvalidPhone;
         }

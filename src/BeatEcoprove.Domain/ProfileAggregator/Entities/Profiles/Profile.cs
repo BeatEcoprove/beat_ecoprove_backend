@@ -139,4 +139,20 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
         return true;
     }
 
+    public void Update
+    (
+        UserName? userName,
+        Phone? phone
+    )
+    {
+        if (userName is not null)
+        {
+            UserName = userName;
+        }
+
+        if (phone is not null)
+        {
+            Phone = phone;
+        }
+    }
 }

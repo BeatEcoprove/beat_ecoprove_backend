@@ -2,6 +2,7 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Profiles.Commands.CreateNestedProfile;
 using BeatEcoprove.Application.Profiles.Commands.DeleteNestedProfile;
 using BeatEcoprove.Application.Profiles.Commands.PromoteProfileToAccount;
+using BeatEcoprove.Application.Profiles.Commands.UpdateProfile;
 using BeatEcoprove.Application.Profiles.Queries.GetAllProfiles;
 using BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
 using BeatEcoprove.Contracts.Profile;
@@ -115,6 +116,31 @@ public class ProfileController : ApiController
                     request.UserName,
                     request.PictureStream
                 ), cancellation);
+        
+        return addNestedProfile.Match(
+            response => Ok(_mapper.Map<ProfileResponse>(response)),
+            Problem<ProfileResponse>
+        );
+    }
+
+    [HttpPut()]
+    public async Task<ActionResult<ProfileResponse>> UpdateProfile(
+        [FromForm] UpdateProfileRequest request,
+        [FromQuery] Guid profileId,
+        CancellationToken cancellationToken = default)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var addNestedProfile = await _sender
+            .Send(new UpdateProfileCommand(
+                authId,
+                profileId,
+                request.Username,
+                request.Email,
+                request.Phone,
+                request.PhoneCode,
+                request.PictureStream
+            ), cancellationToken);
         
         return addNestedProfile.Match(
             response => Ok(_mapper.Map<ProfileResponse>(response)),
