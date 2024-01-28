@@ -5,6 +5,7 @@ using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 using BeatEcoprove.Application.Authentication.Queries.Login;
 using BeatEcoprove.Application.Authentication.Queries.RefreshTokens;
 using BeatEcoprove.Application.Authentication.Queries.ValidationField;
+using BeatEcoprove.Contracts;
 using BeatEcoprove.Contracts.Authentication;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Contracts.Authentication.SignIn;
@@ -94,19 +95,19 @@ public class AuthenticationController : ApiController
     }
 
     [HttpPost("forgot_password")]
-    public async Task<ActionResult<string>> ForgotPassword(ForgotPasswordRequest request)
+    public async Task<ActionResult<DefaultResponse>> ForgotPassword(ForgotPasswordRequest request)
     {
         var resultMessage =
             await _sender.Send(_mapper.Map<ForgotPasswordCommand>(request));
 
         return resultMessage.Match(
-            message => Ok(),
-            Problem<string>
+            message => Ok(new DefaultResponse(message)),
+            Problem<DefaultResponse>
         );
     }
 
     [HttpPost("reset_password")]
-    public async Task<ActionResult<string>> ResetPassword(ResetPasswordRequest request, [FromQuery] string code)
+    public async Task<ActionResult<DefaultResponse>> ResetPassword(ResetPasswordRequest request, [FromQuery] string code)
     {
         var resultMessage =
             await _sender.Send(new
@@ -116,8 +117,8 @@ public class AuthenticationController : ApiController
             }.Adapt<ResetPasswordCommand>());
 
         return resultMessage.Match(
-            message => Ok(),
-            Problem<string>
+            message => Ok(new DefaultResponse(message)),
+            Problem<DefaultResponse>
         );
     }
 }
