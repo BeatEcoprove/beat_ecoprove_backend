@@ -1,7 +1,6 @@
 ﻿using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.Shared.ValueObjects;
 using ErrorOr;
-using BeatEcoprove.Domain.Shared.Errors;
 
 namespace BeatEcoprove.Domain.Shared.Entities;
 
