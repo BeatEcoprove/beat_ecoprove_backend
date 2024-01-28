@@ -6,7 +6,7 @@ public partial class Errors
 {
     public class Concurrency
     {
-        public static Error SymbolNotDefined => Error.Conflict(
+        public static Error SymbolNotDefined => Error.Validation(
             "Concurrency.SymbolNotDefined",
             "O símbolo não foi definido.");      
     }

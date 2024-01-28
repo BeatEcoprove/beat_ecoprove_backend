@@ -10,15 +10,15 @@ public static partial class Errors
             "User.ProfileDoesNotBelongToAuth",
             "Este utilizador não tem acesso ao perfil escolhido.");
         
-        public static Error ProfileDoesNotExists => Error.Conflict(
+        public static Error ProfileDoesNotExists => Error.Validation(
             "User.ProfileDoesNotExists",
             "Não foi encontrado nenhum perfil associado ao utilizador.");
 
-        public static Error EmailAlreadyExists => Error.Conflict(
+        public static Error EmailAlreadyExists => Error.Validation(
             "User.EmailAlreadyExists",
             "Este email já se encontra em uso.");
 
-        public static Error UserNameAlreadyExists => Error.Conflict(
+        public static Error UserNameAlreadyExists => Error.Validation(
             "User.UserNameAlreadyExists",
             "Este nome de utilizador já se encontra em uso.");
 
@@ -26,11 +26,11 @@ public static partial class Errors
             "User.EmailDoesNotExists",
             "Este email não corresponde a nenhum utilizador.");
 
-        public static Error BadCredentials => Error.Conflict(
+        public static Error BadCredentials => Error.Validation(
             "User.BadCredentials",
             "O email ou a palavra-chave estão erradas.");
         
-        public static Error InvalidUserGender => Error.Conflict(
+        public static Error InvalidUserGender => Error.Validation(
             "User.InvalidUserGender",
             "O género do utilizador não é aceite.");
     }
