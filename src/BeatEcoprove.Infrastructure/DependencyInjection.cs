@@ -157,6 +157,7 @@ public static class DependencyInjection
         services.AddScoped<IActivityRepository, ActionRepository>();
         services.AddScoped<IGroupRepository, GroupRepository>();
         services.AddScoped<IMaintenanceServiceRepository, MaintenanceServiceRepository>();
+        services.AddScoped<IFeedBackRepository, FeedBackRepository>();
 
         return services;
     }

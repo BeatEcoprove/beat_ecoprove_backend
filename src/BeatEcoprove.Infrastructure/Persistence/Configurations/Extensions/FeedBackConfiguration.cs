@@ -37,6 +37,9 @@ public class FeedBackConfiguration : IEntityTypeConfiguration<FeedBack>
 
         builder.Property(feedback => feedback.Title)
             .HasColumnName("title")
+            .HasConversion(
+                title => title.Value,
+                title => Title.Create(title).Value)
             .HasMaxLength(30)
             .IsRequired();
         
