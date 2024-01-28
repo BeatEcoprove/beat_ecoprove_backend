@@ -1,9 +1,11 @@
 using BeatEcoprove.Application.Currency.Common;
 using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+using BeatEcoprove.Domain.Shared.Extensions;
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Currency.Queries.ConvertCurrency;
@@ -11,10 +13,14 @@ namespace BeatEcoprove.Application.Currency.Queries.ConvertCurrency;
 internal sealed class ConvertCurrencyQueryHandler : IQueryHandler<ConvertCurrencyQuery, ErrorOr<ConversionResult>>
 {
     private readonly IProfileManager _profileManager;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ConvertCurrencyQueryHandler(IProfileManager profileManager)
+    public ConvertCurrencyQueryHandler(
+        IProfileManager profileManager, 
+        IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<ErrorOr<ConversionResult>> Handle(ConvertCurrencyQuery request, CancellationToken cancellationToken)
@@ -29,18 +35,24 @@ internal sealed class ConvertCurrencyQueryHandler : IQueryHandler<ConvertCurrenc
             return profile.Errors;
         }
 
-        var result = (ErrorOr<bool>)(request.Symbol switch
+        ErrorOr<bool> validator = false;
+        if (request.EcoCoins is not null)
         {
-            "ec" => profile.Value.ConvertEcoCoins(request.EcoCoins, request.SustainabilityPoints),
-            "sp" => profile.Value.ConvertSustainabilityPoints(request.SustainabilityPoints, request.EcoCoins),
-            _ => Errors.Concurrency.SymbolNotDefined
-        });
+            validator = validator.AddValidate(profile.Value.ConvertToSustainabilityPoints(request.EcoCoins.Value));
+        }
         
-        if (result.IsError)
+        if (request.SustainabilityPoints is not null)
         {
-            return result.Errors;
+            validator = validator.AddValidate(profile.Value.ConvertToEcoCoins(request.SustainabilityPoints.Value));
+        }
+        
+        if (validator.IsError)
+        {
+            return validator.Errors;
         }
 
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        
         return new ConversionResult(
             profile.Value.EcoCoins,
             profile.Value.SustainabilityPoints

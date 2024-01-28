@@ -39,7 +39,7 @@ public class Phone : ValueObject
 
     private static bool ValidateCountryCode(string code)
     {
-        return code.Contains("+") && code.Length != 4;
+        return code.Contains("+") && code.Length <= 4;
     }
 
     private static bool ShouldHaveLength(string value, int length)

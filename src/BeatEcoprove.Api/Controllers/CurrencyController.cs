@@ -24,9 +24,8 @@ public class CurrencyController : ApiController
     [HttpGet("convert")]
     public async Task<ActionResult<Conversionresult>> GetAllCurrencies(
         [FromRoute] Guid profileId,
-        [FromQuery] int ecoCoins,
-        [FromQuery] int sustainabilityPoints,
-        [FromQuery] string symbol
+        [FromQuery] int? ecoCoins,
+        [FromQuery] int? sustainabilityPoints
         )
     {
         var authId = HttpContext.User.GetUserId();
@@ -37,8 +36,7 @@ public class CurrencyController : ApiController
                     authId,
                     profileId,
                     ecoCoins,
-                    sustainabilityPoints,
-                    symbol
+                    sustainabilityPoints
                 ));
         
         return getAllCurrenciesResult.Match(

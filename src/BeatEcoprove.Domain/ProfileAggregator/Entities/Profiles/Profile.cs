@@ -103,38 +103,50 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
         return _bucketEntries.Remove(bucketEntry);
     }
     
-    public ErrorOr<bool> ConvertEcoCoins(int ecoCoins, int sustainabilityPoints)
-    {
-        if (ecoCoins < 0)
-        {
-            return Errors.Profile.CannotConvertNegativeEcoCoins;
-        }
-
-        if (EcoCoins < ecoCoins)
-        {
-            return Errors.Profile.NotEnoughEcoCoins;
-        }
-
-        EcoCoins += ecoCoins;
-        SustainabilityPoints -= sustainabilityPoints;
-
-        return true;
-    }
-
-    public object ConvertSustainabilityPoints(int sustainabilityPoints, int ecoCoins)
+    public ErrorOr<bool> ConvertToEcoCoins(int sustainabilityPoints)
     {
         if (sustainabilityPoints < 0)
         {
             return Errors.Profile.CannotConvertNegativeEcoCoins;
         }
-        
+
         if (SustainabilityPoints < sustainabilityPoints)
         {
             return Errors.Profile.NotEnoughEcoCoins;
         }
+
+        var oldEcoCoins = EcoCoins;
+        EcoCoins += sustainabilityPoints * 100;
         
-        EcoCoins -= ecoCoins;
-        SustainabilityPoints += sustainabilityPoints;
+        var delta = EcoCoins - oldEcoCoins;
+        if (delta > 0)
+        {
+            SustainabilityPoints -= sustainabilityPoints;
+        }
+
+        return true;
+    }
+
+    public ErrorOr<bool> ConvertToSustainabilityPoints(int ecoCoins)
+    {
+        if (ecoCoins < 0)
+        {
+            return Errors.Profile.CannotConvertNegativeEcoCoins;
+        }
+        
+        if (EcoCoins < ecoCoins)
+        {
+            return Errors.Profile.NotEnoughEcoCoins;
+        }
+        
+        var oldSustainabilityPoints = SustainabilityPoints;
+        SustainabilityPoints += ecoCoins / 100;
+        
+        var delta = SustainabilityPoints - oldSustainabilityPoints;
+        if (delta > 0)
+        {
+            EcoCoins -= ecoCoins;
+        }
         
         return true;
     }

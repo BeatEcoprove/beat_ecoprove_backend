@@ -9,7 +9,6 @@ public record ConvertCurrencyQuery
 (
     Guid AuthId,
     Guid ProfileId,
-    int EcoCoins,
-    int SustainabilityPoints,
-    string Symbol
+    int? EcoCoins,
+    int? SustainabilityPoints
 ) : IQuery<ErrorOr<ConversionResult>>, IAuthorization;
