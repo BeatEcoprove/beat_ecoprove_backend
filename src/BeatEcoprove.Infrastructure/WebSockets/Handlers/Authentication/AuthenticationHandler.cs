@@ -1,15 +1,22 @@
-using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Application.Shared.Notifications;
+using BeatEcoprove.Domain.Documents;
+using MongoDB.Driver;
 
-namespace BeatEcoprove.Infrastructure.WebSockets.Handlers;
+namespace BeatEcoprove.Infrastructure.WebSockets.Handlers.Authentication;
 
 public class AuthenticationHandler : WebSocketHandler, INotificationSender
 {
-    public AuthenticationHandler(ConnectionManager connectionManager) : base(connectionManager)
+    private readonly IMongoCollection<Notification> _mongoCollection;
+    
+    public AuthenticationHandler(
+        ConnectionManager connectionManager, 
+        IMongoDatabase mongoDb) : base(connectionManager)
     {
+        _mongoCollection = mongoDb.GetCollection<Notification>("notifications");
     }
 
     public override async Task Handle(WebSocketMessage message, CancellationToken cancellationToken = default)
@@ -32,18 +39,35 @@ public class AuthenticationHandler : WebSocketHandler, INotificationSender
         ConnectionManager.AddUser(message.UserId, message.Socket);
     }
 
+    [Obsolete("Obsolete")]
     public async Task SendNotificationAsync(
         Guid userId, 
         SendNotification notification, 
         CancellationToken cancellationToken = default)
     {
-        if (ConnectionManager.AuthUsers.TryGetValue(userId, out var userWebSocket))
+        if (!ConnectionManager.AuthUsers.TryGetValue(userId, out var userWebSocket))
         {
-            var responseBytes = Encoding.UTF8.GetBytes(notification);
-            await userWebSocket.SendAsync(new ArraySegment<byte>(responseBytes, 0, responseBytes.Length),
-                WebSocketMessageType.Text,
-                true,
+           return;
+        }
+        
+        var responseBytes = Encoding.UTF8.GetBytes(notification);
+        await userWebSocket.SendAsync(new ArraySegment<byte>(responseBytes, 0, responseBytes.Length),
+            WebSocketMessageType.Text,
+            true,
+            cancellationToken);
+
+        if (notification is InviteToGroupNotification invite)
+        {
+            await _mongoCollection.InsertOneAsync(
+                new Notification(
+                    userId,
+                    invite.Message,
+                    Guid.Parse(invite.GroupId), 
+                    Guid.Parse(invite.InvitorId),
+                    invite.Code
+                ), 
                 cancellationToken);
         }
+        
     }
 }

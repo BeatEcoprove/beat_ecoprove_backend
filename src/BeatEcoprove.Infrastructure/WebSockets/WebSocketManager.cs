@@ -2,6 +2,7 @@ using System.Net.WebSockets;
 using System.Text;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Infrastructure.WebSockets.Handlers;
+using BeatEcoprove.Infrastructure.WebSockets.Handlers.Authentication;
 using BeatEcoprove.Infrastructure.WebSockets.Handlers.ConnectToGroup;
 using BeatEcoprove.Infrastructure.WebSockets.Handlers.SendChatMessage;
 

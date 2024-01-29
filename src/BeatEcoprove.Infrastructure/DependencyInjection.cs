@@ -16,12 +16,14 @@ using BeatEcoprove.Infrastructure.Providers;
 using BeatEcoprove.Infrastructure.Services;
 using BeatEcoprove.Infrastructure.WebSockets;
 using BeatEcoprove.Infrastructure.WebSockets.Handlers;
+using BeatEcoprove.Infrastructure.WebSockets.Handlers.Authentication;
 using BeatEcoprove.Infrastructure.WebSockets.Handlers.ConnectToGroup;
 using BeatEcoprove.Infrastructure.WebSockets.Handlers.SendChatMessage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using StackExchange.Redis;
 
 namespace BeatEcoprove.Infrastructure;
@@ -40,6 +42,26 @@ public static class DependencyInjection
         
         services.AddScoped<INotificationSender>(provider => provider.GetService<AuthenticationHandler>()!);
 
+        return services;
+    }
+
+    private static IServiceCollection AddMongoDbConfiguration(
+        this IServiceCollection services,
+        ConfigurationManager configurationManager)
+    {
+        var mongoDbHost = Environment.GetEnvironmentVariable("MONGO_HOST") ?? "localhost";
+        var mongoPort = Environment.GetEnvironmentVariable("MONGO_PORT") ?? "27017";
+        var mongoUser = Environment.GetEnvironmentVariable("MONGO_USER") ?? "beat";
+        var mongoPassword = Environment.GetEnvironmentVariable("MONGO_PASSWORD") ?? "password";
+        var mongoDb = Environment.GetEnvironmentVariable("MONGO_DB") ?? "ecoprove";
+        
+        services.AddSingleton<IMongoClient>(new MongoClient($"mongodb://{mongoUser}:{mongoPassword}@{mongoDbHost}:{mongoPort}/{mongoDb}"));
+        services.AddScoped<IMongoDatabase>(provider =>
+        {
+            var client = provider.GetRequiredService<IMongoClient>();
+            return client.GetDatabase(mongoDb);
+        });
+        
         return services;
     }
     
@@ -185,6 +207,7 @@ public static class DependencyInjection
         services.AddAuth(configuration);
         services.AddServices();
         services.AddBackgroundJobs();
+        services.AddMongoDbConfiguration(configuration);
 
         return services;
     }
