@@ -71,15 +71,18 @@ public class Group : AggregateRoot<GroupId, Guid>
         AvatarPicture = avatarPicture;
     }
 
-    public void AddMember(Profile profile, MemberPermission permission = MemberPermission.Member) 
+    public GroupMember AddMember(Profile profile, MemberPermission permission = MemberPermission.Member)
     {
-        this._members.Add(new GroupMember(
+        var member = new GroupMember(
             profile.Id,
             this.Id,
             permission
-        ));
+        );
+        
+        this._members.Add(member);
         
         MembersCount = _members.Count;
+        return member;
     }
 
     public GroupMember? GetMemberByProfileId(ProfileId profileId)
@@ -132,13 +135,18 @@ public class Group : AggregateRoot<GroupId, Guid>
         Description = description;
     }
     
-    public ErrorOr<bool> AddTextMessage(ProfileId profileId, string message)
+    public ErrorOr<bool> AddTextMessage(Profile profile, string message)
     {
-        var groupMember = GetMemberByProfileId(profileId);
+        var groupMember = GetMemberByProfileId(profile.Id);
         
-        if (groupMember is null)
+        if (groupMember is null )
         {
-            return Errors.Groups.MemberNotFound;
+            if (!IsPublic)
+            {
+                return Errors.Groups.MemberNotFound;
+            }
+            
+            groupMember = AddMember(profile);
         }
         
         this._textMessages.Add(new TextMessage(
