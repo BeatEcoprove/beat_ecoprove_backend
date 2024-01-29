@@ -25,7 +25,7 @@ public class BeatEcoproveSeeder
                     Id = washServiceId,
                     Badge = "public/default/wash.png",
                     Title = "Lavar",
-                    Description = "De que forma pertende lavar?"
+                    Description = "De que forma pretende lavar?"
                 }
             );
 
@@ -48,8 +48,8 @@ public class BeatEcoproveSeeder
                     Title = "A menos de 30ºC",
                     Description = "Lavar a menos de 30ºC",
                     Badge = "public/default/wash/less30.png",
-                    SustainablePoints = 100,
-                    EcoScore = 10
+                    SustainablePoints = 2,
+                    EcoScore = -1
                 },
                 new
                 {
@@ -58,8 +58,8 @@ public class BeatEcoproveSeeder
                     Title = "A menos de 50ºC",
                     Description = "Lavar a menos de 50ºC",
                     Badge = "public/default/wash/less50.png",
-                    SustainablePoints = 100,
-                    EcoScore = 10
+                    SustainablePoints = 1,
+                    EcoScore = -2
                 },
                 new
                 {
@@ -68,8 +68,8 @@ public class BeatEcoproveSeeder
                     Title = "A menos de 70ºC",
                     Description = "Lavar a menos de 70ºC",
                     Badge = "public/default/wash/less70.png",
-                    SustainablePoints = 100,
-                    EcoScore = 10
+                    SustainablePoints = 1,
+                    EcoScore = -2
                 },
                 new
                 {
@@ -78,8 +78,8 @@ public class BeatEcoproveSeeder
                     Title = "A menos de 95ºC",
                     Description = "Lavar a menos de 95ºC",
                     Badge = "public/default/wash/less95.png",
-                    SustainablePoints = 100,
-                    EcoScore = 10
+                    SustainablePoints = 1,
+                    EcoScore = -2
                 },
                 new
                 {
@@ -88,8 +88,8 @@ public class BeatEcoproveSeeder
                     Title = "A seco",
                     Description = "Lavar a seco",
                     Badge = "public/default/wash/dry.png",
-                    SustainablePoints = 100,
-                    EcoScore = 10
+                    SustainablePoints = 0,
+                    EcoScore = -3
                 },
                 new
                 {
@@ -102,7 +102,7 @@ public class BeatEcoproveSeeder
                     EcoScore = 10
                 }
             );
-        
+
         var dryServiceId = MaintenanceServiceId.Create(Guid.NewGuid());
         modelBuilder.Entity<MaintenanceService>()
             .HasData(
@@ -111,7 +111,7 @@ public class BeatEcoproveSeeder
                     Id = dryServiceId,
                     Badge = "public/default/dry.png",
                     Title = "Secar",
-                    Description = "De que forma pertende secar?"
+                    Description = "De que forma pretende secar?"
                 }
             );
 
@@ -124,8 +124,8 @@ public class BeatEcoproveSeeder
                     Title = "Ao ar livre",
                     Description = "Secar ao ar livre",
                     Badge = "public/default/dry/air.png",
-                    SustainablePoints = 100,
-                    EcoScore = 10
+                    SustainablePoints = 2,
+                    EcoScore = 0
                 },
                 new
                 {
@@ -134,8 +134,8 @@ public class BeatEcoproveSeeder
                     Title = "Na máquina",
                     Description = "Secar na máquina",
                     Badge = "public/default/dry/machine.png",
-                    SustainablePoints = 100,
-                    EcoScore = 10
+                    SustainablePoints = 1,
+                    EcoScore = -1
                 },
                 new
                 {
@@ -148,7 +148,7 @@ public class BeatEcoproveSeeder
                     EcoScore = 10
                 }
             );
-        
+
         var ironServiceId = MaintenanceServiceId.Create(Guid.NewGuid());
         modelBuilder.Entity<MaintenanceService>()
             .HasData(
@@ -157,7 +157,7 @@ public class BeatEcoproveSeeder
                     Id = ironServiceId,
                     Badge = "public/default/iron.png",
                     Title = "Engomar",
-                    Description = "De que forma pertende engomar?"
+                    Description = "De que forma pretende engomar?"
                 }
             );
 
@@ -170,8 +170,8 @@ public class BeatEcoproveSeeder
                     Title = "A menos de 110ºC",
                     Description = "Engomar a menos de 110ºC",
                     Badge = "public/default/iron/less110.png",
-                    SustainablePoints = 100,
-                    EcoScore = 10
+                    SustainablePoints = 1,
+                    EcoScore = -1
                 },
                 new
                 {
@@ -180,8 +180,8 @@ public class BeatEcoproveSeeder
                     Title = "A menos de 150ºC",
                     Description = "Engomar a menos de 150ºC",
                     Badge = "public/default/iron/less150.png",
-                    SustainablePoints = 100,
-                    EcoScore = 10
+                    SustainablePoints = 1,
+                    EcoScore = -1
                 },
                 new
                 {
@@ -190,8 +190,8 @@ public class BeatEcoproveSeeder
                     Title = "A menos de 200ºC",
                     Description = "Engomar a menos de 200ºC",
                     Badge = "public/default/iron/less200.png",
-                    SustainablePoints = 100,
-                    EcoScore = 10
+                    SustainablePoints = 1,
+                    EcoScore = -1
                 },
                 new
                 {
@@ -204,7 +204,7 @@ public class BeatEcoproveSeeder
                     EcoScore = 10
                 }
             );
-        
+
         var repairServiceId = MaintenanceServiceId.Create(Guid.NewGuid());
         modelBuilder.Entity<MaintenanceService>()
             .HasData(
@@ -213,10 +213,10 @@ public class BeatEcoproveSeeder
                     Id = repairServiceId,
                     Badge = "public/default/repair.png",
                     Title = "Engomar",
-                    Description = "De que forma pertende arranjar a peça?"
+                    Description = "De que forma pretende arranjar a peça?"
                 }
             );
-        
+
         modelBuilder.Entity<MaintenanceAction>()
             .HasData(
                 new
@@ -226,8 +226,8 @@ public class BeatEcoproveSeeder
                     Title = "Pelo Próprio",
                     Description = "Arranjar a peça pelo próprio",
                     Badge = "public/default/repair.png",
-                    SustainablePoints = 100,
-                    EcoScore = 10
+                    SustainablePoints = 3,
+                    EcoScore = 2
                 },
                 new
                 {
@@ -374,7 +374,7 @@ public class BeatEcoproveSeeder
                 }
             );
     }
-    
+
     private static void SeedBrands(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Brand>()

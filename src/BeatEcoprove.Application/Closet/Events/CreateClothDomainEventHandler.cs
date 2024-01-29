@@ -12,7 +12,7 @@ public class CreateClothDomainEventHandler : INotificationHandler<CreateClothDom
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateClothDomainEventHandler(
-        IUnitOfWork unitOfWork, 
+        IUnitOfWork unitOfWork,
         IGamingService gamingService)
     {
         _unitOfWork = unitOfWork;
@@ -23,14 +23,14 @@ public class CreateClothDomainEventHandler : INotificationHandler<CreateClothDom
     {
         var profile = notification.Profile;
         var cloth = notification.Cloth;
-        
+
         // Add points to Cloth
         cloth.EcoScore += 100;
-        
+
         // Add points to profile
         profile.SustainabilityPoints += SustainablePoints.InsertPieceOfCloth;
         profile.EcoScore += cloth.EcoScore;
-        _gamingService.GainXp(profile, 2500);
+        _gamingService.GainXp(profile, 1);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
