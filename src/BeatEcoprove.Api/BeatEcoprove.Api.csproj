@@ -25,6 +25,10 @@
         <ProjectReference Include="..\BeatEcoprove.Infrastructure\BeatEcoprove.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Assets\brands\" />
+    </ItemGroup>
+
     <Target Name="CreateAppDataFolder" BeforeTargets="CoreCompile">
         <MakeDir Directories="$(OutputPath)public\default" Condition="!Exists('$(OutputPath)public\default')" />
         <ItemGroup>
