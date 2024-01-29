@@ -383,25 +383,25 @@ public class BeatEcoproveSeeder
                 {
                     Id = BrandId.Create(Guid.NewGuid()),
                     Name = "Salsa",
-                    BrandAvatar = "public/brands/salsa.png"
+                    BrandAvatar = "public/default/brands/salsa.png"
                 },
                 new
                 {
                     Id = BrandId.Create(Guid.NewGuid()),
                     Name = "Losan",
-                    BrandAvatar = "public/brands/losan.png"
+                    BrandAvatar = "public/default/brands/losan.png"
                 },
                 new
                 {
                     Id = BrandId.Create(Guid.NewGuid()),
                     Name = "MO",
-                    BrandAvatar = "public/brands/mo.png"
+                    BrandAvatar = "public/default/brands/mo.png"
                 },
                 new
                 {
                     Id = BrandId.Create(Guid.NewGuid()),
                     Name = "Zippy",
-                    BrandAvatar = "public/brands/zippy.png"
+                    BrandAvatar = "public/default/brands/zippy.png"
                 }
             );
     }
