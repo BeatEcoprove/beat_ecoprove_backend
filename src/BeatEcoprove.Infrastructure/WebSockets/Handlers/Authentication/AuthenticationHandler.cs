@@ -50,6 +50,11 @@ public class AuthenticationHandler : WebSocketHandler, INotificationSender
            return;
         }
         
+        if (userWebSocket.State != WebSocketState.Open)
+        {
+            return;
+        }
+        
         var responseBytes = Encoding.UTF8.GetBytes(notification);
         await userWebSocket.SendAsync(new ArraySegment<byte>(responseBytes, 0, responseBytes.Length),
             WebSocketMessageType.Text,
