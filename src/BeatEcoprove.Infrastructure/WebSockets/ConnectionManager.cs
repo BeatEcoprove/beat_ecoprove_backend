@@ -68,7 +68,7 @@ public class ConnectionManager
                 return false;
             }
             
-            if (user.Socket.State != WebSocketState.Closed)
+            if (user.Socket.State == WebSocketState.Open)
             { 
                 await CloseUserByGroupId(groupId, userId);
             }
