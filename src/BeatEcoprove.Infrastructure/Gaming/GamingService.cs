@@ -5,7 +5,7 @@ namespace BeatEcoprove.Infrastructure.Gaming;
 
 public class GamingService : IGamingService
 {
-    private const double BaseXp = 5000;
+    private const double BaseXp = 25;
 
     public double GetLevelProgress(Profile profile)
     {
@@ -40,7 +40,7 @@ public class GamingService : IGamingService
         var xpRequiredByLevel = BaseXp * (profile.Level + 1);
 
         if (!(profile.XP >= xpRequiredByLevel)) return;
-        
+
         profile.Level++;
     }
 }
