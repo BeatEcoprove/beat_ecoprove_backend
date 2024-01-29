@@ -62,7 +62,7 @@ public class SendTextMessageHandler : ChatGroupWebSocketHandler
             return;
         }
         
-        var shouldAddMessage = group.Value.AddTextMessage(profile.Id, content.Message);
+        var shouldAddMessage = group.Value.AddTextMessage(profile, content.Message);
         
         if (shouldAddMessage.IsError)
         {

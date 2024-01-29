@@ -51,7 +51,7 @@ internal sealed class InviteMemberCommandHandler : ICommandHandler<InviteMemberC
             return Errors.Groups.NotFound;
         }
         
-        if (!await _groupRepository.IsMemberAsync(groupId, profileId, cancellationToken))
+        if (!await _groupRepository.IsMemberAsync(groupId, profile.Value.Id, cancellationToken))
         {
             return Errors.Groups.MemberNotFound;
         }   

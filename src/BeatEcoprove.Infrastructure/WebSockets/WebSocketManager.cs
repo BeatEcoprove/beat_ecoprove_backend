@@ -74,6 +74,8 @@ public class WebSocketManager : IWebSocketManager
                 await _connectToGroupHandler.Handle(message, cancellationToken);
                 break;
             case WbSocketType.SendTextMessage:
+                
+                
                 await _sendTextMessageHandler.Handle(message, cancellationToken);
                 break;
             default:
