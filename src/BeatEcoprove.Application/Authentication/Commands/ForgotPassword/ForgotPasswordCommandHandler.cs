@@ -48,6 +48,7 @@ internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPassw
         
         var forgotToken = _jwtProvider.GenerateToken(payload);
         await _redis.StringAppendAsync(generatedCode, forgotToken);
+        await _redis.KeyExpireAsync(generatedCode, TimeSpan.FromMinutes(15));
 
         await _mailSender.SendMailAsync(
             user.Email.Value,
