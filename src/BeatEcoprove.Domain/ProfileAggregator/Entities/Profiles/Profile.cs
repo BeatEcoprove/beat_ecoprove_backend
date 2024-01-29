@@ -13,6 +13,7 @@ namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
 public abstract class Profile : AggregateRoot<ProfileId, Guid>
 {
+    private const int ConvertConcurrencyRange = 10;
     private readonly List<ClothEntry> _clothEntries = new();
     private readonly List<BucketEntry> _bucketEntries = new();
 
@@ -116,7 +117,7 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
         }
 
         var oldEcoCoins = EcoCoins;
-        EcoCoins += sustainabilityPoints * 100;
+        EcoCoins += sustainabilityPoints * ConvertConcurrencyRange;
         
         var delta = EcoCoins - oldEcoCoins;
         if (delta > 0)
@@ -140,7 +141,7 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
         }
         
         var oldSustainabilityPoints = SustainabilityPoints;
-        SustainabilityPoints += ecoCoins / 100;
+        SustainabilityPoints += ecoCoins / ConvertConcurrencyRange;
         
         var delta = SustainabilityPoints - oldSustainabilityPoints;
         if (delta > 0)
