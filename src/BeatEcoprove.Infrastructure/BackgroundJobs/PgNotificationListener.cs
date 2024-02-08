@@ -1,6 +1,7 @@
 using System.Text.Json;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Notifications;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -59,7 +60,7 @@ public class PgNotificationListener : BackgroundService
         }
 
         Task.Run(() => notificationSender.SendNotificationAsync(
-            Guid.Parse(payload!.Id!), 
+            ProfileId.Create(Guid.Parse(payload!.Id!)), 
             new SendLevelNotification
                 (
                     payload.Id, 
