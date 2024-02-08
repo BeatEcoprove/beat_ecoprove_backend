@@ -1,11 +1,83 @@
 ﻿using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+using BeatEcoprove.Application.Shared.Interfaces.Websockets;
+using BeatEcoprove.Application.Shared.Notifications;
+using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Domain.Shared.Errors;
+using ErrorOr;
 
 namespace BeatEcoprove.Application.Groups.Queries.ConnectToGroup;
 
-internal class ConnectToGroupQueryHandler : IQueryHandler<ConnectToGroupQuery, string>
+internal class ConnectToGroupQueryHandler : IQueryHandler<ConnectToGroupQuery, ErrorOr<bool>>
 {
-    public Task<string> Handle(ConnectToGroupQuery request, CancellationToken cancellationToken)
+    private readonly ISessionManager _sessionManager;
+    private readonly IGroupSessionManager _groupSessionManager;
+    private readonly IProfileRepository _profileRepository;
+    private readonly IGroupRepository _groupRepository;
+
+    public ConnectToGroupQueryHandler(
+        ISessionManager sessionManager, 
+        IGroupSessionManager groupSessionManager, 
+        IProfileRepository profileRepository, 
+        IGroupRepository groupRepository)
     {
-        throw new NotImplementedException();
+        _sessionManager = sessionManager;
+        _groupSessionManager = groupSessionManager;
+        _profileRepository = profileRepository;
+        _groupRepository = groupRepository;
+    }
+
+    public async Task<ErrorOr<bool>> Handle(
+        ConnectToGroupQuery request, 
+        CancellationToken cancellationToken)
+    {
+        var userId = ProfileId.Create(request.UserId);
+        var groupId = GroupId.Create(request.GroupId);
+
+        if (!_sessionManager.IsUserAuthenticated(userId))
+        {
+            return Errors.Auth.InvalidAuth;
+        }
+
+        var profile = await _profileRepository.GetByIdAsync(userId, cancellationToken);
+
+        if (profile is null)
+        {
+            return Errors.Profile.NotFound;
+        }
+
+        var group = await _groupRepository.GetByIdAsync(groupId, cancellationToken);
+
+        if (group is null)
+        {
+            return Errors.Groups.NotFound;
+        }
+
+        // TODO: I Need to verify if an user has permission to even enter the group
+
+        await _groupSessionManager.AddMember(
+            groupId,
+            new Member(
+                userId,
+                request.UserSocket
+            ),
+            cancellationToken
+         );
+
+        await _groupSessionManager.SendEveryoneAsync(
+            groupId,
+            new ServerChatTextMessage
+            (
+                groupId,
+                userId,
+                $"O utilizador {(string)profile.UserName} entrou no grupo"
+            ),
+            cancellationToken
+        );
+
+        return true;
     }
 }
+
+    

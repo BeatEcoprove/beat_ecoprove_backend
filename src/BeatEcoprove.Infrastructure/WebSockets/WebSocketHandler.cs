@@ -62,9 +62,14 @@ internal class WebSocketHandler : IWebSocketManager, INotificationSender
                 }
 
                 var message = Encoding.UTF8.GetString(buffer, 0, recivedResult.Count) ?? "";
-                var @event = WebSocketEvent.MakeEvent(message, _sender);
+                var @event = WebSocketEvent.MakeEvent(userId, activeSocket, message, _sender);
 
-                await @event.Handle();
+                var eventResult = await @event.Handle(cancellationToken);
+
+                if (eventResult.IsError)
+                {
+                    throw new WebSocketEventHandlerException(eventResult.FirstError.Description);
+                }
             }
 
             if (activeSocket.State != WebSocketState.Closed)
@@ -77,6 +82,14 @@ internal class WebSocketHandler : IWebSocketManager, INotificationSender
             await _sessionManager.CloseAsync(
                 userId,
                 WebSocketCloseStatus.InvalidMessageType,
+                e.Message,
+                cancellationToken);
+        }
+        catch (WebSocketEventHandlerException e)
+        {
+            await _sessionManager.CloseAsync(
+                userId,
+                WebSocketCloseStatus.InvalidPayloadData,
                 e.Message,
                 cancellationToken);
         }
