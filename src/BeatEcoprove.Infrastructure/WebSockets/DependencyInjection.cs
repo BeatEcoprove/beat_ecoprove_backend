@@ -13,7 +13,7 @@ public static class DependencyInjection
 
         services.AddScoped<IWebSocketManager, WebSocketHandler>();
         services.AddScoped<INotificationSender>(
-           provider => provider.GetService<WebSocketHandler>()!);
+           provider => (WebSocketHandler)provider.GetService<IWebSocketManager>()!);
 
         return services;
     }

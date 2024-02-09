@@ -10,18 +10,15 @@ namespace BeatEcoprove.Application.Groups.Events;
 
 public class InviteMemberDomainEventHandler : INotificationHandler<InviteMemberDomainEvent>
 {
-    private readonly IGroupRepository _groupRepository;
     private readonly INotificationSender _notificationSender;
     private readonly IJwtProvider _jwtProvider;
     private readonly IDatabase _redis;
 
     public InviteMemberDomainEventHandler(
-        IGroupRepository groupRepository, 
         INotificationSender notificationSender, 
         IJwtProvider jwtProvider, 
         IDatabase redis)
     {
-        _groupRepository = groupRepository;
         _notificationSender = notificationSender;
         _jwtProvider = jwtProvider;
         _redis = redis;
