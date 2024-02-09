@@ -15,6 +15,10 @@ public partial class Errors
             "Group.WSNotFound",
             "O grupo não foi encontrado.");
 
+        public static Error WSIsntConnected => Error.Conflict(
+            "Group.WSIsntConnected",
+            "Não se encontra conectado a nenhum grupo.");
+
         public static Error CannotAccess => Error.Conflict(
             "Group.CannotAccess",
             "Não tem permissões para aceder ao grupo.");

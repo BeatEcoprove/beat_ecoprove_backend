@@ -104,4 +104,17 @@ public class GroupSessionManager : IGroupSessionManager
             true,
             cancellationToken)));
     }
+
+    public bool IsUserMemberOfAnyGroup(ProfileId userId)
+    {
+        foreach (var group in _groups.Values)
+        {
+            if (group.Any(member => member.Id == userId))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

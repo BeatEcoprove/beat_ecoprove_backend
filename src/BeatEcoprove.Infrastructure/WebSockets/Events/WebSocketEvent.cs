@@ -27,6 +27,7 @@ internal abstract class WebSocketEvent
         return @event.Type switch
         {
             nameof(ConnectGroupEvent) => new ConnectGroupEvent(sender, json, userId, userSocket),
+            nameof(SentGroupTextMessageEvent) => new SentGroupTextMessageEvent(sender, json, userId),
             _ => throw new WebSocketEventException(),
         };
     }
