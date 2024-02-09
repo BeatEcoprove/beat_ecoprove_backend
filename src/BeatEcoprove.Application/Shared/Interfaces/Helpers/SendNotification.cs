@@ -7,7 +7,8 @@ public enum SendNotificationType
     LevelUp,
     InviteToGroup,
     ServerChatMessage,
-    ChatTextMessage
+    ChatTextMessage,
+    SimpleMessage
 }
 
 public abstract class SendNotification

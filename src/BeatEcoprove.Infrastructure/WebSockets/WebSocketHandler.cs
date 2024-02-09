@@ -6,6 +6,7 @@ using BeatEcoprove.Domain.Documents;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.WebSockets.Events;
 using BeatEcoprove.Infrastructure.WebSockets.Exceptions;
+using ErrorOr;
 using MediatR;
 using MongoDB.Driver;
 using System.Net.WebSockets;
@@ -31,6 +32,7 @@ internal class WebSocketHandler : IWebSocketManager, INotificationSender
         _mongoCollection = mongoDatabase.GetCollection<Notification>("notifications");
     }
 
+    [Obsolete]
     public async Task Handle(
         WebSocket activeSocket, 
         ProfileId userId, 
@@ -68,7 +70,21 @@ internal class WebSocketHandler : IWebSocketManager, INotificationSender
 
                 if (eventResult.IsError)
                 {
-                    throw new WebSocketEventHandlerException(eventResult.FirstError.Description);
+                    var error = eventResult.FirstError;
+
+                    if (error.Type == ErrorType.Conflict)
+                    {
+                        await SendNotificationAsync(
+                            userId,
+                            new SimpleMessage(
+                                error.Description
+                            ),
+                            cancellationToken
+                            );
+                        continue;
+                    }
+
+                    throw new WebSocketEventHandlerException(error.Description);
                 }
             }
 

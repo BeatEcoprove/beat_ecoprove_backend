@@ -2,6 +2,7 @@
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Websockets;
 using BeatEcoprove.Application.Shared.Notifications;
+using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
@@ -51,10 +52,13 @@ internal class ConnectToGroupQueryHandler : IQueryHandler<ConnectToGroupQuery, E
 
         if (group is null)
         {
-            return Errors.Groups.NotFound;
+            return Errors.Groups.WSNotFound;
         }
 
-        // TODO: I Need to verify if an user has permission to even enter the group
+        if (await UserCannotConnectToGroup(group, userId, cancellationToken))
+        {
+            return Errors.Groups.CannotAccess;
+        }
 
         await _groupSessionManager.AddMember(
             groupId,
@@ -77,6 +81,14 @@ internal class ConnectToGroupQueryHandler : IQueryHandler<ConnectToGroupQuery, E
         );
 
         return true;
+    }
+
+    private async Task<bool> UserCannotConnectToGroup(
+        Group group,
+        ProfileId userId, 
+        CancellationToken cancellationToken)
+    {
+        return (!await _groupRepository.IsMemberAsync(group.Id, userId, cancellationToken)) && !group.IsPublic;
     }
 }
 
