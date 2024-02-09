@@ -1,7 +1,8 @@
 using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
-using BeatEcoprove.Domain.Documents;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using ErrorOr;
 using MongoDB.Driver;
@@ -11,14 +12,14 @@ namespace BeatEcoprove.Application.Profiles.Queries.GetNotifications;
 internal sealed class GetNotificationQueryHandler : IQueryHandler<GetNotificationQuery, ErrorOr<List<Notification>>>
 {
     private readonly IProfileManager _profileManager;
-    private readonly IMongoCollection<Notification> _mongoCollection;
+    private readonly INotificationRepository _notificationRepository;
 
     public GetNotificationQueryHandler(
-        IProfileManager profileManager,
-        IMongoDatabase mongoDatabase)
+        IProfileManager profileManager, 
+        INotificationRepository notificationRepository)
     {
         _profileManager = profileManager;
-        _mongoCollection = mongoDatabase.GetCollection<Notification>("notifications");
+        _notificationRepository = notificationRepository;
     }
 
     public async Task<ErrorOr<List<Notification>>> Handle(GetNotificationQuery request, CancellationToken cancellationToken)
@@ -33,12 +34,7 @@ internal sealed class GetNotificationQueryHandler : IQueryHandler<GetNotificatio
             return profile.Errors;
         }
         
-        var filter = Builders<Notification>.Filter.Eq("UserId", profile.Value.Id.Value.ToString());
-        
-        var result = await _mongoCollection
-            .Find(filter)
-            .ToListAsync(cancellationToken);
-
-        return result;
+        return await _notificationRepository
+            .GetAllNotificationByOnwerIdAsync(profile.Value.Id, cancellationToken);
     }
 }

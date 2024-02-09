@@ -1,8 +1,8 @@
 ﻿
 namespace BeatEcoprove.Domain.Shared.Models;
 
-public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents, ISoftDelete
-    where TId : notnull
+public abstract class Entity<TId> : IEquatable<Entity<TId>>, IEntity<TId>, IHasDomainEvents, ISoftDelete
+    where TId : notnull, ValueObject
 {
     private readonly List<IDomainEvent> _domainEvents = new();
 

@@ -33,26 +33,6 @@ public static class DependencyInjection
 
         return services;
     }
-
-    private static IServiceCollection AddMongoDbConfiguration(
-        this IServiceCollection services,
-        ConfigurationManager configurationManager)
-    {
-        var mongoDbHost = Environment.GetEnvironmentVariable("MONGO_HOST") ?? "localhost";
-        var mongoPort = Environment.GetEnvironmentVariable("MONGO_PORT") ?? "27017";
-        var mongoUser = Environment.GetEnvironmentVariable("MONGO_USER") ?? "beat";
-        var mongoPassword = Environment.GetEnvironmentVariable("MONGO_PASSWORD") ?? "password";
-        var mongoDb = Environment.GetEnvironmentVariable("MONGO_DB") ?? "ecoprove";
-        
-        services.AddSingleton<IMongoClient>(new MongoClient($"mongodb://{mongoUser}:{mongoPassword}@{mongoDbHost}:{mongoPort}/{mongoDb}"));
-        services.AddScoped<IMongoDatabase>(provider =>
-        {
-            var client = provider.GetRequiredService<IMongoClient>();
-            return client.GetDatabase(mongoDb);
-        });
-        
-        return services;
-    }
     
    private static IServiceCollection AddRedisConfiguration(
        this IServiceCollection services, ConfigurationManager configuration)
@@ -169,6 +149,7 @@ public static class DependencyInjection
         services.AddScoped<IGroupRepository, GroupRepository>();
         services.AddScoped<IMaintenanceServiceRepository, MaintenanceServiceRepository>();
         services.AddScoped<IFeedBackRepository, FeedBackRepository>();
+        services.AddScoped<INotificationRepository, NotificationRepository>();
 
         return services;
     }
@@ -188,6 +169,8 @@ public static class DependencyInjection
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
     {
+        services.SetUpMongoDb();
+
         services.AddRedisConfiguration(configuration);
         services.AddProviders();
         services.AddEmailConfiguration(configuration);
@@ -196,7 +179,6 @@ public static class DependencyInjection
         services.AddAuth(configuration);
         services.AddServices();
         services.AddBackgroundJobs();
-        services.AddMongoDbConfiguration(configuration);
 
         return services;
     }

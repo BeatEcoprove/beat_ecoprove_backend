@@ -1,8 +1,10 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Websockets;
 using BeatEcoprove.Application.Shared.Notifications;
-using BeatEcoprove.Domain.Documents;
+using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.WebSockets.Events;
 using BeatEcoprove.Infrastructure.WebSockets.Exceptions;
@@ -20,16 +22,16 @@ internal class WebSocketHandler : IWebSocketManager, INotificationSender
 
     private readonly ISender _sender;
     private readonly ISessionManager _sessionManager;
-    private readonly IMongoCollection<Notification> _mongoCollection;
+    private readonly INotificationRepository _notificationRepository;
 
     public WebSocketHandler(
         ISessionManager sessionManager,
         ISender sender,
-        IMongoDatabase mongoDatabase)
+        INotificationRepository notificationRepository)
     {
         _sessionManager = sessionManager;
         _sender = sender;
-        _mongoCollection = mongoDatabase.GetCollection<Notification>("notifications");
+        _notificationRepository = notificationRepository;
     }
 
     [Obsolete]
@@ -147,15 +149,16 @@ internal class WebSocketHandler : IWebSocketManager, INotificationSender
 
         if (notification is InviteToGroupNotification invite)
         {
-            await _mongoCollection.InsertOneAsync(
-                new Notification(
-                    userId,
+            await _notificationRepository.AddAsync(
+                InviteNotification.Create(
                     invite.Message,
-                    Guid.Parse(invite.GroupId),
-                    Guid.Parse(invite.InvitorId),
+                    GroupId.Create(Guid.Parse(invite.GroupId)),
+                    ProfileId.Create(Guid.Parse(invite.InvitorId)),
+                    userId,
                     invite.Code
                 ),
-                cancellationToken);
+                cancellationToken
+            );
         }
     }
 }

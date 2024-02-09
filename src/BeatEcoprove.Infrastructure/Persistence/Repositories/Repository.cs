@@ -1,10 +1,11 @@
-﻿using BeatEcoprove.Domain.Shared.Models;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
-public abstract class Repository<TEntity, TId>
+public abstract class Repository<TEntity, TId> : IRepository<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : ValueObject
 {

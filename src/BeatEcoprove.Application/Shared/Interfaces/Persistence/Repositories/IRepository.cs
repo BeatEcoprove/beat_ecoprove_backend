@@ -3,7 +3,7 @@
 namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
 public interface IRepository<TEntity, in TId>
-    where TEntity : Entity<TId>
+    where TEntity : IEntity<TId>
     where TId : ValueObject
 {
     Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
