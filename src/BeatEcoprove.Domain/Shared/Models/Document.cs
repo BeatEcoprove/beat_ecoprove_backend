@@ -1,14 +1,14 @@
-﻿using MongoDB.Bson;
+﻿using MongoDB.Bson.Serialization.Attributes;
 
 namespace BeatEcoprove.Domain.Shared.Models;
 
-public abstract class Document<TId> : BsonDocument, IEntity<TId>, IEquatable<Document<TId>>
-    where TId : notnull, ValueObject
+public abstract class Document<TId> : IEntity<TId>, IEquatable<Document<TId>>
+    where TId : notnull, DocumentId
 {
     public abstract string CollectionName { get; }
 
-    public TId Id { get; protected set; }
-
+    public TId Id { get; protected set; } = null!;
+    
     public override bool Equals(object? obj)
     {
         return obj is Document<TId> entity && Id.Equals(entity.Id);

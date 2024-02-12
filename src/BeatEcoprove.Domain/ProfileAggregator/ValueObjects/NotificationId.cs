@@ -3,13 +3,13 @@ using MongoDB.Bson;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
-public class NotificationId : ValueObject
+public class NotificationId : DocumentId
 {
     private NotificationId() { }
 
     private NotificationId(ObjectId id) => Value = id;
 
-    public ObjectId Value { get; private set; }
+    public override ObjectId Value { get; protected set; }
 
     public static NotificationId CreateUnique() => new(ObjectId.GenerateNewId());
 

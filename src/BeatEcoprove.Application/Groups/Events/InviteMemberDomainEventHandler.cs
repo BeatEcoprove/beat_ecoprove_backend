@@ -1,9 +1,7 @@
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Notifications;
 using BeatEcoprove.Domain.Events;
 using MediatR;
-using MongoDB.Driver;
 using StackExchange.Redis;
 
 namespace BeatEcoprove.Application.Groups.Events;

@@ -5,7 +5,6 @@ using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using ErrorOr;
-using MongoDB.Driver;
 
 namespace BeatEcoprove.Application.Profiles.Queries.GetNotifications;
 

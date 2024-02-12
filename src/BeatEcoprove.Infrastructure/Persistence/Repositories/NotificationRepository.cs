@@ -7,7 +7,8 @@ namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
 public class NotificationRepository : DocumentRepository<Notification, NotificationId>, INotificationRepository
 {
-    public NotificationRepository(IMongoDatabase database) : base(database)
+    public NotificationRepository(IMongoDatabase database) 
+        : base(database)
     {
     }
 

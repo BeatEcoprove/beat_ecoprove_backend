@@ -3,20 +3,23 @@ using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 
-public abstract class Notification : Document<NotificationId>
+public class Notification : Document<NotificationId>
 {
-    public override string CollectionName => "notifications";
+    protected Notification() { }
 
-    protected Notification(
+    public Notification(
         string title,
         ProfileId owner
         )
     {
-        Id = NotificationId.CreateUnique(); 
-        Title = title; 
+        Id = NotificationId.CreateUnique();
+        Title = title;
         Owner = owner;
     }
 
-    public string Title { get; private set; } = null!;
-    public ProfileId Owner { get; private set; }
+    public string Title { get; set; } = null!;
+
+    public ProfileId Owner { get; set; } = null!;
+
+    public override string CollectionName => "notifications";
 }

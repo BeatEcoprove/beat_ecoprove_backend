@@ -19,9 +19,9 @@ public abstract class Message<T> : Entity<MessageId>
         Content = content;
         CreatedAt = DateTime.UtcNow;
     }
-    
-    public GroupId Group { get; protected set; }
-    public GroupMemberId Sender { get; protected set; }
+
+    public GroupId Group { get; protected set; } = null!;
+    public GroupMemberId Sender { get; protected set; } = null!;
     public T Content { get; protected set; }
     public DateTime CreatedAt { get; private set; }
 }

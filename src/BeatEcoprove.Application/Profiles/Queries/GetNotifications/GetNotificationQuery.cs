@@ -1,6 +1,6 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
-using BeatEcoprove.Domain.Documents;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Profiles.Queries.GetNotifications;

@@ -3,4 +3,5 @@
 public interface IEntity<TId>
     where TId : notnull, ValueObject
 {
+    TId Id { get; }
 }

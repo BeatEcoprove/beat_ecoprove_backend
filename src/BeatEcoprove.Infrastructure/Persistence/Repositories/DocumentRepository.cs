@@ -1,25 +1,50 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.Shared.Models;
 using MongoDB.Driver;
+using System.Reflection;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
 public class DocumentRepository<TEntity, TId> : IRepository<TEntity, TId>
     where TEntity : Document<TId>
-    where TId : ValueObject
+    where TId : DocumentId
 {
     protected readonly IMongoCollection<TEntity> Collection;
 
     public DocumentRepository(IMongoDatabase database)
     {
-        var collectionName = typeof(TEntity).GetProperty("CollectionName")?.GetValue(null) as string;
+        Collection = database.GetCollection<TEntity>(GetCollectionName());
+    }
 
-        if (collectionName == null)
+    private string GetCollectionName()
+    {
+        var entityCtor =
+                typeof(TEntity)
+                .GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[0], null);
+
+        if (entityCtor == null)
         {
-            throw new ArgumentNullException(nameof(collectionName));
+            throw new ArgumentException("Could get any active constructor");
         }
 
-        Collection = database.GetCollection<TEntity>(collectionName);
+        var entityInstance = entityCtor.Invoke(null) as TEntity;
+
+        if (entityInstance is null)
+        {
+            throw new ArgumentException("Was not possible to instanciate the class");
+        }
+
+        var collectionNameProperty = typeof(TEntity)
+            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .SingleOrDefault(property => property.Name == "CollectionName");
+
+        if (collectionNameProperty is null)
+        {
+            throw new ArgumentException("There isn't any collection property");
+        }
+
+        var value = collectionNameProperty.GetValue(entityInstance) as string;
+        return entityInstance.CollectionName;
     }
 
     [Obsolete]
@@ -39,9 +64,11 @@ public class DocumentRepository<TEntity, TId> : IRepository<TEntity, TId>
 
     public async Task UpdateByIdAsync(TId id, TEntity entity, CancellationToken cancellationToken = default)
     {
-        var filter = Builders<TEntity>.Filter.Eq("Id", id);
+        var filter = Builders<TEntity>
+            .Filter
+            .Eq("UserId", entity.Id);
 
         await Collection
-            .UpdateOneAsync(filter, entity);
+            .ReplaceOneAsync(filter, entity, cancellationToken: cancellationToken);
     }
 }

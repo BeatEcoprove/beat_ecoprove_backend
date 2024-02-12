@@ -3,7 +3,6 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.WebSockets;
 
 namespace BeatEcoprove.Api.Middlewares;
 

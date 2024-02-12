@@ -1,6 +1,7 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Profiles.Queries.GetNotifications;
-using BeatEcoprove.Contracts.Profile;
+using BeatEcoprove.Contracts.Profile.Notifications;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +23,7 @@ public class NotificationController : ApiController
     }
 
     [HttpGet("notifications")]
-    public async Task<ActionResult<List<NotificationResponse>>> GetNotifications
+    public async Task<ActionResult<List<dynamic>>> GetNotifications
     (
         [FromQuery] Guid profileId,
         CancellationToken cancellationToken = default
@@ -38,9 +39,24 @@ public class NotificationController : ApiController
         );
         
         return getNotifications.Match(
-            response => Ok(_mapper.Map<List<NotificationResponse>>(response)),
-            Problem<List<NotificationResponse>>
+            response => Ok(ProxyResponse(response)),
+            Problem<List<dynamic>>
         );
     }
-    
+
+    private dynamic ProxyResponse(List<Notification> notifications)
+    {
+        return notifications
+            .Select(notification =>
+            {
+                object response = notification switch
+                {
+                    InviteNotification inviteNotification => _mapper.Map<InviteNotificationResponse>(inviteNotification),
+                    Notification genericNotification => _mapper.Map<NotificationResponse>(genericNotification),
+                    _ => throw new ArgumentException("Unsupported notification type"),
+                };
+
+                return response;
+            }).ToList();
+    }
 }

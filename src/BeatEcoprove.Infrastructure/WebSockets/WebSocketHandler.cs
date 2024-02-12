@@ -10,7 +10,6 @@ using BeatEcoprove.Infrastructure.WebSockets.Events;
 using BeatEcoprove.Infrastructure.WebSockets.Exceptions;
 using ErrorOr;
 using MediatR;
-using MongoDB.Driver;
 using System.Net.WebSockets;
 using System.Text;
 
