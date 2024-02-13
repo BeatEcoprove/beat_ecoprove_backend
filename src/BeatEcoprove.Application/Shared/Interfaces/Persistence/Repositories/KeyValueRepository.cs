@@ -12,7 +12,7 @@ public class KeyValueRepository : IKeyValueRepository<string>
         _database = database;
     }
 
-    public async Task AddAsync(string key, string value, TimeSpan? expirationSpan)
+    public async Task AddAsync(string key, string value, TimeSpan? expirationSpan = null)
     {
         if (value == null)
         {
@@ -20,7 +20,7 @@ public class KeyValueRepository : IKeyValueRepository<string>
         }
 
         await _database.StringAppendAsync(key, value.ToString());
-        await _database.KeyExpireAsync(key, expirationSpan);
+        await _database.KeyExpireAsync(key, expirationSpan ?? TimeSpan.FromDays(7));
     }
 
     public async Task DeleteAsync(string key)
