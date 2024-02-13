@@ -1,5 +1,5 @@
+using BeatEcoprove.Application.Shared.Communication.Group;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
-using BeatEcoprove.Application.Shared.Notifications;
 using BeatEcoprove.Domain.Events;
 using MediatR;
 using StackExchange.Redis;
@@ -30,16 +30,16 @@ public class InviteMemberDomainEventHandler : INotificationHandler<InviteMemberD
         await _redis.StringAppendAsync(inviteCode, invitation.Id.Value.ToString());
         await _redis.KeyExpireAsync(inviteCode, TimeSpan.FromDays(7));
 
-        var inviteNotification = new InviteToGroupNotification(
-            "Foi convidado para um grupo",
-            inviteCode,
-            notification.Invite.Group.Value.ToString(),
-            notification.Invite.Inviter.Value.ToString()
-        );
-        
         await _notificationSender.SendNotificationAsync(
-            notification.Invite.Target,
-            inviteNotification
-            , cancellationToken);
+            new InviteGroupNotificationEvent(
+                invitation.Target,
+                new InviteGroupContent(
+                    inviteCode,
+                    invitation.Group,
+                    invitation.Inviter
+                )
+            ),
+            cancellationToken
+        );
     }
 }

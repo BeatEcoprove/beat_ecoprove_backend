@@ -1,10 +1,7 @@
-﻿using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+﻿using BeatEcoprove.Application.Shared.Communication;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Websockets;
-using BeatEcoprove.Application.Shared.Notifications;
-using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.WebSockets.Events;
 using BeatEcoprove.Infrastructure.WebSockets.Exceptions;
@@ -15,7 +12,9 @@ using System.Text;
 
 namespace BeatEcoprove.Infrastructure.WebSockets;
 
-internal class WebSocketHandler : IWebSocketManager, INotificationSender
+internal class WebSocketHandler : 
+    IWebSocketManager, 
+    INotificationSender
 {
     private const string InternalServerErrorMessage = "Someting went wrong";
 
@@ -75,13 +74,14 @@ internal class WebSocketHandler : IWebSocketManager, INotificationSender
 
                     if (error.Type == ErrorType.Conflict)
                     {
-                        await SendNotificationAsync(
-                            userId,
-                            new SimpleMessage(
+                        await NotifyClient(
+                            new MessageNotificationEvent(
+                                userId,
                                 error.Description
                             ),
                             cancellationToken
-                            );
+                        );
+
                         continue;
                     }
 
@@ -122,13 +122,12 @@ internal class WebSocketHandler : IWebSocketManager, INotificationSender
         activeSocket.Dispose();
     }
 
-    [Obsolete("Obsolete")]
-    public async Task SendNotificationAsync(
-        ProfileId userId,
-        SendNotification notification,
+    private async Task HandleNotification(
+        IRealTimeNotification notification,
+        WebSocketMessageType type = WebSocketMessageType.Text,
         CancellationToken cancellationToken = default)
     {
-        var socket = _sessionManager.Get(userId);
+        var socket = _sessionManager.Get(notification.Owner);
 
         if (socket == null)
         {
@@ -140,24 +139,34 @@ internal class WebSocketHandler : IWebSocketManager, INotificationSender
             return;
         }
 
-        var responseBytes = Encoding.UTF8.GetBytes(notification);
+        var responseBytes = Encoding.UTF8.GetBytes(notification.ConvertToJson());
         await socket.SendAsync(new ArraySegment<byte>(responseBytes, 0, responseBytes.Length),
-        WebSocketMessageType.Text,
+            type,
             true,
             cancellationToken);
+    }
 
-        if (notification is InviteToGroupNotification invite)
-        {
-            await _notificationRepository.AddAsync(
-                InviteNotification.Create(
-                    invite.Message,
-                    GroupId.Create(Guid.Parse(invite.GroupId)),
-                    ProfileId.Create(Guid.Parse(invite.InvitorId)),
-                    userId,
-                    invite.Code
-                ),
-                cancellationToken
-            );
-        }
+    public async Task NotifyClient<TContent>(
+        NotificationEvent<TContent> @event, 
+        CancellationToken cancellationToken = default)
+    {
+        await HandleNotification(
+            @event, 
+            cancellationToken: cancellationToken
+        );
+    }
+
+    public async Task SendNotificationAsync(
+        INotifer notification, 
+        CancellationToken cancellationToken = default)
+    {
+        var content = notification.GetNotification();
+
+        await HandleNotification(
+            notification,
+            cancellationToken: cancellationToken
+        );
+
+        await _notificationRepository.AddAsync(content, cancellationToken);
     }
 }

@@ -1,8 +1,8 @@
 ﻿using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Communication.ChatMessage;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Websockets;
-using BeatEcoprove.Application.Shared.Notifications;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
@@ -79,12 +79,12 @@ internal sealed class SendTextMessageCommandHandler : ICommandHandler<SendTextMe
 
         await _groupSessionManager.SendEveryoneAsync(
             groupId,
-            new ChatTextMessage
-            (
-                groupId,
-                profile.UserName,
-                profile.AvatarUrl,
-                request.Message
+            new ChatMessageNotificationEvent<TextMessage>(
+                userId,
+                new TextMessage(
+                    request.Message,
+                    groupId
+                )
             ),
             cancellationToken
         );

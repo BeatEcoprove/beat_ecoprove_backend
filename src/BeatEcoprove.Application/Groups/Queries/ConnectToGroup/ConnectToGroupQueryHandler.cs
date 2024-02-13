@@ -1,7 +1,7 @@
 ﻿using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Communication.Group;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Websockets;
-using BeatEcoprove.Application.Shared.Notifications;
 using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -71,11 +71,12 @@ internal class ConnectToGroupQueryHandler : IQueryHandler<ConnectToGroupQuery, E
 
         await _groupSessionManager.SendEveryoneAsync(
             groupId,
-            new ServerChatTextMessage
-            (
-                groupId,
+            new EnterOnGroupNotificationEvent(
                 userId,
-                $"O utilizador {(string)profile.UserName} entrou no grupo"
+                new EnterOnGroupContent(
+                    groupId,
+                    $"O utilizador {(string)profile.UserName} entrou no grupo"
+                )
             ),
             cancellationToken
         );

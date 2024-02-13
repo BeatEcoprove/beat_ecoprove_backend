@@ -7,7 +7,7 @@ public class Notification : Document<NotificationId>
 {
     protected Notification() { }
 
-    public Notification(
+    protected Notification(
         string title,
         ProfileId owner
         )
@@ -18,8 +18,6 @@ public class Notification : Document<NotificationId>
     }
 
     public string Title { get; set; } = null!;
-
     public ProfileId Owner { get; set; } = null!;
-
     public override string CollectionName => "notifications";
 }

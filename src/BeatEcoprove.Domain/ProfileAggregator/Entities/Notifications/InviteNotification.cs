@@ -20,16 +20,10 @@ public class InviteNotification : Notification
         Code = code;
     }
 
-    [BsonElement("group_id")]
-    [BsonRepresentation(MongoDB.Bson.BsonType.String)]
     public GroupId GroupId { get; set; } = null!;
 
-    [BsonElement("invitor_id")]
-    [BsonRepresentation(MongoDB.Bson.BsonType.String)]
     public ProfileId InvitorId { get; set; } = null!;
 
-    [BsonElement("code")]
-    [BsonRepresentation(MongoDB.Bson.BsonType.String)]
     public string Code { get; set; } = null!;
 
     public static InviteNotification Create

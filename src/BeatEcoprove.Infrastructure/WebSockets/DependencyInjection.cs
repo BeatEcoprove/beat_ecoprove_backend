@@ -12,7 +12,11 @@ public static class DependencyInjection
         services.AddSingleton<IGroupSessionManager, GroupSessionManager>();
 
         services.AddScoped<IWebSocketManager, WebSocketHandler>();
+
         services.AddScoped<INotificationSender>(
+           provider => (WebSocketHandler)provider.GetService<IWebSocketManager>()!);
+
+        services.AddScoped<IRealTimeConnection>(
            provider => (WebSocketHandler)provider.GetService<IWebSocketManager>()!);
 
         return services;

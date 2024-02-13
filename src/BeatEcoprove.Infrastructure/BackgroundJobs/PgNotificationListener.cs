@@ -1,6 +1,6 @@
 using System.Text.Json;
+using BeatEcoprove.Application.Shared.Communication.LevelUp;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
-using BeatEcoprove.Application.Shared.Notifications;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -52,7 +52,7 @@ public class PgNotificationListener : BackgroundService
         var notificationSender = scope.ServiceProvider.GetRequiredService<INotificationSender>();
         
         Console.WriteLine($"Received notification: {e.Payload}");
-        var payload = JsonSerializer.Deserialize<LevelUpNotification>(e.Payload);
+        var payload = JsonSerializer.Deserialize<PgLevelUpNotification>(e.Payload);
 
         if (payload == null)
         {
@@ -60,11 +60,14 @@ public class PgNotificationListener : BackgroundService
         }
 
         Task.Run(() => notificationSender.SendNotificationAsync(
-            ProfileId.Create(Guid.Parse(payload!.Id!)), 
-            new SendLevelNotification
-                (
-                    payload.Id, 
-                    payload.Level
-                )));
+            new LevelUpNotificationEvent(
+                ProfileId.Create(Guid.Parse(payload!.Id!)),
+                new LevelUpContent(
+                    payload.Level,
+                    payload.Xp
+                )
+            ),
+            cancellationToken: default
+           ));
     }
 }

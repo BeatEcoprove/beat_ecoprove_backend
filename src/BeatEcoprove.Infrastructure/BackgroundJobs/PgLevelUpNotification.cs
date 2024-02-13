@@ -1,8 +1,8 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace BeatEcoprove.Application.Shared.Notifications;
+namespace BeatEcoprove.Infrastructure.BackgroundJobs;
 
-public class LevelUpNotification
+internal class PgLevelUpNotification
 {
     [JsonPropertyName("id")] public string Id { get; init; } = null!;
     [JsonPropertyName("level")] public int Level { get; init; }

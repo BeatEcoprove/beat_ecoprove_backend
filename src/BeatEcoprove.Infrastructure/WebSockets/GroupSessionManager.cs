@@ -1,4 +1,4 @@
-﻿using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+﻿using BeatEcoprove.Application.Shared.Communication;
 using BeatEcoprove.Application.Shared.Interfaces.Websockets;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -89,7 +89,10 @@ public class GroupSessionManager : IGroupSessionManager
         return _groups.GetValueOrDefault(groupId);
     }
 
-    public async Task SendEveryoneAsync(GroupId groupId, SendNotification notification, CancellationToken cancellationToken = default)
+    public async Task SendEveryoneAsync(
+        GroupId groupId, 
+        IRealTimeNotification notification, 
+        CancellationToken cancellationToken = default)
     {
         var users = Get(groupId)!;
 
@@ -98,7 +101,7 @@ public class GroupSessionManager : IGroupSessionManager
             return;
         }
 
-        var responseBytes = Encoding.UTF8.GetBytes(notification);
+        var responseBytes = Encoding.UTF8.GetBytes(notification.ConvertToJson());
         await Task.WhenAll(users.Select(user => user.Socket.SendAsync(new ArraySegment<byte>(responseBytes, 0, responseBytes.Length),
             WebSocketMessageType.Text,
             true,

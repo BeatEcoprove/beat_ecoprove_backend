@@ -42,5 +42,8 @@ public static class MongoDBContext
 
         BsonClassMap.RegisterClassMap<InviteNotification>(
            map => new InviteNotificationConfiguration().Configure(map));
+
+        BsonClassMap.RegisterClassMap<LeveUpNotification>(
+            map => new LevelUpNotificationConfiguration().Configure(map));
     }
 }
