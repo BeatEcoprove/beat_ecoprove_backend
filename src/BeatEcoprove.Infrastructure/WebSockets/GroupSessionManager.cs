@@ -2,15 +2,23 @@
 using BeatEcoprove.Application.Shared.Interfaces.Websockets;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
 
 namespace BeatEcoprove.Infrastructure.WebSockets;
 
 public class GroupSessionManager : IGroupSessionManager
 {
     private ConcurrentDictionary<GroupId, List<Member>> _groups = new();
+    private readonly JsonSerializerOptions _options;
+
+    public GroupSessionManager(IOptions<JsonSerializerOptions> options)
+    {
+        _options = options.Value;
+    }
 
     public void Add(GroupId key, List<Member>? members = null)
     {
@@ -101,7 +109,7 @@ public class GroupSessionManager : IGroupSessionManager
             return;
         }
 
-        var responseBytes = Encoding.UTF8.GetBytes(notification.ConvertToJson());
+        var responseBytes = Encoding.UTF8.GetBytes(notification.ConvertToJson(_options));
         await Task.WhenAll(users.Select(user => user.Socket.SendAsync(new ArraySegment<byte>(responseBytes, 0, responseBytes.Length),
             WebSocketMessageType.Text,
             true,

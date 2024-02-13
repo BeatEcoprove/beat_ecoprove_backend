@@ -7,5 +7,5 @@ public interface IRealTimeNotification
 {
     ProfileId Owner { get; }
     string Type { get; }
-    string ConvertToJson();
+    string ConvertToJson(JsonSerializerOptions? options = null);
 }

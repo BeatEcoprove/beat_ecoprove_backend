@@ -7,8 +7,10 @@ using BeatEcoprove.Infrastructure.WebSockets.Events;
 using BeatEcoprove.Infrastructure.WebSockets.Exceptions;
 using ErrorOr;
 using MediatR;
+using Microsoft.Extensions.Options;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
 
 namespace BeatEcoprove.Infrastructure.WebSockets;
 
@@ -21,15 +23,18 @@ internal class WebSocketHandler :
     private readonly ISender _sender;
     private readonly ISessionManager _sessionManager;
     private readonly INotificationRepository _notificationRepository;
+    private readonly JsonSerializerOptions _options;
 
     public WebSocketHandler(
         ISessionManager sessionManager,
         ISender sender,
-        INotificationRepository notificationRepository)
+        INotificationRepository notificationRepository,
+        IOptions<JsonSerializerOptions> options)
     {
         _sessionManager = sessionManager;
         _sender = sender;
         _notificationRepository = notificationRepository;
+        _options = options.Value;
     }
 
     [Obsolete]
@@ -139,7 +144,7 @@ internal class WebSocketHandler :
             return;
         }
 
-        var responseBytes = Encoding.UTF8.GetBytes(notification.ConvertToJson());
+        var responseBytes = Encoding.UTF8.GetBytes(notification.ConvertToJson(_options));
         await socket.SendAsync(new ArraySegment<byte>(responseBytes, 0, responseBytes.Length),
             type,
             true,

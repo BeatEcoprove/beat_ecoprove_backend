@@ -17,10 +17,8 @@ public abstract class NotificationEvent<TContent> : IRealTimeNotification
     public DateTimeOffset DeletedAt { get; private set; }
     public abstract string Type { get; }
 
-    public string ConvertToJson()
+    public string ConvertToJson(JsonSerializerOptions? options = null)
     {
-        var options = new JsonSerializerOptions();
-
         return JsonSerializer.Serialize(this, options);
     }
 }
