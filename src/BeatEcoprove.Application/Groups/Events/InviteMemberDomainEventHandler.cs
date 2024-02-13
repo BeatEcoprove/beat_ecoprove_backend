@@ -1,8 +1,8 @@
 using BeatEcoprove.Application.Shared.Communication.Group;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.Events;
 using MediatR;
-using StackExchange.Redis;
 
 namespace BeatEcoprove.Application.Groups.Events;
 
@@ -10,16 +10,16 @@ public class InviteMemberDomainEventHandler : INotificationHandler<InviteMemberD
 {
     private readonly INotificationSender _notificationSender;
     private readonly IJwtProvider _jwtProvider;
-    private readonly IDatabase _redis;
+    private readonly IKeyValueRepository<string> _keyValueRespository;
 
     public InviteMemberDomainEventHandler(
         INotificationSender notificationSender, 
-        IJwtProvider jwtProvider, 
-        IDatabase redis)
+        IJwtProvider jwtProvider,
+        IKeyValueRepository<string> redis)
     {
         _notificationSender = notificationSender;
         _jwtProvider = jwtProvider;
-        _redis = redis;
+        _keyValueRespository = redis;
     }
 
     public async Task Handle(InviteMemberDomainEvent notification, CancellationToken cancellationToken)
@@ -27,8 +27,7 @@ public class InviteMemberDomainEventHandler : INotificationHandler<InviteMemberD
         var invitation = notification.Invite;
 
         var inviteCode = _jwtProvider.GenerateRandomCode(6);
-        await _redis.StringAppendAsync(inviteCode, invitation.Id.Value.ToString());
-        await _redis.KeyExpireAsync(inviteCode, TimeSpan.FromDays(7));
+        await _keyValueRespository.AddAsync(inviteCode, invitation.Id.Value.ToString());
 
         await _notificationSender.SendNotificationAsync(
             new InviteGroupNotificationEvent(

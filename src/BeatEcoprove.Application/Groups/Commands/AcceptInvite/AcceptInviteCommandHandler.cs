@@ -8,7 +8,6 @@ using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
-using StackExchange.Redis;
 
 namespace BeatEcoprove.Application.Groups.Commands.AcceptInvite;
 
@@ -16,18 +15,18 @@ internal sealed class AcceptInviteCommandHandler : ICommandHandler<AcceptInviteC
 {
     private readonly IProfileManager _profileManager;
     private readonly IGroupRepository _groupRepository;
-    private readonly IDatabase _redis;
+    private readonly IKeyValueRepository<string> _keyValueRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public AcceptInviteCommandHandler(
         IProfileManager profileManager, 
-        IGroupRepository groupRepository, 
-        IDatabase redis, 
+        IGroupRepository groupRepository,
+        IKeyValueRepository<string> redis, 
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
         _groupRepository = groupRepository;
-        _redis = redis;
+        _keyValueRepository = redis;
         _unitOfWork = unitOfWork;
     }
 
@@ -51,9 +50,9 @@ internal sealed class AcceptInviteCommandHandler : ICommandHandler<AcceptInviteC
             return Errors.Groups.NotFound;
         }
 
-        var inviteId = await _redis.StringGetDeleteAsync(request.Code.ToString());
+        var inviteId = await _keyValueRepository.GetAndDeleteAsync(request.Code.ToString());
         
-        if (inviteId.IsNullOrEmpty)
+        if (inviteId is null)
         {
             return Errors.Groups.InviteNotFound;
         }
