@@ -1,11 +1,10 @@
-﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Infrastructure.Persistence.Interceptors;
-using BeatEcoprove.Infrastructure.Persistence.Repositories;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
+using Scrutor;
 
 namespace BeatEcoprove.Infrastructure.Persistence;
 
@@ -26,18 +25,20 @@ public static class DependencyInjection
         services.AddScoped<SoftDeleteInterceptor>();
         services.AddScoped<PublishDomainEventsInterceptor>();
 
-        services.AddScoped<IAuthRepository, AuthRepository>();
-        services.AddScoped<IProfileRepository, ProfileRepository>();
-        services.AddScoped<IClothRepository, ClothRepository>();
-        services.AddScoped<IBucketRepository, BucketRepository>();
-        services.AddScoped<IColorRepository, ColorRepository>();
-        services.AddScoped<IBrandRepository, BrandRepository>();
-        services.AddScoped<IActivityRepository, ActionRepository>();
-        services.AddScoped<IGroupRepository, GroupRepository>();
-        services.AddScoped<IMaintenanceServiceRepository, MaintenanceServiceRepository>();
-        services.AddScoped<IFeedBackRepository, FeedBackRepository>();
-        services.AddScoped<INotificationRepository, NotificationRepository>();
+        AddRepositories(services);
 
         return services;
+    }
+
+    private static void AddRepositories(IServiceCollection services)
+    {
+        services.Scan(selector => selector.FromAssemblies(
+            typeof(DependencyInjection).Assembly
+            )
+            .AddClasses(false)
+            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+            .AsMatchingInterface()
+            .WithScopedLifetime()
+        );
     }
 }

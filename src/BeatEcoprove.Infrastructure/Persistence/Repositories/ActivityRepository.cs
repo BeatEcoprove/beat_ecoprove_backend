@@ -11,9 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
-public class ActionRepository : Repository<Activity, ActivityId>, IActivityRepository 
+public class ActivityRepository : Repository<Activity, ActivityId>, IActivityRepository 
 {
-    public ActionRepository(IApplicationDbContext dbContext) : base(dbContext)
+    public ActivityRepository(IApplicationDbContext dbContext) : base(dbContext)
     {
     }
 
