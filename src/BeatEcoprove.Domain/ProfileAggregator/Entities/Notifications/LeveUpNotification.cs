@@ -16,6 +16,8 @@ public class LeveUpNotification : Notification
     public int StagedLevel { get; private set; }
     public double StagedXp { get; private set; }
 
+    public override string Type => nameof(LeveUpNotification);
+
     public static LeveUpNotification Create(ProfileId owner, int level, double xp)
     {
         return new LeveUpNotification(

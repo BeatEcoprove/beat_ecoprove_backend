@@ -21,5 +21,7 @@ public class InviteNotificationConfiguration : IDocumentTypeConfiguration<Invite
         map.MapMember(x => x.Code)
             .SetElementName("code")
             .SetIsRequired(true);
+
+        map.SetIgnoreExtraElements(true);
     }
 }

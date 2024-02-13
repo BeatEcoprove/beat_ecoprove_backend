@@ -15,5 +15,7 @@ public class NotificationConfiguration : IDocumentTypeConfiguration<Notification
 
         map.MapMember(n => n.Owner)
             .SetElementName("owner");
+
+        map.SetIgnoreExtraElements(true);
     }
 }

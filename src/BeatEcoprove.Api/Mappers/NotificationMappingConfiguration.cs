@@ -11,9 +11,9 @@ public class NotificationMappingConfiguration : IRegister
         config.NewConfig<Notification, NotificationResponse>()
             .MapWith(src => new NotificationResponse
                 (
-                    src.Title
+                    src.Title,
+                    src.Type
                 ));
-
 
         config.NewConfig<InviteNotification, InviteNotificationResponse>()
             .MapWith(src => new InviteNotificationResponse
@@ -21,7 +21,17 @@ public class NotificationMappingConfiguration : IRegister
                     src.Title,
                     src.GroupId,
                     src.InvitorId,
-                    src.Code
+                    src.Code,
+                    src.Type
+                ));
+
+        config.NewConfig<LeveUpNotification, LevelUpNotificationResponse>()
+            .MapWith(src => new LevelUpNotificationResponse
+                (
+                    src.Title,
+                    src.StagedLevel,
+                    src.StagedXp,
+                    src.Type
                 ));
     }
 }

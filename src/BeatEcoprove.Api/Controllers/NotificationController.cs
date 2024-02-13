@@ -52,6 +52,7 @@ public class NotificationController : ApiController
                 object response = notification switch
                 {
                     InviteNotification inviteNotification => _mapper.Map<InviteNotificationResponse>(inviteNotification),
+                    LeveUpNotification levelUpNotification => _mapper.Map<LevelUpNotificationResponse>(levelUpNotification),
                     Notification genericNotification => _mapper.Map<NotificationResponse>(genericNotification),
                     _ => throw new ArgumentException("Unsupported notification type"),
                 };

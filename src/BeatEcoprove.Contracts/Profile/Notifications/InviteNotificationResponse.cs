@@ -2,8 +2,9 @@
 
 public record InviteNotificationResponse
 (
-    string title,
+    string Title,
     Guid GroupId,
     Guid InvitorId,
-    string Code
+    string Code,
+    string Type
 );

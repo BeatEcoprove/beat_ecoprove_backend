@@ -1,6 +1,5 @@
 ﻿using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 
@@ -21,10 +20,9 @@ public class InviteNotification : Notification
     }
 
     public GroupId GroupId { get; set; } = null!;
-
     public ProfileId InvitorId { get; set; } = null!;
-
     public string Code { get; set; } = null!;
+    public override string Type => nameof(InviteNotification);
 
     public static InviteNotification Create
     (

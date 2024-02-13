@@ -19,5 +19,6 @@ public class Notification : Document<NotificationId>
 
     public string Title { get; set; } = null!;
     public ProfileId Owner { get; set; } = null!;
+    public virtual string Type { get; } = nameof(Notification);
     public override string CollectionName => "notifications";
 }

@@ -17,5 +17,7 @@ public class LevelUpNotificationConfiguration : IDocumentTypeConfiguration<LeveU
         map.MapMember(x => x.StagedXp)
             .SetElementName("staged_xp")
             .SetIsRequired(true);
+
+        map.SetIgnoreExtraElements(true);
     }
 }
