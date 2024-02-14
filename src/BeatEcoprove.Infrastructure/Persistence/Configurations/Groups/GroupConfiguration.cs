@@ -70,12 +70,11 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
             .WithOne()
             .HasForeignKey(groupMember => groupMember.Group);       
         
-        builder.HasMany(group => group.TextMessages)
-            .WithOne()
-            .HasForeignKey(textMessage => textMessage.Group);
-        
         builder.HasMany(group => group.Invites)
             .WithOne()
             .HasForeignKey(invites => invites.Group);
+
+        builder
+            .Ignore(group => group.Messages);
     }
 }

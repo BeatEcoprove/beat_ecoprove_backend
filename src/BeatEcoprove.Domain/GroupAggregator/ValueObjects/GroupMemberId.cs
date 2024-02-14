@@ -1,14 +1,13 @@
-using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 
-public class GroupMemberId : ValueObject
+public class GroupMemberId : EntityId<Guid>
 {
     private GroupMemberId() { }
     private GroupMemberId(Guid id) => Value = id;
 
-    public Guid Value { get; private set; }
+    public override Guid Value { get; protected set; }
 
     public static GroupMemberId CreateUnique() => new(Guid.NewGuid());
 

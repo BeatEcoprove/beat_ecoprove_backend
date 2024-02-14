@@ -1,10 +1,10 @@
-using BeatEcoprove.Application.Groups.Queries.GetGroupMessages.Common;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.DAOS;
 using BeatEcoprove.Domain.GroupAggregator.Entities;
 using BeatEcoprove.Domain.GroupAggregator.Enumerators;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -105,7 +105,7 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
                         on groupMember.Profile equals profile.Id
                     where groupEntity.CreatorId == profile.Id
                     select profile
-                ).FirstOrDefault(),
+                ).FirstOrDefault()!,
                 (
                     from groupMember in groupEntity.Members
                     join profile in DbContext.Profiles
@@ -164,31 +164,24 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
         return getGroupInvite.FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<List<MessageResult>> GetGroupMessagesAsync(GroupId groupId, int requestPage, int requestPageSize,
-        CancellationToken cancellationToken)
-    {
-        var groupMessages =
-            from groupEntity in DbContext.Set<Group>()
-            from members in groupEntity.Members
-            from message in groupEntity.TextMessages
-            from profile in DbContext.Profiles
-            where 
-                groupEntity.Id == groupId && 
-                message.Sender == members.Id && 
-                members.Profile == profile.Id
-            select new MessageResult(
-                groupEntity.Id,
-                profile,
-                message.Content,
-                message.CreatedAt
-            );
-            
-        return await groupMessages.ToListAsync(cancellationToken);
-    }
-
     public Task<bool> InvitationExists(InviteGroupId invitationId, CancellationToken cancellationToken)
     {
         return DbContext.Set<GroupInvite>()
             .AnyAsync(invite => invite.Id == invitationId, cancellationToken);
+    }
+
+    public Task<List<Profile>> GetMemberProfiles
+        (GroupId id, List<GroupMemberId> memberIds, CancellationToken cancellationToken = default)
+    {
+        var getMemberProfiles =
+            from groupEntity in DbContext.Set<Group>()
+            from member in groupEntity.Members
+            join profile in DbContext.Profiles on member.Profile equals profile.Id
+            where 
+                groupEntity.Id == id && memberIds.Contains(member.Id)
+            select profile;
+
+        return getMemberProfiles
+            .ToListAsync(cancellationToken);
     }
 }

@@ -3,25 +3,25 @@ using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Domain.GroupAggregator.Entities;
 
-public abstract class Message<T> : Entity<MessageId>
+public class Message : Document<MessageId>
 {
-    protected Message() {  }
-    
-    protected Message(
-        MessageId id,
-        GroupId group,
-        GroupMemberId sender,
-        T content)
+    private Message() { }
+
+    public Message(
+        GroupId group, 
+        GroupMemberId sender, 
+        string title)
     {
-        Id = id;
+        Id = MessageId.CreateUnique();
         Group = group;
         Sender = sender;
-        Content = content;
-        CreatedAt = DateTime.UtcNow;
+        Title = title;
     }
 
     public GroupId Group { get; protected set; } = null!;
     public GroupMemberId Sender { get; protected set; } = null!;
-    public T Content { get; protected set; }
-    public DateTime CreatedAt { get; private set; }
+    public string Title { get; protected set; } = null!;
+    public new DateTimeOffset CreatedAt { get; private set; } = DateTimeOffset.UtcNow;
+
+    public override string CollectionName => "messages";
 }

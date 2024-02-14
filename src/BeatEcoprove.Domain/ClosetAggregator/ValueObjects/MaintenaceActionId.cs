@@ -2,12 +2,12 @@
 
 namespace BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 
-public class MaintenanceActionId : ValueObject
+public class MaintenanceActionId : EntityId<Guid>
 {
     private MaintenanceActionId() { }
     private MaintenanceActionId(Guid id) => Value = id;
 
-    public Guid Value { get; private set; }
+    public override Guid Value { get; protected set; }
 
     public static MaintenanceActionId CreateUnique() => new(Guid.NewGuid());
 

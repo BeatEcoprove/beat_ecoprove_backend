@@ -3,7 +3,7 @@ using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 
-public class Notification : Document<NotificationId>
+public class Notification : Document<MessageId>
 {
     protected Notification() { }
 
@@ -12,7 +12,7 @@ public class Notification : Document<NotificationId>
         ProfileId owner
         )
     {
-        Id = NotificationId.CreateUnique();
+        Id = MessageId.CreateUnique();
         Title = title;
         Owner = owner;
     }

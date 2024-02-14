@@ -14,8 +14,8 @@ public class GroupMappingConfiguration : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<Group, GroupResponse>();
-        config.NewConfig<MessageResult, MessageResponse>()
-            .MapWith(src => new MessageResponse(
+        config.NewConfig<MessageResult, TextMessageResponse>()
+            .MapWith(src => new TextMessageResponse(
                 src.GroupId,
                 src.Sender.Adapt<ProfileResponse>(),
                 src.Content,

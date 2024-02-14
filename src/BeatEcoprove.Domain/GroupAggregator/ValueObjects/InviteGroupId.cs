@@ -2,7 +2,7 @@ using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 
-public class InviteGroupId : ValueObject
+public class InviteGroupId : EntityId<Guid>
 {
     private InviteGroupId()
     {
@@ -10,7 +10,7 @@ public class InviteGroupId : ValueObject
 
     private InviteGroupId(Guid id) => Value = id;
 
-    public Guid Value { get; private set; }
+    public override Guid Value { get; protected set; }
 
     public static InviteGroupId CreateUnique() => new(Guid.NewGuid());
 

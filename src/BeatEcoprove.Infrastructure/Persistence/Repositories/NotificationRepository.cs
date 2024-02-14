@@ -5,7 +5,7 @@ using MongoDB.Driver;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
-public class NotificationRepository : DocumentRepository<Notification, NotificationId>, INotificationRepository
+public class NotificationRepository : DocumentRepository<Notification, MessageId>, INotificationRepository
 {
     public NotificationRepository(IMongoDatabase database) 
         : base(database)

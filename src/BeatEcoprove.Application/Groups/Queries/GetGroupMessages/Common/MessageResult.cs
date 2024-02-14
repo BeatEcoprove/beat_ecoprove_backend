@@ -7,5 +7,5 @@ public record MessageResult
     Guid GroupId,
     Profile Sender,
     string Content,
-    DateTime CreatedAt
+    DateTimeOffset CreatedAt
 );

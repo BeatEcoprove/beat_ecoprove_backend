@@ -3,22 +3,22 @@ using MongoDB.Bson;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
-public class NotificationId : DocumentId
+public class MessageId : DocumentId
 {
-    private NotificationId() { }
+    private MessageId() { }
 
-    private NotificationId(ObjectId id) => Value = id;
+    private MessageId(ObjectId id) => Value = id;
 
     public override ObjectId Value { get; protected set; }
 
-    public static NotificationId CreateUnique() => new(ObjectId.GenerateNewId());
+    public static MessageId CreateUnique() => new(ObjectId.GenerateNewId());
 
-    public static NotificationId Create(ObjectId id) => new(id);
+    public static MessageId Create(ObjectId id) => new(id);
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
 
-    public static implicit operator ObjectId(NotificationId id) => id.Value;
+    public static implicit operator ObjectId(MessageId id) => id.Value;
 }

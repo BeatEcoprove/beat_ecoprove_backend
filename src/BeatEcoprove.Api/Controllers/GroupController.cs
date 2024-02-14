@@ -52,7 +52,7 @@ public class GroupController : ApiController
     }
     
     [HttpGet("{groupId:guid}/messages")]
-    public async Task<ActionResult<List<MessageResponse>>> GetGroupMessages(
+    public async Task<ActionResult<List<TextMessageResponse>>> GetGroupMessages(
         [FromRoute] Guid groupId,
         [FromQuery] Guid profileId,
         [FromQuery] int? page,
@@ -71,8 +71,8 @@ public class GroupController : ApiController
             ));
         
         return getGroupMessagesResult.Match(
-            result => Ok(_mapper.Map<List<MessageResponse>>(result)),
-            Problem<List<MessageResponse>>
+            result => Ok(_mapper.Map<List<TextMessageResponse>>(result)),
+            Problem<List<TextMessageResponse>>
         );
     }
     

@@ -3,7 +3,7 @@ using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
-public interface INotificationRepository : IRepository<Notification, NotificationId>
+public interface INotificationRepository : IRepository<Notification, MessageId>
 {
     Task<List<Notification>> GetAllNotificationByOnwerIdAsync(ProfileId ownerId, CancellationToken cancellationToken = default);
 }

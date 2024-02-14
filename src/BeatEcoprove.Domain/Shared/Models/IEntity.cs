@@ -1,7 +1,7 @@
 ﻿namespace BeatEcoprove.Domain.Shared.Models;
 
 public interface IEntity<TId>
-    where TId : notnull, ValueObject
+    where TId : class
 {
-    TId Id { get; }
+    public TId Id { get; }
 }

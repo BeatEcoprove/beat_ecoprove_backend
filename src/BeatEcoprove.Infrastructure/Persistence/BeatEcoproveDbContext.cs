@@ -16,14 +16,17 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
     private readonly DbSettings _dbSettings;
     private readonly SoftDeleteInterceptor _softDeleteInterceptor;
     private readonly PublishDomainEventsInterceptor _publishDomainEventsInterceptor;
+    private readonly StoreGroupInterceptor _groupInterceptor;
     
     public BeatEcoproveDbContext(
         IOptions<DbSettings> dbSettings, 
         SoftDeleteInterceptor softDeleteInterceptor, 
-        PublishDomainEventsInterceptor publishDomainEventsInterceptor)
+        PublishDomainEventsInterceptor publishDomainEventsInterceptor,
+        StoreGroupInterceptor groupInterceptor)
     {
         _softDeleteInterceptor = softDeleteInterceptor;
         _publishDomainEventsInterceptor = publishDomainEventsInterceptor;
+        _groupInterceptor = groupInterceptor;
         _dbSettings = dbSettings.Value;
     }
 
@@ -36,6 +39,7 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
     {
         optionsBuilder.AddInterceptors(_softDeleteInterceptor);
         optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor);
+        optionsBuilder.AddInterceptors(_groupInterceptor);
         
         optionsBuilder.UseNpgsql(_dbSettings.ConnectionString, builder =>
         {

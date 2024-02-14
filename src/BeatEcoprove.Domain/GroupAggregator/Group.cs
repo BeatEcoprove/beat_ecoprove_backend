@@ -14,7 +14,7 @@ public class Group : AggregateRoot<GroupId, Guid>
 {
     private readonly List<GroupMember> _members = new();
     private readonly List<GroupInvite> _invites = new();
-    private readonly List<TextMessage> _textMessages = new();
+    private readonly List<Message> _messages = new();
     
     private Group() { }
 
@@ -39,14 +39,13 @@ public class Group : AggregateRoot<GroupId, Guid>
 
     public string Name { get; private set; } = null!;
     public string Description { get; private set; } = null!;
-
     public int MembersCount { get; private set; }
     public int SustainablePoints { get; private set; }
     public double Xp { get; private set; }
     public bool IsPublic { get; private set; }
     public string AvatarPicture { get; private set; } = null!;
     public ProfileId CreatorId { get; private set; } = null!;
-    public IReadOnlyList<TextMessage> TextMessages => _textMessages.AsReadOnly();
+    public IReadOnlyList<Message> Messages => _messages.AsReadOnly();
     public IReadOnlyList<GroupMember> Members => _members.AsReadOnly();
     public IReadOnlyList<GroupInvite> Invites => _invites.AsReadOnly();
 
@@ -149,7 +148,7 @@ public class Group : AggregateRoot<GroupId, Guid>
             groupMember = AddMember(profile);
         }
         
-        this._textMessages.Add(new TextMessage(
+        this._messages.Add(new Message(
             this.Id,
             groupMember.Id,
             message

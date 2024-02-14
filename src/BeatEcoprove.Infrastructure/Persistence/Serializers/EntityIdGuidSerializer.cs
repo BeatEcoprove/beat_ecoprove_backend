@@ -7,7 +7,7 @@ using System.Reflection;
 namespace BeatEcoprove.Infrastructure.Persistence.Serializers;
 
 public class EntityIdGuidSerializer<TId> : SerializerBase<TId>
-    where TId : AggregateRootId<Guid>
+    where TId : class, IEntityId<Guid>
 {
     public override TId Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
     {
