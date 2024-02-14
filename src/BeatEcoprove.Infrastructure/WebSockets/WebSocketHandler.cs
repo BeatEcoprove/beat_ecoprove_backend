@@ -166,12 +166,11 @@ internal class WebSocketHandler :
         CancellationToken cancellationToken = default)
     {
         var content = notification.GetNotification();
+        await _notificationRepository.AddAsync(content, cancellationToken);
 
         await HandleNotification(
             notification,
             cancellationToken: cancellationToken
         );
-
-        await _notificationRepository.AddAsync(content, cancellationToken);
     }
 }
