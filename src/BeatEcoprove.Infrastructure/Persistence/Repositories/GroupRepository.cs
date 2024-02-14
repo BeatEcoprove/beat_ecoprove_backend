@@ -170,18 +170,18 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
             .AnyAsync(invite => invite.Id == invitationId, cancellationToken);
     }
 
-    public Task<List<Profile>> GetMemberProfiles
+    public Task<Dictionary<GroupMemberId, Profile>> GetMemberProfiles
         (GroupId id, List<GroupMemberId> memberIds, CancellationToken cancellationToken = default)
     {
         var getMemberProfiles =
-            from groupEntity in DbContext.Set<Group>()
-            from member in groupEntity.Members
-            join profile in DbContext.Profiles on member.Profile equals profile.Id
-            where 
-                groupEntity.Id == id && memberIds.Contains(member.Id)
-            select profile;
+        from groupEntity in DbContext.Set<Group>()
+        from member in groupEntity.Members
+        join profile in DbContext.Profiles on member.Profile equals profile.Id
+        where
+            groupEntity.Id == id && memberIds.Contains(member.Id)
+        select new { member.Id, Profile = profile };
 
         return getMemberProfiles
-            .ToListAsync(cancellationToken);
+            .ToDictionaryAsync(x => x.Id, x => x.Profile, cancellationToken);
     }
 }

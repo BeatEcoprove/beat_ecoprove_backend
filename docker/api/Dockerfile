@@ -13,7 +13,7 @@ RUN dotnet publish -c Release -o out
 
 WORKDIR /usr/src/app/out
 
-COPY docker/api/run-migrations.sh .
+COPY run-migrations.sh .
 RUN sed -i 's/\r$//' ./run-migrations.sh
 
 RUN chmod +x ./run-migrations.sh

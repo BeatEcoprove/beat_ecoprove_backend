@@ -8,6 +8,7 @@ using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
+using System.Linq;
 
 namespace BeatEcoprove.Application.Groups.Queries.GetGroupMessageResults;
 
@@ -61,9 +62,12 @@ internal sealed class GetGroupMessageResultsQueryHandler : IQueryHandler<GetGrou
         return messages
             .Select((message, index) =>
             {
+                var profile = profiles
+                    .SingleOrDefault(p => p.Key == message.Sender);
+
                 return new MessageResult(
                     message.Group,
-                    profiles[index],
+                    profile.Value,
                     message.Title,
                     message.CreatedAt
                 );

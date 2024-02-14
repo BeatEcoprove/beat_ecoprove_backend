@@ -12,3 +12,4 @@ db.createUser(
 );
 
 db.createCollection("notifications");
+db.createCollection("messages");

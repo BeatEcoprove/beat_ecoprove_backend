@@ -1,4 +1,3 @@
-using BeatEcoprove.Contracts.Profile;
 
 namespace BeatEcoprove.Contracts.Groups;
 
