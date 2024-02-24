@@ -59,7 +59,7 @@ public class GroupService : IGroupService
         group.SetAvatarPicture(avatarUrl);
         
         // Add an admin member to the group
-        group.AddMember(profile, MemberPermission.Admin);
+        group.AddMember(profile.Id, MemberPermission.Admin);
         
         await _groupRepository.AddAsync(group, cancellationToken);
 

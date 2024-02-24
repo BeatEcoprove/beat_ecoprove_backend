@@ -34,7 +34,6 @@ public class Group : AggregateRoot<GroupId, Guid>
         SustainablePoints = sustainablePoints;
         Xp = xp;
         IsPublic = isPublic;
-        MembersCount = _members.Count;
     }
 
     public string Name { get; private set; } = null!;
@@ -70,17 +69,17 @@ public class Group : AggregateRoot<GroupId, Guid>
         AvatarPicture = avatarPicture;
     }
 
-    public GroupMember AddMember(Profile profile, MemberPermission permission = MemberPermission.Member)
+    public GroupMember AddMember(ProfileId profileMemberId, MemberPermission permission = MemberPermission.Member)
     {
         var member = new GroupMember(
-            profile.Id,
+            profileMemberId,
             this.Id,
             permission
         );
         
         this._members.Add(member);
-        
-        MembersCount = _members.Count;
+
+        MembersCount++;
         return member;
     }
 
@@ -145,7 +144,7 @@ public class Group : AggregateRoot<GroupId, Guid>
                 return Errors.Groups.MemberNotFound;
             }
             
-            groupMember = AddMember(profile);
+            groupMember = AddMember(profile.Id);
         }
         
         this._messages.Add(new Message(
@@ -191,15 +190,13 @@ public class Group : AggregateRoot<GroupId, Guid>
             invite.Decline();
             return false;
         }
-        
-        var member = new GroupMember(
+
+        this.AddMember(
             invite.Target,
-            invite.Group,
             invite.Permission
         );
         
         invite.Accept();
-        this._members.Add(member);
         this._invites.Remove(invite);
         
         return true;
