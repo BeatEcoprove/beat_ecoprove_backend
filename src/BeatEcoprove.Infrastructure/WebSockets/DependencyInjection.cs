@@ -19,6 +19,10 @@ public static class DependencyInjection
         services.AddScoped<IRealTimeConnection>(
            provider => (WebSocketHandler)provider.GetService<IWebSocketManager>()!);
 
+        services.AddScoped<IRealTimeConnection>(
+            provider => provider.GetRequiredService<IWebSocketManager>()
+        );
+
         return services;
     }
 }

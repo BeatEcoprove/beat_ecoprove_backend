@@ -83,7 +83,12 @@ internal sealed class SendTextMessageCommandHandler : ICommandHandler<SendTextMe
                 userId,
                 new TextMessage(
                     request.Message,
-                    groupId
+                    groupId,
+                    new ChatMessageMember(
+                        profile.Id,
+                        profile.UserName,
+                        profile.AvatarUrl
+                    )
                 )
             ),
             cancellationToken

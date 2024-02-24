@@ -5,5 +5,6 @@ namespace BeatEcoprove.Application.Shared.Communication.ChatMessage;
 public record TextMessage
 (
     string Message,
-    GroupId Group
+    GroupId Group,
+    ChatMessageMember Member
 );
