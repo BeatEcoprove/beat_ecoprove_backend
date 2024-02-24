@@ -19,10 +19,13 @@ public class SessionManager : ISessionManager
     {
         var socket = _users[userId];
 
-        await socket.CloseAsync(
-            status,
-            reason,
-            cancellation);
+        if (socket.State != WebSocketState.Aborted)
+        {
+            await socket.CloseAsync(
+                status,
+                reason,
+                cancellation);
+        }
 
         _users.TryRemove(userId, out _);
     }
