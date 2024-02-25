@@ -1,20 +1,30 @@
-﻿using BeatEcoprove.Infrastructure.Persistence;
-using BeatEcoprove.Infrastructure.Persistence.Shared;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BeatEcoprove.Application.Tests;
 
-public abstract class BaseIntegrationTest : IClassFixture<IntegrationWebApplicationFactory>
+[Collection("SignInPersonalAccount Test Collection")]
+public abstract class BaseIntegrationTest : IClassFixture<IntegrationWebApplicationFactory>, IAsyncLifetime
 {
+    private readonly IServiceScope _scope;
     protected readonly ISender Sender;
-    protected readonly BeatEcoproveDbContext DbContext;
+    private readonly Func<Task> _resetDatabase;
 
     protected BaseIntegrationTest(IntegrationWebApplicationFactory factory)
     {
-        var scope = factory.Services.CreateScope();
+        _scope = factory.Services.CreateScope();
         
-        Sender = scope.ServiceProvider.GetRequiredService<ISender>();
-        DbContext = scope.ServiceProvider.GetRequiredService<BeatEcoproveDbContext>();
+        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+        _resetDatabase = factory.ResetDatabaseAsync;
     }
+
+    protected TService GetService<TService>() 
+        where TService : notnull
+    {
+        return _scope.ServiceProvider.GetRequiredService<TService>();
+    }
+
+    public Task InitializeAsync() => Task.CompletedTask;
+
+    public Task DisposeAsync() => _resetDatabase();
 }

@@ -14,6 +14,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.16" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.1" />
     <PackageReference Include="NSubstitute" Version="5.0.0" />
+    <PackageReference Include="Respawn" Version="6.2.1" />
     <PackageReference Include="Testcontainers.PostgreSql" Version="3.7.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
@@ -32,7 +33,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\brands\" />
+    <Compile Remove="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\**" />
   </ItemGroup>
 
   <Target Name="CreateAppDataFolder" BeforeTargets="CoreCompile">

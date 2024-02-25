@@ -39,9 +39,15 @@ public class PgNotificationListener : BackgroundService
             {
                 await connection.WaitAsync(stoppingToken);
             }
+            catch (PostgresException ex)
+            {
+                Console.WriteLine(ex.Message);
+                break;
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                break;
             }
         }
     }
