@@ -15,3 +15,5 @@ var app = builder
 
 app.SetupConfiguration();
 app.Run();
+
+public partial class Program { } 

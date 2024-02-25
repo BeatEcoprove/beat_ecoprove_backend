@@ -7,7 +7,6 @@ using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using Bogus;
 using NSubstitute;
-using StackExchange.Redis;
 
 namespace BeatEcoprove.Application.Tests.Authentication.Commands;
 
@@ -18,7 +17,7 @@ public class ResetPasswordCommandTests
     private readonly IJwtProvider _jwtProvider = Substitute.For<IJwtProvider>();
     private readonly IAuthRepository _authRepository = Substitute.For<IAuthRepository>();
     private readonly IPasswordProvider _passwordProvider = Substitute.For<IPasswordProvider>();
-    private readonly IDatabase _redis = Substitute.For<IDatabase>();
+    private readonly IKeyValueRepository<string> _redis = Substitute.For<IKeyValueRepository<string>>();
 
     private readonly ResetPasswordCommandHandler _sut;
 

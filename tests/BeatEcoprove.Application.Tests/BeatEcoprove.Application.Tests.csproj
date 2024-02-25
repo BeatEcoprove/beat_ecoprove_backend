@@ -11,8 +11,10 @@
 
   <ItemGroup>
     <PackageReference Include="Bogus" Version="34.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.16" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.1" />
     <PackageReference Include="NSubstitute" Version="5.0.0" />
+    <PackageReference Include="Testcontainers.PostgreSql" Version="3.7.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,7 +27,28 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\BeatEcoprove.Api\BeatEcoprove.Api.csproj" />
     <ProjectReference Include="..\..\src\BeatEcoprove.Application\BeatEcoprove.Application.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\brands\" />
+  </ItemGroup>
+
+  <Target Name="CreateAppDataFolder" BeforeTargets="CoreCompile">
+    <MakeDir Directories="$(OutputPath)public\default" Condition="!Exists('$(OutputPath)public\default')" />
+    <ItemGroup>
+      <FilesToCopy Include="Assets\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutputPath)public\default\%(RecursiveDir)" />
+  </Target>
+
+  <Target Name="CreateAppDataFolderPublish" AfterTargets="Publish" Condition="'$(Configuration)' == 'Release'">
+    <MakeDir Directories="$(PublishDir)public\default" Condition="!Exists('$(PublishDir)public\default')" />
+    <ItemGroup>
+      <FilesToCopyPublish Include="Assets\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(FilesToCopyPublish)" DestinationFolder="$(PublishDir)public\default\%(RecursiveDir)" />
+  </Target>
 
 </Project>

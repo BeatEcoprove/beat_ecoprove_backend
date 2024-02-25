@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -209,7 +210,35 @@ namespace BeatEcoprove.Infrastructure.Migrations
                     { new Guid("f2802726-d963-409e-a9ed-caed80a4637c"), "public/default/wash/less70.png", null, "Lavar a menos de 70ºC", 10, new Guid("3ce29e6e-89a5-4700-8b09-2de656b13103"), 100, "A menos de 70ºC" }
                 });
 
-            migrationBuilder.Sql(File.ReadAllText("../BeatEcoprove.Infrastructure/Scripts/addTriggerNotification.sql"));
+            migrationBuilder.Sql("""
+             CREATE OR REPLACE FUNCTION update_xp_trigger_function()
+             RETURNS TRIGGER AS $$
+             DECLARE
+                 level_up_data json;
+             BEGIN
+                 IF NEW.level IS DISTINCT FROM OLD.level THEN
+                     select 
+                         json_build_object(
+                             'id', NEW."Id",
+                             'level', NEW.level,
+                             'xp', NEW.xp
+                         )
+                     from profiles
+                     where "Id" = NEW."Id"
+                     into level_up_data;
+                     
+                     PERFORM pg_notify('level_up', level_up_data::text);
+             END IF;
+             RETURN NEW;
+             END;
+             $$ LANGUAGE plpgsql;
+             
+             CREATE TRIGGER update_xp_trigger
+                 AFTER UPDATE ON profiles
+                 FOR EACH ROW
+                 EXECUTE FUNCTION update_xp_trigger_function();
+             
+        """);
         }
 
         /// <inheritdoc />
