@@ -84,9 +84,9 @@ public class SignInPersonalAccountCommandTests : BaseIntegrationTest
     {
         // Arrange
         var stream = await GetAvatarPicture();
-        var handleEmailAreadyExistsCommand = GetSutCommand(stream);
+        var handleEmailAlreadyExistsCommand = GetSutCommand(stream);
         
-        var handleUsernameAlreadyExistsCommand = handleEmailAreadyExistsCommand with
+        var handleUsernameAlreadyExistsCommand = handleEmailAlreadyExistsCommand with
         {
             Email = new Faker<Email>()
                 .CustomInstantiator(f => Email.Create(f.Internet.Email()).Value)
@@ -104,18 +104,18 @@ public class SignInPersonalAccountCommandTests : BaseIntegrationTest
         await _unitOfWork.SaveChangesAsync();
 
         // Act
-        var emailAreadyExistsResult = 
-            await Sender.Send(handleEmailAreadyExistsCommand);
+        var emailAlreadyExistsResult = 
+            await Sender.Send(handleEmailAlreadyExistsCommand);
         
-        var usernameAreadyExistsResult = 
+        var usernameAlreadyExistsResult = 
             await Sender.Send(handleUsernameAlreadyExistsCommand);
 
         // Assert
-        Assert.True(emailAreadyExistsResult.IsError);
-        Assert.Equal(emailAreadyExistsResult.FirstError.Code, Errors.User.EmailAlreadyExists.Code);
+        Assert.True(emailAlreadyExistsResult.IsError);
+        Assert.Equal(emailAlreadyExistsResult.FirstError.Code, Errors.User.EmailAlreadyExists.Code);
         
-        Assert.True(usernameAreadyExistsResult.IsError);
-        Assert.Equal(usernameAreadyExistsResult.FirstError.Code, Errors.User.UserNameAlreadyExists.Code);
+        Assert.True(usernameAlreadyExistsResult.IsError);
+        Assert.Equal(usernameAlreadyExistsResult.FirstError.Code, Errors.User.UserNameAlreadyExists.Code);
     }
     
     [Fact]

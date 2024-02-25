@@ -3,7 +3,9 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
+using BeatEcoprove.Domain;
 using BeatEcoprove.Domain.AuthAggregator;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using Bogus;
@@ -11,103 +13,153 @@ using NSubstitute;
 
 namespace BeatEcoprove.Application.Tests.Authentication.Commands;
 
-public class SignInEnterpriseAccountCommandTests
+public class SignInEnterpriseAccountCommandTests : BaseIntegrationTest
 {
-    private readonly IAuthRepository _authRepository = Substitute.For<IAuthRepository>();
-    private readonly IProfileRepository _profileRepository = Substitute.For<IProfileRepository>();
-    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
-    private readonly IJwtProvider _jwtProvider = Substitute.For<IJwtProvider>();
-    private readonly IAccountService _accountService = Substitute.For<IAccountService>();
-
-    private readonly SignInEnterpriseAccountCommandHandler _sut;
-
-    public SignInEnterpriseAccountCommandTests()
+    private readonly IAccountService _accountService;
+    private readonly IJwtProvider _jwtProvider;
+    private readonly IUnitOfWork _unitOfWork;
+    
+    public SignInEnterpriseAccountCommandTests
+        (IntegrationWebApplicationFactory factory) : base(factory)
     {
-        _sut = new SignInEnterpriseAccountCommandHandler(
-            _unitOfWork,
-            _jwtProvider,
-            _accountService
-            );
+        _accountService = GetService<IAccountService>();
+        _jwtProvider = GetService<IJwtProvider>();
+        _unitOfWork = GetService<IUnitOfWork>();
+        
+        (SutAuth, SutProfile) = GetAuthUser();
     }
 
-    private async Task<Stream> GetAvatarPicture()
+    private Auth SutAuth { get; }
+    private Organization SutProfile { get; }
+    
+    private static async Task<Stream> GetAvatarPicture()
     {
         using HttpClient httpClient = new();
         var response = httpClient.GetAsync("https://github.com/DiogoCC7.png");
 
-        using Stream stream = await response.Result.Content.ReadAsStreamAsync();
-        return stream;
+        return await response.Result.Content.ReadAsStreamAsync();
     }
 
-    private async Task<SignInEnterpriseAccountCommand> GetSutCommand()
+    private static (Auth, Organization) GetAuthUser()
     {
-        var avatarPicture = await GetAvatarPicture();
+        var auth = new Faker<Auth>()
+            .CustomInstantiator(f =>
+                Auth.Create(
+                    Email.Create(f.Internet.Email()).Value,
+                    Password.Create("Password12").Value))
+            .Generate();
 
+        var profile = new Faker<Organization>()
+            .CustomInstantiator(f =>
+                Organization.Create(
+                    UserName.Create(f.Internet.UserName()).Value,
+                    Phone.Create("+351", f.Phone.PhoneNumber("#########")).Value,
+                    Address.Create(
+                        f.Address.StreetName(),
+                        12,
+                        f.Address.City(),
+                        PostalCode.Create(f.Address.ZipCode("####-###")).Value
+                    ).Value
+                    )
+                )
+            .Generate();
+        
+        auth.SetMainProfileId(profile.Id);
+        profile.SetAuthPointer(auth.Id);
+
+        return (auth, profile);
+    }
+    
+    private SignInEnterpriseAccountCommand GetSutCommand(Stream avatarPicture)
+    {
         // Arrange
         return new Faker<SignInEnterpriseAccountCommand>()
             .CustomInstantiator(f => new SignInEnterpriseAccountCommand(
                 f.Person.FullName,
-                "Lavandaria",
-                "914953124",
-                "+351",
-                f.Address.StreetName(),
-                14,
-                f.Address.Locale,
-                "4444-444",
-                f.Person.UserName,
+                TypeOption.Dryer.ToString(), 
+                SutProfile.Phone.Value,
+                SutProfile.Phone.Code,
+                SutProfile.Address.Street,
+                SutProfile.Address.Port,
+                SutProfile.Address.Locality,
+                SutProfile.Address.PostalCode.Value,
+                SutProfile.UserName,
                 avatarPicture,
-                f.Internet.Email(),
-                "Password12"))
+                SutAuth.Email,
+                SutAuth.Password))
             .Generate();
     }
 
     [Fact]
     public async Task ShouldNot_SignInPersonalAccount_WhenUserAlreadyExists()
     {
-        // Arrange
-        var command = await GetSutCommand();
+        var stream = await GetAvatarPicture();
+        var handleEmailAlreadyExistsCommand = GetSutCommand(stream);
+        
+        var handleUsernameAlreadyExistsCommand = handleEmailAlreadyExistsCommand with
+        {
+            Email = new Faker<Email>()
+                .CustomInstantiator(f => Email.Create(f.Internet.Email()).Value)
+                .Generate()
+        };
 
-        _authRepository.ExistsUserByEmailAsync(
-            Email.Create(command.Email).Value,
-            default).Returns(true);
+        await _accountService.CreateAccount(
+            SutAuth.Email,
+            SutAuth.Password,
+            SutProfile,
+            stream,
+            default
+        );
+
+        await _unitOfWork.SaveChangesAsync();
 
         // Act
-        var result = await _sut.Handle(command, default);
+        var emailAlreadyExistsResult = 
+            await Sender.Send(handleEmailAlreadyExistsCommand);
+        
+        var usernameAlreadyExistsResult = 
+            await Sender.Send(handleUsernameAlreadyExistsCommand);
 
         // Assert
-        Assert.True(result.IsError);
-        Assert.Equal(result.FirstError.Code, Errors.User.EmailAlreadyExists.Code);
+        Assert.True(emailAlreadyExistsResult.IsError);
+        Assert.Equal(emailAlreadyExistsResult.FirstError.Code, Errors.User.EmailAlreadyExists.Code);
+        
+        Assert.True(usernameAlreadyExistsResult.IsError);
+        Assert.Equal(usernameAlreadyExistsResult.FirstError.Code, Errors.User.UserNameAlreadyExists.Code);
+
     }
 
     [Fact]
-    public async Task ShouldNot_SignInPersonalAccount_WhenUserNameAlreadyUsed()
+    public async Task Should_ReturnAuthTokens_WhenUserSignInPersonalAccount()
     {
-        var command = await GetSutCommand();
-
-        _profileRepository.ExistsUserByUserNameAsync(
-            UserName.Create(command.UserName).Value,
-            default).Returns(true);
-
+        var stream = await GetAvatarPicture();
+        var command = GetSutCommand(stream);
+    
         // Act
-        var result = await _sut.Handle(command, default);
-
-        // Assert
-        Assert.True(result.IsError);
-        Assert.Equal(result.FirstError.Code, Errors.User.UserNameAlreadyExists.Code);
-    }
-
-    [Fact]
-    public async Task Should_ReturnAuthTokens_WhenUserSignEnterpriseAccount()
-    {
-
-        // Arrange
-        var command = await GetSutCommand();
-
-        // Act
-        var result = await _sut.Handle(command, default);
-
+        var result = await Sender.Send(command);
+    
         // Assert
         Assert.False(result.IsError);
-        await _authRepository.Received(1).AddAsync(Arg.Any<Auth>(), default);
+        Assert.NotNull(result.Value);
+    }
+    
+    [Fact]
+    public async Task Should_ReturnValidAccessTokens_WhenUserSignInPersonalAccount()
+    {
+        var stream = await GetAvatarPicture();
+        var command = GetSutCommand(stream);
+    
+        // Act
+        var result = await Sender.Send(command);
+    
+        // Assert
+        var accessToken = result.Value.AccessToken;
+        var refreshToken = result.Value.RefreshToken;
+
+        var isAccessTokenValid = await _jwtProvider.ValidateToken(accessToken);
+        var isRefreshTokenValid = await _jwtProvider.ValidateToken(refreshToken);
+        
+        Assert.True(isAccessTokenValid);
+        Assert.True(isRefreshTokenValid);
     }
 }

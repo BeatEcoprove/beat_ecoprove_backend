@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BeatEcoprove.Application.Tests;
 
-[Collection("SignInPersonalAccount Test Collection")]
+[Collection("Test Collection")]
 public abstract class BaseIntegrationTest : IClassFixture<IntegrationWebApplicationFactory>, IAsyncLifetime
 {
     private readonly IServiceScope _scope;
