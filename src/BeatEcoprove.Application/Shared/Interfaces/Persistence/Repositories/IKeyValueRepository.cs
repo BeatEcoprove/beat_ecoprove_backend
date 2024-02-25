@@ -1,9 +1,10 @@
-﻿namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+﻿using BeatEcoprove.Domain.Shared.Models;
 
+namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 public interface IKeyValueRepository<TValue>
 {
-    Task AddAsync(string key, TValue value, TimeSpan? expirationSpan = null);
-    Task<TValue?> GetAsync(string key);
-    Task<TValue?> GetAndDeleteAsync(string key);
-    Task DeleteAsync(string key);
+    Task AddAsync(Key key, TValue value, TimeSpan? expirationSpan = null);
+    Task<TValue?> GetAsync(Key key);
+    Task<TValue?> GetAndDeleteAsync(Key key);
+    Task DeleteAsync(Key key);
 }

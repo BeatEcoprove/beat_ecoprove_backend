@@ -5,7 +5,6 @@ using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
-using StackExchange.Redis;
 
 namespace BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
 
@@ -13,18 +12,18 @@ internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPassw
 {
     private readonly IAuthRepository _authRepository;
     private readonly IMailSender _mailSender;
-    private readonly IDatabase _redis;
+    private readonly IKeyValueRepository<string> _keyValueRepository;
     private readonly IJwtProvider _jwtProvider;
 
     public ForgotPasswordCommandHandler(
         IAuthRepository authRepository,
         IMailSender mailSender, 
-        IDatabase redis, 
+        IKeyValueRepository<string> keyValueRepository, 
         IJwtProvider jwtProvider)
     {
         _authRepository = authRepository;
         _mailSender = mailSender;
-        _redis = redis;
+        _keyValueRepository = keyValueRepository;
         _jwtProvider = jwtProvider;
     }
 
@@ -47,8 +46,9 @@ internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPassw
         );
         
         var forgotToken = _jwtProvider.GenerateToken(payload);
-        await _redis.StringAppendAsync(generatedCode, forgotToken);
-        await _redis.KeyExpireAsync(generatedCode, TimeSpan.FromMinutes(15));
+
+        var forgotKey = new ForgotKey(generatedCode);
+        await _keyValueRepository.AddAsync(forgotKey, forgotToken, TimeSpan.FromMinutes(15));
 
         await _mailSender.SendMailAsync(
             user.Email.Value,

@@ -6,7 +6,6 @@ using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using ErrorOr;
 using Microsoft.IdentityModel.Tokens;
-using StackExchange.Redis;
 
 namespace BeatEcoprove.Application.Authentication.Commands.ResetPassword;
 
@@ -15,18 +14,18 @@ internal sealed class ResetPasswordCommandHandler : ICommandHandler<ResetPasswor
     private readonly IJwtProvider _jwtProvider;
     private readonly IAuthRepository _authRepository;
     private readonly IPasswordProvider _passwordProvider;
-    private readonly IDatabase _redis;
+    private readonly IKeyValueRepository<string> _keyValueRepository;
 
     public ResetPasswordCommandHandler(
         IJwtProvider jwtProvider,
         IAuthRepository authRepository,
         IPasswordProvider passwordProvider, 
-        IDatabase redis)
+        IKeyValueRepository<string> keyValueRepository)
     {
         _jwtProvider = jwtProvider;
         _authRepository = authRepository;
         _passwordProvider = passwordProvider;
-        _redis = redis;
+        _keyValueRepository = keyValueRepository;
     }
 
     public async Task<ErrorOr<string>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
@@ -45,11 +44,12 @@ internal sealed class ResetPasswordCommandHandler : ICommandHandler<ResetPasswor
         {
             return Errors.ForgotPassword.ForgotTokenNotValid;
         }
-        
+
         // validate code
-        var forgotToken = _redis.StringGetDelete(request.Code);
+        var forgotKey = new ForgotKey(request.Code);
+        var forgotToken = await _keyValueRepository.GetAndDeleteAsync(forgotKey);
         
-        if (forgotToken.IsNull)
+        if (forgotToken is null)
         {
             return Errors.ForgotPassword.ForgotTokenNotValid;
         }

@@ -7,5 +7,5 @@ public interface ISessionManager : IConnectionManager<ProfileId, WebSocket>
 {
     bool IsUserAuthenticated(ProfileId userId);
     Task CloseAsync(ProfileId userId, WebSocketCloseStatus status, string reason, CancellationToken cancellation = default);
-
+    WebSocket Delete(ProfileId userId);
 }

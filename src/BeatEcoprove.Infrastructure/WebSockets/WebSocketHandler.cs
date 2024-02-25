@@ -115,6 +115,10 @@ internal class WebSocketHandler :
                 e.Message,
                 cancellationToken);
         }
+        catch (WebSocketException)
+        {
+            _sessionManager.Delete(userId);
+        }
         catch (Exception)
         {
             await _sessionManager.CloseAsync(

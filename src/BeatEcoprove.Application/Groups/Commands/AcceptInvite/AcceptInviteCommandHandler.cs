@@ -50,7 +50,8 @@ internal sealed class AcceptInviteCommandHandler : ICommandHandler<AcceptInviteC
             return Errors.Groups.NotFound;
         }
 
-        var inviteId = await _keyValueRepository.GetAndDeleteAsync(request.Code.ToString());
+        var codeKey = new CodeKey(profile.Value.Id, group.Id, request.Code.ToString());
+        var inviteId = await _keyValueRepository.GetAndDeleteAsync(codeKey);
         
         if (inviteId is null)
         {

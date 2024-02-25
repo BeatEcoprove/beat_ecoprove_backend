@@ -2,6 +2,7 @@ using BeatEcoprove.Application.Shared.Communication.Group;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.Events;
+using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using MediatR;
 
 namespace BeatEcoprove.Application.Groups.Events;
@@ -27,7 +28,9 @@ public class InviteMemberDomainEventHandler : INotificationHandler<InviteMemberD
         var invitation = notification.Invite;
 
         var inviteCode = _jwtProvider.GenerateRandomCode(6);
-        await _keyValueRespository.AddAsync(inviteCode, invitation.Id.Value.ToString());
+
+        var inviteKey = new CodeKey(invitation.Target, invitation.Group, inviteCode); 
+        await _keyValueRespository.AddAsync(inviteKey, invitation.Id.Value.ToString());
 
         await _notificationSender.SendNotificationAsync(
             new InviteGroupNotificationEvent(

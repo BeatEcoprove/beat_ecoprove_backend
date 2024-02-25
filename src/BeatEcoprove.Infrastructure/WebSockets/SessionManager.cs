@@ -1,6 +1,8 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Websockets;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using System.Collections.Concurrent;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 
 namespace BeatEcoprove.Infrastructure.WebSockets;
@@ -17,17 +19,12 @@ public class SessionManager : ISessionManager
 
     public async Task CloseAsync(ProfileId userId, WebSocketCloseStatus status, string reason, CancellationToken cancellation = default)
     {
-        var socket = _users[userId];
+        var socket = Delete(userId);
 
-        if (socket.State != WebSocketState.Aborted)
-        {
-            await socket.CloseAsync(
+        await socket.CloseAsync(
                 status,
                 reason,
                 cancellation);
-        }
-
-        _users.TryRemove(userId, out _);
     }
 
     public async Task CloseAsync(ProfileId userId, CancellationToken cancellation = default)
@@ -37,6 +34,16 @@ public class SessionManager : ISessionManager
             WebSocketCloseStatus.NormalClosure,
             string.Empty,
             cancellation);
+    }
+
+    public WebSocket Delete(ProfileId userId)
+    {
+        if (_users.TryRemove(userId, out var socket))
+        {
+            return socket;
+        }
+
+        throw new WebSocketException($"There isn't any connection with the Profile Id {userId}");
     }
 
     public WebSocket? Get(ProfileId userId)
