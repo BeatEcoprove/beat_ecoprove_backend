@@ -156,8 +156,8 @@ public class SignInEnterpriseAccountCommandTests : BaseIntegrationTest
         var accessToken = result.Value.AccessToken;
         var refreshToken = result.Value.RefreshToken;
 
-        var isAccessTokenValid = await _jwtProvider.ValidateToken(accessToken);
-        var isRefreshTokenValid = await _jwtProvider.ValidateToken(refreshToken);
+        var isAccessTokenValid = await _jwtProvider.ValidateTokenAsync(accessToken);
+        var isRefreshTokenValid = await _jwtProvider.ValidateTokenAsync(refreshToken);
         
         Assert.True(isAccessTokenValid);
         Assert.True(isRefreshTokenValid);

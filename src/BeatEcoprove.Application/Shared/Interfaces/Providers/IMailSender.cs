@@ -1,6 +1,9 @@
-﻿namespace BeatEcoprove.Application;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+
+namespace BeatEcoprove.Application.Shared.Interfaces.Providers;
 
 public interface IMailSender
 {
-    Task SendMailAsync(string to, string subject, string body);
+    Task SendMailAsync(Mail mail, CancellationToken cancellationToken = default);
+    Mail? Last();
 }

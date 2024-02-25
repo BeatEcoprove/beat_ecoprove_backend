@@ -7,7 +7,7 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Providers;
 public interface IJwtProvider
 {
     string GenerateToken(TokenPayload payload);
-    Task<bool> ValidateToken(string token);
+    Task<bool> ValidateTokenAsync(string token, CancellationToken cancellationToken = default);
     Task<Dictionary<string, string>> GetClaims(string token);
     (string, string) GenerateAuthenticationTokens(Auth account, Profile profile);
     (string, string) MapClaimsToAuthToken(IDictionary<string, string> claims);

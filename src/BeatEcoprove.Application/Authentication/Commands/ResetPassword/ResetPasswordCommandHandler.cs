@@ -54,7 +54,7 @@ internal sealed class ResetPasswordCommandHandler : ICommandHandler<ResetPasswor
             return Errors.ForgotPassword.ForgotTokenNotValid;
         }
 
-        if (!await _jwtProvider.ValidateToken(forgotToken!))
+        if (!await _jwtProvider.ValidateTokenAsync(forgotToken!))
         {
             return Errors.ForgotPassword.ForgotTokenNotValid;
         }

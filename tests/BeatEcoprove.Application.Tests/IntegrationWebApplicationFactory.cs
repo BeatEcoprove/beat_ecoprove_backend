@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Application.Tests.Shared.Mocks;
 using BeatEcoprove.Infrastructure;
 using BeatEcoprove.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Respawn;
+using StackExchange.Redis;
 using Testcontainers.PostgreSql;
+using Testcontainers.Redis;
 
 namespace BeatEcoprove.Application.Tests;
 
@@ -24,29 +27,82 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
         .WithPassword("password")
         .Build();
     
+    private readonly RedisContainer _redisContainer = new RedisBuilder()
+        .WithImage("redis:latest")
+        .Build();
+    
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureTestServices(services =>
         {
-            var descriptor = services
-                .SingleOrDefault(s => 
-                    s.ServiceType == typeof(DbContextOptions<BeatEcoproveDbContext>));
+            ConfigureDbContext(services);
+            ConfigureRedis(services);
+            ConfigureMailSender(services);
+        });
+    }
 
-            if (descriptor is not null)
-            {
-                services.Remove(descriptor);
-            }
+    private static void ConfigureMailSender(IServiceCollection services)
+    {
+        var descriptor = services
+            .SingleOrDefault(s => 
+                s.ServiceType == typeof(IMailSender));
 
-            var dbSettings = new DbSettings()
-            {
-                ConnectionString = _dbContainer.GetConnectionString()
-            };
+        if (descriptor is not null)
+        {
+            services.Remove(descriptor);
+        }
             
-            services.AddSingleton(Options.Create(dbSettings));
-            services.AddDbContext<BeatEcoproveDbContext>(options =>
+        services.AddScoped<IMailSender, MailSenderMock>();
+    }
+
+    private void ConfigureRedis(IServiceCollection services)
+    {
+        var descriptor = services
+            .SingleOrDefault(s => 
+                s.ServiceType == typeof(IDatabase));
+
+        if (descriptor is not null)
+        {
+            services.Remove(descriptor);
+        }
+
+        var redisVars = _redisContainer.GetConnectionString().Split(":");
+        services.AddScoped(cfg =>
+        {
+            var options = new ConfigurationOptions
             {
-                options.UseNpgsql(dbSettings.ConnectionString);
-            });
+                EndPoints = { $"{redisVars[0]}:{redisVars[1]}" },
+                AbortOnConnectFail = false,
+                ConnectTimeout = 5000,
+            };
+
+            IConnectionMultiplexer multiplexer = ConnectionMultiplexer.Connect(options);
+            var database = multiplexer.GetDatabase(db: 0);
+
+            return database;
+        });
+    }
+
+    private void ConfigureDbContext(IServiceCollection services)
+    {
+        var descriptor = services
+            .SingleOrDefault(s => 
+                s.ServiceType == typeof(DbContextOptions<BeatEcoproveDbContext>));
+
+        if (descriptor is not null)
+        {
+            services.Remove(descriptor);
+        }
+
+        var dbSettings = new DbSettings()
+        {
+            ConnectionString = _dbContainer.GetConnectionString()
+        };
+            
+        services.AddSingleton(Options.Create(dbSettings));
+        services.AddDbContext<BeatEcoproveDbContext>(options =>
+        {
+            options.UseNpgsql(dbSettings.ConnectionString);
         });
     }
 
@@ -64,6 +120,8 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
     public async Task InitializeAsync()
     {
         await _dbContainer.StartAsync();
+        await _redisContainer.StartAsync();
+        
         await InitiateDbConnection();
     }
 
@@ -83,8 +141,9 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
         });
     }
 
-    public new Task DisposeAsync()
+    public new async Task DisposeAsync()
     {
-        return _dbContainer.StopAsync();
+        await _redisContainer.StartAsync();
+        await _dbContainer.StopAsync();
     }
 }

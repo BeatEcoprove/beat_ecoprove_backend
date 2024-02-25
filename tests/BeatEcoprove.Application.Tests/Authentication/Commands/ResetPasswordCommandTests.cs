@@ -47,7 +47,7 @@ public class ResetPasswordCommandTests
         // Arrange
         var command = GetSutCommand("not_valid_token");
 
-        _jwtProvider.ValidateToken(
+        _jwtProvider.ValidateTokenAsync(
             command.Code).Returns(false);
 
         // Act
@@ -74,7 +74,7 @@ public class ResetPasswordCommandTests
         // Arrange
         var command = GetSutCommand(CustomForgotToken);
 
-        _jwtProvider.ValidateToken(
+        _jwtProvider.ValidateTokenAsync(
             command.Code).Returns(true);
 
         _jwtProvider.GetClaims(

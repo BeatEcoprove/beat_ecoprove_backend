@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application;
+using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

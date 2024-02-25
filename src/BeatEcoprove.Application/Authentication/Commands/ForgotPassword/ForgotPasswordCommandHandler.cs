@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
+using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -8,8 +9,11 @@ using ErrorOr;
 
 namespace BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordCommand, ErrorOr<string>>
 {
+    public const int ForgotCodeLength = 6;
+    
     private readonly IAuthRepository _authRepository;
     private readonly IMailSender _mailSender;
     private readonly IKeyValueRepository<string> _keyValueRepository;
@@ -51,9 +55,12 @@ internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPassw
         await _keyValueRepository.AddAsync(forgotKey, forgotToken, TimeSpan.FromMinutes(15));
 
         await _mailSender.SendMailAsync(
-            user.Email.Value,
-            "Forgot password",
-            $"Your forgot password token is: {generatedCode}"
+            new Mail(
+                user.Email.Value,
+                "Forgot password",
+                $"Your forgot password token is: {generatedCode}"
+            ),
+            cancellationToken
         );
 
         return "Email sent";

@@ -58,7 +58,7 @@ public class JwtProvider : IJwtProvider
 
     public async Task<Dictionary<string, string>> GetClaims(string token)
     {
-        if (!await ValidateToken(token))
+        if (!await ValidateTokenAsync(token))
         {
             throw new SecurityTokenException();
         }
@@ -132,7 +132,7 @@ public class JwtProvider : IJwtProvider
         return (accessToken, refreshToken);
     }
 
-    public async Task<bool> ValidateToken(string token)
+    public async Task<bool> ValidateTokenAsync(string token, CancellationToken cancellationToken = default)
     {
         var result =
             await _jwtSecurityTokenHandler.ValidateTokenAsync(token, GetTokenValidationParameters(_jwtSettings));
