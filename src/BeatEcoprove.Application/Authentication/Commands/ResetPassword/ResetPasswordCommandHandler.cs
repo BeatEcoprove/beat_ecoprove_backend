@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -54,7 +55,7 @@ internal sealed class ResetPasswordCommandHandler : ICommandHandler<ResetPasswor
             return Errors.ForgotPassword.ForgotTokenNotValid;
         }
 
-        if (!await _jwtProvider.ValidateTokenAsync(forgotToken!))
+        if (!await _jwtProvider.ValidateTokenAsync(forgotToken!, cancellationToken))
         {
             return Errors.ForgotPassword.ForgotTokenNotValid;
         }
@@ -85,7 +86,7 @@ internal sealed class ResetPasswordCommandHandler : ICommandHandler<ResetPasswor
 
         var hashedPassword = Password.FromHash(_passwordProvider.HashPassword(password.Value));
         await _authRepository.UpdateUserPassword(auth.Id, hashedPassword, cancellationToken);
-
+        
         return "Password alterada com sucesso.";
     }
 }

@@ -13,7 +13,8 @@ namespace BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
 internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordCommand, ErrorOr<string>>
 {
     public const int ForgotCodeLength = 6;
-    
+    public static readonly TimeSpan ForgotCodeTimeSpan = TimeSpan.FromMinutes(15);
+
     private readonly IAuthRepository _authRepository;
     private readonly IMailSender _mailSender;
     private readonly IKeyValueRepository<string> _keyValueRepository;
@@ -52,7 +53,7 @@ internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPassw
         var forgotToken = _jwtProvider.GenerateToken(payload);
 
         var forgotKey = new ForgotKey(generatedCode);
-        await _keyValueRepository.AddAsync(forgotKey, forgotToken, TimeSpan.FromMinutes(15));
+        await _keyValueRepository.AddAsync(forgotKey, forgotToken, ForgotCodeTimeSpan);
 
         await _mailSender.SendMailAsync(
             new Mail(

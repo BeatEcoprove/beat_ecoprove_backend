@@ -1,43 +1,106 @@
-﻿using BeatEcoprove.Application.Authentication.Commands.ResetPassword;
+﻿using BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
+using BeatEcoprove.Application.Authentication.Commands.ResetPassword;
 using BeatEcoprove.Application.Shared.Helpers;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using Bogus;
-using NSubstitute;
 
 namespace BeatEcoprove.Application.Tests.Authentication.Commands;
 
-public class ResetPasswordCommandTests
+public class ResetPasswordCommandTests : BaseIntegrationTest
 {
-    private const string CustomForgotToken = "custom_forgot_token";
-
-    private readonly IJwtProvider _jwtProvider = Substitute.For<IJwtProvider>();
-    private readonly IAuthRepository _authRepository = Substitute.For<IAuthRepository>();
-    private readonly IPasswordProvider _passwordProvider = Substitute.For<IPasswordProvider>();
-    private readonly IKeyValueRepository<string> _redis = Substitute.For<IKeyValueRepository<string>>();
-
-    private readonly ResetPasswordCommandHandler _sut;
-
-    public ResetPasswordCommandTests()
+    private readonly string _code;
+    private readonly string _forgotToken;
+    private readonly Email _userEmail;
+    
+    private readonly IJwtProvider _jwtProvider;
+    private readonly IKeyValueRepository<string> _keyValueRepository;
+    private readonly IAccountService _accountService;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IAuthRepository _authRepository;
+    private readonly IPasswordProvider _passwordProvider;
+    
+    public ResetPasswordCommandTests
+        (IntegrationWebApplicationFactory factory) : base(factory)
     {
-        _sut = new ResetPasswordCommandHandler(
-            _jwtProvider,
-            _authRepository,
-            _passwordProvider,
-            _redis
-        );
+        _jwtProvider = GetService<IJwtProvider>();
+        _keyValueRepository = GetService<IKeyValueRepository<string>>();
+        _accountService = GetService<IAccountService>();
+        _unitOfWork = GetService<IUnitOfWork>();
+        _authRepository = GetService<IAuthRepository>();
+        _passwordProvider = GetService<IPasswordProvider>();
+        
+        _userEmail = new Faker<Email>()
+            .CustomInstantiator(f => Email.Create(f.Internet.Email()).Value)
+            .Generate();
+        
+        _forgotToken = FakeForgotToken();
+        _code = _jwtProvider.GenerateRandomCode(ForgotPasswordCommandHandler.ForgotCodeLength);
     }
 
-    private ResetPasswordCommand GetSutCommand(string token)
+    private string FakeForgotToken()
+    {
+        return new Faker<string>()
+            .CustomInstantiator(f =>
+                _jwtProvider.GenerateToken(
+                    new ForgotTokenPayload(
+                        _userEmail.Value,
+                        DateTime.UtcNow.AddDays(3))));
+    }
+    
+    private static async Task<Stream> GetAvatarPicture()
+    {
+        using HttpClient httpClient = new();
+        var response = httpClient.GetAsync("https://github.com/DiogoCC7.png");
+
+        return await response.Result.Content.ReadAsStreamAsync();
+    }
+    
+    private async Task CreateUserAccount(
+        string email,
+        CancellationToken cancellationToken = default)
+    {
+        var avatarPicture = await GetAvatarPicture();
+        var auth = new Faker<Auth>()
+            .CustomInstantiator(f =>
+                Auth.Create(
+                    Email.Create(email).Value,
+                    Password.Create("Password123").Value))
+            .Generate();
+        
+        var profile = new Faker<Consumer>()
+            .CustomInstantiator(f =>
+                Consumer.Create(
+                    UserName.Create(f.Internet.UserName()).Value,
+                    Phone.Create("+351", f.Phone.PhoneNumber("#########")).Value,
+                    DateOnly.FromDateTime(f.Person.DateOfBirth),
+                    Gender.Male))
+            .Generate();
+        
+        await _accountService.CreateAccount(
+            auth.Email,
+            auth.Password,
+            profile,
+            avatarPicture,
+            cancellationToken);
+        
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+    }
+    
+    private static ResetPasswordCommand GetSutCommand(string code = "")
     {
         // Arrange
         return new Faker<ResetPasswordCommand>()
             .CustomInstantiator(f => new ResetPasswordCommand(
-                f.Internet.Password(),
-                token))
+                "NewPassword12",
+                code))
             .Generate();
     }
 
@@ -45,53 +108,74 @@ public class ResetPasswordCommandTests
     public async Task ShouldNot_ResetPassword_ForgotTokenIsNotValid()
     {
         // Arrange
-        var command = GetSutCommand("not_valid_token");
-
-        _jwtProvider.ValidateTokenAsync(
-            command.Code).Returns(false);
+        var command = GetSutCommand(_code);
+        
+        var forgotKey = new ForgotKey(_code);
+        await _keyValueRepository.AddAsync(forgotKey, string.Empty, ForgotPasswordCommandHandler.ForgotCodeTimeSpan);
 
         // Act
-        var result = await _sut.Handle(command, default);
+        var result = await Sender.Send(command);
 
         // Assert
         Assert.True(result.IsError);
         Assert.Equal(result.FirstError.Code, Errors.ForgotPassword.ForgotTokenNotValid.Code);
     }
 
-    private Auth GetAuth(string fakeEmail)
-    {
-        Email email = Email.Create(fakeEmail).Value;
-        var password = Password.Create("Password12").Value;
-
-        return Auth.Create(email, password);
-    }
-
     [Fact]
     public async Task ShouldNot_ResetPassword_WhenUserDoesNotExists()
     {
-        Auth auth = GetAuth("fake@email.com");
-
         // Arrange
-        var command = GetSutCommand(CustomForgotToken);
-
-        _jwtProvider.ValidateTokenAsync(
-            command.Code).Returns(true);
-
-        _jwtProvider.GetClaims(
-            command.Code).Returns(new Dictionary<string, string>
-            {
-                { UserClaims.Email, auth.Email.Value }
-            });
-
-        _authRepository
-            .GetAuthByEmail(auth.Email, default)
-            .Returns(null as Auth);
+        var command = GetSutCommand(_code);
+        
+        var forgotKey = new ForgotKey(_code);
+        await _keyValueRepository.AddAsync(forgotKey, _forgotToken, ForgotPasswordCommandHandler.ForgotCodeTimeSpan);
 
         // Act
-        var result = await _sut.Handle(command, default);
+        var result = await Sender.Send(command);
 
         // Assert
         Assert.True(result.IsError);
         Assert.Equal(result.FirstError.Code, Errors.User.EmailDoesNotExists.Code);
+    }
+    
+    [Fact]
+    public async Task ShouldNot_ResetPassword_IfCodeDoesNotExists()
+    {
+        // Arrange
+        var command = GetSutCommand(_code);
+        
+        var forgotKey = new ForgotKey(_code);
+        await _keyValueRepository.AddAsync(forgotKey, _forgotToken, ForgotPasswordCommandHandler.ForgotCodeTimeSpan);
+
+        // Act
+        var result = await Sender.Send(command);
+
+        // Assert
+        Assert.True(result.IsError);
+        Assert.Equal(result.FirstError.Code, Errors.User.EmailDoesNotExists.Code);
+    }
+    
+    [Fact]
+    public async Task Should_ResetPassword()
+    {
+        // Arrange
+        var command = GetSutCommand(_code);
+        await CreateUserAccount(_userEmail);
+        
+        var forgotKey = new ForgotKey(_code);
+        await _keyValueRepository.AddAsync(forgotKey, _forgotToken, ForgotPasswordCommandHandler.ForgotCodeTimeSpan);
+
+        // Act
+        var result = await Sender.Send(command);
+
+        // Assert
+        Assert.False(result.IsError);
+        
+        var auth = await _authRepository.GetAuthByEmail(_userEmail, default);
+        var validatePassword = _passwordProvider.VerifyPassword(
+            "Password123", 
+            auth!.Password);
+        
+        Assert.True(validatePassword);
     }
 }
