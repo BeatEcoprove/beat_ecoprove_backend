@@ -7,6 +7,7 @@ using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
@@ -103,7 +104,7 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
 
         return _bucketEntries.Remove(bucketEntry);
     }
-    
+
     public ErrorOr<bool> ConvertToEcoCoins(int sustainabilityPoints)
     {
         if (sustainabilityPoints < 0)
@@ -118,7 +119,7 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
 
         var oldEcoCoins = EcoCoins;
         EcoCoins += sustainabilityPoints * ConvertConcurrencyRange;
-        
+
         var delta = EcoCoins - oldEcoCoins;
         if (delta > 0)
         {
@@ -134,21 +135,21 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
         {
             return Errors.Profile.CannotConvertNegativeEcoCoins;
         }
-        
+
         if (EcoCoins < ecoCoins)
         {
             return Errors.Profile.NotEnoughEcoCoins;
         }
-        
+
         var oldSustainabilityPoints = SustainabilityPoints;
         SustainabilityPoints += ecoCoins / ConvertConcurrencyRange;
-        
+
         var delta = SustainabilityPoints - oldSustainabilityPoints;
         if (delta > 0)
         {
             EcoCoins -= ecoCoins;
         }
-        
+
         return true;
     }
 

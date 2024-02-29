@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -19,7 +20,7 @@ public class UserName : ValueObject
         {
             return Errors.Username.InvalidUsername;
         }
-        
+
         return new UserName(value);
     }
 
@@ -27,6 +28,6 @@ public class UserName : ValueObject
     {
         yield return Value;
     }
-    
+
     public static implicit operator string(UserName userName) => userName.Value;
 }

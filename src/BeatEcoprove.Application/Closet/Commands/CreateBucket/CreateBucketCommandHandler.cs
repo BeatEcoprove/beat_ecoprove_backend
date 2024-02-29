@@ -6,8 +6,8 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+
 using ErrorOr;
-using Mapster;
 
 namespace BeatEcoprove.Application.Closet.Commands.CreateBucket;
 
@@ -21,7 +21,7 @@ internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketC
     public CreateBucketCommandHandler(
         IProfileManager profileManager,
         IBucketRepository bucketRepository,
-        IClosetService closetService, 
+        IClosetService closetService,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -38,7 +38,7 @@ internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketC
         {
             return profile.Errors;
         }
-        
+
         var bucket = Bucket.Create(
             request.Name.Capitalize()
         );
@@ -49,16 +49,16 @@ internal sealed class CreateBucketCommandHandler : ICommandHandler<CreateBucketC
         }
 
         var shouldAddBucketToCloset = await _closetService.AddBucketToCloset(
-            profile.Value, 
-            bucket.Value, 
-            ToClothIdList(request.ClothIds), 
+            profile.Value,
+            bucket.Value,
+            ToClothIdList(request.ClothIds),
             cancellationToken);
-        
+
         if (shouldAddBucketToCloset.IsError)
         {
             return shouldAddBucketToCloset.Errors;
         }
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return await _closetService.GetBucketResult(profile.Value, bucket.Value, cancellationToken);

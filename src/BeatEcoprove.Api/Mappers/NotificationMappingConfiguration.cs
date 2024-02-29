@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Contracts.Profile.Notifications;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
+
 using Mapster;
 
 namespace BeatEcoprove.Api.Mappers;

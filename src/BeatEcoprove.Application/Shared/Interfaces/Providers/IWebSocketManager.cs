@@ -1,5 +1,6 @@
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using System.Net.WebSockets;
+
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 namespace BeatEcoprove.Application.Shared.Interfaces.Providers;
 

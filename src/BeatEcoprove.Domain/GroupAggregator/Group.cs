@@ -6,6 +6,7 @@ using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Domain.GroupAggregator;
@@ -15,7 +16,7 @@ public class Group : AggregateRoot<GroupId, Guid>
     private readonly List<GroupMember> _members = new();
     private readonly List<GroupInvite> _invites = new();
     private readonly List<Message> _messages = new();
-    
+
     private Group() { }
 
     private Group(
@@ -55,7 +56,7 @@ public class Group : AggregateRoot<GroupId, Guid>
         bool isPublic)
     {
         return new(
-            GroupId.CreateUnique(), 
+            GroupId.CreateUnique(),
             creatorId,
             name,
             description,
@@ -63,7 +64,7 @@ public class Group : AggregateRoot<GroupId, Guid>
             0,
             isPublic);
     }
-    
+
     public void SetAvatarPicture(string avatarPicture)
     {
         AvatarPicture = avatarPicture;
@@ -76,7 +77,7 @@ public class Group : AggregateRoot<GroupId, Guid>
             this.Id,
             permission
         );
-        
+
         this._members.Add(member);
 
         MembersCount++;
@@ -87,7 +88,7 @@ public class Group : AggregateRoot<GroupId, Guid>
     {
         return this._members.FirstOrDefault(member => member.Profile == profileId);
     }
-    
+
     public ErrorOr<bool> PromoteMember(GroupMemberId memberId, MemberPermission role)
     {
         var member = this._members.FirstOrDefault(member => member.Id == memberId);
@@ -96,7 +97,7 @@ public class Group : AggregateRoot<GroupId, Guid>
         {
             return Errors.Groups.MemberNotFound;
         }
-        
+
         if (member.Permission == role)
         {
             return Errors.Groups.CannotPromoteToSameRole;
@@ -104,7 +105,7 @@ public class Group : AggregateRoot<GroupId, Guid>
 
         return member.Promote(role);
     }
-    
+
     public List<GroupMember> GetAdmins()
     {
         return this._members
@@ -117,36 +118,36 @@ public class Group : AggregateRoot<GroupId, Guid>
         MembersCount--;
         return this._members.Remove(member);
     }
-    
+
     public void SetGroupState(bool isPublic)
     {
         IsPublic = isPublic;
     }
-    
+
     public void SetName(string name)
     {
         Name = name;
     }
-    
+
     public void SetDescription(string description)
     {
         Description = description;
     }
-    
+
     public ErrorOr<bool> AddTextMessage(Profile profile, string message)
     {
         var groupMember = GetMemberByProfileId(profile.Id);
-        
-        if (groupMember is null )
+
+        if (groupMember is null)
         {
             if (!IsPublic)
             {
                 return Errors.Groups.MemberNotFound;
             }
-            
+
             groupMember = AddMember(profile.Id);
         }
-        
+
         this._messages.Add(new Message(
             this.Id,
             groupMember.Id,
@@ -168,10 +169,10 @@ public class Group : AggregateRoot<GroupId, Guid>
             from,
             to.Id
         );
-        
+
         this._invites.Add(invite);
         this.AddDomainEvent(new InviteMemberDomainEvent(invite));
-        
+
         return invite;
     }
 
@@ -179,12 +180,12 @@ public class Group : AggregateRoot<GroupId, Guid>
     {
         invite = this._invites
             .First(i => i.Id == invite.Id);
-        
+
         if (invite.AcceptedAt is not null || invite.DeclinedAt is not null)
         {
             return Errors.Groups.InviteAlreadyUsed;
         }
-        
+
         if (!accept)
         {
             invite.Decline();
@@ -195,10 +196,10 @@ public class Group : AggregateRoot<GroupId, Guid>
             invite.Target,
             invite.Permission
         );
-        
+
         invite.Accept();
         this._invites.Remove(invite);
-        
+
         return true;
     }
 }

@@ -6,6 +6,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Websockets;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Groups.Commands.SendTextMessage;
@@ -36,7 +37,7 @@ internal sealed class SendTextMessageCommandHandler : ICommandHandler<SendTextMe
     {
         var userId = ProfileId.Create(request.UserId);
         var groupId = GroupId.Create(request.GroupId);
-        
+
         if (!_sessionManager.IsUserAuthenticated(userId))
         {
             return Errors.Auth.InvalidAuth;

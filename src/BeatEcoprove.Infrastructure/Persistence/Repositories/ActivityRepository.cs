@@ -7,11 +7,12 @@ using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
-public class ActivityRepository : Repository<Activity, ActivityId>, IActivityRepository 
+public class ActivityRepository : Repository<Activity, ActivityId>, IActivityRepository
 {
     public ActivityRepository(IApplicationDbContext dbContext) : base(dbContext)
     {
@@ -25,9 +26,9 @@ public class ActivityRepository : Repository<Activity, ActivityId>, IActivityRep
             where activity.Id == dailyUseActivity.Id
                   && activity.ProfileId == profile.Id
                   && dailyUseActivity.ClothId == clothId
-                  orderby activity.CreatedAt descending 
+            orderby activity.CreatedAt descending
             select dailyUseActivity;
-        
+
         return getLastDailyUseActivityAsync.FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -53,7 +54,7 @@ public class ActivityRepository : Repository<Activity, ActivityId>, IActivityRep
                 cloth.State.ToString(),
                 cloth.ClothAvatar
             );
-            
+
         return getCurrentOutfit.ToListAsync(cancellationToken);
     }
 }

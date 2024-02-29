@@ -1,6 +1,6 @@
-﻿using BeatEcoprove.Application;
-using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
+
 using FluentEmail.Core;
 
 namespace BeatEcoprove.Infrastructure.EmailSender;
@@ -22,7 +22,7 @@ public class MailSender : IMailSender
             .Subject(mail.Subject)
             .Body(mail.Body, isHtml: false)
             .SendAsync(cancellationToken);
-        
+
         Mails.Add(mail);
     }
 

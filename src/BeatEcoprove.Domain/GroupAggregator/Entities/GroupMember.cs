@@ -7,7 +7,7 @@ namespace BeatEcoprove.Domain.GroupAggregator.Entities;
 
 public class GroupMember : Entity<GroupMemberId>
 {
-    private GroupMember() {}
+    private GroupMember() { }
 
     public GroupMember(
         ProfileId profile,
@@ -23,7 +23,7 @@ public class GroupMember : Entity<GroupMemberId>
     public ProfileId Profile { get; private set; } = null!;
     public GroupId Group { get; private set; } = null!;
     public MemberPermission Permission { get; private set; }
-    
+
     public bool Promote(MemberPermission permission)
     {
         Permission = permission;

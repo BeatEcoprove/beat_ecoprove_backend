@@ -1,6 +1,7 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Services.Queries.GetAllServices;

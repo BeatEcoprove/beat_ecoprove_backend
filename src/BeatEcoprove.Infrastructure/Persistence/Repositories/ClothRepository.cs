@@ -5,6 +5,7 @@ using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
@@ -25,7 +26,7 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
 
     public async Task<ClothDao?> GetClothDaoByIdAsync(ClothId id, CancellationToken cancellationToken = default)
     {
-        var getCloth = 
+        var getCloth =
             from cloth in DbContext.Cloths
             from color in DbContext.Set<Color>()
             from brand in DbContext.Set<Brand>()
@@ -42,7 +43,7 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
                 cloth.State.ToString(),
                 cloth.ClothAvatar
             );
-        
+
         return await getCloth.SingleOrDefaultAsync(cancellationToken);
     }
 
@@ -59,7 +60,7 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
 
         DbContext.Cloths.Remove(cloth);
     }
-    
+
     public async Task<List<MaintenanceService>> GetAvailableMaintenanceServices(ClothId id, CancellationToken cancellationToken)
     {
         var getAvailableServices =
@@ -74,7 +75,7 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
                 select mainActivity
             ).All(mainActivity => mainActivity == null || mainActivity.EndAt != null)
             select services;
-        
+
         return await getAvailableServices.ToListAsync(cancellationToken);
     }
 
@@ -84,10 +85,10 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
             from cloth in DbContext.Cloths
             from mainActivity in DbContext.Set<MaintenanceActivity>()
             where
-                cloth.Id == id && mainActivity.ClothId == cloth.Id && ( mainActivity.EndAt == null || mainActivity.EndAt < DateTime.UtcNow )
-                orderby mainActivity.EndAt descending
+                cloth.Id == id && mainActivity.ClothId == cloth.Id && (mainActivity.EndAt == null || mainActivity.EndAt < DateTime.UtcNow)
+            orderby mainActivity.EndAt descending
             select mainActivity;
-        
+
         return await getLastMaintenanceActivity.FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -100,7 +101,7 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
             where
                 cloth.Id == id && bucketClothEntry.ClothId == cloth.Id
             select bucket;
-        
+
         return await getBucketsOfCloth.ToListAsync(cancellationToken);
     }
 
@@ -109,5 +110,5 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
         return await DbContext.Cloths
             .AnyAsync(cloth => cloths.Contains(cloth.Id), cancellationToken);
     }
-    
+
 }

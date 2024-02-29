@@ -4,10 +4,13 @@ using BeatEcoprove.Application.Closet.Commands.RemoveClothFromOutfit;
 using BeatEcoprove.Application.Closet.Queries.GetCurrentOutfit;
 using BeatEcoprove.Contracts.Activities;
 using BeatEcoprove.Contracts.Closet.Bucket;
-using BeatEcoprove.Contracts.Closet.Cloth;
+
 using Mapster;
+
 using MapsterMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,7 +46,7 @@ public class OutfitController : ApiController
             Problem<DailyActivityResponse>
         );
     }
-    
+
     [HttpPut("cloth/{clothId:guid}/unUse")]
     public async Task<ActionResult<DailyActivityResponse>> RemoveClothFromOutfit([FromQuery] Guid profileId, [FromRoute] Guid clothId)
     {
@@ -61,7 +64,7 @@ public class OutfitController : ApiController
             Problem<DailyActivityResponse>
         );
     }
-    
+
     [HttpGet("outfit")]
     public async Task<ActionResult<BucketResponse>> GetCurrentOutfit([FromQuery] Guid profileId)
     {

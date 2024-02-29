@@ -1,10 +1,9 @@
 ﻿using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using System.Text.Json;
 
 namespace BeatEcoprove.Application.Shared.Communication.Group;
 
-public class InviteGroupNotificationEvent : 
+public class InviteGroupNotificationEvent :
     NotificationEvent<InviteGroupContent>, INotifer
 {
     public InviteGroupNotificationEvent

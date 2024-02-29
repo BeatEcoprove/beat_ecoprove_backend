@@ -7,6 +7,7 @@ using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Groups.Commands.InviteMember;
@@ -19,9 +20,9 @@ internal sealed class InviteMemberCommandHandler : ICommandHandler<InviteMemberC
     private readonly IUnitOfWork _unitOfWork;
 
     public InviteMemberCommandHandler(
-        IProfileManager profileManager, 
-        IGroupRepository groupRepository, 
-        IProfileRepository profileRepository, 
+        IProfileManager profileManager,
+        IGroupRepository groupRepository,
+        IProfileRepository profileRepository,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -38,38 +39,38 @@ internal sealed class InviteMemberCommandHandler : ICommandHandler<InviteMemberC
         var inviteeId = ProfileId.Create(request.InviteeId);
 
         var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
-        
+
         if (profile.IsError)
         {
             return profile.Errors;
         }
-        
+
         var group = await _groupRepository.GetByIdAsync(groupId, cancellationToken);
-        
+
         if (group is null)
         {
             return Errors.Groups.NotFound;
         }
-        
+
         if (!await _groupRepository.IsMemberAsync(groupId, profile.Value.Id, cancellationToken))
         {
             return Errors.Groups.MemberNotFound;
-        }   
-        
+        }
+
         var invitee = await _profileRepository.GetByIdAsync(inviteeId, cancellationToken);
-        
+
         if (invitee is null)
         {
             return Errors.User.ProfileDoesNotExists;
         }
-        
+
         var shouldInviteUser = group.InviteMember(profile.Value.Id, invitee);
-        
+
         if (shouldInviteUser.IsError)
         {
             return shouldInviteUser.Errors;
         }
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return group;

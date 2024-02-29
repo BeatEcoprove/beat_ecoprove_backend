@@ -1,5 +1,6 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using System.Text.Json;
+﻿using System.Text.Json;
+
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 namespace BeatEcoprove.Application.Shared.Communication;
 
@@ -13,7 +14,7 @@ public abstract class NotificationEvent<TContent> : IRealTimeNotification
 
     public TContent Content { get; init; }
     public ProfileId Owner { get; init; }
-    public DateTimeOffset CreatedAt {  get; init; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
     public DateTimeOffset DeletedAt { get; private set; }
     public abstract string Type { get; }
 

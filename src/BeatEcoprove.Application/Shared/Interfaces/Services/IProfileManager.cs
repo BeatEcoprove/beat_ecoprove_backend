@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Shared.Interfaces.Services;

@@ -2,6 +2,7 @@
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.Shared.ValueObjects;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -32,7 +33,7 @@ public class ClothConfiguration : IEntityTypeConfiguration<Cloth>
                 id => id.Value,
                 value => ClothId.Create(value))
             .IsRequired();
-        
+
         builder.Property(cloth => cloth.DeletedAt)
             .HasColumnName("deleted_at");
 

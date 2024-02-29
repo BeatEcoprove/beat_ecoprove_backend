@@ -2,6 +2,7 @@ using BeatEcoprove.Application.Shared.Gaming;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.Events;
+
 using MediatR;
 
 namespace BeatEcoprove.Application.Closet.Events;

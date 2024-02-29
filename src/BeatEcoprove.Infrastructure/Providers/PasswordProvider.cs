@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application;
+
 using BC = BCrypt.Net.BCrypt;
 
 namespace BeatEcoprove.Infrastructure.Providers;

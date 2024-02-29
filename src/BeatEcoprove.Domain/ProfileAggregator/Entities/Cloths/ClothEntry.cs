@@ -1,13 +1,12 @@
 ﻿using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
 
 public class ClothEntry
 {
     public ClothEntry(
-        ProfileId profileId, 
+        ProfileId profileId,
         ClothId clothId)
     {
         ProfileId = profileId;

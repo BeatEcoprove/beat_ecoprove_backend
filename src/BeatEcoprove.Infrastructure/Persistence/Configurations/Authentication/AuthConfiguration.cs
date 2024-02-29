@@ -1,6 +1,7 @@
 ﻿using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -40,7 +41,7 @@ public class AuthConfiguration : IEntityTypeConfiguration<Auth>
 
         builder.Property(auth => auth.IsEnabled)
             .HasColumnName("is_enabled");
-        
+
         builder.Property(auth => auth.DeletedAt)
             .HasColumnName("deleted_at");
 

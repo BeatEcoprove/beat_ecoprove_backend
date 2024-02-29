@@ -1,5 +1,6 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using System.Text.Json;
+﻿using System.Text.Json;
+
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 namespace BeatEcoprove.Application.Shared.Communication;
 

@@ -8,7 +8,7 @@ public class GetAllBrandsQueryTests : BaseIntegrationTest
         (IntegrationWebApplicationFactory factory) : base(factory)
     {
     }
-    
+
     [Fact]
     public async Task GetAllBrands_ShouldReturnBrands_WhenBrandsExists()
     {
@@ -16,7 +16,7 @@ public class GetAllBrandsQueryTests : BaseIntegrationTest
         var query = new GetAllBrandsQuery();
 
         // Act
-        var brands = await Sender.Send(query);
+        var brands = await _sender.Send(query);
 
         // Assert
         Assert.False(brands.IsError);

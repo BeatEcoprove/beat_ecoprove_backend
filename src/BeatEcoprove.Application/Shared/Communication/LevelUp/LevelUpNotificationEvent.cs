@@ -1,6 +1,5 @@
 ﻿using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using System.Text.Json;
 
 namespace BeatEcoprove.Application.Shared.Communication.LevelUp;
 
@@ -17,7 +16,7 @@ public class LevelUpNotificationEvent :
     {
         return LeveUpNotification.Create(
             Owner,
-            Content.Level, 
+            Content.Level,
             Content.Xp
         );
     }

@@ -1,8 +1,11 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Currency.Queries.ConvertCurrency;
 using BeatEcoprove.Contracts.Currency;
+
 using MapsterMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,7 +41,7 @@ public class CurrencyController : ApiController
                     ecoCoins,
                     sustainabilityPoints
                 ));
-        
+
         return getAllCurrenciesResult.Match(
             currencyResponse => Ok(_mapper.Map<Conversionresult>(currencyResponse)),
             Problem<Conversionresult>

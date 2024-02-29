@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.Shared.ValueObjects;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,7 +9,7 @@ namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Extensions;
 public class BrandConfiguration : IEntityTypeConfiguration<Brand>
 {
     private const string BrandTableName = "brands";
-    
+
     public void Configure(EntityTypeBuilder<Brand> builder)
     {
         builder.ToTable(BrandTableName);
@@ -26,7 +27,7 @@ public class BrandConfiguration : IEntityTypeConfiguration<Brand>
             .HasColumnName("name")
             .HasMaxLength(30)
             .IsRequired();
-        
+
         builder.Property(brand => brand.DeletedAt)
             .HasColumnName("deleted_at");
 

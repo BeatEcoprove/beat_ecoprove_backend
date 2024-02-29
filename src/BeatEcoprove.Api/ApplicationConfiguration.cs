@@ -1,8 +1,5 @@
-﻿using BeatEcoprove.Api.Extensions;
-using BeatEcoprove.Api.Middlewares;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
-using BeatEcoprove.Application.Shared.Interfaces.Providers;
-using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
+﻿using BeatEcoprove.Api.Middlewares;
+
 using Microsoft.Extensions.FileProviders;
 
 namespace BeatEcoprove.Api;
@@ -12,7 +9,7 @@ public static class ApplicationConfiguration
     private static IApplicationBuilder AddLocalFileStorage(this IApplicationBuilder app)
     {
         var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "public");
-        
+
         app.UseStaticFiles(new StaticFileOptions
         {
             OnPrepareResponse = ctx =>
@@ -26,28 +23,28 @@ public static class ApplicationConfiguration
                 path),
             RequestPath = "/public"
         });
-        
+
         return app;
     }
-    
+
     private static IApplicationBuilder AddCustomMiddlewares(this IApplicationBuilder app)
     {
         app.UseMiddleware<ProfileCheckerMiddleware>();
-        
+
         return app;
     }
-    
+
     private static IApplicationBuilder AddWebSockets(this IApplicationBuilder app)
     {
         app.UseWebSockets();
         app.UseMiddleware<WebSocketsMiddleware>();
-        
+
         return app;
     }
-    
+
     public static WebApplication SetupConfiguration(this WebApplication app)
     {
-        app.UseCors(policyBuilder => 
+        app.UseCors(policyBuilder =>
             policyBuilder
                 .AllowAnyOrigin()
                 .AllowAnyMethod()

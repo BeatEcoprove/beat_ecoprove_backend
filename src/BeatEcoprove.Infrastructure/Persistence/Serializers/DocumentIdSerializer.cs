@@ -1,8 +1,10 @@
-﻿using BeatEcoprove.Domain.Shared.Models;
+﻿using System.Reflection;
+
+using BeatEcoprove.Domain.Shared.Models;
+
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
-using System.Reflection;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Serializers;
 
@@ -16,9 +18,9 @@ public class DocumentIdSerializer<TId> : SerializerBase<TId>
 
         var stronglyTypedIdCtor = typeof(TId)
             .GetConstructor(
-                BindingFlags.NonPublic | BindingFlags.Instance, 
-                null, 
-                new[] { typeof(ObjectId) }, 
+                BindingFlags.NonPublic | BindingFlags.Instance,
+                null,
+                new[] { typeof(ObjectId) },
                 null
             );
 

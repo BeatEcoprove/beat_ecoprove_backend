@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
+
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Converters;

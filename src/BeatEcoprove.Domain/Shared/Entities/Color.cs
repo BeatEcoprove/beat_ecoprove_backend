@@ -1,6 +1,8 @@
 ﻿using System.Text.RegularExpressions;
+
 using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.Shared.ValueObjects;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Domain.Shared.Entities;

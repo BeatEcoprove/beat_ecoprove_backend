@@ -7,6 +7,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Closet.Commands.CreateCloth;
@@ -21,9 +22,9 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
 
     public CreateClothCommandHandler(
         IUnitOfWork unitOfWork,
-        IColorRepository colorRepository, 
-        IProfileManager profileManager, 
-        IClosetService closetService, 
+        IColorRepository colorRepository,
+        IProfileManager profileManager,
+        IClosetService closetService,
         IBrandRepository brandRepository)
     {
         _unitOfWork = unitOfWork;
@@ -50,7 +51,7 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
         {
             return Errors.Color.BadHexValue;
         }
-        
+
         var brandId = await _brandRepository.GetBrandIdByNameAsync(request.Brand, cancellationToken);
 
         if (brandId is null)
@@ -62,12 +63,12 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
         var clothSize = _closetService.GetClothSize(request.ClothSize);
 
         var shouldBeValidTypes = clothType.AddValidate(clothSize);
-        
+
         if (shouldBeValidTypes.IsError)
         {
             return shouldBeValidTypes.Errors;
         }
-        
+
         var cloth = Cloth.Create
         (
             request.Name.Capitalize(),
@@ -83,15 +84,15 @@ public class CreateClothCommandHandler : ICommandHandler<CreateClothCommand, Err
         }
 
         var clothResult = await _closetService.AddClothToCloset(
-            profile.Value, 
-            cloth.Value, 
+            profile.Value,
+            cloth.Value,
             request.Brand,
-            request.Color, 
-            request.ClothAvatar, 
+            request.Color,
+            request.ClothAvatar,
             cancellationToken);
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         return clothResult;
     }
 }

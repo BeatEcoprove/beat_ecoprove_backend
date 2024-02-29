@@ -1,6 +1,7 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Contracts.Authentication.Common;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Authentication.Queries.ValidationField;

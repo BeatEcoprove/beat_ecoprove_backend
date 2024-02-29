@@ -22,7 +22,7 @@ public class LeveUpNotification : Notification
     {
         return new LeveUpNotification(
             owner,
-            level, 
+            level,
             xp
         );
     }

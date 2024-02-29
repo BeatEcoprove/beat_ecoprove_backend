@@ -1,5 +1,7 @@
 using BeatEcoprove.Domain.Shared.Models;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

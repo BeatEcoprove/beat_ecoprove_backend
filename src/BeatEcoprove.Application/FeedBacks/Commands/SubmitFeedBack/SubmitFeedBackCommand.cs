@@ -1,7 +1,7 @@
 using BeatEcoprove.Application.FeedBacks.Commands.Common;
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
-using BeatEcoprove.Domain.Shared.Entities;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.FeedBacks.Commands.SubmitFeedBack;

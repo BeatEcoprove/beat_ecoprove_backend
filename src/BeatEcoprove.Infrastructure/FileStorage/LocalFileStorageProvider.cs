@@ -1,6 +1,6 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Providers;
+
 using Microsoft.Extensions.Options;
-using Npgsql.Replication.PgOutput.Messages;
 
 namespace BeatEcoprove.Infrastructure.FileStorage;
 
@@ -18,7 +18,7 @@ public class LocalFileStorageProvider : IFileStorageProvider
     {
         var pointerName = Path.Combine(bucketName, fileName + ".png");
         var bucketPath = Path.Combine(_settings.FolderPath, bucketName);
-        
+
         if (!Directory.Exists(bucketPath))
         {
             Directory.CreateDirectory(bucketPath);
@@ -28,7 +28,7 @@ public class LocalFileStorageProvider : IFileStorageProvider
         {
             return Path.Combine(_settings.PublicFolder, DefaultImagePath);
         }
-        
+
         var path = Path.Combine(_settings.FolderPath, pointerName);
 
         await using var fileStream = new FileStream(path, stream.CanSeek ? FileMode.Create : FileMode.CreateNew);

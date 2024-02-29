@@ -9,10 +9,10 @@ public static class DependencyInjection
     {
         services.AddTransient<ProfileCheckerMiddleware>();
         services.AddTransient<WebSocketsMiddleware>();
-        
+
         return services;
     }
-    
+
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
         services.AddMiddlewares();
@@ -20,7 +20,7 @@ public static class DependencyInjection
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddMappings();
-        
+
         services.AddCors();
 
         return services;

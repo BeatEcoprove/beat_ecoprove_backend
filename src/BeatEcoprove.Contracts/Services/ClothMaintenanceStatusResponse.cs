@@ -1,4 +1,3 @@
-using BeatEcoprove.Contracts.Profile;
 using ClothResponse = BeatEcoprove.Contracts.Closet.Cloth.ClothResponse;
 
 namespace BeatEcoprove.Contracts.Services;

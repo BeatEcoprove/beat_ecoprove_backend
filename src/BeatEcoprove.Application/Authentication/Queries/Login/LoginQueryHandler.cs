@@ -1,12 +1,11 @@
 ﻿using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Helpers;
-using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Authentication.Queries.Login;
@@ -60,7 +59,7 @@ internal sealed class LoginQueryHandler : IQueryHandler<LoginQuery, ErrorOr<Auth
         }
 
         // Generate Tokens
-        var ( accessToken, refreshToken ) =
+        var (accessToken, refreshToken) =
             _jwtProvider
                 .GenerateAuthenticationTokens(auth, profile);
 

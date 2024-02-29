@@ -6,7 +6,7 @@ namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
 public class BucketEntry
 {
     public BucketEntry(
-        ProfileId profileId, 
+        ProfileId profileId,
         BucketId bucketId)
     {
         ProfileId = profileId;

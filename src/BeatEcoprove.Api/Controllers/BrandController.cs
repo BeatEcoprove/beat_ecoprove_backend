@@ -1,7 +1,10 @@
 ﻿using BeatEcoprove.Application.Brands.Queries;
 using BeatEcoprove.Contracts.Brands;
+
 using MapsterMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,9 +25,9 @@ public class BrandController : ApiController
 
     public async Task<ActionResult<BrandResponse>> GetAllBrands()
     {
-        var getAllBrandsQuery = 
+        var getAllBrandsQuery =
             await _sender.Send(new GetAllBrandsQuery());
-        
+
         return getAllBrandsQuery.Match(
             brandResponse => Ok(_mapper.Map<BrandResponse>(brandResponse)),
             Problem<BrandResponse>

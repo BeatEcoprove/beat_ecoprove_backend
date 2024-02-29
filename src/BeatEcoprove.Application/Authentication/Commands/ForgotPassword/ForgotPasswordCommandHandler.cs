@@ -5,6 +5,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
@@ -22,8 +23,8 @@ internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPassw
 
     public ForgotPasswordCommandHandler(
         IAuthRepository authRepository,
-        IMailSender mailSender, 
-        IKeyValueRepository<string> keyValueRepository, 
+        IMailSender mailSender,
+        IKeyValueRepository<string> keyValueRepository,
         IJwtProvider jwtProvider)
     {
         _authRepository = authRepository;
@@ -42,14 +43,14 @@ internal sealed class ForgotPasswordCommandHandler : ICommandHandler<ForgotPassw
         {
             return Errors.User.EmailDoesNotExists;
         }
-        
+
         var generatedCode = _jwtProvider.GenerateRandomCode(6);
 
         var payload = new ForgotTokenPayload(
             email.Value,
             DateTime.Now.AddMinutes(10)
         );
-        
+
         var forgotToken = _jwtProvider.GenerateToken(payload);
 
         var forgotKey = new ForgotKey(generatedCode);

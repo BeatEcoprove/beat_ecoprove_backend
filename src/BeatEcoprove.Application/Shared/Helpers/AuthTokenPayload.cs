@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 
 namespace BeatEcoprove.Application.Shared.Helpers;
@@ -42,7 +43,7 @@ public class AuthTokenPayload : TokenPayload
         _levelPercentage = levelPercentage;
         _sustainablePoints = sustainablePoints;
         _ecoScore = ecoScore;
-        _ecoCoins = ecoCoins;   
+        _ecoCoins = ecoCoins;
         _currentXp = currentXp;
         _nextLevelXp = nextLevelXp;
     }

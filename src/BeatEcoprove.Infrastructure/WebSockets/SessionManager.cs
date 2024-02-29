@@ -1,9 +1,8 @@
-﻿using BeatEcoprove.Application.Shared.Interfaces.Websockets;
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using System.Collections.Concurrent;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
+﻿using System.Collections.Concurrent;
 using System.Net.WebSockets;
+
+using BeatEcoprove.Application.Shared.Interfaces.Websockets;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 namespace BeatEcoprove.Infrastructure.WebSockets;
 

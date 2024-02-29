@@ -1,6 +1,4 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
-
-namespace BeatEcoprove.Application.Closet.Common;
+﻿namespace BeatEcoprove.Application.Closet.Common;
 
 public record ClothResult
 (

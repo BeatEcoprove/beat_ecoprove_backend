@@ -1,7 +1,8 @@
-﻿using BeatEcoprove.Domain.Shared.Models;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
+using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Serializers;
 

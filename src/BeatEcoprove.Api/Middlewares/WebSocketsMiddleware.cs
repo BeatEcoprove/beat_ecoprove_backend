@@ -2,11 +2,12 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Middlewares;
 
-public class WebSocketsMiddleware  : ControllerBase, IMiddleware
+public class WebSocketsMiddleware : ControllerBase, IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
@@ -15,13 +16,13 @@ public class WebSocketsMiddleware  : ControllerBase, IMiddleware
             await next(context);
             return;
         }
-            
+
         if (context.User.Identity?.IsAuthenticated != true)
         {
             context.Response.StatusCode = 401;
             return;
         }
-            
+
         var authId = context.User.GetUserId();
         var authRepository = context.RequestServices.GetService<IAuthRepository>();
 
@@ -35,7 +36,7 @@ public class WebSocketsMiddleware  : ControllerBase, IMiddleware
 
         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
         var webSocketHandler = context.RequestServices.GetService<IWebSocketManager>();
-        
+
         await webSocketHandler?.Handle(webSocket, profile.Id)!;
     }
 }

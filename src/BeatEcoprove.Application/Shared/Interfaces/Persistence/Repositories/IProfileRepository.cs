@@ -6,8 +6,6 @@ using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.DAOS;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Entities;
-using ErrorOr;
 
 namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
@@ -27,7 +25,7 @@ public interface IProfileRepository : IRepository<Profile, ProfileId>
     Task<List<Bucket>> GetBucketCloth(ProfileId profileId, List<Guid> clothIds, CancellationToken cancellationToken = default);
     Task<List<ClothDao>> GetClosetCloth(
         Guid mainProfileId,
-        List<ProfileId> profileId, 
+        List<ProfileId> profileId,
         string? search,
         List<ClothType>? category = null,
         List<ClothSize>? size = null,
@@ -35,7 +33,7 @@ public interface IProfileRepository : IRepository<Profile, ProfileId>
         List<Guid>? brand = null,
         string? order = null,
         string? sortBy = null,
-        int pageSize = 10,  
+        int pageSize = 10,
         int page = 1,
         CancellationToken cancellationToken = default);
 

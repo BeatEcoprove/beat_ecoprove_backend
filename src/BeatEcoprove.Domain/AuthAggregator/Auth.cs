@@ -1,7 +1,6 @@
 ﻿using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
-using ErrorOr;
 
 namespace BeatEcoprove.Domain.AuthAggregator;
 
@@ -42,7 +41,7 @@ public class Auth : AggregateRoot<AuthId, Guid>
             "",
             false);
     }
-    
+
     public void SetMainProfileId(ProfileId profileId)
     {
         MainProfileId = profileId;

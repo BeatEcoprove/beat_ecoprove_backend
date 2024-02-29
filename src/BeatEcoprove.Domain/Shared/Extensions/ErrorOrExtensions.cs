@@ -12,7 +12,7 @@ public static class ErrorOrExtensions
         {
             return nextError.Errors;
         }
-        
+
         return errorOr;
     }
 }

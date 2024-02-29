@@ -11,7 +11,7 @@ public class InviteNotification : Notification
         ProfileId invitorId,
         ProfileId owner,
         string code
-        ) 
+        )
         : base(title, owner)
     {
         GroupId = groupId;
@@ -33,7 +33,7 @@ public class InviteNotification : Notification
         string code
     )
     {
-        return new (
+        return new(
             title,
             groupId,
             invitorId,

@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Domain.Shared.Models;
+
 using MongoDB.Bson;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.ValueObjects;

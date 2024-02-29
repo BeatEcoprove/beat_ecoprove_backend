@@ -9,6 +9,7 @@ using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
@@ -24,14 +25,14 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
     {
         var getAllProfiles =
             from profile in DbContext.Profiles
-            where 
+            where
                 (search == null || ((string)profile.UserName).ToLower().Contains(search))
             select profile;
-        
+
         getAllProfiles = getAllProfiles
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
-        
+
         return await getAllProfiles
             .ToListAsync(cancellationToken);
     }
@@ -71,12 +72,12 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             from color in DbContext.Set<Color>()
             from brand in DbContext.Set<Brand>()
             join cloth in DbContext.Cloths on clothEntry.ClothId equals cloth.Id
-            where 
-                cloth.Color == color.Id && 
-                cloth.Brand == brand.Id && 
+            where
+                cloth.Color == color.Id &&
+                cloth.Brand == brand.Id &&
                 queryProfiles.Contains(profile.Id) &&
                 (brandValue == null || brandValue.Contains(brand.Id)) &&
-                (colorValue == null || colorValue.Contains(color.Id) ) &&
+                (colorValue == null || colorValue.Contains(color.Id)) &&
                 (size == null || size.Contains(cloth.Size)) &&
                 (category == null || category.Contains(cloth.Type)) &&
                 (search == null || cloth.Name.ToLower().Contains(search) || brand.Name.ToLower().Contains(search))
@@ -102,11 +103,11 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                     cloth.EcoScore,
                     cloth.State.ToString(),
                     cloth.ClothAvatar);
-    
+
         getAllCloth = getAllCloth
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
-            
+
         return await getAllCloth
             .ToListAsync(cancellationToken);
     }
@@ -139,11 +140,11 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
             from bucketEntry in profile.BucketEntries
             from bucket in DbContext.Buckets
             from clothEntry in bucket.BucketClothEntries
-            where 
-                profile.Id == profileId && 
+            where
+                profile.Id == profileId &&
                 bucketEntry.BucketId == bucket.Id &&
                 clothEntry.BucketId == bucket.Id &&
-                clothIds.Contains(clothEntry.ClothId) && 
+                clothIds.Contains(clothEntry.ClothId) &&
                 clothEntry.DeletedAt == null
             select bucket;
 
@@ -161,7 +162,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                 (bucketEntry.BucketId == bucketId && profile.Id == profileId)
                 || (auth.MainProfileId == profileId)
             select bucketEntry;
-        
+
         return canAccessBucket.AnyAsync(cancellationToken);
     }
 
@@ -175,7 +176,7 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
                 (clothEntry.ClothId == clothId && profile.Id == profileId)
                 || (auth.MainProfileId == profileId)
             select clothEntry;
-        
+
         return canAccessCloth.AnyAsync(cancellationToken);
     }
 

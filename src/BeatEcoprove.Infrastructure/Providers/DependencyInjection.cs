@@ -1,6 +1,7 @@
-﻿using BeatEcoprove.Application.Shared.Interfaces.Providers;
-using BeatEcoprove.Application;
+﻿using BeatEcoprove.Application;
+using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Infrastructure.Authentication;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BeatEcoprove.Infrastructure.Providers;

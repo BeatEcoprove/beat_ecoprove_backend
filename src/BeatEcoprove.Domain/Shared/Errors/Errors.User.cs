@@ -9,7 +9,7 @@ public static partial class Errors
         public static Error ProfileDoesNotBelongToAuth => Error.Unexpected(
             "User.ProfileDoesNotBelongToAuth",
             "Este utilizador não tem acesso ao perfil escolhido.");
-        
+
         public static Error ProfileDoesNotExists => Error.Validation(
             "User.ProfileDoesNotExists",
             "Não foi encontrado nenhum perfil associado ao utilizador.");
@@ -29,7 +29,7 @@ public static partial class Errors
         public static Error BadCredentials => Error.Validation(
             "User.BadCredentials",
             "O email ou a palavra-chave estão erradas.");
-        
+
         public static Error InvalidUserGender => Error.Validation(
             "User.InvalidUserGender",
             "O género do utilizador não é aceite.");

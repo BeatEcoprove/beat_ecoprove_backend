@@ -1,10 +1,9 @@
-﻿using BeatEcoprove.Domain.Shared.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Interceptors;
 
-public class SoftDeleteInterceptor: SaveChangesInterceptor
+public class SoftDeleteInterceptor : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,
@@ -20,7 +19,7 @@ public class SoftDeleteInterceptor: SaveChangesInterceptor
         ApplySoftDelete(eventData.Context);
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
-    
+
     private void ApplySoftDelete(DbContext? dbContext)
     {
         if (dbContext is null)
@@ -31,10 +30,10 @@ public class SoftDeleteInterceptor: SaveChangesInterceptor
         var deletedEntities = dbContext.ChangeTracker.Entries()
             .Where(e => e.State == EntityState.Deleted)
             .ToList();
-        
+
         foreach (var entry in deletedEntities)
         {
-            if (entry is not { State: EntityState.Deleted}) continue;
+            if (entry is not { State: EntityState.Deleted }) continue;
 
             entry.State = EntityState.Modified;
             entry.Property("DeletedAt").CurrentValue = DateTimeOffset.UtcNow;

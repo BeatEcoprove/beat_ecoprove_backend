@@ -10,8 +10,8 @@ public class MaintenanceAction : Entity<MaintenanceActionId>
     private MaintenanceAction(
         MaintenanceActionId id,
         MaintenanceServiceId maintenanceServiceId,
-        string title, 
-        string description, 
+        string title,
+        string description,
         string badge,
         int sustainablePoints = 0,
         int ecoScore = 0)
@@ -34,17 +34,17 @@ public class MaintenanceAction : Entity<MaintenanceActionId>
 
     public static MaintenanceAction Create(
         MaintenanceServiceId maintenanceServiceId,
-        string title, 
-        string description, 
+        string title,
+        string description,
         string badge,
         int sustainablePoints = 0,
         int ecoScore = 0)
     {
         return new MaintenanceAction(
-            MaintenanceActionId.CreateUnique(), 
+            MaintenanceActionId.CreateUnique(),
             maintenanceServiceId,
-            title, 
-            description, 
+            title,
+            description,
             badge,
             sustainablePoints,
             ecoScore);

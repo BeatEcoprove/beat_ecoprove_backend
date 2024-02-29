@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.GroupAggregator;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -37,7 +38,7 @@ public class StoreGroupInterceptor : SaveChangesInterceptor
 
         var groupEntity = dbContext.ChangeTracker.Entries<Group>()
             .SingleOrDefault();
-            
+
         if (groupEntity is null)
         {
             return;

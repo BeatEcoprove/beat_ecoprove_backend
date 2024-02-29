@@ -1,7 +1,10 @@
 ﻿using BeatEcoprove.Application.Colors.Queries;
 using BeatEcoprove.Contracts.Colors;
+
 using MapsterMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,9 +25,9 @@ public class ColorController : ApiController
 
     public async Task<ActionResult<ColorResponse>> GetAllColors()
     {
-        var getAllColorsResult = 
+        var getAllColorsResult =
             await _sender.Send(new GetColorsQuery());
-        
+
         return getAllColorsResult.Match(
             colorResponse => Ok(_mapper.Map<ColorResponse>(colorResponse)),
             Problem<ColorResponse>

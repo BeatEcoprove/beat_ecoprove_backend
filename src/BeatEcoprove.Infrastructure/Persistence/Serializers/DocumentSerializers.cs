@@ -1,15 +1,16 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Serializers;
 
 public static class DocumentSerializers
-{ 
+{
     public static IServiceCollection RegisterSerializers(
         this IServiceCollection services,
         Type? searchType = null)
@@ -58,7 +59,7 @@ public static class DocumentSerializers
                 if (BsonSerializer.IsTypeDiscriminated(derivedType))
                 {
                     BsonSerializer.TryRegisterSerializer(derivedType, instance as IBsonSerializer);
-                }                    
+                }
             }
         }
 

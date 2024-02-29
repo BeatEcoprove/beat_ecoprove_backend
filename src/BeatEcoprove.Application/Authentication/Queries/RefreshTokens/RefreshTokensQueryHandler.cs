@@ -7,7 +7,9 @@ using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
+
 using Microsoft.IdentityModel.Tokens;
 
 namespace BeatEcoprove.Application.Authentication.Queries.RefreshTokens;
@@ -19,8 +21,8 @@ internal sealed class RefreshTokensQueryHandler : IQueryHandler<RefreshTokensQue
     private readonly IProfileManager _profileManager;
 
     public RefreshTokensQueryHandler(
-        IJwtProvider jwtProvider, 
-        IAuthRepository authRepository, 
+        IJwtProvider jwtProvider,
+        IAuthRepository authRepository,
         IProfileManager profileManager)
     {
         _jwtProvider = jwtProvider;
@@ -56,8 +58,8 @@ internal sealed class RefreshTokensQueryHandler : IQueryHandler<RefreshTokensQue
         {
             return profile.Errors;
         }
-        
-        var ( accessToken, refreshToken ) =
+
+        var (accessToken, refreshToken) =
             _jwtProvider.GenerateAuthenticationTokens(auth, profile.Value);
 
         return new AuthenticationResult(

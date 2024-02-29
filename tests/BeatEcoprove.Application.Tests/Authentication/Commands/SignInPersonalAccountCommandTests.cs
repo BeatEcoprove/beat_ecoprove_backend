@@ -10,7 +10,7 @@ namespace BeatEcoprove.Application.Tests.Authentication.Commands;
 public class SignInPersonalAccountCommandTests : AuthenticationBaseTests
 {
     private readonly IJwtProvider _jwtProvider;
-    
+
     public SignInPersonalAccountCommandTests
         (IntegrationWebApplicationFactory factory) : base(factory)
     {
@@ -20,12 +20,12 @@ public class SignInPersonalAccountCommandTests : AuthenticationBaseTests
     private SignInPersonalAccountCommand GetSutCommand(Stream avatarPicture)
     {
         var (auth, profile) = GetAuth<Consumer>();
-        
+
         // Arrange
         return new Faker<SignInPersonalAccountCommand>()
             .CustomInstantiator(f => new SignInPersonalAccountCommand(
                 f.Person.FullName,
-                profile.BornDate, 
+                profile.BornDate,
                 profile.UserName,
                 profile.Gender.ToString(),
                 profile.Phone.Code,
@@ -42,7 +42,7 @@ public class SignInPersonalAccountCommandTests : AuthenticationBaseTests
         // Arrange
         var stream = await GetAvatarPicture();
         var handleEmailAlreadyExistsCommand = GetSutCommand(stream);
-        
+
         var handleUsernameAlreadyExistsCommand = handleEmailAlreadyExistsCommand with
         {
             Email = new Faker<Email>()
@@ -51,54 +51,54 @@ public class SignInPersonalAccountCommandTests : AuthenticationBaseTests
         };
 
         await CreateUserAccount<Consumer>(
-                email: handleEmailAlreadyExistsCommand.Email, 
+                email: handleEmailAlreadyExistsCommand.Email,
                 username: handleEmailAlreadyExistsCommand.UserName);
 
         // Act
-        var emailAlreadyExistsResult = 
-            await Sender.Send(handleEmailAlreadyExistsCommand);
-        
-        var usernameAlreadyExistsResult = 
-            await Sender.Send(handleUsernameAlreadyExistsCommand);
+        var emailAlreadyExistsResult =
+            await _sender.Send(handleEmailAlreadyExistsCommand);
+
+        var usernameAlreadyExistsResult =
+            await _sender.Send(handleUsernameAlreadyExistsCommand);
 
         // Assert
         Assert.True(emailAlreadyExistsResult.IsError);
         Assert.Equal(emailAlreadyExistsResult.FirstError.Code, Errors.User.EmailAlreadyExists.Code);
-        
+
         Assert.True(usernameAlreadyExistsResult.IsError);
         Assert.Equal(usernameAlreadyExistsResult.FirstError.Code, Errors.User.UserNameAlreadyExists.Code);
     }
-    
+
     [Fact]
     public async Task Should_ReturnAuthTokens_WhenUserSignInPersonalAccount()
     {
         var stream = await GetAvatarPicture();
         var command = GetSutCommand(stream);
-    
+
         // Act
-        var result = await Sender.Send(command);
-    
+        var result = await _sender.Send(command);
+
         // Assert
         Assert.False(result.IsError);
         Assert.NotNull(result.Value);
     }
-    
+
     [Fact]
     public async Task Should_ReturnValidAccessTokens_WhenUserSignInPersonalAccount()
     {
         var stream = await GetAvatarPicture();
         var command = GetSutCommand(stream);
-    
+
         // Act
-        var result = await Sender.Send(command);
-    
+        var result = await _sender.Send(command);
+
         // Assert
         var accessToken = result.Value.AccessToken;
         var refreshToken = result.Value.RefreshToken;
 
         var isAccessTokenValid = await _jwtProvider.ValidateTokenAsync(accessToken);
         var isRefreshTokenValid = await _jwtProvider.ValidateTokenAsync(refreshToken);
-        
+
         Assert.True(isAccessTokenValid);
         Assert.True(isRefreshTokenValid);
     }

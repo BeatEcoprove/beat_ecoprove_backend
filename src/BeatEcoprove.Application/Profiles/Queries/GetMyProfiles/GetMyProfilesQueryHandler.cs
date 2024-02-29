@@ -3,7 +3,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.DAOS;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
@@ -14,7 +14,7 @@ internal sealed class GetMyProfilesQueryHandler : IQueryHandler<GetMyProfilesQue
     private readonly IProfileRepository _profileRepository;
 
     public GetMyProfilesQueryHandler(
-        IProfileManager profileManager, 
+        IProfileManager profileManager,
         IProfileRepository profileRepository)
     {
         _profileManager = profileManager;

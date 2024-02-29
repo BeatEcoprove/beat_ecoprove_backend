@@ -1,6 +1,7 @@
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.Shared.ValueObjects;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,7 +10,7 @@ namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Extensions;
 public class FeedBackConfiguration : IEntityTypeConfiguration<FeedBack>
 {
     private const string FeedBackTable = "feedbacks";
-    
+
     public void Configure(EntityTypeBuilder<FeedBack> builder)
     {
         builder.ToTable(FeedBackTable);
@@ -22,7 +23,7 @@ public class FeedBackConfiguration : IEntityTypeConfiguration<FeedBack>
                 id => id.Value,
                 id => FeedBackId.Create(id)
             );
-        
+
         builder.Property(feedback => feedback.Sender)
             .HasColumnName("sender_id")
             .ValueGeneratedNever()
@@ -30,7 +31,7 @@ public class FeedBackConfiguration : IEntityTypeConfiguration<FeedBack>
                 id => id.Value,
                 id => ProfileId.Create(id)
             );
-        
+
         builder.HasOne<Domain.ProfileAggregator.Entities.Profiles.Profile>()
             .WithMany()
             .HasForeignKey(b => b.Sender);
@@ -42,11 +43,11 @@ public class FeedBackConfiguration : IEntityTypeConfiguration<FeedBack>
                 title => Title.Create(title).Value)
             .HasMaxLength(30)
             .IsRequired();
-        
+
         builder.Property(feedback => feedback.Description)
             .HasColumnName("description")
             .IsRequired();
-        
+
         builder.Property(feedback => feedback.DeletedAt)
             .HasColumnName("deleted_at");
     }

@@ -8,7 +8,7 @@ namespace BeatEcoprove.Domain.GroupAggregator.Entities;
 public class GroupInvite : Entity<InviteGroupId>
 {
     public GroupInvite(
-        GroupId group, 
+        GroupId group,
         ProfileId inviter,
         ProfileId target,
         MemberPermission permission = MemberPermission.Member)
@@ -28,12 +28,12 @@ public class GroupInvite : Entity<InviteGroupId>
     public DateTime CreatedAt { get; private set; }
     public DateTime? AcceptedAt { get; private set; }
     public DateTime? DeclinedAt { get; private set; }
-    
+
     public void Accept()
     {
         AcceptedAt = DateTime.UtcNow;
     }
-    
+
     public void Decline()
     {
         DeclinedAt = DateTime.UtcNow;

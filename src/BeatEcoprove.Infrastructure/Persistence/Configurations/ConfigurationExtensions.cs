@@ -1,6 +1,9 @@
 ﻿using BeatEcoprove.Infrastructure.Shared;
+
 using Microsoft.Extensions.DependencyInjection;
+
 using MongoDB.Bson.Serialization;
+
 using Scrutor;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Configurations;

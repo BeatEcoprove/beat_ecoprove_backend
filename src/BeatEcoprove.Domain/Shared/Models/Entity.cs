@@ -7,7 +7,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>, IEntity<TId>, IHasD
     private readonly List<IDomainEvent> _domainEvents = new();
 
     public TId Id { get; protected set; }
-    
+
     public DateTimeOffset? DeletedAt { get; set; }
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 

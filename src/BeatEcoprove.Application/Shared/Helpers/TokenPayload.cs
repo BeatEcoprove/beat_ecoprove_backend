@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 
 namespace BeatEcoprove.Application.Shared.Helpers;
 

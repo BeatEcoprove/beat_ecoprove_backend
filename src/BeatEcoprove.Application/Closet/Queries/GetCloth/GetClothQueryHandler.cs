@@ -3,6 +3,7 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Closet.Queries.GetCloth;
@@ -14,8 +15,8 @@ internal sealed class GetClothQueryHandler : IQueryHandler<GetClothQuery, ErrorO
     private readonly IUnitOfWork _unitOfWork;
 
     public GetClothQueryHandler(
-        IProfileManager profileManager, 
-        IClosetService closetService, 
+        IProfileManager profileManager,
+        IClosetService closetService,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -26,7 +27,7 @@ internal sealed class GetClothQueryHandler : IQueryHandler<GetClothQuery, ErrorO
     public async Task<ErrorOr<ClothResult>> Handle(GetClothQuery request, CancellationToken cancellationToken)
     {
         var clothId = ClothId.Create(request.ClothId);
-        
+
         var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
 
         if (profile.IsError)

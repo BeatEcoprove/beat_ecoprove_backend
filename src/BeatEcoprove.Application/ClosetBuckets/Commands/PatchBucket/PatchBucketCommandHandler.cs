@@ -7,6 +7,7 @@ using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.ClosetBuckets.Commands;
@@ -19,9 +20,9 @@ internal sealed class PatchBucketCommandHandler : ICommandHandler<PatchBucketCom
     private readonly IUnitOfWork _unitOfWork;
 
     public PatchBucketCommandHandler(
-        IProfileManager profileManager, 
-        IProfileRepository profileRepository, 
-        IBucketRepository bucketRepository, 
+        IProfileManager profileManager,
+        IProfileRepository profileRepository,
+        IBucketRepository bucketRepository,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -35,7 +36,7 @@ internal sealed class PatchBucketCommandHandler : ICommandHandler<PatchBucketCom
         var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
         var bucketId = BucketId.Create(request.BucketId);
-        
+
         if (string.IsNullOrWhiteSpace(request.Name))
         {
             return Errors.Bucket.NameCannotBeEmpty;
@@ -47,7 +48,7 @@ internal sealed class PatchBucketCommandHandler : ICommandHandler<PatchBucketCom
         {
             return profile.Errors;
         }
-        
+
         if (!await _profileRepository.CanProfileAccessBucket(profile.Value.Id, bucketId, cancellationToken))
         {
             return Errors.Bucket.CannotAccessBucket;
@@ -57,15 +58,15 @@ internal sealed class PatchBucketCommandHandler : ICommandHandler<PatchBucketCom
         {
             return Errors.Bucket.BucketNameAlreadyUsed;
         }
-        
+
         var bucket = await _bucketRepository.GetByIdAsync(bucketId, cancellationToken);
-        
+
         if (bucket is null)
         {
             return Errors.Bucket.BucketDoesNotExists;
         }
 
-        bucket.SetName(request.Name); 
+        bucket.SetName(request.Name);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return bucket;

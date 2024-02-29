@@ -1,19 +1,22 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Tests.Shared.Mocks;
-using BeatEcoprove.Infrastructure;
 using BeatEcoprove.Infrastructure.Persistence;
+
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using Respawn;
 using StackExchange.Redis;
 using Testcontainers.MongoDb;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
+
+using Env = BeatEcoprove.Infrastructure.Configuration.Env;
 
 namespace BeatEcoprove.Application.Tests;
 
@@ -28,7 +31,7 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
         .WithUsername("sa")
         .WithPassword("password")
         .Build();
-    
+
     private readonly RedisContainer _redisContainer = new RedisBuilder()
         .WithImage("redis:latest")
         .Build();
@@ -38,7 +41,16 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
         .WithUsername("beat")
         .WithPassword("password")
         .Build();
-    
+
+    protected override IHostBuilder? CreateHostBuilder()
+    {
+        Env.Postgres.ConnectionString = _dbContainer.GetConnectionString();
+        Env.Redis.ConnectionString = _redisContainer.GetConnectionString();
+        Env.Mongo.ConnectionString = _mongoDbContainer.GetConnectionString();
+        
+        return base.CreateHostBuilder();
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureTestServices(services =>
@@ -53,36 +65,36 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
     private void ConfigureMongoDb(IServiceCollection services)
     {
         var descriptor = services
-            .SingleOrDefault(s => 
+            .SingleOrDefault(s =>
                 s.ServiceType == typeof(IMongoClient));
-        
+
         if (descriptor is not null)
         {
             services.Remove(descriptor);
         }
-        
+
         services.AddSingleton<IMongoClient>
             (new MongoClient(_mongoDbContainer.GetConnectionString()));
     }
-    
+
     private static void ConfigureMailSender(IServiceCollection services)
     {
         var descriptor = services
-            .SingleOrDefault(s => 
+            .SingleOrDefault(s =>
                 s.ServiceType == typeof(IMailSender));
 
         if (descriptor is not null)
         {
             services.Remove(descriptor);
         }
-            
+
         services.AddScoped<IMailSender, MailSenderMock>();
     }
 
     private void ConfigureRedis(IServiceCollection services)
     {
         var descriptor = services
-            .SingleOrDefault(s => 
+            .SingleOrDefault(s =>
                 s.ServiceType == typeof(IDatabase));
 
         if (descriptor is not null)
@@ -110,7 +122,7 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
     private void ConfigureDbContext(IServiceCollection services)
     {
         var descriptor = services
-            .SingleOrDefault(s => 
+            .SingleOrDefault(s =>
                 s.ServiceType == typeof(DbContextOptions<BeatEcoproveDbContext>));
 
         if (descriptor is not null)
@@ -118,15 +130,9 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
             services.Remove(descriptor);
         }
 
-        var dbSettings = new DbSettings()
-        {
-            ConnectionString = _dbContainer.GetConnectionString()
-        };
-            
-        services.AddSingleton(Options.Create(dbSettings));
         services.AddDbContext<BeatEcoproveDbContext>(options =>
         {
-            options.UseNpgsql(dbSettings.ConnectionString);
+            options.UseNpgsql(_dbContainer.GetConnectionString());
         });
     }
 
@@ -134,22 +140,22 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
     {
         using var scope = Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<BeatEcoproveDbContext>();
-        
+
         var dbConnection = dbContext.Database.GetDbConnection();
         await dbConnection.OpenAsync();
-        
+
         await _respawner.ResetAsync(dbConnection);
     }
-    
+
     public async Task InitializeAsync()
     {
         await _dbContainer.StartAsync();
         await _redisContainer.StartAsync();
         await _mongoDbContainer.StartAsync();
-        
+
         await InitiateDbConnection();
     }
-    
+
     private async Task InitiateDbConnection()
     {
         using var scope = Services.CreateScope();

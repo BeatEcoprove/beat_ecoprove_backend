@@ -4,8 +4,8 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Currency.Queries.ConvertCurrency;
@@ -16,7 +16,7 @@ internal sealed class ConvertCurrencyQueryHandler : IQueryHandler<ConvertCurrenc
     private readonly IUnitOfWork _unitOfWork;
 
     public ConvertCurrencyQueryHandler(
-        IProfileManager profileManager, 
+        IProfileManager profileManager,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -27,7 +27,7 @@ internal sealed class ConvertCurrencyQueryHandler : IQueryHandler<ConvertCurrenc
     {
         var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
-        
+
         var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
 
         if (profile.IsError)
@@ -40,19 +40,19 @@ internal sealed class ConvertCurrencyQueryHandler : IQueryHandler<ConvertCurrenc
         {
             validator = validator.AddValidate(profile.Value.ConvertToSustainabilityPoints(request.EcoCoins.Value));
         }
-        
+
         if (request.SustainabilityPoints is not null)
         {
             validator = validator.AddValidate(profile.Value.ConvertToEcoCoins(request.SustainabilityPoints.Value));
         }
-        
+
         if (validator.IsError)
         {
             return validator.Errors;
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         return new ConversionResult(
             profile.Value.EcoCoins,
             profile.Value.SustainabilityPoints

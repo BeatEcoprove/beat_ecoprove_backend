@@ -6,7 +6,7 @@ namespace BeatEcoprove.Application.Tests.Shared.Mocks;
 public class MailSenderMock : IMailSender
 {
     private static readonly List<Mail> Mails = new();
-    
+
     public Task SendMailAsync(Mail mail, CancellationToken cancellationToken = default)
     {
         Mails.Add(mail);
@@ -17,7 +17,7 @@ public class MailSenderMock : IMailSender
     {
         if (Mails.Count == 0)
             return null;
-        
+
         return Mails.Last();
     }
 }

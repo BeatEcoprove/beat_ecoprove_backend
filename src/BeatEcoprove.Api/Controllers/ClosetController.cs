@@ -12,9 +12,13 @@ using BeatEcoprove.Application.Closet.Queries.GetCloth;
 using BeatEcoprove.Contracts.Closet;
 using BeatEcoprove.Contracts.Closet.Bucket;
 using BeatEcoprove.Contracts.Closet.Cloth;
+
 using Mapster;
+
 using MapsterMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +32,7 @@ public class ClosetController : ApiController
     private readonly IMapper _mapper;
 
     public ClosetController(
-        ISender sender, 
+        ISender sender,
         IMapper mapper)
     {
         _sender = sender;
@@ -50,7 +54,7 @@ public class ClosetController : ApiController
     {
         var authId = HttpContext.User.GetUserId();
 
-        var result = 
+        var result =
             await _sender.Send(new
             {
                 ProfileId = profileId,
@@ -71,14 +75,14 @@ public class ClosetController : ApiController
             Problem<ClosetResponse>
         );
     }
-    
+
     [HttpPost("cloth")]
     public async Task<ActionResult<ClothResponse>> AddClothToCloset([FromForm] CreateClothRequest request, [FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
 
-        var result = 
-            await _sender.Send( new CreateClothCommand(
+        var result =
+            await _sender.Send(new CreateClothCommand(
                 authId,
                 profileId,
                 request.Name,
@@ -96,13 +100,13 @@ public class ClosetController : ApiController
             Problem<ClothResponse>
         );
     }
-    
+
     [HttpGet("cloth/{clothId:guid}/buckets")]
     public async Task<ActionResult<List<BucketResponse>>> GetClothBuckets([FromQuery] Guid profileId, Guid clothId)
     {
         var authId = HttpContext.User.GetUserId();
 
-        var result = 
+        var result =
             await _sender.Send(new
             {
                 AuthId = authId,
@@ -115,13 +119,13 @@ public class ClosetController : ApiController
             Problem<List<BucketResponse>>
         );
     }
-    
+
     [HttpGet("cloth/{clothId:guid}")]
     public async Task<ActionResult<ClothResponse>> GetCloth([FromQuery] Guid profileId, Guid clothId)
     {
         var authId = HttpContext.User.GetUserId();
 
-        var result = 
+        var result =
             await _sender.Send(new
             {
                 AuthId = authId,
@@ -137,13 +141,13 @@ public class ClosetController : ApiController
             Problem<ClothResponse>
         );
     }
-    
+
     [HttpDelete("cloth/{clothId:guid}")]
     public async Task<ActionResult<ClothResponse>> RemoveClothFromCloset([FromQuery] Guid profileId, Guid clothId)
     {
         var authId = HttpContext.User.GetUserId();
 
-        var result = 
+        var result =
             await _sender.Send(new
             {
                 AuthId = authId,
@@ -159,13 +163,13 @@ public class ClosetController : ApiController
             Problem<ClothResponse>
         );
     }
-    
+
     [HttpPost("bucket")]
     public async Task<ActionResult<BucketResponse>> AddBucketToCloset(CreateBucketRequest request, [FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
-        
-        var result = 
+
+        var result =
             await _sender.Send(new
             {
                 AuthId = authId,
@@ -181,13 +185,13 @@ public class ClosetController : ApiController
             Problem<BucketResponse>
         );
     }
-    
+
     [HttpGet("bucket/{bucketId:guid}")]
     public async Task<ActionResult<BucketResponse>> GetBucket([FromQuery] Guid profileId, Guid bucketId)
     {
         var authId = HttpContext.User.GetUserId();
 
-        var result = 
+        var result =
             await _sender.Send(new
             {
                 AuthId = authId,
@@ -203,13 +207,13 @@ public class ClosetController : ApiController
             Problem<BucketResponse>
         );
     }
-    
+
     [HttpDelete("bucket/{bucketId:guid}")]
     public async Task<ActionResult<BucketResponse>> RemoveBucketFromCloset([FromQuery] Guid profileId, Guid bucketId)
     {
         var authId = HttpContext.User.GetUserId();
 
-        var result = 
+        var result =
             await _sender.Send(new
             {
                 AuthId = authId,
@@ -225,19 +229,20 @@ public class ClosetController : ApiController
             Problem<BucketResponse>
         );
     }
-    
+
     [HttpPut("bucket/{bucketId:guid}/add")]
     public async Task<ActionResult<BucketResponse>> AddClothsToBucket(AddClothToBucketRequest request, [FromQuery] Guid profileId, Guid bucketId)
     {
         var authId = HttpContext.User.GetUserId();
-        
-        var result = 
-            await _sender.Send(new{
-                    AuthId = authId,
-                    ProfileId = profileId,
-                    BucketId = bucketId,
-                    request.ClothToAdd
-                }.Adapt<AddClothToBucketCommand>());
+
+        var result =
+            await _sender.Send(new
+            {
+                AuthId = authId,
+                ProfileId = profileId,
+                BucketId = bucketId,
+                request.ClothToAdd
+            }.Adapt<AddClothToBucketCommand>());
 
         return result.Match(
             response => Created(
@@ -246,14 +251,15 @@ public class ClosetController : ApiController
             Problem<BucketResponse>
         );
     }
-    
+
     [HttpPut("bucket/{bucketId:guid}/remove")]
     public async Task<ActionResult<BucketResponse>> RemoveClothFromBucket(RemoveClothFromBucketRequest request, [FromQuery] Guid profileId, Guid bucketId)
     {
         var authId = HttpContext.User.GetUserId();
-        
-        var result = 
-            await _sender.Send(new{
+
+        var result =
+            await _sender.Send(new
+            {
                 AuthId = authId,
                 ProfileId = profileId,
                 BucketId = bucketId,

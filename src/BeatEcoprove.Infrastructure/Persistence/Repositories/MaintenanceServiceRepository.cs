@@ -2,6 +2,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
@@ -16,7 +17,7 @@ public class MaintenanceServiceRepository : Repository<MaintenanceService, Maint
     {
         return await
             DbContext.Set<MaintenanceService>()
-                .Include(service => 
+                .Include(service =>
                     service.MaintenanceActions
                         .OrderBy(a => a.Title))
                 .OrderBy(a => a.Title)

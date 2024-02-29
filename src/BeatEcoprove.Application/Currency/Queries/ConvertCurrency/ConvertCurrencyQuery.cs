@@ -1,6 +1,7 @@
 using BeatEcoprove.Application.Currency.Common;
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Currency.Queries.ConvertCurrency;

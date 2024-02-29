@@ -1,9 +1,9 @@
-﻿using BeatEcoprove.Application;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Infrastructure.Services;
@@ -14,7 +14,7 @@ public class AuthorizationFacade : IAuthorizationFacade
     private readonly IProfileRepository _profileRepository;
 
     public AuthorizationFacade(
-        IAuthRepository authRepository, 
+        IAuthRepository authRepository,
         IProfileRepository profileRepository)
     {
         _authRepository = authRepository;
@@ -36,7 +36,7 @@ public class AuthorizationFacade : IAuthorizationFacade
         {
             return Errors.User.EmailDoesNotExists;
         }
-        
+
         var profile = await _profileRepository.GetProfileByAuthId(auth.Id, cancellationToken);
 
         if (profile is null)

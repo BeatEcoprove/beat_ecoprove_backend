@@ -6,14 +6,14 @@ namespace BeatEcoprove.Domain.ClosetAggregator.Entities;
 public class MaintenanceActivity : Activity
 {
     private MaintenanceActivity() { }
-    
+
     private MaintenanceActivity(
         MaintenanceServiceId serviceId,
         MaintenanceActionId actionId,
-        ProfileId profileId, 
+        ProfileId profileId,
         ClothId clothId,
         int sustainablePoints,
-        float xp = 0, 
+        float xp = 0,
         float deltaScore = 0) : base(profileId, clothId, xp, deltaScore)
     {
         ServiceId = serviceId;
@@ -28,7 +28,7 @@ public class MaintenanceActivity : Activity
     public static MaintenanceActivity Create(
         MaintenanceServiceId serviceId,
         MaintenanceActionId actionId,
-        ProfileId profileId, 
+        ProfileId profileId,
         ClothId clothId,
         int sustainablePoints = 0,
         float xp = 0,
@@ -37,10 +37,10 @@ public class MaintenanceActivity : Activity
         return new MaintenanceActivity(
             serviceId,
             actionId,
-            profileId, 
-            clothId, 
+            profileId,
+            clothId,
             sustainablePoints,
-            xp, 
+            xp,
             deltaScore);
     }
 }

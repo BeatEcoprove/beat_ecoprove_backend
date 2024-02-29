@@ -4,6 +4,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Groups.Commands.CreateGroup;
@@ -15,7 +16,7 @@ internal sealed class CreateGroupCommandHandler : ICommandHandler<CreateGroupCom
     private readonly IGroupService _groupService;
 
     public CreateGroupCommandHandler(
-        IProfileManager profileManager, 
+        IProfileManager profileManager,
         IUnitOfWork unitOfWork, IGroupService groupService)
     {
         _profileManager = profileManager;
@@ -27,9 +28,9 @@ internal sealed class CreateGroupCommandHandler : ICommandHandler<CreateGroupCom
     {
         var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
-        
+
         // validate the profile
-        
+
         var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
 
         if (profile.IsError)
@@ -46,7 +47,7 @@ internal sealed class CreateGroupCommandHandler : ICommandHandler<CreateGroupCom
 
         var groupDao = await _groupService.CreateGroupAsync(profile.Value, group, request.AvatarPicture, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         return groupDao;
     }
 }

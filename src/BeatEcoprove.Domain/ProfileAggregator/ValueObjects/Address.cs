@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Domain.Shared.Models;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.ValueObjects;

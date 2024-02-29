@@ -10,8 +10,8 @@ public class MaintenanceService : Entity<MaintenanceServiceId>
 
     private MaintenanceService(
         MaintenanceServiceId id,
-        string badge, 
-        string title, 
+        string badge,
+        string title,
         string description)
     {
         Id = id;
@@ -26,14 +26,14 @@ public class MaintenanceService : Entity<MaintenanceServiceId>
     public IReadOnlyList<MaintenanceAction> MaintenanceActions => _maintenanceActions.AsReadOnly();
 
     public static MaintenanceService Create(
-        string badge, 
-        string title, 
+        string badge,
+        string title,
         string description)
     {
         return new MaintenanceService(
-            MaintenanceServiceId.CreateUnique(), 
-            badge, 
-            title, 
+            MaintenanceServiceId.CreateUnique(),
+            badge,
+            title,
             description);
     }
 }

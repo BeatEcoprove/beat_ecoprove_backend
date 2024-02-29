@@ -3,6 +3,7 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Closet.Commands.RemoveClothFromCloset;
@@ -14,8 +15,8 @@ public class RemoveClothFromClosetCommandHandler : ICommandHandler<RemoveClothFr
     private readonly IUnitOfWork _unitOfWork;
 
     public RemoveClothFromClosetCommandHandler(
-        IProfileManager profileManager, 
-        IClosetService closetService, 
+        IProfileManager profileManager,
+        IClosetService closetService,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;

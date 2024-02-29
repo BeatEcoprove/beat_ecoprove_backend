@@ -7,4 +7,3 @@ internal class WebSocketEventJson
     [JsonPropertyName("type")]
     public string Type { get; init; } = null!;
 }
-

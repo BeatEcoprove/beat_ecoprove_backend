@@ -4,7 +4,7 @@ using BeatEcoprove.Contracts.Groups;
 using BeatEcoprove.Contracts.Profile;
 using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.DAOS;
-using BeatEcoprove.Domain.GroupAggregator.Entities;
+
 using Mapster;
 
 namespace BeatEcoprove.Api.Mappers;
@@ -21,7 +21,7 @@ public class GroupMappingConfiguration : IRegister
                 src.Content,
                 src.CreatedAt
             ));
-        
+
         config.NewConfig<GetGroupList, GetGroupsResponse>()
             .MapWith(dest => new GetGroupsResponse(
                 dest.Public.Adapt<List<GroupResponse>>(),

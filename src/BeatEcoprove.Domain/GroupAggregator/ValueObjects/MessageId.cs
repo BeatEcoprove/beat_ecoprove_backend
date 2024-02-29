@@ -1,5 +1,5 @@
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
+
 using MongoDB.Bson;
 
 namespace BeatEcoprove.Domain.GroupAggregator.ValueObjects;

@@ -32,7 +32,7 @@ public abstract class AuthenticationBaseTests : BaseIntegrationTest
 
     protected (Auth, TProfile) GetAuth<TProfile>(
         string? email = null,
-        string password = DefaultPassword, 
+        string password = DefaultPassword,
         string? username = null)
         where TProfile : Profile
     {
@@ -42,7 +42,7 @@ public abstract class AuthenticationBaseTests : BaseIntegrationTest
                     Email.Create(email ?? f.Internet.Email()).Value,
                     Password.Create(password).Value))
             .Generate();
-        
+
         var profile = new Faker<TProfile>()
             .CustomInstantiator(f =>
             {
@@ -52,7 +52,7 @@ public abstract class AuthenticationBaseTests : BaseIntegrationTest
                         Phone.Create("+351", f.Phone.PhoneNumber("#########")).Value,
                         DateOnly.FromDateTime(f.Person.DateOfBirth),
                         Gender.Male) as TProfile)!;
-                
+
                 return (Organization.Create(
                     UserName.Create(username ?? f.Internet.UserName()).Value,
                     Phone.Create("+351", f.Phone.PhoneNumber("#########")).Value,
@@ -63,10 +63,10 @@ public abstract class AuthenticationBaseTests : BaseIntegrationTest
                         PostalCode.Create(f.Address.ZipCode("####-###")).Value).Value) as TProfile)!;
             })
             .Generate();
-                
+
         return (auth, profile);
     }
-    
+
     protected async Task CreateUserAccount<TProfile>(
         string? email = null,
         string password = DefaultPassword,
@@ -76,14 +76,14 @@ public abstract class AuthenticationBaseTests : BaseIntegrationTest
     {
         var avatarPicture = await GetAvatarPicture();
         var (auth, profile) = GetAuth<TProfile>(email, password, username);
-        
+
         await _accountService.CreateAccount(
             auth.Email,
             auth.Password,
             profile,
             avatarPicture,
             cancellationToken);
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

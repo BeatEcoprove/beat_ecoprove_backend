@@ -5,9 +5,13 @@ using BeatEcoprove.Application.Cloths.Queries.GetAvailableServices;
 using BeatEcoprove.Application.Cloths.Queries.GetClothMaintenanceStatus;
 using BeatEcoprove.Contracts.Closet.Cloth;
 using BeatEcoprove.Contracts.Services;
+
 using Mapster;
+
 using MapsterMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,13 +47,13 @@ public class ClothController : ApiController
             Problem<List<MaintenanceServiceResponse>>
         );
     }
-    
+
     [HttpPost("{serviceId:guid}/perform/{actionId:guid}")]
     public async Task<ActionResult<ClothResponse>> PerformService(
-        [FromRoute] Guid clothId, 
-        [FromRoute] Guid serviceId, 
-        [FromRoute] Guid actionId, 
-        [FromQuery] Guid profileId, 
+        [FromRoute] Guid clothId,
+        [FromRoute] Guid serviceId,
+        [FromRoute] Guid actionId,
+        [FromQuery] Guid profileId,
         CancellationToken cancellationToken = default)
     {
         var userId = HttpContext.User.GetUserId();
@@ -68,12 +72,12 @@ public class ClothController : ApiController
             Problem<ClothResponse>
         );
     }
-    
+
     [HttpPost("{maintenanceActivityId:guid}/finish")]
     public async Task<ActionResult<ClothResponse>> CloseAction(
-        [FromRoute] Guid clothId, 
-        [FromRoute] Guid maintenanceActivityId, 
-        [FromQuery] Guid profileId, 
+        [FromRoute] Guid clothId,
+        [FromRoute] Guid maintenanceActivityId,
+        [FromQuery] Guid profileId,
         CancellationToken cancellationToken = default)
     {
         var userId = HttpContext.User.GetUserId();
@@ -91,7 +95,7 @@ public class ClothController : ApiController
             Problem<ClothResponse>
         );
     }
-    
+
     // Status response
     [HttpGet("current")]
     public async Task<ActionResult<ClothMaintenanceStatusResponse>> GetClothMaintenanceStatus(
@@ -99,7 +103,7 @@ public class ClothController : ApiController
         [FromRoute] Guid clothId)
     {
         var authId = HttpContext.User.GetUserId();
-        
+
         var currentStatus = await _sender.Send(new
             GetClothMaintenanceStatusQuery(
                 authId,
@@ -107,7 +111,7 @@ public class ClothController : ApiController
                 clothId
                 )
         );
-        
+
         return currentStatus.Match(
             response => Ok(_mapper.Map<ClothMaintenanceStatusResponse>(response)),
             Problem<ClothMaintenanceStatusResponse>

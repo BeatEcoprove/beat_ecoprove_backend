@@ -1,6 +1,8 @@
-﻿using BeatEcoprove.Application.Shared;
+﻿using System.Net.WebSockets;
+
+using BeatEcoprove.Application.Shared;
+
 using ErrorOr;
-using System.Net.WebSockets;
 
 namespace BeatEcoprove.Application.Groups.Queries.ConnectToGroup;
 

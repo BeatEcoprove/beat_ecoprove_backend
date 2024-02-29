@@ -10,10 +10,10 @@ public static class ClaimsExtensions
 
         var userId = claimList
             .FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier);
-        
+
         return Guid.Parse(userId!.Value);
     }
-    
+
     public static string GetEmail(this ClaimsPrincipal claims)
     {
         var claimList = claims.Claims;

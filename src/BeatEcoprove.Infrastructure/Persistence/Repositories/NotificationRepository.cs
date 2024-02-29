@@ -1,13 +1,14 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+
 using MongoDB.Driver;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
 public class NotificationRepository : DocumentRepository<Notification, MessageId>, INotificationRepository
 {
-    public NotificationRepository(IMongoDatabase database) 
+    public NotificationRepository(IMongoDatabase database)
         : base(database)
     {
     }

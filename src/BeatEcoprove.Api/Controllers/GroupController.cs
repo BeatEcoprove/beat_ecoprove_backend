@@ -10,8 +10,11 @@ using BeatEcoprove.Application.Groups.Queries.GetGroupDetail;
 using BeatEcoprove.Application.Groups.Queries.GetGroupMessages;
 using BeatEcoprove.Application.Groups.Queries.GetGroups;
 using BeatEcoprove.Contracts.Groups;
+
 using MapsterMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,13 +47,13 @@ public class GroupController : ApiController
                 request.Description,
                 request.IsPublic
             ));
-        
+
         return createGroupResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>
         );
     }
-    
+
     [HttpGet("{groupId:guid}/messages")]
     public async Task<ActionResult<List<TextMessageResponse>>> GetGroupMessages(
         [FromRoute] Guid groupId,
@@ -69,13 +72,13 @@ public class GroupController : ApiController
                 page ?? 1,
                 pageSize ?? 10
             ));
-        
+
         return getGroupMessagesResult.Match(
             result => Ok(_mapper.Map<List<TextMessageResponse>>(result)),
             Problem<List<TextMessageResponse>>
         );
     }
-    
+
     [HttpGet]
     public async Task<ActionResult<GetGroupsResponse>> GetGroups(
         [FromQuery] Guid profileId,
@@ -94,7 +97,7 @@ public class GroupController : ApiController
                 page ?? 1,
                 pageSize ?? 10
             ));
-        
+
         return getGroupResult.Match(
             result => Ok(_mapper.Map<GetGroupsResponse>(result)),
             Problem<GetGroupsResponse>
@@ -103,7 +106,7 @@ public class GroupController : ApiController
 
     [HttpGet("{groupId:guid}")]
     public async Task<ActionResult<GetGroupDetailResponse>> GetDetailGroup(
-        Guid groupId, 
+        Guid groupId,
         [FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
@@ -115,7 +118,7 @@ public class GroupController : ApiController
                 groupId
             )
         );
-        
+
         return getDetailGroup.Match(
             result => Ok(_mapper.Map<GetGroupDetailResponse>(result)),
             Problem<GetGroupDetailResponse>
@@ -130,7 +133,7 @@ public class GroupController : ApiController
         [FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
-        
+
         var promoteUserResult = await _sender.Send(
             new PromoteMemberCommand(
                 authId,
@@ -140,13 +143,13 @@ public class GroupController : ApiController
                 role
             )
         );
-        
+
         return promoteUserResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>
         );
     }
-    
+
     [HttpPatch("{groupId:guid}/kick/{memberId:guid}")]
     public async Task<ActionResult<GroupResponse>> KickUser(
         [FromRoute] Guid groupId,
@@ -154,7 +157,7 @@ public class GroupController : ApiController
         [FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
-        
+
         var promoteUserResult = await _sender.Send(
             new KickMemberCommand(
                 authId,
@@ -162,20 +165,20 @@ public class GroupController : ApiController
                 groupId,
                 memberId
         ));
-        
+
         return promoteUserResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>
         );
     }
-    
+
     [HttpDelete("{groupId:guid}")]
     public async Task<ActionResult<GroupResponse>> DeleteGroup(
         [FromRoute] Guid groupId,
         [FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
-        
+
         var deleteGroupResult = await _sender.Send(
             new DeleteGroupCommand(
                 authId,
@@ -183,13 +186,13 @@ public class GroupController : ApiController
                 groupId
             )
         );
-        
+
         return deleteGroupResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>
         );
     }
-    
+
     [HttpPut("{groupId:guid}/update/{memberId:guid}")]
     public async Task<ActionResult<GroupResponse>> UpdateGroup(
         [FromRoute] Guid groupId,
@@ -198,7 +201,7 @@ public class GroupController : ApiController
         [FromForm] UpdateGroupRequest request)
     {
         var authId = HttpContext.User.GetUserId();
-        
+
         var updateGroupResult = await _sender.Send(
             new UpdateGroupCommand(
                 authId,
@@ -211,13 +214,13 @@ public class GroupController : ApiController
                 request.PictureStream
             )
         );
-        
+
         return updateGroupResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>
         );
     }
-    
+
     [HttpPatch("{groupId:guid}/invite/{inviteeId:guid}")]
     public async Task<ActionResult<GroupResponse>> InviteUser(
         [FromRoute] Guid groupId,
@@ -225,7 +228,7 @@ public class GroupController : ApiController
         [FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
-        
+
         var inviteUserResult = await _sender.Send(
             new InviteMemberCommand(
                 authId,
@@ -234,13 +237,13 @@ public class GroupController : ApiController
                 inviteeId
             )
         );
-        
+
         return inviteUserResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>
         );
     }
-    
+
     [HttpPatch("{groupId:guid}/invite/{code:int}/accept")]
     public async Task<ActionResult<GroupResponse>> AcceptInvite(
         [FromRoute] Guid groupId,
@@ -248,7 +251,7 @@ public class GroupController : ApiController
         [FromQuery] Guid profileId)
     {
         var authId = HttpContext.User.GetUserId();
-        
+
         var acceptInviteResult = await _sender.Send(
             new AcceptInviteCommand(
                 authId,
@@ -257,7 +260,7 @@ public class GroupController : ApiController
                 code
             )
         );
-        
+
         return acceptInviteResult.Match(
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>

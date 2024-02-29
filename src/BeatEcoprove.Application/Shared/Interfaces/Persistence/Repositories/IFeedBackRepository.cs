@@ -5,5 +5,5 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
 public interface IFeedBackRepository : IRepository<FeedBack, FeedBackId>
 {
-    
+
 }

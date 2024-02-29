@@ -1,8 +1,11 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.ClosetBuckets.Commands;
 using BeatEcoprove.Contracts.Closet.Bucket;
+
 using MapsterMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

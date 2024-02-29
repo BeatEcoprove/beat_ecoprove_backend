@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Websockets;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BeatEcoprove.Infrastructure.WebSockets;

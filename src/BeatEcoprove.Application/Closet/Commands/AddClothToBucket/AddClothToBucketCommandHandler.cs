@@ -5,6 +5,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Closet.Commands.AddClothToBucket;
@@ -17,9 +18,9 @@ internal sealed class AddClothToBucketCommandHandler : ICommandHandler<AddClothT
     private readonly IUnitOfWork _unitOfWork;
 
     public AddClothToBucketCommandHandler(
-        IProfileManager profileManager, 
-        IClosetService closetService, 
-        IBucketRepository bucketRepository, 
+        IProfileManager profileManager,
+        IClosetService closetService,
+        IBucketRepository bucketRepository,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -31,7 +32,7 @@ internal sealed class AddClothToBucketCommandHandler : ICommandHandler<AddClothT
     public async Task<ErrorOr<BucketResult>> Handle(AddClothToBucketCommand request, CancellationToken cancellationToken)
     {
         BucketId bucketId = BucketId.Create(request.BucketId);
-        
+
         var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
 
         if (profile.IsError)
@@ -47,21 +48,21 @@ internal sealed class AddClothToBucketCommandHandler : ICommandHandler<AddClothT
         }
 
         var shouldAddClothToBucket = await _closetService.AddClothToBucket(
-            profile.Value, 
-            bucket, 
-            ToClothIdList(request.ClothToAdd), 
+            profile.Value,
+            bucket,
+            ToClothIdList(request.ClothToAdd),
             cancellationToken);
 
         if (shouldAddClothToBucket.IsError)
         {
             return shouldAddClothToBucket.Errors;
         }
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return await _closetService.GetBucketResult(profile.Value, bucket, cancellationToken);
     }
-    
+
     private static List<ClothId> ToClothIdList(List<Guid> clothIds)
     {
         return clothIds.Select(ClothId.Create).ToList();

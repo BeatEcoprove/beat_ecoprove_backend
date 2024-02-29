@@ -1,14 +1,13 @@
-﻿using BeatEcoprove.Application;
-using BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
+﻿using BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
 using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
 using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 using BeatEcoprove.Application.Authentication.Queries.Login;
-using BeatEcoprove.Contracts;
 using BeatEcoprove.Contracts.Authentication;
 using BeatEcoprove.Contracts.Authentication.SignIn;
 using BeatEcoprove.Contracts.Profile;
 using BeatEcoprove.Domain.ProfileAggregator.DAOS;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+
 using Mapster;
 
 namespace BeatEcoprove.Api.Mappers;
@@ -32,7 +31,7 @@ public class ProfileMappingConfiguration : IRegister
                     src.AvatarUrl
                 )
             );
-        
+
         config.NewConfig<Profile, ProfileClosetResponse>()
             .MapWith((src) =>
                 new ProfileClosetResponse(
@@ -46,7 +45,7 @@ public class ProfileMappingConfiguration : IRegister
             .MapWith(src => ToMyProfilesResponse(src));
 
         config.NewConfig<SignInPersonalAccountRequest, SignInPersonalAccountCommand>()
-            .MapWith((src) => 
+            .MapWith((src) =>
                 new SignInPersonalAccountCommand(
                     src.Name,
                     src.BornDate,
@@ -75,10 +74,10 @@ public class ProfileMappingConfiguration : IRegister
                     src.Password)
                 );
     }
-    
+
     private MyProfilesResponse ToMyProfilesResponse(List<ProfileDao> profiles)
     {
-        var mainProfile = 
+        var mainProfile =
             profiles.SingleOrDefault(profile => profile.IsNested);
 
         if (mainProfile is null)
@@ -91,7 +90,7 @@ public class ProfileMappingConfiguration : IRegister
                 .Where(profile => !profile.IsNested)
                 .Select(profile => profile.Profile)
                 .ToList();
-        
+
         return new MyProfilesResponse(
             mainProfile.Profile.Adapt<ProfileResponse>(),
             nestedProfiles.Adapt<List<ProfileResponse>>()

@@ -1,6 +1,7 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.Shared.Entities;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Colors.Queries;

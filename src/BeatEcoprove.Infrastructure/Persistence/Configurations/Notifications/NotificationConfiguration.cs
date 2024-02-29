@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 using BeatEcoprove.Infrastructure.Shared;
+
 using MongoDB.Bson.Serialization;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Notifications;

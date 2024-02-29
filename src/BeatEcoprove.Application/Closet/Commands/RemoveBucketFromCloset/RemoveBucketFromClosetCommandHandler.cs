@@ -3,6 +3,7 @@ using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Closet.Commands.RemoveBucketFromCloset;
@@ -14,8 +15,8 @@ internal sealed class RemoveBucketFromClosetCommandHandler : ICommandHandler<Rem
     private readonly IUnitOfWork _unitOfWork;
 
     public RemoveBucketFromClosetCommandHandler(
-        IProfileManager profileManager, 
-        IClosetService closetService, 
+        IProfileManager profileManager,
+        IClosetService closetService,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -39,9 +40,9 @@ internal sealed class RemoveBucketFromClosetCommandHandler : ICommandHandler<Rem
         {
             return bucket.Errors;
         }
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         return bucket;
     }
 }

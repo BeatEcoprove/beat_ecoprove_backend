@@ -6,6 +6,7 @@ using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Persistence.Converters;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -37,10 +38,10 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
                 .HasConversion(
                     profileId => profileId.Value,
                     value => ProfileId.Create(value));
-            
+
             bucketEntry.Property(b => b.DeletedAt)
                 .HasColumnName("deleted_at");
-            
+
             bucketEntry.Property(b => b.BucketId)
                 .HasColumnName("bucket_id")
                 .ValueGeneratedNever()
@@ -68,7 +69,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
                 .HasConversion(
                     profileId => profileId.Value,
                     value => ProfileId.Create(value));
-            
+
             clothEntry.Property(c => c.DeletedAt)
                 .HasColumnName("deleted_at");
 
@@ -78,7 +79,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
                 .HasConversion(
                     clothId => clothId.Value,
                     value => ClothId.Create(value));
-            
+
             clothEntry.HasOne<Cloth>()
                 .WithMany()
                 .HasForeignKey(b => b.ClothId);
@@ -93,7 +94,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
     {
         builder.ToTable(ProfileTable);
         builder.HasKey(profile => profile.Id);
-        
+
         builder.Property(profile => profile.DeletedAt)
             .HasColumnName("deleted_at");
 
@@ -109,7 +110,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
             .HasForeignKey(t => t.AuthId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
-        
+
         builder.Property(profile => profile.AuthId)
             .HasColumnName("auth_id")
             .HasConversion(
@@ -124,11 +125,11 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
             .HasColumnName("type")
             .HasConversion(new UserTypeConverter())
             .IsRequired();
-        
+
         builder.Property(profile => profile.Level)
             .HasColumnName("level")
             .IsRequired();
-        
+
         builder.Property(profile => profile.EcoCoins)
             .HasColumnName("eco_coins")
             .IsRequired();
@@ -166,7 +167,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
             .HasColumnName("avatar_url")
             .HasMaxLength(256)
             .IsRequired();
-        
+
         builder.HasQueryFilter(b => b.BucketEntries.All(be => be.DeletedAt == null));
         builder.HasQueryFilter(b => b.ClothEntries.All(be => be.DeletedAt == null));
     }

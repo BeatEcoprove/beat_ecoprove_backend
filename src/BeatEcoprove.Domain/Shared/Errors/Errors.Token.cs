@@ -4,7 +4,7 @@ namespace BeatEcoprove.Domain.Shared.Errors;
 
 public static partial class Errors
 {
-    public class Token 
+    public class Token
     {
         public static Error InvalidRefreshToken => Error.Validation(
             "Token.InvalidRefreshToken",

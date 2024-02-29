@@ -1,10 +1,13 @@
-﻿using BeatEcoprove.Application.Groups.Queries.ConnectToGroup;
+﻿using System.Net.WebSockets;
+using System.Text.Json;
+
+using BeatEcoprove.Application.Groups.Queries.ConnectToGroup;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.WebSockets.Contracts;
+
 using ErrorOr;
+
 using MediatR;
-using System.Net.WebSockets;
-using System.Text.Json;
 
 namespace BeatEcoprove.Infrastructure.WebSockets.Events;
 
@@ -41,7 +44,7 @@ internal class ConnectGroupEvent : WebSocketEvent
                 _event.GroupId,
                 _userId,
                 _userSocket
-            ), 
+            ),
             cancellation
         );
     }

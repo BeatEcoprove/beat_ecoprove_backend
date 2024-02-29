@@ -1,5 +1,6 @@
 ﻿
 using System.Text.Json.Serialization;
+
 using BeatEcoprove.Contracts.Profile;
 
 namespace BeatEcoprove.Contracts.Closet.Cloth;

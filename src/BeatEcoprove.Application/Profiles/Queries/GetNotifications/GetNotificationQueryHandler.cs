@@ -4,6 +4,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Profiles.Queries.GetNotifications;
@@ -14,7 +15,7 @@ internal sealed class GetNotificationQueryHandler : IQueryHandler<GetNotificatio
     private readonly INotificationRepository _notificationRepository;
 
     public GetNotificationQueryHandler(
-        IProfileManager profileManager, 
+        IProfileManager profileManager,
         INotificationRepository notificationRepository)
     {
         _profileManager = profileManager;
@@ -32,7 +33,7 @@ internal sealed class GetNotificationQueryHandler : IQueryHandler<GetNotificatio
         {
             return profile.Errors;
         }
-        
+
         return await _notificationRepository
             .GetAllNotificationByOnwerIdAsync(profile.Value.Id, cancellationToken);
     }

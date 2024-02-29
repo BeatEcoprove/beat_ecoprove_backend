@@ -1,11 +1,10 @@
 using BeatEcoprove.Application.Shared;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
-using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.DAOS;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Groups.Queries.GetGroupDetail;
@@ -33,7 +32,7 @@ internal sealed class GetGroupDetailQueryHandler : IQueryHandler<GetGroupDetailQ
         {
             return profile.Errors;
         }
-        
+
         return await _groupService.GetGroupAsync(profile.Value, groupId, cancellationToken);
     }
 }

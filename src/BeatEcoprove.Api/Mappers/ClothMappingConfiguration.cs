@@ -8,7 +8,9 @@ using BeatEcoprove.Contracts.Profile;
 using BeatEcoprove.Contracts.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
+
 using Mapster;
+
 using ClothResponse = BeatEcoprove.Contracts.Closet.Cloth.ClothResponse;
 
 namespace BeatEcoprove.Api.Mappers;
@@ -32,7 +34,7 @@ public class ClothMappingConfiguration : IRegister
                 src.ClothAvatar,
                 src.Profile.Adapt<ProfileClosetResponse>()
             ));
-        
+
         config.NewConfig<ClothDao, ClothResult>()
             .MapWith(src => new ClothResult(
                 src.Id,
@@ -45,7 +47,7 @@ public class ClothMappingConfiguration : IRegister
                 src.ClothState,
                 src.ClothAvatar
             ));
-        
+
         config.NewConfig<ClothDaoWithProfile, ClothResultExtension>()
             .MapWith(src => new ClothResultExtension(
                 src.Id,
@@ -59,9 +61,9 @@ public class ClothMappingConfiguration : IRegister
                 src.ClothAvatar,
                 src.Profile
             ));
-        
+
         config.NewConfig<CreateBucketRequest, CreateBucketCommand>();
-        
+
         config.NewConfig<ClothMaintenanceStatus, ClothMaintenanceStatusResponse>()
             .MapWith(src => new ClothMaintenanceStatusResponse(
                 src.Cloth.Adapt<ClothResponse>(),
@@ -75,10 +77,10 @@ public class ClothMappingConfiguration : IRegister
                 src.MaintenanceActivityId,
                 src.Status
             ));
-        
+
         config.NewConfig<BucketResult, BucketResponse>()
             .MapWith(src => ToBucketResponse(src.Bucket, src.Cloths));
-        
+
         config.NewConfig<MixedClothBucketList, ClosetResponse>()
             .MapWith((source) => ToClosetResponse(source));
     }
@@ -102,7 +104,7 @@ public class ClothMappingConfiguration : IRegister
             ConvertCloth(cloths, bucket));
     }
 
-    
+
     private ClosetResponse ToClosetResponse(MixedClothBucketList source)
     {
         var bucketResponses = source.Buckets
@@ -116,7 +118,7 @@ public class ClothMappingConfiguration : IRegister
                 {
                     return clothDao.Adapt<ClothResponse>();
                 }
-                
+
                 return cloth.Adapt<ClothResponse>();
             }).ToList(),
             bucketResponses

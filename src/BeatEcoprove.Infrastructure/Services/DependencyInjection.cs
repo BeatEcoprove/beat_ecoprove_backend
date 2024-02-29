@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Infrastructure.Gaming;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BeatEcoprove.Infrastructure.Services;

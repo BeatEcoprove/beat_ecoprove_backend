@@ -1,15 +1,13 @@
 ﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Extensions;
-using BeatEcoprove.Application.Shared.Helpers;
-using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Contracts.Authentication.Common;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Extensions;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
@@ -51,31 +49,31 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
         {
             return address.Errors;
         }
-        
+
         var enterpriseProfile = Organization.Create(
             userName.Value,
             phone.Value,
             address.Value
         );
-        
+
         var account = await _accountService.CreateAccount(
-            email.Value, 
-            password.Value, 
-            enterpriseProfile, 
-            request.AvatarPicture, 
+            email.Value,
+            password.Value,
+            enterpriseProfile,
+            request.AvatarPicture,
             cancellationToken);
 
         if (account.IsError)
         {
             return account.Errors;
         }
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var ( accessToken, refreshToken ) =
+        var (accessToken, refreshToken) =
             _jwtProvider
                 .GenerateAuthenticationTokens(account.Value, enterpriseProfile);
-        
+
         return new AuthenticationResult(
             accessToken,
             refreshToken);

@@ -2,6 +2,9 @@ using BeatEcoprove.Api;
 using BeatEcoprove.Application;
 using BeatEcoprove.Infrastructure;
 
+using DotNetEnv;
+
+Env.Load($"../../.env");
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -16,4 +19,4 @@ var app = builder
 app.SetupConfiguration();
 app.Run();
 
-public partial class Program { } 
+public abstract partial class Program { }

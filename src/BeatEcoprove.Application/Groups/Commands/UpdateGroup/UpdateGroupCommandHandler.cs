@@ -1,4 +1,3 @@
-using ErrorOr;
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
@@ -12,6 +11,8 @@ using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 
+using ErrorOr;
+
 namespace BeatEcoprove.Application.Groups.Commands.UpdateGroup;
 
 internal sealed class UpdateGroupCommandHandler : ICommandHandler<UpdateGroupCommand, ErrorOr<Group>>
@@ -22,9 +23,9 @@ internal sealed class UpdateGroupCommandHandler : ICommandHandler<UpdateGroupCom
     private readonly IFileStorageProvider _fileStorage;
 
     public UpdateGroupCommandHandler(
-        IProfileManager profileManager, 
-        IGroupRepository groupRepository, 
-        IUnitOfWork unitOfWork, 
+        IProfileManager profileManager,
+        IGroupRepository groupRepository,
+        IUnitOfWork unitOfWork,
         IFileStorageProvider fileStorage)
     {
         _profileManager = profileManager;
@@ -46,43 +47,43 @@ internal sealed class UpdateGroupCommandHandler : ICommandHandler<UpdateGroupCom
         {
             return profile.Errors;
         }
-        
+
         var group = await _groupRepository.GetByIdAsync(groupId, cancellationToken);
-        
+
         if (group is null)
         {
             return Errors.Groups.NotFound;
         }
-        
+
         var actionMember = group.GetMemberByProfileId(memberId);
 
         if (actionMember is null)
         {
             return Errors.Groups.DontBelongToGroup;
         }
-            
+
         if (actionMember.Permission != MemberPermission.Admin)
         {
             return Errors.Groups.CannotAccess;
         }
-        
+
         group.SetName(request.Name ?? group.Name);
         group.SetDescription(request.Description ?? group.Description);
         group.SetGroupState(request.IsPublic ?? group.IsPublic);
 
         if (request.PictureStream != Stream.Null)
         {
-            var avatarUrl = 
+            var avatarUrl =
                 await _fileStorage
                     .UploadFileAsync(
                         Buckets.GroupBucket,
-                        ((Guid)groupId).ToString(), 
-                        request.PictureStream, 
+                        ((Guid)groupId).ToString(),
+                        request.PictureStream,
                         cancellationToken);
-            
+
             group.SetAvatarPicture(avatarUrl);
         }
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return group;

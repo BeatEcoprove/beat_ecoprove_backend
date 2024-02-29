@@ -1,5 +1,6 @@
-using ErrorOr;
 using BeatEcoprove.Domain.Shared.Models;
+
+using ErrorOr;
 
 namespace BeatEcoprove.Domain.Shared.ValueObjects;
 
@@ -7,7 +8,7 @@ public class Title : ValueObject
 {
     private const int MaxLength = 100;
     private const int MinLength = 5;
-    
+
     private Title() { }
 
     private Title(string value) => Value = value;

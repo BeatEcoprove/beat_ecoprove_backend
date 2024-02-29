@@ -1,21 +1,25 @@
-﻿using BeatEcoprove.Application.Shared.Communication;
+﻿using System.Net.WebSockets;
+using System.Text;
+using System.Text.Json;
+
+using BeatEcoprove.Application.Shared.Communication;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Websockets;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.WebSockets.Events;
 using BeatEcoprove.Infrastructure.WebSockets.Exceptions;
+
 using ErrorOr;
+
 using MediatR;
+
 using Microsoft.Extensions.Options;
-using System.Net.WebSockets;
-using System.Text;
-using System.Text.Json;
 
 namespace BeatEcoprove.Infrastructure.WebSockets;
 
-internal class WebSocketHandler : 
-    IWebSocketManager, 
+internal class WebSocketHandler :
+    IWebSocketManager,
     INotificationSender
 {
     private const string InternalServerErrorMessage = "Someting went wrong";
@@ -39,8 +43,8 @@ internal class WebSocketHandler :
 
     [Obsolete]
     public async Task Handle(
-        WebSocket activeSocket, 
-        ProfileId userId, 
+        WebSocket activeSocket,
+        ProfileId userId,
         CancellationToken cancellationToken = default)
     {
         var buffer = new byte[1024 * 2];
@@ -156,17 +160,17 @@ internal class WebSocketHandler :
     }
 
     public async Task NotifyClient<TContent>(
-        NotificationEvent<TContent> @event, 
+        NotificationEvent<TContent> @event,
         CancellationToken cancellationToken = default)
     {
         await HandleNotification(
-            @event, 
+            @event,
             cancellationToken: cancellationToken
         );
     }
 
     public async Task SendNotificationAsync(
-        INotifer notification, 
+        INotifer notification,
         CancellationToken cancellationToken = default)
     {
         var content = notification.GetNotification();

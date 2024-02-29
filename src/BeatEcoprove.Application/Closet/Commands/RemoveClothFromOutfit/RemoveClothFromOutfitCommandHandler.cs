@@ -5,6 +5,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Closet.Commands.RemoveClothFromOutfit;
@@ -17,9 +18,9 @@ internal sealed class RemoveClothFromOutfitCommandHandler : ICommandHandler<Remo
     private readonly IUnitOfWork _unitOfWork;
 
     public RemoveClothFromOutfitCommandHandler(
-        IProfileManager profileManager, 
-        IClosetService closetService, 
-        IActivityRepository activityRepository, 
+        IProfileManager profileManager,
+        IClosetService closetService,
+        IActivityRepository activityRepository,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -31,7 +32,7 @@ internal sealed class RemoveClothFromOutfitCommandHandler : ICommandHandler<Remo
     public async Task<ErrorOr<DailyUseActivity>> Handle(RemoveClothFromOutfitCommand request, CancellationToken cancellationToken)
     {
         var clothId = ClothId.Create(request.ClothId);
-        
+
         var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
 
         if (profile.IsError)
@@ -45,23 +46,23 @@ internal sealed class RemoveClothFromOutfitCommandHandler : ICommandHandler<Remo
         {
             return cloth.Errors;
         }
-        
+
         var activity = await _activityRepository.GetLastDailyUseActivityAsync(profile.Value, clothId, cancellationToken);
 
         if (activity is null)
         {
             return Errors.Cloth.CannotDisposeCloth;
         }
-        
+
         var shouldDisposeCloth = cloth.Value.DisposeCloth(activity);
 
         if (shouldDisposeCloth.IsError)
         {
             return shouldDisposeCloth.Errors;
         }
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         return activity;
     }
 }

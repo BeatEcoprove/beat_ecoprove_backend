@@ -16,6 +16,6 @@ public class MaintenanceServiceId : EntityId<Guid>
     {
         yield return Value;
     }
-    
+
     public static implicit operator Guid(MaintenanceServiceId id) => id.Value;
 }

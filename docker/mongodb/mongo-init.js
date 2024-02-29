@@ -1,11 +1,11 @@
 db.createUser(
     {
-        user: "beat",
-        pwd: "password",
+        user: process.env.MONGO_DEFAULT_USER,
+        pwd: process.env.MONGO_DEFAULT_PASSWORD,
         roles: [
             {
                 role: "readWrite",
-                db: "ecoprove"
+                db: process.env.MONGO_INITDB_DATABASE,
             }
         ]
     }

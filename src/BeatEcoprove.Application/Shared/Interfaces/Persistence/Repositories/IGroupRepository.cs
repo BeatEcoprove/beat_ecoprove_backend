@@ -1,4 +1,3 @@
-using BeatEcoprove.Application.Groups.Queries.GetGroupMessages.Common;
 using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.DAOS;
 using BeatEcoprove.Domain.GroupAggregator.Entities;

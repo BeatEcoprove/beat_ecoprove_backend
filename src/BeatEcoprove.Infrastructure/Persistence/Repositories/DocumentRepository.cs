@@ -1,7 +1,9 @@
-﻿using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+﻿using System.Reflection;
+
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.Shared.Models;
+
 using MongoDB.Driver;
-using System.Reflection;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 

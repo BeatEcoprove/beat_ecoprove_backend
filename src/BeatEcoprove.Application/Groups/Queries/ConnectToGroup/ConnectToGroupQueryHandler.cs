@@ -6,6 +6,7 @@ using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Groups.Queries.ConnectToGroup;
@@ -18,9 +19,9 @@ internal class ConnectToGroupQueryHandler : IQueryHandler<ConnectToGroupQuery, E
     private readonly IGroupRepository _groupRepository;
 
     public ConnectToGroupQueryHandler(
-        ISessionManager sessionManager, 
-        IGroupSessionManager groupSessionManager, 
-        IProfileRepository profileRepository, 
+        ISessionManager sessionManager,
+        IGroupSessionManager groupSessionManager,
+        IProfileRepository profileRepository,
         IGroupRepository groupRepository)
     {
         _sessionManager = sessionManager;
@@ -30,7 +31,7 @@ internal class ConnectToGroupQueryHandler : IQueryHandler<ConnectToGroupQuery, E
     }
 
     public async Task<ErrorOr<bool>> Handle(
-        ConnectToGroupQuery request, 
+        ConnectToGroupQuery request,
         CancellationToken cancellationToken)
     {
         var userId = ProfileId.Create(request.UserId);
@@ -86,11 +87,9 @@ internal class ConnectToGroupQueryHandler : IQueryHandler<ConnectToGroupQuery, E
 
     private async Task<bool> UserCannotConnectToGroup(
         Group group,
-        ProfileId userId, 
+        ProfileId userId,
         CancellationToken cancellationToken)
     {
         return (!await _groupRepository.IsMemberAsync(group.Id, userId, cancellationToken)) && !group.IsPublic;
     }
 }
-
-    

@@ -1,18 +1,20 @@
-﻿using BeatEcoprove.Application.Shared.Communication;
-using BeatEcoprove.Application.Shared.Interfaces.Websockets;
-using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using Microsoft.Extensions.Options;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
+
+using BeatEcoprove.Application.Shared.Communication;
+using BeatEcoprove.Application.Shared.Interfaces.Websockets;
+using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+
+using Microsoft.Extensions.Options;
 
 namespace BeatEcoprove.Infrastructure.WebSockets;
 
 public class GroupSessionManager : IGroupSessionManager
 {
-    private ConcurrentDictionary<GroupId, List<Member>> _groups = new();
+    private readonly ConcurrentDictionary<GroupId, List<Member>> _groups = new();
     private readonly JsonSerializerOptions _options;
 
     public GroupSessionManager(IOptions<JsonSerializerOptions> options)
@@ -98,8 +100,8 @@ public class GroupSessionManager : IGroupSessionManager
     }
 
     public async Task SendEveryoneAsync(
-        GroupId groupId, 
-        IRealTimeNotification notification, 
+        GroupId groupId,
+        IRealTimeNotification notification,
         CancellationToken cancellationToken = default)
     {
         var users = Get(groupId)!;

@@ -2,6 +2,7 @@
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Domain.ClosetAggregator;
@@ -9,7 +10,7 @@ namespace BeatEcoprove.Domain.ClosetAggregator;
 public class Bucket : AggregateRoot<BucketId, Guid>
 {
     private readonly List<BucketClothEntry> _bucketClothEntries = new();
-    
+
     public Bucket(
         BucketId id,
         string name)
@@ -32,7 +33,7 @@ public class Bucket : AggregateRoot<BucketId, Guid>
         {
             return Errors.Bucket.InvalidBucketName;
         }
-        
+
         return new Bucket(
             BucketId.CreateUnique(),
             name);
@@ -63,26 +64,26 @@ public class Bucket : AggregateRoot<BucketId, Guid>
         {
             return Errors.Bucket.ClothAreNotUnique;
         }
-        
+
         foreach (var cloth in cloths)
         {
             if (_bucketClothEntries.Any(entry => entry.ClothId == cloth && entry.DeletedAt == null))
             {
                 return Errors.Bucket.CanAddClothToBucket;
             }
-            
+
             if (alreadyDeletedCloth.Any(entry => entry.ClothId == cloth))
             {
                 _bucketClothEntries.First(entry => entry.ClothId == cloth).DeletedAt = null;
                 continue;
             }
-            
+
             AddCloth(cloth);
         }
 
         return true;
     }
-    
+
     public void AddCloth(ClothId clothId)
     {
         _bucketClothEntries.Add(
@@ -103,14 +104,14 @@ public class Bucket : AggregateRoot<BucketId, Guid>
         {
             return Errors.Bucket.ClothAreNotUnique;
         }
-        
+
         _bucketClothEntries
-            .RemoveAll(entry => 
+            .RemoveAll(entry =>
                 clothToRemove.Contains(entry.ClothId));
 
         return true;
     }
-    
+
     public void SetName(string name)
     {
         Name = name;

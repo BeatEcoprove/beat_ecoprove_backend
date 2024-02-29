@@ -1,4 +1,5 @@
 using BeatEcoprove.Contracts.Authentication.SignIn;
+
 using Microsoft.AspNetCore.Http;
 
 namespace BeatEcoprove.Contracts.Groups;

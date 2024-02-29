@@ -1,8 +1,11 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.FeedBacks.Commands.SubmitFeedBack;
 using BeatEcoprove.Contracts.FeedBacks;
+
 using MapsterMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +31,7 @@ public class FeedBackController : ApiController
         CancellationToken cancellationToken)
     {
         var authId = HttpContext.User.GetUserId();
-        
+
         var submitFeedBack = await _sender.Send(
             new SubmitFeedBackCommand(
                 authId,
@@ -36,7 +39,7 @@ public class FeedBackController : ApiController
                 request.Title,
                 request.Description),
             cancellationToken);
-        
+
         return submitFeedBack.Match(
             result => Ok(_mapper.Map<FeedBackResponse>(result)),
             Problem<FeedBackResponse>

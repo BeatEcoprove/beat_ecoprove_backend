@@ -8,6 +8,7 @@ using BeatEcoprove.Domain.GroupAggregator.Enumerators;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Infrastructure.Services;
@@ -30,9 +31,9 @@ public class GroupService : IGroupService
         {
             return Errors.Groups.CannotAccess;
         }
-        
+
         var group = await _groupRepository.GetGroupDaoAsync(groupId, cancellationToken);
-        
+
         if (group is null)
         {
             return Errors.Groups.NotFound;
@@ -42,25 +43,25 @@ public class GroupService : IGroupService
     }
 
     public async Task<Group> CreateGroupAsync(
-        Profile profile, 
-        Group group, 
-        Stream avatarPicture, 
+        Profile profile,
+        Group group,
+        Stream avatarPicture,
         CancellationToken cancellationToken)
     {
-        var avatarUrl = 
+        var avatarUrl =
             await _fileStorageProvider
                 .UploadFileAsync(
                     Buckets.GroupBucket,
-                    ((Guid)group.Id).ToString(), 
-                    avatarPicture, 
+                    ((Guid)group.Id).ToString(),
+                    avatarPicture,
                     cancellationToken);
-        
+
         // Set the group avatar picture
         group.SetAvatarPicture(avatarUrl);
-        
+
         // Add an admin member to the group
         group.AddMember(profile.Id, MemberPermission.Admin);
-        
+
         await _groupRepository.AddAsync(group, cancellationToken);
 
         return group;

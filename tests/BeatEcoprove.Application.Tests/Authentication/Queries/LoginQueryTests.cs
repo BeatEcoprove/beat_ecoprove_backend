@@ -12,7 +12,7 @@ public class LoginQueryTests : AuthenticationBaseTests
         : base(factory)
     {
     }
-    
+
     private static LoginQuery GetSutQuery()
     {
         // Arrange
@@ -30,14 +30,14 @@ public class LoginQueryTests : AuthenticationBaseTests
         var query = GetSutQuery();
 
         // Act
-        var result = 
-            await Sender.Send(query, default);
+        var result =
+            await _sender.Send(query, default);
 
         // Assert
         Assert.True(result.IsError);
         Assert.Equal(result.FirstError.Code, Errors.User.EmailDoesNotExists.Code);
     }
-    
+
     [Fact]
     public async Task ShouldNot_Login_IncorrectCredentials()
     {
@@ -46,25 +46,25 @@ public class LoginQueryTests : AuthenticationBaseTests
         await CreateUserAccount<Consumer>(
             email: query.Email,
             password: NewDefaultPassword);
-    
+
         // Act
-        var result = await Sender.Send(query, default);
-    
+        var result = await _sender.Send(query, default);
+
         // Assert
         Assert.True(result.IsError);
         Assert.Equal(result.FirstError.Code, Errors.User.BadCredentials.Code);
     }
-    
+
     [Fact]
     public async Task Should_GenerateTokens_WhenLoginCorrectly()
     {
         // Arrange
         var query = GetSutQuery();
         await CreateUserAccount<Consumer>(query.Email);
-    
+
         // Act
-        var result = await Sender.Send(query, default);
-    
+        var result = await _sender.Send(query, default);
+
         // Assert
         Assert.False(result.IsError);
         Assert.NotNull(result.Value.AccessToken);

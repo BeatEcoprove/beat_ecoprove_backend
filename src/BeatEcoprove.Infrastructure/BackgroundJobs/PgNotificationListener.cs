@@ -1,10 +1,13 @@
 using System.Text.Json;
+
 using BeatEcoprove.Application.Shared.Communication.LevelUp;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Infrastructure.Persistence.Shared;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
+
 using Npgsql;
 
 namespace BeatEcoprove.Infrastructure.BackgroundJobs;
@@ -12,27 +15,28 @@ namespace BeatEcoprove.Infrastructure.BackgroundJobs;
 public class PgNotificationListener : BackgroundService
 {
     private const string Channel = "level_up";
-    private readonly DbSettings _dbSettings;
     private readonly IServiceProvider _serviceProvider;
 
     public PgNotificationListener(
-        IOptions<DbSettings> dbSettings,
         IServiceProvider serviceProvider)
     {
-        _dbSettings = dbSettings.Value;
         _serviceProvider = serviceProvider;
     }
-    
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await using var connection = new NpgsqlConnection(_dbSettings.ConnectionString);
+        using var scope = _serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
+        var connectionString = dbContext.GetConnectionString();
+
+        await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync(stoppingToken);
-        
+
         await using var command = new NpgsqlCommand($"LISTEN {Channel};", connection);
         await command.ExecuteNonQueryAsync(stoppingToken);
 
         connection.Notification += HandleNotification;
-        
+
         while (!stoppingToken.IsCancellationRequested)
         {
             try
@@ -56,7 +60,7 @@ public class PgNotificationListener : BackgroundService
     {
         using var scope = _serviceProvider.CreateScope();
         var notificationSender = scope.ServiceProvider.GetRequiredService<INotificationSender>();
-        
+
         Console.WriteLine($"Received notification: {e.Payload}");
         var payload = JsonSerializer.Deserialize<PgLevelUpNotification>(e.Payload);
 

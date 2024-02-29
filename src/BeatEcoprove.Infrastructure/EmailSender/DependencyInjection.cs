@@ -1,30 +1,23 @@
-﻿using BeatEcoprove.Application;
-using BeatEcoprove.Application.Shared.Interfaces.Providers;
-using Microsoft.Extensions.Configuration;
+﻿using BeatEcoprove.Application.Shared.Interfaces.Providers;
+using BeatEcoprove.Infrastructure.Configuration;
+
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace BeatEcoprove.Infrastructure.EmailSender;
 
 public static class DependencyInjection
 {
     public static IServiceCollection AddEmailSender(
-        this IServiceCollection services,
-        IConfiguration configuration)
+        this IServiceCollection services)
     {
-        var mailSenderSettings = new MailSenderSettings();
-        configuration.Bind(MailSenderSettings.Section, mailSenderSettings);
-        services.AddSingleton(Options.Create(mailSenderSettings));
-
         services.AddScoped<IMailSender, MailSender>();
 
-        services.AddFluentEmail(
-                mailSenderSettings.HostEmail)
+        services.AddFluentEmail(Env.Smtp.Email)
             .AddSmtpSender(
-                mailSenderSettings.SmtpServer,
-                mailSenderSettings.SmtpPort,
-                Environment.GetEnvironmentVariable("SmtpUser") ?? mailSenderSettings.SmtpUser,
-                Environment.GetEnvironmentVariable("SmtpPassword") ?? mailSenderSettings.SmtpPassword);
+                Env.Smtp.Host,
+                Env.Smtp.Port,
+                Env.Smtp.User,
+                Env.Smtp.Password);
 
         return services;
     }

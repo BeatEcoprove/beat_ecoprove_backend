@@ -5,6 +5,7 @@ using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
@@ -14,7 +15,7 @@ public class BucketRepository : Repository<Bucket, BucketId>, IBucketRepository
     public BucketRepository(IApplicationDbContext dbContext) : base(dbContext)
     {
     }
-    
+
     public async Task<Bucket?> GetByIdWithClothAsync(BucketId bucketId, CancellationToken cancellationToken)
     {
         return await DbContext
@@ -32,7 +33,7 @@ public class BucketRepository : Repository<Bucket, BucketId>, IBucketRepository
             from bucketEntry in profile.BucketEntries
             where bucketEntry.BucketId != bucketId && bucketEntry.ProfileId == profileId && bucket.Name == name
             select bucket.Name;
-        
+
         return await bucketNameAlreadyUsed.AnyAsync(cancellationToken);
     }
 
@@ -67,7 +68,7 @@ public class BucketRepository : Repository<Bucket, BucketId>, IBucketRepository
                 cloth.State.ToString(),
                 cloth.ClothAvatar
                 );
-        
+
         return getBucketCloths.ToListAsync(cancellationToken);
     }
 
@@ -78,9 +79,9 @@ public class BucketRepository : Repository<Bucket, BucketId>, IBucketRepository
             from bucketClothEntry in bucketEntry.BucketClothEntries
             where bucketClothEntry.ClothId == clothId
             select bucketEntry;
-        
+
         var result = await checkIfClothBelongsToBucket.FirstOrDefaultAsync(cancellationToken);
-        
+
         return (result is not null, result!);
     }
 

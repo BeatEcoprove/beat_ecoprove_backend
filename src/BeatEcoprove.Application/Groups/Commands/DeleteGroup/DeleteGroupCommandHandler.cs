@@ -8,6 +8,7 @@ using BeatEcoprove.Domain.GroupAggregator.Enumerators;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Groups.Commands.DeleteGroup;
@@ -19,8 +20,8 @@ internal sealed class DeleteGroupCommandHandler : ICommandHandler<DeleteGroupCom
     private readonly IUnitOfWork _unitOfWork;
 
     public DeleteGroupCommandHandler(
-        IProfileManager profileManager, 
-        IGroupRepository groupRepository, 
+        IProfileManager profileManager,
+        IGroupRepository groupRepository,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -40,21 +41,21 @@ internal sealed class DeleteGroupCommandHandler : ICommandHandler<DeleteGroupCom
         {
             return profile.Errors;
         }
-        
+
         var group = await _groupRepository.GetByIdAsync(groupId, cancellationToken);
-        
+
         if (group is null)
         {
             return Errors.Groups.NotFound;
         }
-        
+
         var actionMember = group.GetMemberByProfileId(profile.Value.Id);
 
         if (actionMember is null)
         {
             return Errors.Groups.DontBelongToGroup;
         }
-        
+
         if (actionMember.Permission != MemberPermission.Admin)
         {
             return Errors.Groups.PermissionNotValid;
@@ -62,7 +63,7 @@ internal sealed class DeleteGroupCommandHandler : ICommandHandler<DeleteGroupCom
 
         await _groupRepository.RemoveGroupAsync(group, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         return group;
     }
 }

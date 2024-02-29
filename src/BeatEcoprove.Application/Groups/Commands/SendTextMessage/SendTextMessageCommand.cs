@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application.Shared;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Groups.Commands.SendTextMessage;

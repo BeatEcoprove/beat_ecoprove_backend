@@ -5,6 +5,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Closet.Commands.RegisterClothUsage;
@@ -18,10 +19,10 @@ internal sealed class RegisterClothUsageCommandHandler : ICommandHandler<Registe
     private readonly IClothRepository _clothRepository;
 
     public RegisterClothUsageCommandHandler(
-        IProfileManager profileManager, 
+        IProfileManager profileManager,
         IClosetService closetService,
-        IActivityRepository activityRepository, 
-        IUnitOfWork unitOfWork, 
+        IActivityRepository activityRepository,
+        IUnitOfWork unitOfWork,
         IClothRepository clothRepository)
     {
         _profileManager = profileManager;
@@ -34,7 +35,7 @@ internal sealed class RegisterClothUsageCommandHandler : ICommandHandler<Registe
     public async Task<ErrorOr<DailyUseActivity>> Handle(RegisterClothUsageCommand request, CancellationToken cancellationToken)
     {
         var clothId = ClothId.Create(request.ClothId);
-        
+
         var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
 
         if (profile.IsError)
@@ -55,7 +56,7 @@ internal sealed class RegisterClothUsageCommandHandler : ICommandHandler<Registe
         {
             return Errors.Cloth.CannotUseClothBecauseIsOnMaintenance;
         }
-        
+
         var activity = cloth.Value.UseCloth(profile.Value);
 
         if (activity.IsError)
@@ -65,7 +66,7 @@ internal sealed class RegisterClothUsageCommandHandler : ICommandHandler<Registe
 
         await _activityRepository.AddAsync(activity.Value, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         return activity;
     }
 }

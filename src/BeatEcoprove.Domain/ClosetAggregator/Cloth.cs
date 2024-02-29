@@ -3,10 +3,10 @@ using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Events;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.Shared.ValueObjects;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Domain.ClosetAggregator;
@@ -32,7 +32,7 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         Brand = brand;
         Color = color;
         EcoScore = ecoScore;
-        
+
         State = ClothState.Idle;
     }
 
@@ -57,7 +57,7 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         {
             return Errors.Cloth.InvalidClothType;
         }
-        
+
         return new Cloth(
             ClothId.CreateUnique(),
             name,
@@ -72,9 +72,9 @@ public class Cloth : AggregateRoot<ClothId, Guid>
     {
         ClothAvatar = clothAvatar;
     }
-    
+
     public ErrorOr<bool> MaintainCloth(
-        MaintenanceActivity activity, 
+        MaintenanceActivity activity,
         MaintenanceAction action,
         Profile profile)
     {
@@ -82,7 +82,7 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         {
             return Errors.Cloth.IsBeingMaintain;
         }
-        
+
         _activities.Add(activity);
 
         this.AddDomainEvent(new MaintainClothDomainEvent(action, profile));
@@ -92,12 +92,12 @@ public class Cloth : AggregateRoot<ClothId, Guid>
     public ErrorOr<bool> CloseMaintenance(MaintenanceActivity activity, MaintenanceAction action)
     {
         EcoScore += action.EcoScore;
-        
+
         if (!activity.IsRunning())
         {
             return Errors.Cloth.CannotFinishMaintenanceActivity;
         }
-        
+
         activity.EndActivity();
         return true;
     }
@@ -108,17 +108,17 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         {
             return Errors.Cloth.CannotUseCloth;
         }
-        
+
         var activity = DailyUseActivity.Create(
             profile.Id,
             this.Id,
             0,
             0
             );
-        
+
         _activities.Add(activity);
         this.State = ClothState.InUse;
-        
+
         this.AddDomainEvent(new UseClothDomainEvent(profile, this));
         return activity;
     }
@@ -134,10 +134,10 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         {
             return Errors.Cloth.CannotDisposeCloth;
         }
-        
+
         activity.EndActivity();
         this.State = ClothState.Idle;
-        
+
         return true;
     }
 }

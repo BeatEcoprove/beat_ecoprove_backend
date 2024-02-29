@@ -1,9 +1,12 @@
-﻿using BeatEcoprove.Application.Groups.Commands.SendTextMessage;
+﻿using System.Text.Json;
+
+using BeatEcoprove.Application.Groups.Commands.SendTextMessage;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.WebSockets.Contracts;
+
 using ErrorOr;
+
 using MediatR;
-using System.Text.Json;
 
 namespace BeatEcoprove.Infrastructure.WebSockets.Events;
 

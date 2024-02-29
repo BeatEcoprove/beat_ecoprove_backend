@@ -7,8 +7,8 @@ using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
-using System.Linq;
 
 namespace BeatEcoprove.Application.Groups.Queries.GetGroupMessageResults;
 
@@ -45,11 +45,11 @@ internal sealed class GetGroupMessageResultsQueryHandler : IQueryHandler<GetGrou
         {
             return Errors.Groups.MemberNotFound;
         }
-        
+
         var messages = await _messageRepository.GetMessagesAsync(
-            groupId, 
-            request.Page, 
-            request.PageSize, 
+            groupId,
+            request.Page,
+            request.PageSize,
             cancellationToken);
 
         var senderIds = messages

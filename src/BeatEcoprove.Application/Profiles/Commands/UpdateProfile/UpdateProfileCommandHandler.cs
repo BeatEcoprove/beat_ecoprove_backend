@@ -9,6 +9,7 @@ using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Extensions;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Profiles.Commands.UpdateProfile;
@@ -21,9 +22,9 @@ internal sealed class UpdateProfileCommandHandler : ICommandHandler<UpdateProfil
     private readonly IAuthRepository _authRepository;
 
     public UpdateProfileCommandHandler(
-        IProfileManager profileManager, 
-        IUnitOfWork unitOfWork, 
-        IFileStorageProvider storageProvider, 
+        IProfileManager profileManager,
+        IUnitOfWork unitOfWork,
+        IFileStorageProvider storageProvider,
         IAuthRepository authRepository)
     {
         _profileManager = profileManager;
@@ -45,54 +46,54 @@ internal sealed class UpdateProfileCommandHandler : ICommandHandler<UpdateProfil
         {
             validator = validator.AddValidate(username.Value);
         }
-        
+
         if (email != null)
         {
             validator = validator.AddValidate(email.Value);
         }
-        
+
         if (phone != null)
         {
             validator = validator.AddValidate(phone.Value);
         }
-        
+
         if (validator.IsError)
         {
             return validator.Errors;
         }
-        
+
         var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
-        
+
         if (profile.IsError)
         {
             return profile.Errors;
         }
-        
+
         if (email?.Value is not null)
         {
             var auth = await _authRepository.GetByIdAsync(profile.Value.AuthId, cancellationToken);
-            
+
             if (auth is null)
             {
                 return Errors.Auth.InvalidAuth;
             }
-            
+
             auth.SetEmail(email.Value.Value);
         }
-        
+
         if (request.AvatarPicture != Stream.Null)
         {
-            var avatarUrl = 
+            var avatarUrl =
                 await _storageProvider
                     .UploadFileAsync(
                         Buckets.ProfileBucket,
-                        ((Guid)profile.Value.Id).ToString(), 
-                        request.AvatarPicture, 
+                        ((Guid)profile.Value.Id).ToString(),
+                        request.AvatarPicture,
                         cancellationToken);
-            
+
             profile.Value.SetProfileAvatar(avatarUrl);
         }
-        
+
         profile.Value.Update(username?.Value, phone?.Value);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

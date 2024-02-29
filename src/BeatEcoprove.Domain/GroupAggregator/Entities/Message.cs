@@ -8,8 +8,8 @@ public class Message : Document<MessageId>
     private Message() { }
 
     public Message(
-        GroupId group, 
-        GroupMemberId sender, 
+        GroupId group,
+        GroupMemberId sender,
         string title)
     {
         Id = MessageId.CreateUnique();

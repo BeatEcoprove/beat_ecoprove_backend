@@ -9,7 +9,7 @@ public record EnterOnGroupContent
     string Message
 );
 
-public class EnterOnGroupNotificationEvent 
+public class EnterOnGroupNotificationEvent
     : NotificationEvent<EnterOnGroupContent>
 {
     public EnterOnGroupNotificationEvent

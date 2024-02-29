@@ -7,4 +7,3 @@ internal class ConnectGroupEventJson : WebSocketEventJson
     [JsonPropertyName("groupId")]
     public Guid GroupId { get; init; }
 }
-

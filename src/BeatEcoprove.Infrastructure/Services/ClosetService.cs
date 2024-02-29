@@ -9,7 +9,9 @@ using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Infrastructure.Extensions;
+
 using ErrorOr;
+
 using Mapster;
 
 namespace BeatEcoprove.Infrastructure.Services;
@@ -22,9 +24,9 @@ public class ClosetService : IClosetService
     private readonly IProfileRepository _profileRepository;
 
     public ClosetService(
-        IFileStorageProvider fileStorageProvider, 
-        IClothRepository clothRepository, 
-        IBucketRepository bucketRepository, 
+        IFileStorageProvider fileStorageProvider,
+        IClothRepository clothRepository,
+        IBucketRepository bucketRepository,
         IProfileRepository profileRepository)
     {
         _fileStorageProvider = fileStorageProvider;
@@ -34,11 +36,11 @@ public class ClosetService : IClosetService
     }
 
     public async Task<ClothResult> AddClothToCloset(
-        Profile profile, 
+        Profile profile,
         Cloth cloth,
         string brandName,
-        string colorHex, 
-        Stream clothAvatar, 
+        string colorHex,
+        Stream clothAvatar,
         CancellationToken cancellationToken = default)
     {
         var clothPicture = profile.Id.Value + "-" + cloth.Id.Value;
@@ -64,7 +66,7 @@ public class ClosetService : IClosetService
     }
 
     public async Task<ErrorOr<Bucket>> AddBucketToCloset(
-        Profile profile, 
+        Profile profile,
         Bucket bucket,
         List<ClothId> clothToAdd,
         CancellationToken cancellationToken = default)
@@ -73,19 +75,19 @@ public class ClosetService : IClosetService
         {
             return Errors.Bucket.BucketNameAlreadyUsed;
         }
-        
+
         if (!await _clothRepository.ClothExists(clothToAdd, cancellationToken))
         {
             return Errors.Bucket.InvalidClothToAdd;
         }
-        
+
         var shouldAddClothToBucket = bucket.AddCloths(clothToAdd);
 
         if (shouldAddClothToBucket.IsError)
         {
             return shouldAddClothToBucket.Errors;
         }
-        
+
         profile.AddBucket(bucket);
         await _bucketRepository.AddAsync(bucket, cancellationToken);
 
@@ -98,19 +100,19 @@ public class ClosetService : IClosetService
         {
             return Errors.Bucket.InvalidClothToAdd;
         }
-        
+
         if (!await _profileRepository.CanProfileAccessBucket(profile.Id, bucket.Id, cancellationToken))
         {
             return Errors.Bucket.CannotAccessBucket;
         }
-        
+
         var shouldAddAllCloth = bucket.AddCloths(cloths);
 
         if (shouldAddAllCloth.IsError)
         {
             return shouldAddAllCloth.Errors;
         }
-        
+
         return bucket;
     }
 
@@ -120,29 +122,29 @@ public class ClosetService : IClosetService
         {
             return Errors.Bucket.InvalidClothToAdd;
         }
-        
+
         if (!await _profileRepository.CanProfileAccessBucket(profile.Id, bucket.Id, cancellationToken))
         {
             return Errors.Bucket.CannotAccessBucket;
         }
-        
+
         if (!await _bucketRepository.AreClothAlreadyOnBucket(clothToRemove, cancellationToken))
         {
             return Errors.Bucket.CannotRemoveCloth;
         }
-        
+
         var shouldRemoveCloth = bucket.RemoveCloths(clothToRemove);
 
         if (shouldRemoveCloth.IsError)
         {
             return shouldRemoveCloth.Errors;
         }
-        
+
         if (bucket.ClothNumber == 0)
         {
             await _bucketRepository.RemoveByIdAsync(bucket.Id, cancellationToken);
         }
-        
+
         return bucket;
     }
 
@@ -152,31 +154,31 @@ public class ClosetService : IClosetService
         {
             return Errors.Cloth.CannotAccessBucket;
         }
-        
+
         var cloth = await _clothRepository.GetByIdAsync(clothId, cancellationToken);
 
         if (cloth is null)
         {
             return Errors.Cloth.InvalidClothName;
         }
-        
+
         return cloth;
     }
-    
+
     public async Task<ErrorOr<ClothResult>> GetClothResult(Profile profile, ClothId clothId, CancellationToken cancellationToken = default)
     {
         if (!await _profileRepository.CanProfileAccessCloth(profile.Id, clothId, cancellationToken))
         {
             return Errors.Cloth.CannotAccessBucket;
         }
-        
+
         var cloth = await _clothRepository.GetClothDaoByIdAsync(clothId, cancellationToken);
 
         if (cloth is null)
         {
             return Errors.Cloth.ClothNotFound;
         }
-        
+
         return cloth.Adapt<ClothResult>();
     }
 
@@ -186,10 +188,10 @@ public class ClosetService : IClosetService
         {
             return Errors.Bucket.CannotAccessBucket;
         }
-        
+
         var cloths = await
             _bucketRepository.GetClothsAsync(bucket.Id, cancellationToken);
-        
+
         return new BucketResult(
             bucket,
             cloths.Adapt<List<ClothResult>>());
@@ -204,7 +206,7 @@ public class ClosetService : IClosetService
 
         return Errors.Cloth.InvalidClothType;
     }
-    
+
     public ErrorOr<ClothSize> GetClothSize(string size)
     {
         if (size.CanConvertToEnum(out ClothSize result))
@@ -224,14 +226,14 @@ public class ClosetService : IClosetService
         {
             return clothResult.Errors;
         }
-        
+
         var shouldRemoveCloth = profile.RemoveCloth(clothId);
-        
+
         if (shouldRemoveCloth.IsError)
         {
             return shouldRemoveCloth.Errors;
         }
-        
+
         var (clothShouldBelongToBucket, bucket) = await _bucketRepository.CheckIfClothBelongsToAnBucket(clothId, cancellationToken);
 
         if (clothShouldBelongToBucket)
@@ -242,13 +244,13 @@ public class ClosetService : IClosetService
             {
                 return shouldRemoveClothFromBucket.Errors;
             }
-            
+
             if (bucket.ClothNumber == 0)
             {
                 await _bucketRepository.RemoveByIdAsync(bucket.Id, cancellationToken);
             }
         }
-        
+
         await _clothRepository.RemoveByIdAsync(clothId, cancellationToken);
         return clothResult;
     }
@@ -261,21 +263,21 @@ public class ClosetService : IClosetService
         {
             return Errors.Bucket.BucketDoesNotExists;
         }
-        
+
         var bucketResult = await GetBucketResult(profile, bucket, cancellationToken);
 
         if (bucketResult.IsError)
         {
             return bucketResult.Errors;
         }
-        
+
         var shouldRemoveBucket = profile.RemoveBucket(bucketId);
 
         if (shouldRemoveBucket.IsError)
         {
             return shouldRemoveBucket.Errors;
         }
-        
+
         await _bucketRepository.RemoveByIdAsync(bucketId, cancellationToken);
         return bucketResult;
     }

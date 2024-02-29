@@ -7,6 +7,7 @@ using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
@@ -26,7 +27,7 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
     }
 
     public async Task<List<Group>> GetPublicGroupsAsync(
-        ProfileId profileId, 
+        ProfileId profileId,
         string? search,
         int page,
         int pageSize,
@@ -34,20 +35,20 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
     {
         var getPublicGroups =
             from groupEntity in DbContext.Set<Group>()
-            where 
+            where
                 groupEntity.IsPublic && groupEntity.CreatorId != profileId &&
-                ( search == null ||  groupEntity.Name.ToLower().Contains(search.ToLower()) )
+                (search == null || groupEntity.Name.ToLower().Contains(search.ToLower()))
             select groupEntity;
-        
+
         getPublicGroups = getPublicGroups
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
-        
+
         return await getPublicGroups.ToListAsync(cancellationToken);
     }
 
     public async Task<List<Group>> GetPrivateGroupsAsync(
-        ProfileId profileId, 
+        ProfileId profileId,
         string? search,
         int page,
         int pageSize,
@@ -56,17 +57,17 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
         var getPrivateGroups =
             from groupEntity in DbContext.Set<Group>()
             from groupMember in groupEntity.Members
-            join profile in DbContext.Profiles 
+            join profile in DbContext.Profiles
                 on groupMember.Profile equals profile.Id
-            where 
-                profile.Id == profileId && 
-                ( search == null ||  groupEntity.Name.ToLower().Contains(search.ToLower()) )
+            where
+                profile.Id == profileId &&
+                (search == null || groupEntity.Name.ToLower().Contains(search.ToLower()))
             select groupEntity;
-        
+
         getPrivateGroups = getPrivateGroups
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
-        
+
         return await getPrivateGroups.ToListAsync(cancellationToken);
     }
 
@@ -75,10 +76,10 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
         var isMemberOfGroup =
             from groupEntity in DbContext.Set<Group>()
             from groupMember in groupEntity.Members
-            join profile in DbContext.Profiles 
+            join profile in DbContext.Profiles
                 on groupMember.Profile equals profile.Id
             where
-                (profile.Id == profileId && groupEntity.Id == groupId) || 
+                (profile.Id == profileId && groupEntity.Id == groupId) ||
                 (groupEntity.IsPublic == true && groupEntity.Id == groupId)
             select profile;
 
@@ -130,10 +131,10 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
         var isAdminOrOwnerOfGroup =
             from groupEntity in DbContext.Set<Group>()
             from groupMember in groupEntity.Members
-            join profile in DbContext.Profiles 
+            join profile in DbContext.Profiles
                 on groupMember.Profile equals profile.Id
-                where groupEntity.CreatorId == profileId || 
-                      (groupMember.Permission == MemberPermission.Admin && groupEntity.Id == groupId)
+            where groupEntity.CreatorId == profileId ||
+                  (groupMember.Permission == MemberPermission.Admin && groupEntity.Id == groupId)
             select profile;
 
         return await isAdminOrOwnerOfGroup.AnyAsync(cancellationToken);
@@ -160,7 +161,7 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
             from groupInvite in groupEntity.Invites
             where groupEntity.Id == groupId && groupInvite.Id == inviteId
             select groupInvite;
-        
+
         return getGroupInvite.FirstOrDefaultAsync(cancellationToken);
     }
 

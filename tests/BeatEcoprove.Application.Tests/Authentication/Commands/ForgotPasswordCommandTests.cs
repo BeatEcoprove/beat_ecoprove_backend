@@ -15,7 +15,7 @@ public class ForgotPasswordCommandTests : AuthenticationBaseTests
     private readonly IKeyValueRepository<string> _keyValueRepository;
     private readonly IJwtProvider _jwtProvider;
     private readonly IMailSender _mailSender;
-    
+
     public ForgotPasswordCommandTests
         (IntegrationWebApplicationFactory factory) : base(factory)
     {
@@ -23,7 +23,7 @@ public class ForgotPasswordCommandTests : AuthenticationBaseTests
         _jwtProvider = GetService<IJwtProvider>();
         _mailSender = GetService<IMailSender>();
     }
-    
+
     private ForgotPasswordCommand GetSutCommand()
     {
         return new Faker<ForgotPasswordCommand>()
@@ -39,13 +39,13 @@ public class ForgotPasswordCommandTests : AuthenticationBaseTests
         var command = GetSutCommand();
 
         // Act
-        var result = await Sender.Send(command);
+        var result = await _sender.Send(command);
 
         // Assert
         Assert.True(result.IsError);
         Assert.Equal(result.FirstError.Code, Errors.User.EmailDoesNotExists.Code);
     }
-    
+
     [Fact]
     public async Task Should_GenerateTokenAndPersistItOnMemory()
     {
@@ -54,23 +54,23 @@ public class ForgotPasswordCommandTests : AuthenticationBaseTests
         await CreateUserAccount<Consumer>(command.Email);
 
         // Act
-        var result = await Sender.Send(command);
+        var result = await _sender.Send(command);
 
         // Assert
         var lastEmail = _mailSender.Last();
-        
+
         Assert.False(result.IsError);
         Assert.NotNull(lastEmail);
-        
+
         var match = _expression.Match(lastEmail.Body);
         var code = match.Value;
-        
+
         Assert.True(match.Success);
 
         var forgotToken = await _keyValueRepository.GetAsync(new ForgotKey(code));
         Assert.NotNull(forgotToken);
     }
-    
+
     [Fact]
     public async Task Should_ForgotTokenBeValid_WhenTokenIsPersisted()
     {
@@ -79,13 +79,13 @@ public class ForgotPasswordCommandTests : AuthenticationBaseTests
         await CreateUserAccount<Consumer>(command.Email);
 
         // Act
-        await Sender.Send(command);
+        await _sender.Send(command);
         var lastEmail = _mailSender.Last()!;
         var code = _expression.Match(lastEmail.Body).Value;
-        
+
         var forgotToken = await _keyValueRepository.GetAsync(new ForgotKey(code));
         // Assert
-        
+
         Assert.NotNull(forgotToken);
         var result = await _jwtProvider.ValidateTokenAsync(forgotToken);
         Assert.True(result);

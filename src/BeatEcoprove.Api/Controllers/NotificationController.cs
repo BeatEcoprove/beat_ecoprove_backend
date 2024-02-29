@@ -2,8 +2,11 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Profiles.Queries.GetNotifications;
 using BeatEcoprove.Contracts.Profile.Notifications;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
+
 using MapsterMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,7 +40,7 @@ public class NotificationController : ApiController
                 profileId),
             cancellationToken
         );
-        
+
         return getNotifications.Match(
             response => Ok(ProxyResponse(response)),
             Problem<List<dynamic>>

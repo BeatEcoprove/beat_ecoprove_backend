@@ -4,6 +4,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Profiles.Queries.GetAllProfiles;
@@ -30,7 +31,7 @@ internal sealed class GetAllProfilesQueryHandler : IQueryHandler<GetAllProfilesQ
         {
             return profile.Errors;
         }
-        
+
         var profiles = await _profileRepository.GetAllProfilesAsync(
             request.Search?.ToLower(),
             request.PageSize,

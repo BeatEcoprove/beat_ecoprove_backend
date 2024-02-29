@@ -1,13 +1,15 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
-using Microsoft.Extensions.Options;
+using BeatEcoprove.Infrastructure.Configuration;
+
 using Microsoft.IdentityModel.Tokens;
 
 namespace BeatEcoprove.Infrastructure.Authentication;
@@ -15,22 +17,19 @@ namespace BeatEcoprove.Infrastructure.Authentication;
 public class JwtProvider : IJwtProvider
 {
     private const string Algorithm = SecurityAlgorithms.HmacSha256;
-    private readonly JwtSettings _jwtSettings;
     private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
     private readonly IGamingService _gamingService;
 
     public JwtProvider(
-        IOptions<JwtSettings> jwtSettings, 
         IGamingService gamingService)
     {
-        _jwtSettings = jwtSettings.Value;
         _gamingService = gamingService;
     }
 
     public string GenerateToken(TokenPayload payload)
     {
         var signCredentials = new SigningCredentials(
-           new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
+           new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Env.Jwt.SecretKey)),
            Algorithm
        );
 
@@ -46,8 +45,8 @@ public class JwtProvider : IJwtProvider
         claims.Append(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
 
         var token = new JwtSecurityToken(
-            issuer: _jwtSettings.Issuer,
-            audience: _jwtSettings.Audience,
+            issuer: Env.Jwt.JwtIssuer,
+            audience: Env.Jwt.JwtAudience,
             expires: payload.ExpireAt,
             claims: claims,
             signingCredentials: signCredentials
@@ -87,10 +86,10 @@ public class JwtProvider : IJwtProvider
             profile.XP,
             _gamingService.GetNextLevelXp(profile),
             Tokens.Access);
-        
-       return GenerateAuthenticationTokens(payload);
+
+        return GenerateAuthenticationTokens(payload);
     }
-    
+
     public (string, string) MapClaimsToAuthToken(IDictionary<string, string> claims)
     {
         var payload = new AuthTokenPayload(
@@ -107,7 +106,7 @@ public class JwtProvider : IJwtProvider
             double.Parse(claims[UserClaims.CurrentXp]),
             double.Parse(claims[UserClaims.NextLevelXp]),
             Tokens.Access);
-        
+
         return GenerateAuthenticationTokens(payload);
     }
 
@@ -135,7 +134,7 @@ public class JwtProvider : IJwtProvider
     public async Task<bool> ValidateTokenAsync(string token, CancellationToken cancellationToken = default)
     {
         var result =
-            await _jwtSecurityTokenHandler.ValidateTokenAsync(token, GetTokenValidationParameters(_jwtSettings));
+            await _jwtSecurityTokenHandler.ValidateTokenAsync(token, GetTokenValidationParameters());
 
         return result.IsValid;
     }
@@ -144,23 +143,23 @@ public class JwtProvider : IJwtProvider
     {
         return token switch
         {
-            Tokens.Access => DateTime.Now.AddMinutes(_jwtSettings.AccessTokenExpirationInMinutes),
-            Tokens.Refresh => DateTime.Now.AddDays(_jwtSettings.RefreshTokenExpirationInDays),
+            Tokens.Access => DateTime.Now.AddMinutes(Env.Jwt.JwtAccessTokenExpiration),
+            Tokens.Refresh => DateTime.Now.AddDays(Env.Jwt.JwtRefreshTokenExpiration),
             _ => throw new Exception("Invalid token type")
         };
     }
 
-    public static TokenValidationParameters GetTokenValidationParameters(JwtSettings jwtSettings)
+    public static TokenValidationParameters GetTokenValidationParameters()
     {
         return new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = jwtSettings.Issuer,
+            ValidIssuer = Env.Jwt.JwtIssuer,
             ValidateAudience = true,
-            ValidAudience = jwtSettings.Audience,
+            ValidAudience = Env.Jwt.JwtAudience,
             ValidateLifetime = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+                Encoding.UTF8.GetBytes(Env.Jwt.SecretKey)),
             ValidateIssuerSigningKey = true
         };
     }

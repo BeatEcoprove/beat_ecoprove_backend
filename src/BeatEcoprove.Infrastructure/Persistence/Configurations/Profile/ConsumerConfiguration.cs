@@ -1,5 +1,5 @@
-﻿using BeatEcoprove.Domain.ProfileAggregator.Entities;
-using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+﻿using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

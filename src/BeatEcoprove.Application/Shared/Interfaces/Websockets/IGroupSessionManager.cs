@@ -10,7 +10,7 @@ public interface IGroupSessionManager : IConnectionManager<GroupId, List<Member>
     Task AddMember(GroupId groupId, Member member, CancellationToken cancellation = default);
     Task RemoveMember(GroupId groupId, ProfileId memberId, CancellationToken cancellation = default);
     Task SendEveryoneAsync(
-        GroupId groupId, 
-        IRealTimeNotification notification, 
+        GroupId groupId,
+        IRealTimeNotification notification,
         CancellationToken cancellation = default);
 }

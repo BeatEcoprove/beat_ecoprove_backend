@@ -1,5 +1,6 @@
 ﻿
 using BeatEcoprove.Domain.Shared.Models;
+
 using StackExchange.Redis;
 
 namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;

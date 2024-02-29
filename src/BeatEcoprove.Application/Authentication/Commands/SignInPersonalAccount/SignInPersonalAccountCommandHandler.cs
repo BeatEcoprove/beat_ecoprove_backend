@@ -8,6 +8,7 @@ using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Extensions;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
@@ -20,7 +21,7 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
 
     public SignInPersonalAccountCommandHandler(
         IUnitOfWork unitOfWork,
-        IJwtProvider jwtProvider, 
+        IJwtProvider jwtProvider,
         IAccountService accountService)
     {
         _unitOfWork = unitOfWork;
@@ -42,7 +43,7 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
         {
             return shouldBeValid.Errors;
         }
-        
+
         var personalProfile = Consumer.Create(
                 userName.Value,
                 phone.Value,
@@ -65,7 +66,7 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var ( accessToken, refreshToken ) =
+        var (accessToken, refreshToken) =
             _jwtProvider
                 .GenerateAuthenticationTokens(account.Value, personalProfile);
 
@@ -75,9 +76,9 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
     }
 
     private ErrorOr<Email> ValidateConstraints(
-        ErrorOr<Email> email, 
-        ErrorOr<Password> password, 
-        ErrorOr<Phone> phone, 
+        ErrorOr<Email> email,
+        ErrorOr<Password> password,
+        ErrorOr<Phone> phone,
         ErrorOr<Gender> gender)
     {
         return email

@@ -5,6 +5,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+
 using ErrorOr;
 
 namespace BeatEcoprove.Application.Closet.Commands.RemoveClothFromBucket;
@@ -17,9 +18,9 @@ internal sealed class RemoveClothFromBucketCommandHandler : ICommandHandler<Remo
     private readonly IUnitOfWork _unitOfWork;
 
     public RemoveClothFromBucketCommandHandler(
-        IProfileManager profileManager, 
-        IClosetService closetService, 
-        IBucketRepository bucketRepository, 
+        IProfileManager profileManager,
+        IClosetService closetService,
+        IBucketRepository bucketRepository,
         IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
@@ -31,7 +32,7 @@ internal sealed class RemoveClothFromBucketCommandHandler : ICommandHandler<Remo
     public async Task<ErrorOr<BucketResult>> Handle(RemoveClothFromBucketCommand request, CancellationToken cancellationToken)
     {
         BucketId bucketId = BucketId.Create(request.BucketId);
-        
+
         var profile = await _profileManager.GetProfileAsync(request.AuthId, request.ProfileId, cancellationToken);
 
         if (profile.IsError)
@@ -45,23 +46,23 @@ internal sealed class RemoveClothFromBucketCommandHandler : ICommandHandler<Remo
         {
             return Errors.Bucket.BucketDoesNotExists;
         }
-        
+
         var shouldRemoveClothFromBucket = await _closetService.RemoveClothFromBucket(
-            profile.Value, 
-            bucket, 
-            ToClothIdList(request.ClothToRemove), 
+            profile.Value,
+            bucket,
+            ToClothIdList(request.ClothToRemove),
             cancellationToken);
 
         if (shouldRemoveClothFromBucket.IsError)
         {
             return shouldRemoveClothFromBucket.Errors;
         }
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return await _closetService.GetBucketResult(profile.Value, bucket, cancellationToken);
     }
-    
+
     private static List<ClothId> ToClothIdList(List<Guid> clothIds)
     {
         return clothIds.Select(ClothId.Create).ToList();

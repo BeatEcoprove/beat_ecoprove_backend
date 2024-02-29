@@ -1,5 +1,6 @@
 ﻿using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.Shared.ValueObjects;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,7 +20,7 @@ public class ColorConfiguration : IEntityTypeConfiguration<Color>
                 id => id.Value,
                 id => ColorId.Create(id)
             );
-        
+
         builder.Property(color => color.DeletedAt)
             .HasColumnName("deleted_at");
 

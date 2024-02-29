@@ -8,6 +8,6 @@ public partial class Errors
     {
         public static Error SymbolNotDefined => Error.Validation(
             "Concurrency.SymbolNotDefined",
-            "O símbolo não foi definido.");      
+            "O símbolo não foi definido.");
     }
 }

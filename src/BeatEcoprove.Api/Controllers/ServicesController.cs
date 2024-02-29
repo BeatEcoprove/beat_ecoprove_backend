@@ -1,7 +1,10 @@
 using BeatEcoprove.Application.Services.Queries.GetAllServices;
 using BeatEcoprove.Contracts.Services;
+
 using MapsterMapper;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +27,7 @@ public class ServicesController : ApiController
     public async Task<ActionResult<List<MaintenanceServiceResponse>>> GetAllServices()
     {
         var services = await _sender.Send(new GetAllServicesQuery());
-        
+
         return services.Match(
             result => _mapper.Map<List<MaintenanceServiceResponse>>(result),
             Problem<List<MaintenanceServiceResponse>>
