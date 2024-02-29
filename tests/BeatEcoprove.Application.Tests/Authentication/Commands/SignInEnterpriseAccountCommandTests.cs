@@ -1,97 +1,48 @@
 ﻿using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
-using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain;
-using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using Bogus;
-using NSubstitute;
 
 namespace BeatEcoprove.Application.Tests.Authentication.Commands;
 
-public class SignInEnterpriseAccountCommandTests : BaseIntegrationTest
+public class SignInEnterpriseAccountCommandTests : AuthenticationBaseTests
 {
-    private readonly IAccountService _accountService;
     private readonly IJwtProvider _jwtProvider;
-    private readonly IUnitOfWork _unitOfWork;
     
     public SignInEnterpriseAccountCommandTests
         (IntegrationWebApplicationFactory factory) : base(factory)
     {
-        _accountService = GetService<IAccountService>();
         _jwtProvider = GetService<IJwtProvider>();
-        _unitOfWork = GetService<IUnitOfWork>();
         
-        (SutAuth, SutProfile) = GetAuthUser();
     }
 
-    private Auth SutAuth { get; }
-    private Organization SutProfile { get; }
-    
-    private static async Task<Stream> GetAvatarPicture()
-    {
-        using HttpClient httpClient = new();
-        var response = httpClient.GetAsync("https://github.com/DiogoCC7.png");
-
-        return await response.Result.Content.ReadAsStreamAsync();
-    }
-
-    private static (Auth, Organization) GetAuthUser()
-    {
-        var auth = new Faker<Auth>()
-            .CustomInstantiator(f =>
-                Auth.Create(
-                    Email.Create(f.Internet.Email()).Value,
-                    Password.Create("Password12").Value))
-            .Generate();
-
-        var profile = new Faker<Organization>()
-            .CustomInstantiator(f =>
-                Organization.Create(
-                    UserName.Create(f.Internet.UserName()).Value,
-                    Phone.Create("+351", f.Phone.PhoneNumber("#########")).Value,
-                    Address.Create(
-                        f.Address.StreetName(),
-                        12,
-                        f.Address.City(),
-                        PostalCode.Create(f.Address.ZipCode("####-###")).Value
-                    ).Value
-                    )
-                )
-            .Generate();
-        
-        auth.SetMainProfileId(profile.Id);
-        profile.SetAuthPointer(auth.Id);
-
-        return (auth, profile);
-    }
-    
     private SignInEnterpriseAccountCommand GetSutCommand(Stream avatarPicture)
     {
+        var (auth, organization) = GetAuth<Organization>();
+        
         // Arrange
         return new Faker<SignInEnterpriseAccountCommand>()
             .CustomInstantiator(f => new SignInEnterpriseAccountCommand(
                 f.Person.FullName,
                 TypeOption.Dryer.ToString(), 
-                SutProfile.Phone.Value,
-                SutProfile.Phone.Code,
-                SutProfile.Address.Street,
-                SutProfile.Address.Port,
-                SutProfile.Address.Locality,
-                SutProfile.Address.PostalCode.Value,
-                SutProfile.UserName,
+                organization.Phone.Value,
+                organization.Phone.Code,
+                organization.Address.Street,
+                organization.Address.Port,
+                organization.Address.Locality,
+                organization.Address.PostalCode.Value,
+                organization.UserName,
                 avatarPicture,
-                SutAuth.Email,
-                SutAuth.Password))
+                auth.Email,
+                auth.Password))
             .Generate();
     }
 
     [Fact]
-    public async Task ShouldNot_SignInPersonalAccount_WhenUserAlreadyExists()
+    public async Task ShouldNot_SignInEnterpriseAccount_WhenUserAlreadyExists()
     {
         var stream = await GetAvatarPicture();
         var handleEmailAlreadyExistsCommand = GetSutCommand(stream);
@@ -103,15 +54,9 @@ public class SignInEnterpriseAccountCommandTests : BaseIntegrationTest
                 .Generate()
         };
 
-        await _accountService.CreateAccount(
-            SutAuth.Email,
-            SutAuth.Password,
-            SutProfile,
-            stream,
-            default
-        );
-
-        await _unitOfWork.SaveChangesAsync();
+        await CreateUserAccount<Organization>(
+                email: handleEmailAlreadyExistsCommand.Email, 
+                username: handleEmailAlreadyExistsCommand.UserName);
 
         // Act
         var emailAlreadyExistsResult = 

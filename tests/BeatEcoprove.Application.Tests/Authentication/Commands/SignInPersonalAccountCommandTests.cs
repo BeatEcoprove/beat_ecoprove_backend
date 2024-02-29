@@ -1,81 +1,38 @@
 ﻿using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
-using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
-using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using Bogus;
 
 namespace BeatEcoprove.Application.Tests.Authentication.Commands;
 
-public class SignInPersonalAccountCommandTests : BaseIntegrationTest
+public class SignInPersonalAccountCommandTests : AuthenticationBaseTests
 {
-    private readonly IAccountService _accountService;
     private readonly IJwtProvider _jwtProvider;
-    private readonly IUnitOfWork _unitOfWork;
     
     public SignInPersonalAccountCommandTests
         (IntegrationWebApplicationFactory factory) : base(factory)
     {
-        _accountService = GetService<IAccountService>();
         _jwtProvider = GetService<IJwtProvider>();
-        _unitOfWork = GetService<IUnitOfWork>();
-
-        (SutAuth, SutProfile) = GetAuthUser();
     }
 
-    private Auth SutAuth { get; }
-    private Consumer SutProfile { get; }
-    
-    private static async Task<Stream> GetAvatarPicture()
-    {
-        using HttpClient httpClient = new();
-        var response = httpClient.GetAsync("https://github.com/DiogoCC7.png");
-
-       return await response.Result.Content.ReadAsStreamAsync();
-    }
-
-    private static (Auth, Consumer) GetAuthUser()
-    {
-        var auth = new Faker<Auth>()
-            .CustomInstantiator(f =>
-                Auth.Create(
-                    Email.Create(f.Internet.Email()).Value,
-                    Password.Create("Password12").Value))
-            .Generate();
-
-        var profile = new Faker<Consumer>()
-            .CustomInstantiator(f =>
-                Consumer.Create(
-                    UserName.Create(f.Internet.UserName()).Value,
-                    Phone.Create("+351", f.Phone.PhoneNumber("#########")).Value,
-                    DateOnly.FromDateTime(f.Person.DateOfBirth),
-                    Gender.Male))
-            .Generate();
-        
-       auth.SetMainProfileId(profile.Id);
-       profile.SetAuthPointer(auth.Id);
-
-       return (auth, profile);
-    }
-    
     private SignInPersonalAccountCommand GetSutCommand(Stream avatarPicture)
     {
+        var (auth, profile) = GetAuth<Consumer>();
+        
         // Arrange
         return new Faker<SignInPersonalAccountCommand>()
             .CustomInstantiator(f => new SignInPersonalAccountCommand(
                 f.Person.FullName,
-                SutProfile.BornDate, 
-                SutProfile.UserName,
-                SutProfile.Gender.ToString(),
-                SutProfile.Phone.Code,
-                SutProfile.Phone.Value,
+                profile.BornDate, 
+                profile.UserName,
+                profile.Gender.ToString(),
+                profile.Phone.Code,
+                profile.Phone.Value,
                 avatarPicture,
-                SutAuth.Email,
-                SutAuth.Password))
+                auth.Email,
+                auth.Password))
             .Generate();
     }
 
@@ -93,15 +50,9 @@ public class SignInPersonalAccountCommandTests : BaseIntegrationTest
                 .Generate()
         };
 
-        await _accountService.CreateAccount(
-            SutAuth.Email,
-            SutAuth.Password,
-            SutProfile,
-            stream,
-            default
-            );
-
-        await _unitOfWork.SaveChangesAsync();
+        await CreateUserAccount<Consumer>(
+                email: handleEmailAlreadyExistsCommand.Email, 
+                username: handleEmailAlreadyExistsCommand.UserName);
 
         // Act
         var emailAlreadyExistsResult = 

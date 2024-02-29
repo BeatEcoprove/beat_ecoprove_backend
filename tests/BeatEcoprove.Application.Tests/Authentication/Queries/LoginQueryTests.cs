@@ -1,26 +1,16 @@
 ﻿using BeatEcoprove.Application.Authentication.Queries.Login;
-using BeatEcoprove.Application.Shared.Interfaces.Persistence;
-using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
-using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using Bogus;
 
 namespace BeatEcoprove.Application.Tests.Authentication.Queries;
 
-public class LoginQueryTests : BaseIntegrationTest
+public class LoginQueryTests : AuthenticationBaseTests
 {
-    private readonly IAccountService _accountService;
-    private readonly IUnitOfWork _unitOfWork;
-    private const string SutPassword = "Password12";
-
-    public LoginQueryTests(IntegrationWebApplicationFactory factory)
+    public LoginQueryTests(
+        IntegrationWebApplicationFactory factory)
         : base(factory)
     {
-        _accountService = GetService<IAccountService>();
-        _unitOfWork = GetService<IUnitOfWork>();
     }
     
     private static LoginQuery GetSutQuery()
@@ -29,48 +19,8 @@ public class LoginQueryTests : BaseIntegrationTest
         return new Faker<LoginQuery>()
             .CustomInstantiator(f => new LoginQuery(
                 f.Internet.Email(),
-                SutPassword))
+                DefaultPassword))
             .Generate();
-    }
-    
-    private static async Task<Stream> GetAvatarPicture()
-    {
-        using HttpClient httpClient = new();
-        var response = httpClient.GetAsync("https://github.com/DiogoCC7.png");
-
-        return await response.Result.Content.ReadAsStreamAsync();
-    }
-
-    private async Task CreateUserAccount(
-        string email,
-        string password = SutPassword,
-        CancellationToken cancellationToken = default)
-    {
-        var avatarPicture = await GetAvatarPicture();
-        var auth = new Faker<Auth>()
-            .CustomInstantiator(f =>
-                Auth.Create(
-                    Email.Create(email).Value,
-                    Password.Create(password).Value))
-            .Generate();
-        
-        var profile = new Faker<Consumer>()
-            .CustomInstantiator(f =>
-                Consumer.Create(
-                    UserName.Create(f.Internet.UserName()).Value,
-                    Phone.Create("+351", f.Phone.PhoneNumber("#########")).Value,
-                    DateOnly.FromDateTime(f.Person.DateOfBirth),
-                    Gender.Male))
-            .Generate();
-        
-        await _accountService.CreateAccount(
-            auth.Email,
-            auth.Password,
-            profile,
-            avatarPicture,
-            cancellationToken);
-        
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     [Fact]
@@ -93,7 +43,9 @@ public class LoginQueryTests : BaseIntegrationTest
     {
         // Arrange
         var query = GetSutQuery();
-        await CreateUserAccount(query.Email, "Password123");
+        await CreateUserAccount<Consumer>(
+            email: query.Email,
+            password: NewDefaultPassword);
     
         // Act
         var result = await Sender.Send(query, default);
@@ -108,7 +60,7 @@ public class LoginQueryTests : BaseIntegrationTest
     {
         // Arrange
         var query = GetSutQuery();
-        await CreateUserAccount(query.Email);
+        await CreateUserAccount<Consumer>(query.Email);
     
         // Act
         var result = await Sender.Send(query, default);
