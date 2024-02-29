@@ -55,7 +55,10 @@ public static class DocumentSerializers
                     continue;
                 }
 
-                BsonSerializer.RegisterSerializer(derivedType, instance as IBsonSerializer);
+                if (BsonSerializer.IsTypeDiscriminated(derivedType))
+                {
+                    BsonSerializer.TryRegisterSerializer(derivedType, instance as IBsonSerializer);
+                }                    
             }
         }
 

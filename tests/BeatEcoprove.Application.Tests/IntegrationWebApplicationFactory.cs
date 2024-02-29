@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using Respawn;
 using StackExchange.Redis;
+using Testcontainers.MongoDb;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 
@@ -30,6 +32,12 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
     private readonly RedisContainer _redisContainer = new RedisBuilder()
         .WithImage("redis:latest")
         .Build();
+
+    private readonly MongoDbContainer _mongoDbContainer = new MongoDbBuilder()
+        .WithImage("mongo:latest")
+        .WithUsername("beat")
+        .WithPassword("password")
+        .Build();
     
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -38,9 +46,25 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
             ConfigureDbContext(services);
             ConfigureRedis(services);
             ConfigureMailSender(services);
+            ConfigureMongoDb(services);
         });
     }
 
+    private void ConfigureMongoDb(IServiceCollection services)
+    {
+        var descriptor = services
+            .SingleOrDefault(s => 
+                s.ServiceType == typeof(IMongoClient));
+        
+        if (descriptor is not null)
+        {
+            services.Remove(descriptor);
+        }
+        
+        services.AddSingleton<IMongoClient>
+            (new MongoClient(_mongoDbContainer.GetConnectionString()));
+    }
+    
     private static void ConfigureMailSender(IServiceCollection services)
     {
         var descriptor = services
@@ -121,10 +145,11 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
     {
         await _dbContainer.StartAsync();
         await _redisContainer.StartAsync();
+        await _mongoDbContainer.StartAsync();
         
         await InitiateDbConnection();
     }
-
+    
     private async Task InitiateDbConnection()
     {
         using var scope = Services.CreateScope();
@@ -133,7 +158,7 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
 
         var dbConnection = dbContext.Database.GetDbConnection();
         await dbConnection.OpenAsync();
-        
+
         _respawner = await Respawner.CreateAsync(dbConnection, new RespawnerOptions()
         {
             DbAdapter = DbAdapter.Postgres,
@@ -143,7 +168,8 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
 
     public new async Task DisposeAsync()
     {
-        await _redisContainer.StartAsync();
+        await _redisContainer.StopAsync();
+        await _mongoDbContainer.StopAsync();
         await _dbContainer.StopAsync();
     }
 }

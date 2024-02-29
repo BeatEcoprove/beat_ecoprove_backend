@@ -16,7 +16,7 @@ public static class ConfigurationExtensions
 
         var configurations = configurationAssembly.GetTypes()
             .Where(type => type.GetInterfaces()
-                .Any(i => IsDocumentConfiguration(i)))
+                .Any(IsDocumentConfiguration))
             .ToList();
 
         services.Scan(selector => selector
@@ -42,14 +42,15 @@ public static class ConfigurationExtensions
             var bsonClassMapType = typeof(BsonClassMap<>).MakeGenericType(genericType);
             var configurationMethod = configurationService.GetType().GetMethod(methodName);
 
-            if (bsonClassMapType is null || configurationMethod is null)
+            if (configurationMethod is null)
             {
                 continue;
             }
 
             var bsonClassMap = Activator.CreateInstance(bsonClassMapType);
             configurationMethod.Invoke(configurationService, new[] { bsonClassMap });
-            BsonClassMap.RegisterClassMap((dynamic)bsonClassMap!);
+
+            BsonClassMap.TryRegisterClassMap((dynamic)bsonClassMap!);
         }
 
         return services;
