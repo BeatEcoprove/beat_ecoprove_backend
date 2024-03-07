@@ -1,4 +1,5 @@
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.GroupAggregator;
 using BeatEcoprove.Domain.GroupAggregator.DAOS;
 using BeatEcoprove.Domain.GroupAggregator.Entities;
@@ -161,7 +162,7 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
             from groupInvite in groupEntity.Invites
             where groupEntity.Id == groupId && groupInvite.Id == inviteId
             select groupInvite;
-
+        
         return getGroupInvite.FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -183,6 +184,7 @@ public class GroupRepository : Repository<Group, GroupId>, IGroupRepository
         select new { member.Id, Profile = profile };
 
         return getMemberProfiles
+            .IgnoreQueryFilters()
             .ToDictionaryAsync(x => x.Id, x => x.Profile, cancellationToken);
     }
 }

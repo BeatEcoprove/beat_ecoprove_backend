@@ -60,7 +60,7 @@ internal sealed class GetGroupMessageResultsQueryHandler : IQueryHandler<GetGrou
             .GetMemberProfiles(groupId, senderIds, cancellationToken);
 
         return messages
-            .Select((message, index) =>
+            .Select((message) =>
             {
                 var profile = profiles
                     .SingleOrDefault(p => p.Key == message.Sender);
