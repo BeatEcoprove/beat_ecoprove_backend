@@ -22,7 +22,8 @@ public class BrandController : ApiController
         _sender = sender;
         _mapper = mapper;
     }
-
+    
+    [HttpGet]
     public async Task<ActionResult<BrandResponse>> GetAllBrands()
     {
         var getAllBrandsQuery =

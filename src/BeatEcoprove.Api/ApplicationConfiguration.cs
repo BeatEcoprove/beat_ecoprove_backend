@@ -50,6 +50,12 @@ public static class ApplicationConfiguration
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
         app.UseHttpsRedirection();
         app.UseAuthorization();
 

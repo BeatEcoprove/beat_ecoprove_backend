@@ -22,7 +22,8 @@ public class ColorController : ApiController
         _sender = sender;
         _mapper = mapper;
     }
-
+    
+    [HttpGet]
     public async Task<ActionResult<ColorResponse>> GetAllColors()
     {
         var getAllColorsResult =
