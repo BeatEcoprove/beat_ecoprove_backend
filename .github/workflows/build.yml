@@ -15,7 +15,7 @@ jobs:
       - name: Use .NET 7.0 x64
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 7.0.0
+          dotnet-version: '7.0.x'
 
       - name: Restore dependencies
         run: dotnet restore
