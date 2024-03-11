@@ -1,4 +1,6 @@
-﻿using ErrorOr;
+﻿using BeatEcoprove.Application.Shared.Multilanguage;
+
+using ErrorOr;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -8,6 +10,13 @@ namespace BeatEcoprove.Api.Controllers;
 [ApiController]
 public class ApiController : ControllerBase
 {
+    protected readonly ILanguageCulture Localizer;
+
+    public ApiController(ILanguageCulture localizer)
+    {
+        Localizer = localizer;
+    }
+
     protected ActionResult<TResponse> Problem<TResponse>(List<Error> errors)
     {
         if (errors.All(error => error.Type == ErrorType.Conflict))
@@ -16,9 +25,10 @@ public class ApiController : ControllerBase
 
             foreach (var error in errors)
             {
+
                 modelValidation.AddModelError(
                     error.Code,
-                    error.Description);
+                    Localizer.GetChunk(error.Code, error.Description));
             }
 
             return ValidationProblem(modelValidation);
@@ -34,6 +44,6 @@ public class ApiController : ControllerBase
             _ => StatusCodes.Status500InternalServerError
         };
 
-        return Problem(statusCode: statusCode, title: firstError.Description);
+        return Problem(statusCode: statusCode, title: Localizer.GetChunk(firstError.Code, firstError.Description));
     }
 }

@@ -31,7 +31,7 @@ public partial class Errors
             "Não pode promover um membro para o mesmo cargo.");
 
         public static Error DontBelongToGroup => Error.Validation(
-            "Group.MemberNotFound",
+            "Group.DontBelongToGroup",
             "Não pertences a este grupo.");
 
         public static Error PermissionNotValid => Error.Validation(
@@ -39,7 +39,7 @@ public partial class Errors
             "Permissão invalida.");
 
         public static Error CannotPromoteMember => Error.Validation(
-            "Group.PermissionNotValid",
+            "Group.CannotPromoteMember",
             "Não tem permissões para promover este membro.");
 
         public static Error CannotPromoteYourself => Error.Validation(

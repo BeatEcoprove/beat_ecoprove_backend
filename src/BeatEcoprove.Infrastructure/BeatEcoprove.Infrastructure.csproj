@@ -31,4 +31,11 @@
       <Folder Include="BackgroundJobs\PgLevelBackgroundJ\" />
     </ItemGroup>
     
+    <ItemGroup>
+      <EmbeddedResource Update="MultiLanguage\Resources\LanguageResources.pt-PT.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.pt-PT.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+    
 </Project>

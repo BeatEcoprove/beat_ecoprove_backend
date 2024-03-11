@@ -2,6 +2,7 @@
 using BeatEcoprove.Application.Closet.Commands.RegisterClothUsage;
 using BeatEcoprove.Application.Closet.Commands.RemoveClothFromOutfit;
 using BeatEcoprove.Application.Closet.Queries.GetCurrentOutfit;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Activities;
 using BeatEcoprove.Contracts.Closet.Bucket;
 
@@ -23,7 +24,10 @@ public class OutfitController : ApiController
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public OutfitController(ISender sender, IMapper mapper)
+    public OutfitController(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture languageCulture) : base(languageCulture)
     {
         _sender = sender;
         _mapper = mapper;

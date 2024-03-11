@@ -1,5 +1,6 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.FeedBacks.Commands.SubmitFeedBack;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.FeedBacks;
 
 using MapsterMapper;
@@ -18,7 +19,10 @@ public class FeedBackController : ApiController
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public FeedBackController(ISender sender, IMapper mapper)
+    public FeedBackController(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture languageCulture) : base(languageCulture)
     {
         _sender = sender;
         _mapper = mapper;

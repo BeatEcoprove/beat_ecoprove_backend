@@ -1,5 +1,6 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.ClosetBuckets.Commands;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Closet.Bucket;
 
 using MapsterMapper;
@@ -18,7 +19,10 @@ public class BucketController : ApiController
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public BucketController(ISender sender, IMapper mapper)
+    public BucketController(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture languageCulture) : base(languageCulture)
     {
         _sender = sender;
         _mapper = mapper;

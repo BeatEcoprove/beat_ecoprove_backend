@@ -34,17 +34,17 @@ public static class SwaggerConfiguration
             };
         }
     }
-    
+
     public static IServiceCollection AddSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "Api Playground", 
+                Title = "Api Playground",
                 Version = "v1",
             });
-            
+
             c.AddSecurityDefinition("token", new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.Http,
@@ -52,7 +52,7 @@ public static class SwaggerConfiguration
                 Name = HeaderNames.Authorization,
                 Scheme = "Bearer",
             });
-          
+
             c.OperationFilter<SecureEndpointAuthRequirementFilter>();
         });
 

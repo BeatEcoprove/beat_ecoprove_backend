@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application.Colors.Queries;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Colors;
 
 using MapsterMapper;
@@ -17,12 +18,15 @@ public class ColorController : ApiController
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public ColorController(ISender sender, IMapper mapper)
+    public ColorController(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture languageCulture) : base(languageCulture)
     {
         _sender = sender;
         _mapper = mapper;
     }
-    
+
     [HttpGet]
     public async Task<ActionResult<ColorResponse>> GetAllColors()
     {

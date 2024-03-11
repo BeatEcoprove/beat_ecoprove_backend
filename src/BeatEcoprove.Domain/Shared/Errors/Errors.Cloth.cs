@@ -31,7 +31,7 @@ public partial class Errors
             "Esta peça já está em uso.");
 
         public static Error CannotUseClothBecauseIsOnMaintenance => Error.Validation(
-            "Cloth.CannotUseCloth",
+            "Cloth.CannotUseClothOnMaintenaice",
             "Esta peça está em manutenção.");
 
         public static Error IsBeingMaintain => Error.Validation(

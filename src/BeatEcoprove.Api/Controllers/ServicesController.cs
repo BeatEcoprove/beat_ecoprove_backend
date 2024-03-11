@@ -1,4 +1,5 @@
 using BeatEcoprove.Application.Services.Queries.GetAllServices;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Services;
 
 using MapsterMapper;
@@ -17,7 +18,10 @@ public class ServicesController : ApiController
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public ServicesController(ISender sender, IMapper mapper)
+    public ServicesController(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture languageCulture) : base(languageCulture)
     {
         _sender = sender;
         _mapper = mapper;

@@ -11,7 +11,7 @@ public static partial class Errors
             "Não foi possível encontrar a peça de roupa.");
 
         public static Error CannotFindBucket => Error.Validation(
-            "Profile.CannotFindCloth",
+            "Profile.CannotFindBucket",
             "Não foi possível encontrar o cesto.");
 
         public static Error CannotConvertNegativeEcoCoins => Error.Validation(

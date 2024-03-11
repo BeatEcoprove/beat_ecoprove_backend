@@ -1,4 +1,5 @@
 ﻿using BeatEcoprove.Application.Brands.Queries;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Brands;
 
 using MapsterMapper;
@@ -17,12 +18,15 @@ public class BrandController : ApiController
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public BrandController(ISender sender, IMapper mapper)
+    public BrandController(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture languageCulture) : base(languageCulture)
     {
         _sender = sender;
         _mapper = mapper;
     }
-    
+
     [HttpGet]
     public async Task<ActionResult<BrandResponse>> GetAllBrands()
     {

@@ -15,7 +15,7 @@ public static partial class Errors
             "Por favor introduza um código de país válido.");
 
         public static Error MustBeNineLegth => Error.Validation(
-            "Phone.InvalidPhone",
+            "Phone.MustBeNineLegth",
             "A telemóvel deve ter nove digítos.");
     }
 }

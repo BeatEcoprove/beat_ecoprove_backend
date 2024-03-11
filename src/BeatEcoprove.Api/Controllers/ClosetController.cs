@@ -9,6 +9,7 @@ using BeatEcoprove.Application.Closet.Queries.GetBucket;
 using BeatEcoprove.Application.Closet.Queries.GetBucketsCloth;
 using BeatEcoprove.Application.Closet.Queries.GetCloset;
 using BeatEcoprove.Application.Closet.Queries.GetCloth;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Closet;
 using BeatEcoprove.Contracts.Closet.Bucket;
 using BeatEcoprove.Contracts.Closet.Cloth;
@@ -33,7 +34,8 @@ public class ClosetController : ApiController
 
     public ClosetController(
         ISender sender,
-        IMapper mapper)
+        IMapper mapper,
+        ILanguageCulture languageCulture) : base(languageCulture)
     {
         _sender = sender;
         _mapper = mapper;

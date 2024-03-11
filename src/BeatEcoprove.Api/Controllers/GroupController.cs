@@ -9,6 +9,7 @@ using BeatEcoprove.Application.Groups.Commands.UpdateGroup;
 using BeatEcoprove.Application.Groups.Queries.GetGroupDetail;
 using BeatEcoprove.Application.Groups.Queries.GetGroupMessages;
 using BeatEcoprove.Application.Groups.Queries.GetGroups;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Groups;
 
 using MapsterMapper;
@@ -27,7 +28,10 @@ public class GroupController : ApiController
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public GroupController(ISender sender, IMapper mapper)
+    public GroupController(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture languageCulture) : base(languageCulture)
     {
         _sender = sender;
         _mapper = mapper;

@@ -3,6 +3,7 @@ using BeatEcoprove.Application.Cloths.Commands.CloseMaintenanceActivity;
 using BeatEcoprove.Application.Cloths.Commands.PerformAction;
 using BeatEcoprove.Application.Cloths.Queries.GetAvailableServices;
 using BeatEcoprove.Application.Cloths.Queries.GetClothMaintenanceStatus;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Closet.Cloth;
 using BeatEcoprove.Contracts.Services;
 
@@ -24,7 +25,10 @@ public class ClothController : ApiController
     private readonly IMapper _mapper;
     private readonly ISender _sender;
 
-    public ClothController(IMapper mapper, ISender sender)
+    public ClothController(
+        IMapper mapper,
+        ISender sender,
+        ILanguageCulture languageCulture) : base(languageCulture)
     {
         _mapper = mapper;
         _sender = sender;

@@ -1,5 +1,7 @@
 ﻿using BeatEcoprove.Api.Middlewares;
+using BeatEcoprove.Application.Shared.Multilanguage;
 
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.FileProviders;
 
 namespace BeatEcoprove.Api;
@@ -30,6 +32,7 @@ public static class ApplicationConfiguration
     private static IApplicationBuilder AddCustomMiddlewares(this IApplicationBuilder app)
     {
         app.UseMiddleware<ProfileCheckerMiddleware>();
+        app.UseMiddleware<LanguageMiddleware>();
 
         return app;
     }
@@ -44,6 +47,15 @@ public static class ApplicationConfiguration
 
     public static WebApplication SetupConfiguration(this WebApplication app)
     {
+        var supportedCultures = Language.GetSupportedLanguages();
+
+        app.UseRequestLocalization(new RequestLocalizationOptions
+        {
+            DefaultRequestCulture = new RequestCulture(Language.Portuguese.Value),
+            SupportedCultures = supportedCultures,
+            SupportedUICultures = supportedCultures
+        });
+
         app.UseCors(policyBuilder =>
             policyBuilder
                 .AllowAnyOrigin()

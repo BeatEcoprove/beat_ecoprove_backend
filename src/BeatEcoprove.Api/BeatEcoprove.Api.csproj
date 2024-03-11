@@ -30,6 +30,13 @@
       <Folder Include="Assets\brands\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\LanguageResources.pt-PT.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resource.pt-PT.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
     <Target Name="CreateAppDataFolder" BeforeTargets="CoreCompile">
         <MakeDir Directories="$(OutputPath)public\default" Condition="!Exists('$(OutputPath)public\default')" />
         <ItemGroup>

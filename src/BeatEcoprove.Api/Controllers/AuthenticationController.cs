@@ -5,6 +5,7 @@ using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 using BeatEcoprove.Application.Authentication.Queries.Login;
 using BeatEcoprove.Application.Authentication.Queries.RefreshTokens;
 using BeatEcoprove.Application.Authentication.Queries.ValidationField;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts;
 using BeatEcoprove.Contracts.Authentication;
 using BeatEcoprove.Contracts.Authentication.Common;
@@ -26,7 +27,11 @@ public class AuthenticationController : ApiController
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public AuthenticationController(ISender sender, IMapper mapper)
+    public AuthenticationController(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture languageCulture)
+        : base(languageCulture)
     {
         _sender = sender;
         _mapper = mapper;

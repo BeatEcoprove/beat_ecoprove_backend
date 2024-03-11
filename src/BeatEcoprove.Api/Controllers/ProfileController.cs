@@ -6,6 +6,7 @@ using BeatEcoprove.Application.Profiles.Commands.UpdateProfile;
 using BeatEcoprove.Application.Profiles.Queries.GetAllProfiles;
 using BeatEcoprove.Application.Profiles.Queries.GetMyProfiles;
 using BeatEcoprove.Application.Profiles.Queries.GetProfile;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Profile;
 
 using MapsterMapper;
@@ -24,7 +25,10 @@ public class ProfileController : ApiController
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public ProfileController(ISender sender, IMapper mapper)
+    public ProfileController(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture languageCulture) : base(languageCulture)
     {
         _sender = sender;
         _mapper = mapper;

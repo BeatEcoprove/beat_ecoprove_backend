@@ -1,5 +1,6 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Currency.Queries.ConvertCurrency;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Currency;
 
 using MapsterMapper;
@@ -18,7 +19,10 @@ public class CurrencyController : ApiController
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public CurrencyController(ISender sender, IMapper mapper)
+    public CurrencyController(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture languageCulture) : base(languageCulture)
     {
         _sender = sender;
         _mapper = mapper;

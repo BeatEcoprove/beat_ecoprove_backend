@@ -1,5 +1,6 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Profiles.Queries.GetNotifications;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Profile.Notifications;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Notifications;
 
@@ -19,7 +20,10 @@ public class NotificationController : ApiController
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public NotificationController(ISender sender, IMapper mapper)
+    public NotificationController(
+        ISender sender,
+        IMapper mapper,
+        ILanguageCulture languageCulture) : base(languageCulture)
     {
         _sender = sender;
         _mapper = mapper;
