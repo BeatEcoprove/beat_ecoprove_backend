@@ -280,7 +280,7 @@
         <value>A palavra-chave deve ter entre 6 a 16 caracteres</value>
     </data>
     <data name="Password.MustContainAtLeastOnNumber" xml:space="preserve">
-        <value>A palavra-chave deve conter pelo menos biiii número</value>
+        <value>A palavra-chave deve conter pelo menos 1 número</value>
     </data>
     <data name="Password.MustContainAtLeastOnCaptialLetter" xml:space="preserve">
         <value>A palavra-chave deve conter pelo menos uma letra maiúscula</value>
