@@ -6,8 +6,10 @@ namespace BeatEcoprove.Application.Shared.Multilanguage;
 
 public class Language : Enumeration<Language, string>
 {
-    public static readonly Language Portuguese = new("pt-PT", typeof(CultureInfo));
-    public static Language Default => Portuguese;
+    public static readonly Language English = new("en-GB", typeof(CultureInfo));
+    public static readonly Language PortuguesePt = new("pt-PT", typeof(CultureInfo));
+    public static readonly Language Portuguese = new("pt", typeof(CultureInfo));
+    public static Language Default => English;
 
     public Language(string value, Type type)
         : base(value, type)

@@ -36,6 +36,10 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>Resource.pt-PT.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="MultiLanguage\Resources\LanguageResources.en-GB.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LanguageResources.en-GB.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
     
 </Project>

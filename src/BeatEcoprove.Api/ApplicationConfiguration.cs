@@ -32,7 +32,6 @@ public static class ApplicationConfiguration
     private static IApplicationBuilder AddCustomMiddlewares(this IApplicationBuilder app)
     {
         app.UseMiddleware<ProfileCheckerMiddleware>();
-        app.UseMiddleware<LanguageMiddleware>();
 
         return app;
     }
@@ -45,16 +44,26 @@ public static class ApplicationConfiguration
         return app;
     }
 
-    public static WebApplication SetupConfiguration(this WebApplication app)
+    private static IApplicationBuilder AddMultiLanguageSupport(this IApplicationBuilder app)
     {
         var supportedCultures = Language.GetSupportedLanguages();
 
         app.UseRequestLocalization(new RequestLocalizationOptions
         {
-            DefaultRequestCulture = new RequestCulture(Language.Portuguese.Value),
+            DefaultRequestCulture = new RequestCulture(Language.Default.Value),
             SupportedCultures = supportedCultures,
-            SupportedUICultures = supportedCultures
+            SupportedUICultures = supportedCultures,
+            ApplyCurrentCultureToResponseHeaders = true,
+            FallBackToParentCultures = true,
+            FallBackToParentUICultures = true
         });
+
+        return app;
+    }
+
+    public static WebApplication SetupConfiguration(this WebApplication app)
+    {
+        app.AddMultiLanguageSupport();
 
         app.UseCors(policyBuilder =>
             policyBuilder
