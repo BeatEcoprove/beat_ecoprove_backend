@@ -9,6 +9,8 @@ using BeatEcoprove.Application.Profiles.Queries.GetProfile;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Profile;
 
+using Mapster;
+
 using MapsterMapper;
 
 using MediatR;
@@ -35,10 +37,10 @@ public class ProfileController : ApiController
     }
 
     [HttpGet("all")]
-    public async Task<ActionResult<List<ProfileResponse>>> GetAllProfiles(
+    public async Task<ActionResult<AllProfilesResponse>> GetAllProfiles(
         [FromQuery] Guid profileId,
         [FromQuery] string? search,
-        [FromQuery] int? page,
+        [FromQuery] int? page = 1,
         [FromQuery] int? pageSize = 10,
         CancellationToken cancellationToken = default
     )
@@ -55,8 +57,8 @@ public class ProfileController : ApiController
                 ), cancellationToken);
 
         return profiles.Match(
-            response => Ok(_mapper.Map<List<ProfileResponse>>(response)),
-            Problem<List<ProfileResponse>>
+            response => Ok(new AllProfilesResponse(response.Adapt<List<ProfileResponse>>())),
+            Problem<AllProfilesResponse>
         );
     }
 

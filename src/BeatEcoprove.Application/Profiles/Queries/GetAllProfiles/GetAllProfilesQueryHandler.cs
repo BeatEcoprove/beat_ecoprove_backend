@@ -39,6 +39,8 @@ internal sealed class GetAllProfilesQueryHandler : IQueryHandler<GetAllProfilesQ
             cancellationToken
         );
 
-        return profiles;
+        return profiles
+            .Where(userProfile => profile.Value.Id != userProfile.Id)
+            .ToList();
     }
 }
