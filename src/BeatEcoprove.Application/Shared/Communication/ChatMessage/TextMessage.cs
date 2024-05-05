@@ -2,9 +2,16 @@
 
 namespace BeatEcoprove.Application.Shared.Communication.ChatMessage;
 
-public record TextMessage
-(
-    string Message,
-    GroupId Group,
-    ChatMessageMember Member
-);
+public class TextMessage
+{
+    public string Message { get; init; }
+    public GroupId Group { get; init; }
+    public ChatMessageMember Member { get; init; }
+
+    public TextMessage(string message, GroupId group, ChatMessageMember member)
+    {
+        Message = message;
+        Group = group;
+        Member = member;
+    }
+}

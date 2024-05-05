@@ -1,3 +1,4 @@
+using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Events;
 using BeatEcoprove.Domain.GroupAggregator.Entities;
 using BeatEcoprove.Domain.GroupAggregator.Enumerators;
@@ -156,7 +157,34 @@ public class Group : AggregateRoot<GroupId, Guid>
 
         return true;
     }
+    
+    public ErrorOr<bool> AddBorrowMessage(Profile profile, string message, ClothId clothId)
+    {
+        var groupMember = GetMemberByProfileId(profile.Id);
 
+        if (groupMember is null)
+        {
+            if (!IsPublic)
+            {
+                return Errors.Groups.MemberNotFound;
+            }
+
+            groupMember = AddMember(profile.Id);
+        }
+
+
+        this._messages.Add(
+            new BorrowMessage(
+                this.Id,
+                groupMember.Id,
+                message,
+                clothId
+            )
+        );
+
+        return true;
+    }
+    
     public ErrorOr<GroupInvite> InviteMember(ProfileId from, Profile to)
     {
         if (this._members.Any(m => m.Profile == to.Id))

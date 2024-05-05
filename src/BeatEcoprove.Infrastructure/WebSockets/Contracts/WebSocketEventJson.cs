@@ -2,7 +2,7 @@
 
 namespace BeatEcoprove.Infrastructure.WebSockets.Contracts;
 
-internal class WebSocketEventJson
+public class WebSocketEventJson
 {
     [JsonPropertyName("type")]
     public string Type { get; init; } = null!;

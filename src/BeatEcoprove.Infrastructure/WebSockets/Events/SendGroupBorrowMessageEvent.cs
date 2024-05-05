@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-using BeatEcoprove.Application.Groups.Commands.SendTextMessage;
+using BeatEcoprove.Application.Groups.Commands.SendBorrowMessage;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.WebSockets.Contracts;
 
@@ -10,19 +10,19 @@ using MediatR;
 
 namespace BeatEcoprove.Infrastructure.WebSockets.Events;
 
-internal class SentGroupTextMessageEvent : WebSocketEvent
+internal class SendGroupBorrowMessageEvent : WebSocketEvent
 {
     private readonly ISender _sender;
-    private readonly SendGroupTextMessageEventJson _event;
+    private readonly SendGroupBorrowMessageEventJson _event;
     private readonly ProfileId _userId;
 
-    public SentGroupTextMessageEvent(
-        ISender sender,
-        string @event,
+    public SendGroupBorrowMessageEvent(
+        ISender sender, 
+        string @event, 
         ProfileId userId)
     {
-        var jsonResult = JsonSerializer.Deserialize<SendGroupTextMessageEventJson>(@event);
-
+        var jsonResult = JsonSerializer.Deserialize<SendGroupBorrowMessageEventJson>(@event);
+        
         _sender = sender;
         _event = jsonResult ?? throw new ArgumentNullException(nameof(jsonResult));
         _userId = userId;
@@ -31,11 +31,12 @@ internal class SentGroupTextMessageEvent : WebSocketEvent
     public override async Task<ErrorOr<bool>> Handle(CancellationToken cancellation = default)
     {
         return await _sender.Send(
-            new SendTextMessageCommand(
+            new SendBorrowMessageCommand(
                 _event.GroupId,
                 _userId,
-                _event.Message
-            ),
+                _event.Message,
+                _event.ClothId
+                ),
             cancellation
         );
     }

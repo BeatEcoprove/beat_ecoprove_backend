@@ -31,6 +31,7 @@ internal abstract class WebSocketEvent
         {
             nameof(ConnectGroupEvent) => new ConnectGroupEvent(sender, json, userId, userSocket),
             nameof(SentGroupTextMessageEvent) => new SentGroupTextMessageEvent(sender, json, userId),
+            nameof(SendGroupBorrowMessageEvent) => new SendGroupBorrowMessageEvent(sender, json, userId),
             _ => throw new WebSocketEventException(),
         };
     }
