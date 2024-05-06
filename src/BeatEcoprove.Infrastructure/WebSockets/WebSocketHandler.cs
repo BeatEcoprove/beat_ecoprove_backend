@@ -119,13 +119,12 @@ internal class WebSocketHandler :
                 e.Message,
                 cancellationToken);
         }
-        catch (WebSocketException)
+        catch (WebSocketException e)
         {
             _sessionManager.Delete(userId);
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            System.Console.WriteLine(e);
             await _sessionManager.CloseAsync(
                 userId,
                 WebSocketCloseStatus.InternalServerError,

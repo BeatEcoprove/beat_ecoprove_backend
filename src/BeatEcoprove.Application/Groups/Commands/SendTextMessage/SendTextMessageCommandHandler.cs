@@ -78,22 +78,29 @@ internal sealed class SendTextMessageCommandHandler : ICommandHandler<SendTextMe
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await _groupSessionManager.SendEveryoneAsync(
-            groupId,
-            new ChatMessageNotificationEvent<TextMessage>(
-                userId,
-                new TextMessage(
-                    request.Message,
-                    groupId,
-                    new ChatMessageMember(
-                        profile.Id,
-                        profile.UserName,
-                        profile.AvatarUrl
-                    )
-                )
-            ),
-            cancellationToken
-        );
+        try
+        {
+            await _groupSessionManager.SendEveryoneAsync(
+               groupId,
+               new ChatMessageNotificationEvent<TextMessage>(
+                   userId,
+                   new TextMessage(
+                       request.Message,
+                       groupId,
+                       new ChatMessageMember(
+                           profile.Id,
+                           profile.UserName,
+                           profile.AvatarUrl
+                       )
+                   )
+               ),
+               cancellationToken
+           );
+        }
+        catch (Exception e)
+        {
+            System.Console.WriteLine(e);
+        }
 
         return true;
     }

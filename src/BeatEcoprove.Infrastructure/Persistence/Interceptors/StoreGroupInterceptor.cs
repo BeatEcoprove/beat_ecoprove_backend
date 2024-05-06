@@ -36,8 +36,7 @@ public class StoreGroupInterceptor : SaveChangesInterceptor
             return;
         }
 
-        var groupEntity = dbContext.ChangeTracker.Entries<Group>()
-            .SingleOrDefault();
+        var groupEntity = dbContext.ChangeTracker.Entries<Group>().ToList();
 
         if (groupEntity is null)
         {
@@ -45,22 +44,25 @@ public class StoreGroupInterceptor : SaveChangesInterceptor
         }
 
         var messages = groupEntity
-            .Entity
-            .Messages;
+            .Select(entity => entity.Entity)
+            .SelectMany(entity => entity.Messages).ToList();
 
-        if (messages.Count() == 0)
+        if (messages.Count == 0)
         {
             return;
         }
 
-        var lastMessageSent = messages.Last();
-
-        if (lastMessageSent is null)
+        foreach (var message in messages)
         {
-            return;
-        }
+            var foundMessage = await _messageRepository.GetByIdAsync(message.Id, cancellationToken);
 
-        await _messageRepository
-            .AddAsync(lastMessageSent, cancellationToken);
+            if (foundMessage != null)
+            {
+                continue;
+            }
+
+            await _messageRepository
+                .AddAsync(message, cancellationToken);
+        }
     }
 }
