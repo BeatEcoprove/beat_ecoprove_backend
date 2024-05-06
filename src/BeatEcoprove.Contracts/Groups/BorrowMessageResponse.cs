@@ -20,8 +20,9 @@ public class BorrowMessageResponse : TextMessageResponse
         ProfileResponse sender,
         string content,
         DateTimeOffset createdAt,
-        BorrowResult borrow)
-        : base(groupId, sender, content, createdAt)
+        BorrowResult borrow,
+        string type)
+        : base(groupId, sender, content, createdAt, type)
     {
         GroupId = groupId;
         Sender = sender;

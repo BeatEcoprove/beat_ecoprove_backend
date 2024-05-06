@@ -16,6 +16,8 @@ public class BorrowMessageResult : MessageResult
     {
         Borrow = borrow;
     }
+
+    public override string Type => nameof(BorrowMessageResult);
 }
 
 public class MessageResult
@@ -32,4 +34,5 @@ public class MessageResult
     public Profile Sender { get; init; }
     public string Content { get; init; }
     public DateTimeOffset CreatedAt { get; init; }
+    public virtual string Type { get; } = nameof(MessageResult);
 }

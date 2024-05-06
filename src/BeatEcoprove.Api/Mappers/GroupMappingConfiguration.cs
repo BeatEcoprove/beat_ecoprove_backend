@@ -19,7 +19,8 @@ public class GroupMappingConfiguration : IRegister
                         src.GroupId,
                         src.Sender.Adapt<ProfileResponse>(),
                         src.Content,
-                        src.CreatedAt
+                        src.CreatedAt,
+                        src.Type
                     ));
 
         config.NewConfig<BorrowMessageResult, BorrowMessageResponse>()
@@ -35,7 +36,8 @@ public class GroupMappingConfiguration : IRegister
                 src.Borrow.Color,
                 src.Borrow.Size,
                 src.Borrow.EcoScore
-            )));
+            ),
+            src.Type));
 
         config.NewConfig<GetGroupList, GetGroupsResponse>()
             .MapWith(dest => new GetGroupsResponse(
