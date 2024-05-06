@@ -79,14 +79,16 @@ internal sealed class GetGroupMessageResultsQueryHandler : IQueryHandler<GetGrou
                     if (cloth.IsError)
                     {
                         return new MessageResult(
-                             message.Group,
-                             profile.Value,
-                             message.Title,
-                             message.CreatedAt
+                            message.Id.Value.ToString(),
+                            message.Group,
+                            profile.Value,
+                            message.Title,
+                            message.CreatedAt
                          );
                     }
 
                     return new BorrowMessageResult(
+                                        message.Id.Value.ToString(),
                                         message.Group,
                                         profile.Value,
                                         message.Title,
@@ -104,6 +106,7 @@ internal sealed class GetGroupMessageResultsQueryHandler : IQueryHandler<GetGrou
 
 
                 return new MessageResult(
+                    message.Id.Value.ToString(),
                     message.Group,
                     profile.Value,
                     message.Title,

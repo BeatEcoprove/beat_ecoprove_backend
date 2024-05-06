@@ -135,7 +135,7 @@ public class Group : AggregateRoot<GroupId, Guid>
         Description = description;
     }
 
-    public ErrorOr<bool> AddTextMessage(Profile profile, string message)
+    public ErrorOr<Message> AddTextMessage(Profile profile, string message)
     {
         var groupMember = GetMemberByProfileId(profile.Id);
 
@@ -149,16 +149,18 @@ public class Group : AggregateRoot<GroupId, Guid>
             groupMember = AddMember(profile.Id);
         }
 
-        this._messages.Add(new Message(
-            this.Id,
-            groupMember.Id,
-            message
-            ));
+        var textMessage = new
+            Message(
+                this.Id,
+                groupMember.Id,
+                message
+            );
 
-        return true;
+        this._messages.Add(textMessage);
+        return textMessage;
     }
-    
-    public ErrorOr<bool> AddBorrowMessage(Profile profile, string message, ClothId clothId)
+
+    public ErrorOr<BorrowMessage> AddBorrowMessage(Profile profile, string message, ClothId clothId)
     {
         var groupMember = GetMemberByProfileId(profile.Id);
 
@@ -172,19 +174,21 @@ public class Group : AggregateRoot<GroupId, Guid>
             groupMember = AddMember(profile.Id);
         }
 
-
-        this._messages.Add(
+        var borrowMessage =
             new BorrowMessage(
                 this.Id,
                 groupMember.Id,
                 message,
                 clothId
-            )
+            );
+
+        this._messages.Add(
+            borrowMessage
         );
 
-        return true;
+        return borrowMessage;
     }
-    
+
     public ErrorOr<GroupInvite> InviteMember(ProfileId from, Profile to)
     {
         if (this._members.Any(m => m.Profile == to.Id))

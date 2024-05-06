@@ -69,39 +69,33 @@ internal sealed class SendTextMessageCommandHandler : ICommandHandler<SendTextMe
             return Errors.Groups.WSNotFound;
         }
 
-        var shouldAddMessage = group.AddTextMessage(profile, request.Message);
+        var textMessage = group.AddTextMessage(profile, request.Message);
 
-        if (shouldAddMessage.IsError)
+        if (textMessage.IsError)
         {
-            return shouldAddMessage.Errors;
+            return textMessage.Errors;
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        try
-        {
-            await _groupSessionManager.SendEveryoneAsync(
-               groupId,
-               new ChatMessageNotificationEvent<TextMessage>(
-                   userId,
-                   new TextMessage(
-                       request.Message,
-                       groupId,
-                       new ChatMessageMember(
-                           profile.Id,
-                           profile.UserName,
-                           profile.AvatarUrl
-                       )
-                   ),
-                   nameof(TextMessage)
+        await _groupSessionManager.SendEveryoneAsync(
+           groupId,
+           new ChatMessageNotificationEvent<TextMessage>(
+               userId,
+               new TextMessage(
+                    textMessage.Value.Id.Value.ToString(),
+                    request.Message,
+                    groupId,
+                    new ChatMessageMember(
+                        profile.Id,
+                        profile.UserName,
+                        profile.AvatarUrl
+                    )
                ),
-               cancellationToken
-           );
-        }
-        catch (Exception e)
-        {
-            System.Console.WriteLine(e);
-        }
+               nameof(TextMessage)
+           ),
+           cancellationToken
+       );
 
         return true;
     }

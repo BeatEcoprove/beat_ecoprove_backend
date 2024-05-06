@@ -6,6 +6,7 @@ namespace BeatEcoprove.Domain.GroupAggregator.Entities;
 public class BorrowMessage : Message
 {
     public ClothId ClothId { get; init; } = null!;
+    public bool IsAccepted { get; private set; } = false;
 
     public BorrowMessage(
         GroupId group,
@@ -14,6 +15,11 @@ public class BorrowMessage : Message
         ClothId clothId) : base(group, sender, title)
     {
         ClothId = clothId;
+    }
+
+    void Accept()
+    {
+        IsAccepted = true;
     }
 
     public override string Type => nameof(BorrowMessage);

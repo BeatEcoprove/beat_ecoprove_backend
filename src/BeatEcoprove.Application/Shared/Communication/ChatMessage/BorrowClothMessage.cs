@@ -15,12 +15,13 @@ public record BorrowClothResponse
 public class BorrowClothMessage : TextMessage
 {
     public BorrowClothResponse borrow { get; init; }
-    
+
     public BorrowClothMessage(
-        string message, 
-        GroupId group, 
-        ChatMessageMember member, 
-        BorrowClothResponse borrow) : base(message, group, member)
+        string id,
+        string message,
+        GroupId group,
+        ChatMessageMember member,
+        BorrowClothResponse borrow) : base(id, message, group, member)
     {
         this.borrow = borrow;
     }

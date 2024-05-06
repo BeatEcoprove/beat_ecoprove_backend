@@ -15,6 +15,10 @@ public class BorrowMessageConfiguration : IDocumentTypeConfiguration<BorrowMessa
             .SetElementName("cloth_id")
             .SetIsRequired(true);
 
+        map.MapMember(x => x.IsAccepted)
+            .SetElementName("is_accepted")
+            .SetIsRequired(true);
+
         map.SetIgnoreExtraElements(true);
     }
 }

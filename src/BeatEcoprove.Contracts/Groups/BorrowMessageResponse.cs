@@ -16,13 +16,14 @@ public class BorrowMessageResponse : TextMessageResponse
     public BorrowResult Borrow { get; set; }
 
     public BorrowMessageResponse(
+        string id,
         Guid groupId,
         ProfileResponse sender,
         string content,
         DateTimeOffset createdAt,
         BorrowResult borrow,
         string type)
-        : base(groupId, sender, content, createdAt, type)
+        : base(id, groupId, sender, content, createdAt, type)
     {
         GroupId = groupId;
         Sender = sender;

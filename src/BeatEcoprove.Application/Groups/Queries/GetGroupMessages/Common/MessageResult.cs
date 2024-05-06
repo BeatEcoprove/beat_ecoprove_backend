@@ -7,12 +7,13 @@ public class BorrowMessageResult : MessageResult
 {
     public BorrowClothResponse Borrow { get; set; }
     public BorrowMessageResult(
+        string id,
         Guid groupId,
         Profile sender,
         string content,
         DateTimeOffset createdAt,
         BorrowClothResponse borrow
-    ) : base(groupId, sender, content, createdAt)
+    ) : base(id, groupId, sender, content, createdAt)
     {
         Borrow = borrow;
     }
@@ -22,14 +23,15 @@ public class BorrowMessageResult : MessageResult
 
 public class MessageResult
 {
-    public MessageResult(Guid groupId, Profile sender, string content, DateTimeOffset createdAt)
+    public MessageResult(string id, Guid groupId, Profile sender, string content, DateTimeOffset createdAt)
     {
+        Id = id;
         GroupId = groupId;
         Sender = sender;
         Content = content;
         CreatedAt = createdAt;
     }
-
+    public string Id { get; set; }
     public Guid GroupId { get; init; }
     public Profile Sender { get; init; }
     public string Content { get; init; }

@@ -86,11 +86,11 @@ internal sealed class SendBorrowMessageCommandHandler : ICommandHandler<SendBorr
             return Errors.Groups.WSNotFound;
         }
 
-        var shouldAddMessage = group.AddBorrowMessage(profile, request.Message, clothId);
+        var borrowMessage = group.AddBorrowMessage(profile, request.Message, clothId);
 
-        if (shouldAddMessage.IsError)
+        if (borrowMessage.IsError)
         {
-            return shouldAddMessage.Errors;
+            return borrowMessage.Errors;
         }
 
         var shouldBlockCloth = await _clothRepository.ChangeClothState(clothId, ClothState.Blocked, cancellationToken);
@@ -107,6 +107,7 @@ internal sealed class SendBorrowMessageCommandHandler : ICommandHandler<SendBorr
             new ChatMessageNotificationEvent<BorrowClothMessage>(
                 userId,
                 new BorrowClothMessage(
+                    borrowMessage.Value.Id.Value.ToString(),
                     request.Message,
                     groupId,
                     new ChatMessageMember(
