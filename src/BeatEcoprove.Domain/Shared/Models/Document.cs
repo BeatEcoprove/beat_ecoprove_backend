@@ -25,7 +25,7 @@ public abstract class Document<TId> : IEntity<TId>, IEquatable<Document<TId>>
         return Equals((object?)other);
     }
 
-    public static bool operator ==(Document<TId> left, Document<TId> right)
+    public static bool operator ==(Document<TId>? left, Document<TId>? right)
     {
         return Equals(left, right);
     }

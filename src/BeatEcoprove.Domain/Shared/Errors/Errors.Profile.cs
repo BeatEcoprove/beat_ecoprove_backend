@@ -13,6 +13,9 @@ public static partial class Errors
         public static Error CannotFindBucket => Error.Validation(
             "Profile.CannotFindBucket",
             "Não foi possível encontrar o cesto.");
+        public static Error CannotExchageWithYourSelf => Error.Validation(
+            "Profile.CannotExchageWithYourSelf",
+            "Não é possível realizar trocas com o mesmo perfil.");
 
         public static Error CannotConvertNegativeEcoCoins => Error.Validation(
             "Profile.CannotConvertNegativeEcoCoins",

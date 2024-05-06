@@ -1,4 +1,5 @@
 using BeatEcoprove.Api.Extensions;
+using BeatEcoprove.Application.Groups.Commands.AcceptBorrowCloth;
 using BeatEcoprove.Application.Groups.Commands.AcceptInvite;
 using BeatEcoprove.Application.Groups.Commands.CreateGroup;
 using BeatEcoprove.Application.Groups.Commands.DeleteGroup;
@@ -60,6 +61,30 @@ public class GroupController : ApiController
         );
     }
 
+    [HttpPost("{groupId:guid}/messages/{messageId}")]
+    public async Task<ActionResult<AcceptBorrowClothResponse>> AcceptBorrowCloth(
+        [FromQuery] Guid profileId,
+        [FromRoute] string messageId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var authId = HttpContext.User.GetUserId();
+
+        var messageIdResult = await _sender.Send(
+            new AcceptBorrowCommand(
+                authId,
+                profileId,
+                messageId
+            ),
+            cancellationToken
+        );
+        
+        return messageIdResult.Match(
+            result => Ok(new AcceptBorrowClothResponse(result)),
+            Problem<AcceptBorrowClothResponse>
+        );
+    }
+    
     [HttpGet("{groupId:guid}/messages")]
     public async Task<ActionResult<List<dynamic>>> GetGroupMessages(
         [FromRoute] Guid groupId,

@@ -75,7 +75,7 @@ public class DocumentRepository<TEntity, TId> : IRepository<TEntity, TId>
     {
         var filter = Builders<TEntity>
             .Filter
-            .Eq("UserId", entity.Id);
+            .Eq("Id", entity.Id);
 
         await Collection
             .ReplaceOneAsync(filter, entity, cancellationToken: cancellationToken);

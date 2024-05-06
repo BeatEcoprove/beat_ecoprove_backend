@@ -168,6 +168,9 @@
     <data name="Cloth.ClothIdBlocked" xml:space="preserve">
         <value>A peça que tentou aceder está bloqueada numa transação.</value>
     </data>
+    <data name="Profile.CannotExchageWithYourSelf" xml:space="preserve">
+        <value>Não é possível realizar trocas com o mesmo perfil.</value>
+    </data>
     <data name="Cloth.MaintenanceActivityNotFound" xml:space="preserve">
         <value>Esta peça não possui nenhum registo de manutenções anteriores.</value>
     </data>

@@ -54,6 +54,9 @@
     <data name="Bucket.BucketDoesNotExists" xml:space="preserve">
         <value>Failing to find the basket.</value>
     </data>
+    <data name="Profile.CannotExchageWithYourSelf" xml:space="preserve">
+        <value>It is not possible to trade with the same profile.</value>
+    </data>
     <data name="Bucket.CannotAccessBucket" xml:space="preserve">
         <value>This basket does not belong to you.</value>
     </data>

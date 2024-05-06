@@ -17,7 +17,7 @@ public class BorrowMessage : Message
         ClothId = clothId;
     }
 
-    void Accept()
+    public void Accept()
     {
         IsAccepted = true;
     }
