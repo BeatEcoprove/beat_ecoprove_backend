@@ -9,6 +9,7 @@ using BeatEcoprove.Application.Groups.Commands.UpdateGroup;
 using BeatEcoprove.Application.Groups.Queries.DeclineInvite;
 using BeatEcoprove.Application.Groups.Queries.GetGroupDetail;
 using BeatEcoprove.Application.Groups.Queries.GetGroupMessages;
+using BeatEcoprove.Application.Groups.Queries.GetGroupMessages.Common;
 using BeatEcoprove.Application.Groups.Queries.GetGroups;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Groups;
@@ -60,7 +61,7 @@ public class GroupController : ApiController
     }
 
     [HttpGet("{groupId:guid}/messages")]
-    public async Task<ActionResult<List<TextMessageResponse>>> GetGroupMessages(
+    public async Task<ActionResult<List<dynamic>>> GetGroupMessages(
         [FromRoute] Guid groupId,
         [FromQuery] Guid profileId,
         [FromQuery] int? page,
@@ -79,9 +80,25 @@ public class GroupController : ApiController
             ));
 
         return getGroupMessagesResult.Match(
-            result => Ok(_mapper.Map<List<TextMessageResponse>>(result)),
-            Problem<List<TextMessageResponse>>
+            result => Ok(ProxyResponse(result)),
+            Problem<List<dynamic>>
         );
+    }
+
+    private dynamic ProxyResponse(List<MessageResult> messages)
+    {
+        return messages
+            .Select(message =>
+            {
+                object response = message switch
+                {
+                    BorrowMessageResult borrowMessage => _mapper.Map<BorrowMessageResponse>(borrowMessage),
+                    MessageResult genericMessage => _mapper.Map<TextMessageResponse>(genericMessage),
+                    _ => throw new ArgumentException("Unsupported notification type"),
+                };
+
+                return response;
+            }).ToList();
     }
 
     [HttpGet]
@@ -271,8 +288,8 @@ public class GroupController : ApiController
             Problem<GroupResponse>
         );
     }
-    
-    
+
+
     [HttpPatch("{groupId:guid}/invite/{code:int}/decline")]
     public async Task<ActionResult<GroupResponse>> DeclineInvite(
         [FromRoute] Guid groupId,
@@ -294,4 +311,5 @@ public class GroupController : ApiController
             result => Ok(_mapper.Map<GroupResponse>(result)),
             Problem<GroupResponse>
         );
-    }}
+    }
+}

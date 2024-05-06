@@ -22,6 +22,6 @@ public class Message : Document<MessageId>
     public GroupMemberId Sender { get; protected set; } = null!;
     public string Title { get; protected set; } = null!;
     public new DateTimeOffset CreatedAt { get; private set; } = DateTimeOffset.UtcNow;
-
+    public virtual string Type { get; } = nameof(Message);
     public override string CollectionName => "messages";
 }

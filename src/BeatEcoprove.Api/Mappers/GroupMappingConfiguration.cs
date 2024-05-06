@@ -16,11 +16,26 @@ public class GroupMappingConfiguration : IRegister
         config.NewConfig<Group, GroupResponse>();
         config.NewConfig<MessageResult, TextMessageResponse>()
             .MapWith(src => new TextMessageResponse(
-                src.GroupId,
-                src.Sender.Adapt<ProfileResponse>(),
-                src.Content,
-                src.CreatedAt
-            ));
+                        src.GroupId,
+                        src.Sender.Adapt<ProfileResponse>(),
+                        src.Content,
+                        src.CreatedAt
+                    ));
+
+        config.NewConfig<BorrowMessageResult, BorrowMessageResponse>()
+            .MapWith(src => new BorrowMessageResponse(
+            src.GroupId,
+            src.Sender.Adapt<ProfileResponse>(),
+            src.Content,
+            src.CreatedAt,
+            new BorrowResult(
+                src.Borrow.Avatar,
+                src.Borrow.Title,
+                src.Borrow.Brand,
+                src.Borrow.Color,
+                src.Borrow.Size,
+                src.Borrow.EcoScore
+            )));
 
         config.NewConfig<GetGroupList, GetGroupsResponse>()
             .MapWith(dest => new GetGroupsResponse(
