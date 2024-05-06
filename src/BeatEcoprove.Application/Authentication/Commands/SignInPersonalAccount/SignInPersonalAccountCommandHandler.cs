@@ -68,7 +68,7 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
 
         var (accessToken, refreshToken) =
             _jwtProvider
-                .GenerateAuthenticationTokens(account.Value, personalProfile);
+                .GenerateAuthenticationTokens(account.Value, personalProfile, personalProfile.Id);
 
         return new AuthenticationResult(
             accessToken,

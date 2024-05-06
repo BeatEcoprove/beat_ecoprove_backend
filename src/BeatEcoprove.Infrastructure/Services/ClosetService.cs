@@ -227,6 +227,11 @@ public class ClosetService : IClosetService
             return clothResult.Errors;
         }
 
+        if (clothResult.Value.ClothState == nameof(ClothState.Blocked))
+        {
+            return Errors.Cloth.ClothIdBlocked;
+        }
+
         var shouldRemoveCloth = profile.RemoveCloth(clothId);
 
         if (shouldRemoveCloth.IsError)

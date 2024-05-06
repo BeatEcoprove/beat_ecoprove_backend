@@ -72,7 +72,7 @@ internal sealed class SignInEnterpriseAccountCommandHandler : ICommandHandler<Si
 
         var (accessToken, refreshToken) =
             _jwtProvider
-                .GenerateAuthenticationTokens(account.Value, enterpriseProfile);
+                .GenerateAuthenticationTokens(account.Value, enterpriseProfile, enterpriseProfile.Id);
 
         return new AuthenticationResult(
             accessToken,

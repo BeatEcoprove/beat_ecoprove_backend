@@ -61,7 +61,7 @@ internal sealed class LoginQueryHandler : IQueryHandler<LoginQuery, ErrorOr<Auth
         // Generate Tokens
         var (accessToken, refreshToken) =
             _jwtProvider
-                .GenerateAuthenticationTokens(auth, profile);
+                .GenerateAuthenticationTokens(auth, profile, profile.Id);
 
         return new AuthenticationResult(
             accessToken,
