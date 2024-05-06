@@ -165,6 +165,9 @@
     <data name="Cloth.ClothNotFound" xml:space="preserve">
         <value>A peça que tentou aceder não existe.</value>
     </data>
+    <data name="Cloth.ClothIdBlocked" xml:space="preserve">
+        <value>A peça que tentou aceder está bloqueada numa transação.</value>
+    </data>
     <data name="Cloth.MaintenanceActivityNotFound" xml:space="preserve">
         <value>Esta peça não possui nenhum registo de manutenções anteriores.</value>
     </data>

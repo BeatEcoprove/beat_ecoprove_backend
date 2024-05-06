@@ -73,11 +73,21 @@ public class Cloth : AggregateRoot<ClothId, Guid>
         ClothAvatar = clothAvatar;
     }
 
+    public void SetState(ClothState state)
+    {
+        State = state;
+    }
+
     public ErrorOr<bool> MaintainCloth(
         MaintenanceActivity activity,
         MaintenanceAction action,
         Profile profile)
     {
+        if (State == ClothState.Blocked)
+        {
+            return Errors.Cloth.ClothIdBlocked;
+        }
+
         if (_activities.Any(a => a.EndAt == null))
         {
             return Errors.Cloth.IsBeingMaintain;
@@ -91,6 +101,11 @@ public class Cloth : AggregateRoot<ClothId, Guid>
 
     public ErrorOr<bool> CloseMaintenance(MaintenanceActivity activity, MaintenanceAction action)
     {
+        if (State == ClothState.Blocked)
+        {
+            return Errors.Cloth.ClothIdBlocked;
+        }
+
         EcoScore += action.EcoScore;
 
         if (!activity.IsRunning())
@@ -104,6 +119,11 @@ public class Cloth : AggregateRoot<ClothId, Guid>
 
     public ErrorOr<DailyUseActivity> UseCloth(Profile profile)
     {
+        if (State == ClothState.Blocked)
+        {
+            return Errors.Cloth.ClothIdBlocked;
+        }
+
         if (this.State == ClothState.InUse)
         {
             return Errors.Cloth.CannotUseCloth;
@@ -125,6 +145,11 @@ public class Cloth : AggregateRoot<ClothId, Guid>
 
     public ErrorOr<bool> DisposeCloth(DailyUseActivity activity)
     {
+        if (State == ClothState.Blocked)
+        {
+            return Errors.Cloth.ClothIdBlocked;
+        }
+
         if (State != ClothState.InUse)
         {
             return Errors.Cloth.CannotDisposeCloth;

@@ -14,6 +14,10 @@ public partial class Errors
             "Cloth.ClothNotFound",
             "A peça que tentou aceder não existe.");
 
+        public static Error ClothIdBlocked => Error.Validation(
+            "Cloth.ClothIdBlocked",
+            "A peça que tentou aceder está bloqueada numa transação");
+
         public static Error MaintenanceActivityNotFound => Error.Validation(
             "Cloth.MaintenanceActivityNotFound",
             "Esta peça não possui nenhum registo de manutenções anteriores.");

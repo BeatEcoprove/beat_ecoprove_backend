@@ -4,6 +4,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Application.Shared.Interfaces.Websockets;
+using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.GroupAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -21,14 +22,16 @@ internal sealed class SendBorrowMessageCommandHandler : ICommandHandler<SendBorr
     private readonly IProfileRepository _profileRepository;
     private readonly IGroupRepository _groupRepository;
     private readonly IClosetService _closetService;
+    private readonly IClothRepository _clothRepository;
 
     public SendBorrowMessageCommandHandler(
-        IUnitOfWork unitOfWork, 
-        ISessionManager sessionManager, 
-        IGroupSessionManager groupSessionManager, 
-        IProfileRepository profileRepository, 
-        IGroupRepository groupRepository, 
-        IClosetService closetService)
+        IUnitOfWork unitOfWork,
+        ISessionManager sessionManager,
+        IGroupSessionManager groupSessionManager,
+        IProfileRepository profileRepository,
+        IGroupRepository groupRepository,
+        IClosetService closetService,
+        IClothRepository clothRepository)
     {
         _unitOfWork = unitOfWork;
         _sessionManager = sessionManager;
@@ -36,6 +39,7 @@ internal sealed class SendBorrowMessageCommandHandler : ICommandHandler<SendBorr
         _profileRepository = profileRepository;
         _groupRepository = groupRepository;
         _closetService = closetService;
+        _clothRepository = clothRepository;
     }
 
     public async Task<ErrorOr<bool>> Handle(SendBorrowMessageCommand request, CancellationToken cancellationToken)
@@ -43,12 +47,12 @@ internal sealed class SendBorrowMessageCommandHandler : ICommandHandler<SendBorr
         var userId = ProfileId.Create(request.UserId);
         var groupId = GroupId.Create(request.GroupId);
         var clothId = ClothId.Create(request.ClothId);
-        
+
         if (!_sessionManager.IsUserAuthenticated(userId))
         {
             return Errors.Auth.InvalidAuth;
         }
-        
+
         var groupSocket = _groupSessionManager.Get(groupId);
 
         if (groupSocket is null)
@@ -87,6 +91,13 @@ internal sealed class SendBorrowMessageCommandHandler : ICommandHandler<SendBorr
         if (shouldAddMessage.IsError)
         {
             return shouldAddMessage.Errors;
+        }
+
+        var shouldBlockCloth = await _clothRepository.ChangeClothState(clothId, ClothState.Blocked, cancellationToken);
+
+        if (!shouldBlockCloth)
+        {
+            return Errors.Cloth.ClothNotFound;
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

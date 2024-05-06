@@ -119,7 +119,7 @@ internal class WebSocketHandler :
                 e.Message,
                 cancellationToken);
         }
-        catch (WebSocketException e)
+        catch (WebSocketException)
         {
             _sessionManager.Delete(userId);
         }

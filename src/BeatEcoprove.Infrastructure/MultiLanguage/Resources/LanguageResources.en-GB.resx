@@ -66,6 +66,9 @@
     <data name="Cloth.ClothNotFound" xml:space="preserve">
         <value>The item you tried to access doesn't exist.</value>
     </data>
+    <data name="Cloth.ClothIdBlocked" xml:space="preserve">
+        <value>The garment you tried to access is blocked in a transaction.</value>
+    </data>
     <data name="Cloth.MaintenanceActivityNotFound" xml:space="preserve">
         <value>This garment has no previous maintenance record.</value>
     </data>

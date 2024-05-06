@@ -2,6 +2,7 @@
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
+using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
@@ -111,4 +112,16 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
             .AnyAsync(cloth => cloths.Contains(cloth.Id), cancellationToken);
     }
 
+    public async Task<bool> ChangeClothState(ClothId id, ClothState state, CancellationToken cancellationToken = default)
+    {
+        var cloth = await GetByIdAsync(id, cancellationToken);
+
+        if (cloth != null)
+        {
+            cloth.SetState(state);
+            return true;
+        }
+
+        return false;
+    }
 }
