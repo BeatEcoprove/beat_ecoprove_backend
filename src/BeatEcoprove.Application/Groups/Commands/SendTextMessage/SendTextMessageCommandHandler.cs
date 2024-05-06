@@ -92,7 +92,8 @@ internal sealed class SendTextMessageCommandHandler : ICommandHandler<SendTextMe
                            profile.UserName,
                            profile.AvatarUrl
                        )
-                   )
+                   ),
+                   nameof(TextMessage)
                ),
                cancellationToken
            );
