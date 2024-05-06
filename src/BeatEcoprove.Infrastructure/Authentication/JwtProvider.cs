@@ -8,6 +8,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Configuration;
 
 using Microsoft.IdentityModel.Tokens;
@@ -69,17 +70,17 @@ public class JwtProvider : IJwtProvider
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     }
 
-    public (string, string) GenerateAuthenticationTokens(Auth account, Profile profile)
+    public (string, string) GenerateAuthenticationTokens(Auth account, Profile profile, ProfileId profileId)
     {
-        var ola = _gamingService.GetLevelProgress(profile);
+        var levelProgress = _gamingService.GetLevelProgress(profile);
         var payload = new AuthTokenPayload(
             account.Id,
-            profile.Id,
+            profileId,
             account.Email,
             profile.UserName,
             profile.AvatarUrl,
             profile.Level,
-            ola,
+            levelProgress,
             profile.SustainabilityPoints,
             profile.EcoScore,
             profile.EcoCoins,

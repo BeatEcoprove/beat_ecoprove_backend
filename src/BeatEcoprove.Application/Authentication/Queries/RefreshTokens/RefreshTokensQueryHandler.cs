@@ -60,7 +60,7 @@ internal sealed class RefreshTokensQueryHandler : IQueryHandler<RefreshTokensQue
         }
 
         var (accessToken, refreshToken) =
-            _jwtProvider.GenerateAuthenticationTokens(auth, profile.Value);
+            _jwtProvider.GenerateAuthenticationTokens(auth, profile.Value, profileId);
 
         return new AuthenticationResult(
             accessToken,
