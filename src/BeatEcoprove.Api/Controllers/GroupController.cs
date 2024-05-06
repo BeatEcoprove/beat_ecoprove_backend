@@ -6,6 +6,7 @@ using BeatEcoprove.Application.Groups.Commands.InviteMember;
 using BeatEcoprove.Application.Groups.Commands.KickMember;
 using BeatEcoprove.Application.Groups.Commands.PromoteMember;
 using BeatEcoprove.Application.Groups.Commands.UpdateGroup;
+using BeatEcoprove.Application.Groups.Queries.DeclineInvite;
 using BeatEcoprove.Application.Groups.Queries.GetGroupDetail;
 using BeatEcoprove.Application.Groups.Queries.GetGroupMessages;
 using BeatEcoprove.Application.Groups.Queries.GetGroups;
@@ -270,4 +271,27 @@ public class GroupController : ApiController
             Problem<GroupResponse>
         );
     }
-}
+    
+    
+    [HttpPatch("{groupId:guid}/invite/{code:int}/decline")]
+    public async Task<ActionResult<GroupResponse>> DeclineInvite(
+        [FromRoute] Guid groupId,
+        [FromRoute] int code,
+        [FromQuery] Guid profileId)
+    {
+        var authId = HttpContext.User.GetUserId();
+
+        var acceptInviteResult = await _sender.Send(
+            new DeclineInviteCommand(
+                authId,
+                profileId,
+                groupId,
+                code
+            )
+        );
+
+        return acceptInviteResult.Match(
+            result => Ok(_mapper.Map<GroupResponse>(result)),
+            Problem<GroupResponse>
+        );
+    }}

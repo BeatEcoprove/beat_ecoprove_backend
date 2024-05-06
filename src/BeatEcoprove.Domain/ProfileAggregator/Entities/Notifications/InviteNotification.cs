@@ -19,9 +19,9 @@ public class InviteNotification : Notification
         Code = code;
     }
 
-    public GroupId GroupId { get; set; } = null!;
-    public ProfileId InvitorId { get; set; } = null!;
-    public string Code { get; set; } = null!;
+    public GroupId GroupId { get; set; }
+    public ProfileId InvitorId { get; set; }
+    public string Code { get; set; }
     public override string Type => nameof(InviteNotification);
 
     public static InviteNotification Create

@@ -217,6 +217,7 @@ public class Group : AggregateRoot<GroupId, Guid>
         if (!accept)
         {
             invite.Decline();
+            this._invites.Remove(invite);
             return false;
         }
 

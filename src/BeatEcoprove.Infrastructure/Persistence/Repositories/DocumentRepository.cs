@@ -55,6 +55,13 @@ public class DocumentRepository<TEntity, TId> : IRepository<TEntity, TId>
         await Collection.InsertOneAsync(entity, cancellationToken);
     }
 
+    public async Task DeleteAsync(TId id, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<TEntity>.Filter.Eq("Id", id);
+
+        await Collection.DeleteOneAsync(filter, cancellationToken: cancellationToken);
+    }
+
     public async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
         var filter = Builders<TEntity>.Filter.Eq("Id", id);

@@ -21,4 +21,9 @@ public class Notification : Document<MessageId>
     public ProfileId Owner { get; set; } = null!;
     public virtual string Type { get; } = nameof(Notification);
     public override string CollectionName => "notifications";
+
+    public void Remove()
+    {
+        DeletedAt = DateTimeOffset.Now;
+    }
 }

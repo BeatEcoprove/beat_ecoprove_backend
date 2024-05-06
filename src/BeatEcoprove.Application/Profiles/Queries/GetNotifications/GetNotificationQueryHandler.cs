@@ -35,6 +35,6 @@ internal sealed class GetNotificationQueryHandler : IQueryHandler<GetNotificatio
         }
 
         return await _notificationRepository
-            .GetAllNotificationByOnwerIdAsync(profile.Value.Id, cancellationToken);
+            .GetAllNotificationByOwnerIdAsync(profile.Value.Id, cancellationToken);
     }
 }

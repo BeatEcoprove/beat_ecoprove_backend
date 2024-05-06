@@ -1,4 +1,4 @@
-using BeatEcoprove.Application.Shared;
+﻿using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
@@ -10,9 +10,9 @@ using BeatEcoprove.Domain.Shared.Errors;
 
 using ErrorOr;
 
-namespace BeatEcoprove.Application.Groups.Commands.AcceptInvite;
+namespace BeatEcoprove.Application.Groups.Queries.DeclineInvite;
 
-internal sealed class AcceptInviteCommandHandler : ICommandHandler<AcceptInviteCommand, ErrorOr<Group>>
+internal sealed class DeclineInviteCommandHandler : ICommandHandler<DeclineInviteCommand, ErrorOr<Group>>
 {
     private readonly IProfileManager _profileManager;
     private readonly IGroupRepository _groupRepository;
@@ -20,21 +20,21 @@ internal sealed class AcceptInviteCommandHandler : ICommandHandler<AcceptInviteC
     private readonly IUnitOfWork _unitOfWork;
     private readonly INotificationRepository _notificationRepository;
 
-    public AcceptInviteCommandHandler(
+    public DeclineInviteCommandHandler(
         IProfileManager profileManager,
         IGroupRepository groupRepository,
-        IKeyValueRepository<string> redis,
+        IKeyValueRepository<string> keyValueRepository,
         IUnitOfWork unitOfWork,
         INotificationRepository notificationRepository)
     {
         _profileManager = profileManager;
         _groupRepository = groupRepository;
-        _keyValueRepository = redis;
+        _keyValueRepository = keyValueRepository;
         _unitOfWork = unitOfWork;
         _notificationRepository = notificationRepository;
     }
 
-    public async Task<ErrorOr<Group>> Handle(AcceptInviteCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Group>> Handle(DeclineInviteCommand request, CancellationToken cancellationToken)
     {
         var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
@@ -70,7 +70,7 @@ internal sealed class AcceptInviteCommandHandler : ICommandHandler<AcceptInviteC
             return Errors.Groups.InviteNotFound;
         }
 
-        var shouldAccept = group.AcceptInvite(invite, true);
+        var shouldAccept = group.AcceptInvite(invite, false);
 
         if (shouldAccept.IsError)
         {

@@ -123,8 +123,9 @@ internal class WebSocketHandler :
         {
             _sessionManager.Delete(userId);
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            System.Console.WriteLine(e);
             await _sessionManager.CloseAsync(
                 userId,
                 WebSocketCloseStatus.InternalServerError,

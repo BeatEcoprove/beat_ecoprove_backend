@@ -13,7 +13,7 @@ public abstract class Document<TId> : IEntity<TId>, IEquatable<Document<TId>>
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
 
     [BsonElement("deleted_at")]
-    public DateTimeOffset DeletedAt { get; private set; }
+    public DateTimeOffset DeletedAt { get; set; }
 
     public override bool Equals(object? obj)
     {
