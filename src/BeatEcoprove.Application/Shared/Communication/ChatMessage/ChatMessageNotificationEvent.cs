@@ -10,5 +10,5 @@ public class ChatMessageNotificationEvent<TContent> : NotificationEvent<TContent
     {
     }
 
-    public override string Type => nameof(ChatMessage);
+    public override string Type => nameof(TContent);
 }
