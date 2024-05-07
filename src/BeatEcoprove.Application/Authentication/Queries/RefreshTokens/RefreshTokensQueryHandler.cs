@@ -59,6 +59,11 @@ internal sealed class RefreshTokensQueryHandler : IQueryHandler<RefreshTokensQue
             return profile.Errors;
         }
 
+        if (profileId.Value == Guid.Empty)
+        {
+            profileId = profile.Value.Id;
+        }
+
         var (accessToken, refreshToken) =
             _jwtProvider.GenerateAuthenticationTokens(auth, profile.Value, profileId);
 
