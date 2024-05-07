@@ -89,6 +89,7 @@ public abstract class Profile : AggregateRoot<ProfileId, Guid>
             return Errors.Profile.CannotFindCloth;
         }
 
+        clothEntry.DeletedAt = DateTimeOffset.UtcNow;
         return _clothEntries.Remove(clothEntry);
     }
 

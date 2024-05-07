@@ -35,7 +35,7 @@ internal sealed class GetClothQueryHandler : IQueryHandler<GetClothQuery, ErrorO
             return profile.Errors;
         }
 
-        var clothResult = await _closetService.GetClothResult(profile.Value, clothId, cancellationToken);
+        var clothResult = await _closetService.GetClothResult(profile.Value, clothId, cancellationToken: cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return clothResult;

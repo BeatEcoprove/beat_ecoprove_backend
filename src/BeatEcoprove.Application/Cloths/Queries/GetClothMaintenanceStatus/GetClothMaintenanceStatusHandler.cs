@@ -43,7 +43,7 @@ internal sealed class GetClothMaintenanceStatusHandler : IQueryHandler<GetClothM
             return profile.Errors;
         }
 
-        var cloth = await _closetService.GetClothResult(profile.Value, clothId, cancellationToken);
+        var cloth = await _closetService.GetClothResult(profile.Value, clothId, cancellationToken: cancellationToken);
 
         if (cloth.IsError)
         {

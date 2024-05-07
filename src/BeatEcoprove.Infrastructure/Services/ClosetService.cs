@@ -4,6 +4,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
+using BeatEcoprove.Domain.ClosetAggregator.DAOs;
 using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
@@ -165,14 +166,25 @@ public class ClosetService : IClosetService
         return cloth;
     }
 
-    public async Task<ErrorOr<ClothResult>> GetClothResult(Profile profile, ClothId clothId, CancellationToken cancellationToken = default)
+    public async Task<ErrorOr<ClothResult>> GetClothResult(Profile profile, ClothId clothId, bool withDeleted = false, CancellationToken cancellationToken = default)
     {
+        Task<ClothDao?> fetch;
+
         if (!await _profileRepository.CanProfileAccessCloth(profile.Id, clothId, cancellationToken))
         {
             return Errors.Cloth.CannotAccessBucket;
         }
 
-        var cloth = await _clothRepository.GetClothDaoByIdAsync(clothId, cancellationToken);
+        if (withDeleted)
+        {
+            fetch = _clothRepository.GetClothDaoByIdWithNoFiltersAsync(clothId, withDeleted: withDeleted, cancellationToken: cancellationToken);
+        }
+        else
+        {
+            fetch = _clothRepository.GetClothDaoByIdAsync(clothId, withDeleted: withDeleted, cancellationToken: cancellationToken);
+        }
+
+        var cloth = await fetch;
 
         if (cloth is null)
         {
@@ -220,7 +232,7 @@ public class ClosetService : IClosetService
     public async Task<ErrorOr<ClothResult>> RemoveClothFromCloset(Profile profile, ClothId clothId, CancellationToken cancellationToken)
     {
         // TODO: Move this to an Domain Event
-        var clothResult = await GetClothResult(profile, clothId, cancellationToken);
+        var clothResult = await GetClothResult(profile, clothId, cancellationToken: cancellationToken);
 
         if (clothResult.IsError)
         {
@@ -286,4 +298,5 @@ public class ClosetService : IClosetService
         await _bucketRepository.RemoveByIdAsync(bucketId, cancellationToken);
         return bucketResult;
     }
+
 }

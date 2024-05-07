@@ -72,7 +72,7 @@ internal sealed class SendBorrowMessageCommandHandler : ICommandHandler<SendBorr
             return Errors.Profile.NotFound;
         }
 
-        var cloth = await _closetService.GetClothResult(profile, clothId, cancellationToken);
+        var cloth = await _closetService.GetClothResult(profile, clothId, cancellationToken: cancellationToken);
 
         if (cloth.IsError)
         {

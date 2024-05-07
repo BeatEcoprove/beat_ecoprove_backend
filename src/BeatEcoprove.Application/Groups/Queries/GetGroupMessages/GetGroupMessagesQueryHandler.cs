@@ -74,7 +74,7 @@ internal sealed class GetGroupMessageResultsQueryHandler : IQueryHandler<GetGrou
                 if (message is BorrowMessage)
                 {
                     BorrowMessage borrowMessage = (BorrowMessage)message;
-                    var cloth = _clothRepository.GetClothResult(profile.Value, ClothId.Create(borrowMessage.ClothId)).GetAwaiter().GetResult();
+                    var cloth = _clothRepository.GetClothResult(profile.Value, ClothId.Create(borrowMessage.ClothId), withDeleted: true).GetAwaiter().GetResult();
 
                     if (cloth.IsError)
                     {

@@ -91,6 +91,6 @@ internal sealed class PerformActionCommandHandler : ICommandHandler<PerformActio
         await _activityRepository.AddAsync(activity, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return (await _closetService.GetClothResult(profile.Value, clothId, cancellationToken)).Value;
+        return (await _closetService.GetClothResult(profile.Value, clothId, cancellationToken: cancellationToken)).Value;
     }
 }

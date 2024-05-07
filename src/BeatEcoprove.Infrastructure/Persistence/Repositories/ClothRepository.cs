@@ -25,13 +25,13 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
             .SingleOrDefaultAsync(cloth => cloth.Id == id, cancellationToken);
     }
 
-    public async Task<ClothDao?> GetClothDaoByIdAsync(ClothId id, CancellationToken cancellationToken = default)
+    public async Task<ClothDao?> GetClothDaoByIdAsync(ClothId id, bool withDeleted = false, CancellationToken cancellationToken = default)
     {
         var getCloth =
             from cloth in DbContext.Cloths
             from color in DbContext.Set<Color>()
             from brand in DbContext.Set<Brand>()
-            where cloth.Id == id && cloth.Color == color.Id && cloth.Brand == brand.Id
+            where cloth.Id == id && cloth.Color == color.Id && cloth.Brand == brand.Id && (withDeleted || cloth.DeletedAt != null)
             select new ClothDao
             (
                 cloth.Id,
@@ -46,6 +46,29 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
             );
 
         return await getCloth.SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<ClothDao?> GetClothDaoByIdWithNoFiltersAsync(ClothId id, bool withDeleted = false, CancellationToken cancellationToken = default)
+    {
+        var getCloth =
+            from cloth in DbContext.Cloths
+            from color in DbContext.Set<Color>()
+            from brand in DbContext.Set<Brand>()
+            where cloth.Id == id && cloth.Color == color.Id && cloth.Brand == brand.Id && (withDeleted || cloth.DeletedAt != null)
+            select new ClothDao
+            (
+                cloth.Id,
+                cloth.Name,
+                cloth.Type.ToString(),
+                cloth.Size.ToString(),
+                brand.Name,
+                color.Hex,
+                cloth.EcoScore,
+                cloth.State.ToString(),
+                cloth.ClothAvatar
+            );
+
+        return await getCloth.IgnoreQueryFilters().SingleOrDefaultAsync(cancellationToken);
     }
 
     public async Task RemoveByIdAsync(ClothId clothId, CancellationToken cancellationToken)

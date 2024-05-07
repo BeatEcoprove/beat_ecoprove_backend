@@ -79,6 +79,6 @@ internal sealed class CloseMaintenanceActivityCommandHandler : ICommandHandler<C
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return (await _closetService.GetClothResult(profile.Value, clothId, cancellationToken)).Value;
+        return (await _closetService.GetClothResult(profile.Value, clothId, cancellationToken: cancellationToken)).Value;
     }
 }

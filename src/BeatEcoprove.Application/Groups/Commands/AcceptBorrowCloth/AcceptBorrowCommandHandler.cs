@@ -104,6 +104,7 @@ internal sealed class AcceptBorrowCommandHandler : ICommandHandler<AcceptBorrowC
         }
 
         // Switch Cloth from account
+        profile.Value.RemoveCloth(clothId);
         await _clothRepository.RemoveByIdAsync(clothId, cancellationToken);
 
         var switchCloth = Cloth.Create(
