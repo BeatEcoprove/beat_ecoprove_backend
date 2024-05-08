@@ -19,7 +19,7 @@ public class ApiController : ControllerBase
 
     protected ActionResult<TResponse> Problem<TResponse>(List<Error> errors)
     {
-        if (errors.All(error => error.Type == ErrorType.Conflict))
+        if (errors.All(error => error.Type == ErrorType.Validation))
         {
             var modelValidation = new ModelStateDictionary();
 

@@ -6,15 +6,15 @@ public partial class Errors
 {
     public class Brand
     {
-        public static Error MustProvideBrandName => Error.Unexpected(
+        public static Error MustProvideBrandName => Error.Conflict(
             "Brand.MustProvideBrandName",
             "Por favor, forneça um nome para a marca.");
 
-        public static Error MustProvideBrandAvatar => Error.Unexpected(
+        public static Error MustProvideBrandAvatar => Error.Conflict(
             "Brand.MustProvideBrandAvatar",
             "Por favor, forneça um avatar para a marca.");
 
-        public static Error ThereIsNoBrandName => Error.Unexpected(
+        public static Error ThereIsNoBrandName => Error.Conflict(
             "Brand.ThereIsNoBrandName",
             "Não existe nenhuma marca com esse nome.");
     }
