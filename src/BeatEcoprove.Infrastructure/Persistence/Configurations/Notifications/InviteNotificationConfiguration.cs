@@ -15,6 +15,10 @@ public class InviteNotificationConfiguration : IDocumentTypeConfiguration<Invite
             .SetElementName("group_id")
             .SetIsRequired(true);
 
+        map.MapMember(x => x.GroupName)
+            .SetElementName("group_name")
+            .SetIsRequired(true);
+
         map.MapMember(x => x.InvitorId)
             .SetElementName("invitor_id")
             .SetIsRequired(true);

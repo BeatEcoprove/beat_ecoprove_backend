@@ -16,6 +16,7 @@ public class InviteGroupNotificationEvent :
         return InviteNotification.Create(
             Content.Message,
             Content.Group,
+            Content.GroupName,
             Content.From,
             Owner,
             Content.Code

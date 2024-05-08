@@ -12,26 +12,37 @@ public class InviteMemberDomainEventHandler : INotificationHandler<InviteMemberD
 {
     private readonly INotificationSender _notificationSender;
     private readonly IJwtProvider _jwtProvider;
+    private readonly IGroupRepository _groupRepository;
     private readonly IKeyValueRepository<string> _keyValueRespository;
 
     public InviteMemberDomainEventHandler(
         INotificationSender notificationSender,
         IJwtProvider jwtProvider,
-        IKeyValueRepository<string> redis)
+        IKeyValueRepository<string> redis,
+        IGroupRepository groupRepository)
     {
         _notificationSender = notificationSender;
         _jwtProvider = jwtProvider;
         _keyValueRespository = redis;
+        _groupRepository = groupRepository;
     }
 
     public async Task Handle(InviteMemberDomainEvent notification, CancellationToken cancellationToken)
     {
         var invitation = notification.Invite;
+        var groupId = GroupId.Create(invitation.Group);
 
         var inviteCode = _jwtProvider.GenerateRandomCode(6);
 
         var inviteKey = new CodeKey(invitation.Target, invitation.Group, inviteCode);
         await _keyValueRespository.AddAsync(inviteKey, invitation.Id.Value.ToString());
+
+        var group = await _groupRepository.GetByIdAsync(groupId, cancellationToken);
+
+        if (group is null)
+        {
+            return;
+        }
 
         await _notificationSender.SendNotificationAsync(
             new InviteGroupNotificationEvent(
@@ -39,6 +50,7 @@ public class InviteMemberDomainEventHandler : INotificationHandler<InviteMemberD
                 new InviteGroupContent(
                     inviteCode,
                     invitation.Group,
+                    group.Name,
                     invitation.Inviter
                 )
             ),

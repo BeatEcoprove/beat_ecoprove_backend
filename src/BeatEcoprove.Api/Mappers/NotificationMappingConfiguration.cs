@@ -21,6 +21,7 @@ public class NotificationMappingConfiguration : IRegister
                 (
                     src.Title,
                     src.GroupId,
+                    src.GroupName,
                     src.InvitorId,
                     src.Code,
                     src.Type

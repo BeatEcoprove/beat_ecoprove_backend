@@ -7,8 +7,9 @@ public record InviteGroupContent
 (
     string Code,
     GroupId Group,
+    string GroupName,
     ProfileId From
 )
 {
-    public string Message => "Foi Convidado para um Grupo";
+    public string Message => "Foi Convidado";
 };
