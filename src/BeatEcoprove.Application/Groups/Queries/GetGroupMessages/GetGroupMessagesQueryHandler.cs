@@ -114,6 +114,8 @@ internal sealed class GetGroupMessageResultsQueryHandler : IQueryHandler<GetGrou
                     message.CreatedAt
                 );
 
-            }).ToList();
+            })
+            .Reverse()
+            .ToList();
     }
 }

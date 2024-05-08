@@ -45,7 +45,9 @@ public class StoreGroupInterceptor : SaveChangesInterceptor
 
         var messages = groupEntity
             .Select(entity => entity.Entity)
-            .SelectMany(entity => entity.Messages).ToList();
+            .SelectMany(entity => entity.Messages)
+            .Reverse()
+            .ToList();
 
         if (messages.Count == 0)
         {
