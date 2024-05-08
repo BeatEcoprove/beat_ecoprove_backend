@@ -2,6 +2,7 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,8 @@ public class WebSocketsMiddleware : ControllerBase, IMiddleware
         }
 
         var authId = context.User.GetUserId();
+        var profileId = ProfileId.Create(context.User.GetProfileId());
+
         var authRepository = context.RequestServices.GetService<IAuthRepository>();
 
         var profile = await authRepository?.GetMainProfile(AuthId.Create(authId))!;
@@ -37,6 +40,6 @@ public class WebSocketsMiddleware : ControllerBase, IMiddleware
         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
         var webSocketHandler = context.RequestServices.GetService<IWebSocketManager>();
 
-        await webSocketHandler?.Handle(webSocket, profile.Id)!;
+        await webSocketHandler?.Handle(webSocket, profileId)!;
     }
 }
