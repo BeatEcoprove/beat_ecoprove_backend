@@ -9,6 +9,7 @@ public interface IGroupSessionManager : IConnectionManager<GroupId, List<Member>
     bool IsUserMemberOfAnyGroup(ProfileId userId);
     Task AddMember(GroupId groupId, Member member, CancellationToken cancellation = default);
     Task RemoveMember(GroupId groupId, ProfileId memberId, CancellationToken cancellation = default);
+    GroupId? GetGroupOfConnectedMember(ProfileId profileId, CancellationToken cancellationToken = default);
     Task SendEveryoneAsync(
         GroupId groupId,
         IRealTimeNotification notification,

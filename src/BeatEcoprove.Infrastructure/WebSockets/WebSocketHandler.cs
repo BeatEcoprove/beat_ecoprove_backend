@@ -26,16 +26,19 @@ internal class WebSocketHandler :
 
     private readonly ISender _sender;
     private readonly ISessionManager _sessionManager;
+    private readonly IGroupSessionManager _groupSessionManager;
     private readonly INotificationRepository _notificationRepository;
     private readonly JsonSerializerOptions _options;
 
     public WebSocketHandler(
         ISessionManager sessionManager,
+        IGroupSessionManager groupSessionManager,
         ISender sender,
         INotificationRepository notificationRepository,
         IOptions<JsonSerializerOptions> options)
     {
         _sessionManager = sessionManager;
+        _groupSessionManager = groupSessionManager;
         _sender = sender;
         _notificationRepository = notificationRepository;
         _options = options.Value;
@@ -57,6 +60,17 @@ internal class WebSocketHandler :
             }
 
             _sessionManager.Add(userId, activeSocket);
+
+            if (_groupSessionManager.IsUserMemberOfAnyGroup(userId))
+            {
+                var groupId = _groupSessionManager.GetGroupOfConnectedMember(userId, cancellationToken);
+
+                if (groupId is not null)
+                {
+                    await _groupSessionManager.RemoveMember(groupId, userId, cancellationToken);
+                    await _groupSessionManager.AddMember(groupId, new Member(userId, activeSocket), cancellationToken);
+                }
+            }
 
             while (activeSocket.State == WebSocketState.Open)
             {

@@ -70,10 +70,14 @@ public class GroupSessionManager : IGroupSessionManager
             return;
         }
 
-        await user.Socket.CloseAsync(
-            WebSocketCloseStatus.NormalClosure,
-        string.Empty,
-            cancellation);
+        if (user.Socket.State == WebSocketState.Open)
+        {
+            await user.Socket.CloseAsync(
+                WebSocketCloseStatus.NormalClosure,
+                string.Empty,
+                cancellation
+            );
+        }
 
         _groups[groupId].Remove(user);
     }
@@ -112,10 +116,20 @@ public class GroupSessionManager : IGroupSessionManager
         }
 
         var responseBytes = Encoding.UTF8.GetBytes(notification.ConvertToJson(_options));
-        await Task.WhenAll(users.Select(user => user.Socket.SendAsync(new ArraySegment<byte>(responseBytes, 0, responseBytes.Length),
-            WebSocketMessageType.Text,
-            true,
-            cancellationToken)));
+        await Task.WhenAll(users.Select(user =>
+        {
+            if (user.Socket.State == WebSocketState.Closed)
+            {
+                return Task.CompletedTask;
+            }
+
+            return user.Socket.SendAsync(
+                new ArraySegment<byte>(responseBytes, 0, responseBytes.Length),
+                    WebSocketMessageType.Text,
+                    true,
+                    cancellationToken
+                );
+        }));
     }
 
     public bool IsUserMemberOfAnyGroup(ProfileId userId)
@@ -129,5 +143,15 @@ public class GroupSessionManager : IGroupSessionManager
         }
 
         return false;
+    }
+
+    public GroupId? GetGroupOfConnectedMember(ProfileId profileId, CancellationToken cancellationToken = default)
+    {
+        var querySearchUserSocketId = from groupSocket in _groups
+                                      from user in groupSocket.Value
+                                      where user.Id == profileId
+                                      select groupSocket.Key;
+
+        return querySearchUserSocketId.FirstOrDefault();
     }
 }
