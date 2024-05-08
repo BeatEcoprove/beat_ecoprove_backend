@@ -31,7 +31,7 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
             from cloth in DbContext.Cloths
             from color in DbContext.Set<Color>()
             from brand in DbContext.Set<Brand>()
-            where cloth.Id == id && cloth.Color == color.Id && cloth.Brand == brand.Id && (withDeleted || cloth.DeletedAt != null)
+            where cloth.Id == id && cloth.Color == color.Id && cloth.Brand == brand.Id
             select new ClothDao
             (
                 cloth.Id,

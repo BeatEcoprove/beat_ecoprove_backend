@@ -6,16 +6,20 @@ namespace BeatEcoprove.Application.Groups.Queries.GetGroupMessages.Common;
 public class BorrowMessageResult : MessageResult
 {
     public BorrowClothResponse Borrow { get; set; }
+    public bool IsAccepted { get; set; }
+
     public BorrowMessageResult(
         string id,
         Guid groupId,
         Profile sender,
         string content,
         DateTimeOffset createdAt,
-        BorrowClothResponse borrow
+        BorrowClothResponse borrow,
+        bool isAccepted
     ) : base(id, groupId, sender, content, createdAt)
     {
         Borrow = borrow;
+        IsAccepted = isAccepted;
     }
 
     public override string Type => nameof(BorrowMessageResult);

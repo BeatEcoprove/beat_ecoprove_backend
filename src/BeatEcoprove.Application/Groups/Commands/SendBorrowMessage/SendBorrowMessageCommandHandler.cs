@@ -122,7 +122,8 @@ internal sealed class SendBorrowMessageCommandHandler : ICommandHandler<SendBorr
                         cloth.Value.Color,
                         cloth.Value.Size,
                         cloth.Value.EcoScore.ToString()
-                    )
+                    ),
+                    borrowMessage.Value.IsAccepted
                 ),
                 nameof(BorrowClothMessage)
             )

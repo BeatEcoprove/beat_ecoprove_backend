@@ -14,6 +14,7 @@ public record BorrowResult(
 public class BorrowMessageResponse : TextMessageResponse
 {
     public BorrowResult Borrow { get; set; }
+    public bool IsAccepted { get; set; }
 
     public BorrowMessageResponse(
         string id,
@@ -22,6 +23,7 @@ public class BorrowMessageResponse : TextMessageResponse
         string content,
         DateTimeOffset createdAt,
         BorrowResult borrow,
+        bool isAccepted,
         string type)
         : base(id, groupId, sender, content, createdAt, type)
     {
@@ -30,5 +32,6 @@ public class BorrowMessageResponse : TextMessageResponse
         Content = content;
         CreatedAt = createdAt;
         Borrow = borrow;
+        IsAccepted = isAccepted;
     }
 }

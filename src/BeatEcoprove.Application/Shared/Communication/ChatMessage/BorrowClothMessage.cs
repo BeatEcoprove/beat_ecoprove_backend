@@ -14,15 +14,18 @@ public record BorrowClothResponse
 
 public class BorrowClothMessage : TextMessage
 {
-    public BorrowClothResponse borrow { get; init; }
+    public BorrowClothResponse Borrow { get; init; }
+    public bool IsAccepted { get; init; }
 
     public BorrowClothMessage(
         string id,
         string message,
         GroupId group,
         ChatMessageMember member,
-        BorrowClothResponse borrow) : base(id, message, group, member)
+        BorrowClothResponse borrow,
+        bool isAccepted) : base(id, message, group, member)
     {
-        this.borrow = borrow;
+        Borrow = borrow;
+        IsAccepted = isAccepted;
     }
 }

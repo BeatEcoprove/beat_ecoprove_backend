@@ -100,7 +100,8 @@ internal sealed class GetGroupMessageResultsQueryHandler : IQueryHandler<GetGrou
                                             cloth.Value.Color,
                                             cloth.Value.Size,
                                             cloth.Value.EcoScore.ToString()
-                                        )
+                                        ),
+                                        borrowMessage.IsAccepted
                                     );
                 }
 

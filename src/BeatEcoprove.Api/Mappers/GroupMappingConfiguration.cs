@@ -39,6 +39,7 @@ public class GroupMappingConfiguration : IRegister
                 src.Borrow.Size,
                 src.Borrow.EcoScore
             ),
+            src.IsAccepted,
             src.Type));
 
         config.NewConfig<GetGroupList, GetGroupsResponse>()
