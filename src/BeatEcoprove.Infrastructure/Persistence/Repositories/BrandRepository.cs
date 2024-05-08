@@ -22,7 +22,7 @@ public class BrandRepository : Repository<Brand, BrandId>, IBrandRepository
     {
         return await DbContext
             .Set<Brand>()
-            .SingleOrDefaultAsync(brand => brand.Name == name, cancellationToken)
+            .FirstOrDefaultAsync(brand => brand.Name == name, cancellationToken)
             .ContinueWith(task => task.Result?.Id, cancellationToken);
     }
 }

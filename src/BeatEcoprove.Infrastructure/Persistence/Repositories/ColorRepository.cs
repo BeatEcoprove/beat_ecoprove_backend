@@ -24,7 +24,7 @@ public class ColorRepository : Repository<Color, ColorId>, IColorRepository
     {
         return DbContext
             .Set<Color>()
-            .SingleOrDefaultAsync(e => e.Hex == hexValue, cancellationToken)
+            .FirstOrDefaultAsync(e => e.Hex == hexValue, cancellationToken)
             .ContinueWith(t => t.Result?.Id, cancellationToken);
     }
 }

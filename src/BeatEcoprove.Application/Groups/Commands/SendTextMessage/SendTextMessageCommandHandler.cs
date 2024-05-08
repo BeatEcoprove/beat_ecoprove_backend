@@ -62,6 +62,11 @@ internal sealed class SendTextMessageCommandHandler : ICommandHandler<SendTextMe
             return Errors.Profile.NotFound;
         }
 
+        if (!await _groupRepository.IsMemberAsync(groupId, profile.Id, cancellationToken))
+        {
+            return Errors.Groups.CannotAccess;
+        }
+
         var group = await _groupRepository.GetByIdAsync(groupId, cancellationToken);
 
         if (group is null)

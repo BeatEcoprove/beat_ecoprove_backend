@@ -87,7 +87,7 @@ public class Group : AggregateRoot<GroupId, Guid>
 
     public GroupMember? GetMemberByProfileId(ProfileId profileId)
     {
-        return this._members.FirstOrDefault(member => member.Profile == profileId);
+        return this._members.FirstOrDefault(member => member.Profile == profileId && member.DeletedAt == null);
     }
 
     public ErrorOr<bool> PromoteMember(GroupMemberId memberId, MemberPermission role)

@@ -44,5 +44,8 @@ public class GroupMemberConfiguration : IEntityTypeConfiguration<GroupMember>
         builder.Property(g => g.Permission)
             .HasColumnName("permission")
             .IsRequired();
+
+        builder.Property(g => g.DeletedAt)
+            .HasColumnName("deleted_at");
     }
 }

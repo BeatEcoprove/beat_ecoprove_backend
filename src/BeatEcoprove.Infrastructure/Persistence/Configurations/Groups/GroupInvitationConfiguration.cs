@@ -61,5 +61,8 @@ public class GroupInvitationConfiguration : IEntityTypeConfiguration<GroupInvite
 
         builder.Property(g => g.DeclinedAt)
             .HasColumnName("declined_at");
+
+        builder.Property(cloth => cloth.DeletedAt)
+            .HasColumnName("deleted_at");
     }
 }

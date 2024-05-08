@@ -72,11 +72,21 @@ internal sealed class SendBorrowMessageCommandHandler : ICommandHandler<SendBorr
             return Errors.Profile.NotFound;
         }
 
+        if (!await _groupRepository.IsMemberAsync(groupId, profile.Id, cancellationToken))
+        {
+            return Errors.Groups.CannotAccess;
+        }
+
         var cloth = await _closetService.GetClothResult(profile, clothId, cancellationToken: cancellationToken);
 
         if (cloth.IsError)
         {
             return cloth.Errors;
+        }
+
+        if (cloth.Value.ClothState == nameof(ClothState.Blocked))
+        {
+            return Errors.Cloth.ClothIdBlocked;
         }
 
         var group = await _groupRepository.GetByIdAsync(groupId, cancellationToken);

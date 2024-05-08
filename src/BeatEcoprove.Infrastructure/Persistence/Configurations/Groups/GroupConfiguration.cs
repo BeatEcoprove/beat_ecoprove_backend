@@ -67,6 +67,9 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
             .HasMaxLength(256)
             .IsRequired();
 
+        builder.Property(cloth => cloth.DeletedAt)
+            .HasColumnName("deleted_at");
+
         builder.HasMany(group => group.Members)
             .WithOne()
             .HasForeignKey(groupMember => groupMember.Group);
