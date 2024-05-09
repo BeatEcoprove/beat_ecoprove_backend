@@ -11,12 +11,14 @@ namespace BeatEcoprove.Application.Groups.Events;
 public class InviteMemberDomainEventHandler : INotificationHandler<InviteMemberDomainEvent>
 {
     private readonly INotificationSender _notificationSender;
+    private readonly INotificationRepository _notificationRepository;
     private readonly IJwtProvider _jwtProvider;
     private readonly IGroupRepository _groupRepository;
     private readonly IKeyValueRepository<string> _keyValueRespository;
 
     public InviteMemberDomainEventHandler(
         INotificationSender notificationSender,
+        INotificationRepository notificationRepository,
         IJwtProvider jwtProvider,
         IKeyValueRepository<string> redis,
         IGroupRepository groupRepository)
@@ -25,12 +27,18 @@ public class InviteMemberDomainEventHandler : INotificationHandler<InviteMemberD
         _jwtProvider = jwtProvider;
         _keyValueRespository = redis;
         _groupRepository = groupRepository;
+        _notificationRepository = notificationRepository;
     }
 
     public async Task Handle(InviteMemberDomainEvent notification, CancellationToken cancellationToken)
     {
         var invitation = notification.Invite;
         var groupId = GroupId.Create(invitation.Group);
+
+        if (await _notificationRepository.ThereIsAnyInviteForUserOnGroup(groupId, invitation.Target, cancellationToken))
+        {
+            return;
+        }
 
         var inviteCode = _jwtProvider.GenerateRandomCode(6);
 
