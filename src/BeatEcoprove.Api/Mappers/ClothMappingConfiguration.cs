@@ -1,9 +1,11 @@
 ﻿using BeatEcoprove.Application.Closet.Commands.CreateBucket;
 using BeatEcoprove.Application.Closet.Common;
 using BeatEcoprove.Application.Cloths.Queries.Common;
+using BeatEcoprove.Application.Cloths.Queries.Common.HistoryResult;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Contracts.Closet;
 using BeatEcoprove.Contracts.Closet.Bucket;
+using BeatEcoprove.Contracts.Closet.Cloth.HistoryResponse;
 using BeatEcoprove.Contracts.Profile;
 using BeatEcoprove.Contracts.Services;
 using BeatEcoprove.Domain.ClosetAggregator;
@@ -33,6 +35,21 @@ public class ClothMappingConfiguration : IRegister
                 src.ClothState,
                 src.ClothAvatar,
                 src.Profile.Adapt<ProfileClosetResponse>()
+            ));
+
+        config.NewConfig<DailyHistoryResult, DailyHistoryResponse>()
+            .MapWith(src => new DailyHistoryResponse(
+                src.Title,
+                src.EndedAt,
+                src.Type
+            ));
+
+        config.NewConfig<MaintenaceHistoryResult, MaintenanceHistoryResponse>()
+            .MapWith(src => new MaintenanceHistoryResponse(
+                src.ProvidedService,
+                src.ProvidedAction,
+                src.EndedAt,
+                src.Type
             ));
 
         config.NewConfig<ClothDao, ClothResult>()

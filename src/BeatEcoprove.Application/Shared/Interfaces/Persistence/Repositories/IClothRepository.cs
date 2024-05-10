@@ -16,4 +16,5 @@ public interface IClothRepository : IRepository<Cloth, ClothId>
     Task<MaintenanceActivity?> GetLatestMaintenanceActivity(ClothId id, CancellationToken cancellationToken);
     Task<List<Bucket>> GetBuckets(ClothId id, CancellationToken cancellationToken);
     Task<bool> ChangeClothState(ClothId id, ClothState state, CancellationToken cancellationToken = default);
+    Task<List<Activity>> GetHistoryOfActivities(ClothId clothId, CancellationToken cancellationToken = default);
 }

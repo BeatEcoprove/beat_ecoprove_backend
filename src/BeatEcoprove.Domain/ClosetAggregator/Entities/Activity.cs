@@ -26,8 +26,8 @@ public abstract class Activity : Entity<ActivityId>
     public ProfileId ProfileId { get; protected set; } = null!;
     public float XP { get; protected set; }
     public float DeltaScore { get; protected set; }
-    public DateTime CreatedAt { get; private set; }
-    public DateTime? EndAt { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset? EndAt { get; private set; }
 
     public void EndActivity()
     {

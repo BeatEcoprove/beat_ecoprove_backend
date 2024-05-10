@@ -1,10 +1,13 @@
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Cloths.Commands.CloseMaintenanceActivity;
 using BeatEcoprove.Application.Cloths.Commands.PerformAction;
+using BeatEcoprove.Application.Cloths.Queries.Common.HistoryResult;
 using BeatEcoprove.Application.Cloths.Queries.GetAvailableServices;
 using BeatEcoprove.Application.Cloths.Queries.GetClothMaintenanceStatus;
+using BeatEcoprove.Application.Cloths.Queries.GetHistory;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Closet.Cloth;
+using BeatEcoprove.Contracts.Closet.Cloth.HistoryResponse;
 using BeatEcoprove.Contracts.Services;
 
 using Mapster;
@@ -103,7 +106,7 @@ public class ClothController : ApiController
     // Status response
     [HttpGet("current")]
     public async Task<ActionResult<ClothMaintenanceStatusResponse>> GetClothMaintenanceStatus(
-        [FromRoute] Guid profileId,
+        [FromQuery] Guid profileId,
         [FromRoute] Guid clothId)
     {
         var authId = HttpContext.User.GetUserId();
@@ -120,5 +123,42 @@ public class ClothController : ApiController
             response => Ok(_mapper.Map<ClothMaintenanceStatusResponse>(response)),
             Problem<ClothMaintenanceStatusResponse>
         );
+    }
+
+    [HttpGet("history")]
+    public async Task<ActionResult<List<dynamic>>> GetClothHistory(
+       [FromQuery] Guid profileId,
+       [FromRoute] Guid clothId)
+    {
+        var authId = HttpContext.User.GetUserId();
+
+        var history = await _sender.Send(new
+            GetHistoryQuery(
+                authId,
+                profileId,
+                clothId
+                )
+        );
+
+        return history.Match(
+            response => Ok(ProxyResponse(response)),
+            Problem<dynamic>
+        );
+    }
+
+    private dynamic ProxyResponse(List<HistoryResult> history)
+    {
+        return history
+            .Select(history =>
+            {
+                object response = history switch
+                {
+                    DailyHistoryResult dailyHistory => _mapper.Map<DailyHistoryResponse>(dailyHistory),
+                    MaintenaceHistoryResult maintenaceHistory => _mapper.Map<MaintenanceHistoryResponse>(maintenaceHistory),
+                    _ => throw new ArgumentException("Unsupported history type"),
+                };
+
+                return response;
+            }).ToList();
     }
 }

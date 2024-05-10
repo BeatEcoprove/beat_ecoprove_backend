@@ -147,4 +147,13 @@ public class ClothRepository : Repository<Cloth, ClothId>, IClothRepository
 
         return false;
     }
+
+    public async Task<List<Activity>> GetHistoryOfActivities(ClothId clothId, CancellationToken cancellationToken = default)
+    {
+        var activities = from activity in DbContext.Set<Activity>()
+                         where activity.ClothId == clothId && activity.EndAt != null
+                         select activity;
+
+        return await activities.ToListAsync(cancellationToken);
+    }
 }
