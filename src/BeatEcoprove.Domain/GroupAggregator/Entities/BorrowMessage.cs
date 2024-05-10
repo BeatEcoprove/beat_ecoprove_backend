@@ -22,5 +22,7 @@ public class BorrowMessage : Message
         IsAccepted = true;
     }
 
+    // public new DateTimeOffset CreatedAt { get; private set; } = DateTimeOffset.UtcNow;
+
     public override string Type => nameof(BorrowMessage);
 }
