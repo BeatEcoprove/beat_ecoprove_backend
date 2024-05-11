@@ -213,7 +213,7 @@ public class BeatEcoproveSeeder
                 {
                     Id = repairServiceId,
                     Badge = "public/default/repair.png",
-                    Title = "Engomar",
+                    Title = "Reparar",
                     Description = "De que forma pretende arranjar a peça?"
                 }
             );

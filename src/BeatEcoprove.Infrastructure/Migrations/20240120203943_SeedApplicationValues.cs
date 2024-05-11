@@ -41,7 +41,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 {
                     { new Guid("0eaefa43-2687-44ee-b3fb-527db9eb5dad"), "public/default/iron.png", null, "De que forma pertende engomar?", "Engomar" },
                     { new Guid("53ecb0f0-bb77-4875-8563-17eac5e97780"), "public/default/wash.png", null, "De que forma pertende lavar?", "Lavar" },
-                    { new Guid("8e8ecf6e-7301-4f8a-9b5d-00768daade36"), "public/default/repair.png", null, "De que forma pertende arranjar a peça?", "Engomar" },
+                    { new Guid("8e8ecf6e-7301-4f8a-9b5d-00768daade36"), "public/default/repair.png", null, "De que forma pertende arranjar a peça?", "Reparar" },
                     { new Guid("fa98a556-80d0-4dc3-a905-479e40f5030f"), "public/default/dry.png", null, "De que forma pertende secar?", "Secar" }
                 });
 

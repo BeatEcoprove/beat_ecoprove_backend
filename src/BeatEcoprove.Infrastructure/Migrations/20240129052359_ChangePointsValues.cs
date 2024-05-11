@@ -283,7 +283,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 {
                     { new Guid("3182bec8-1946-4eb1-8e1b-20a855d81fb2"), "public/default/iron.png", null, "De que forma pretende engomar?", "Engomar" },
                     { new Guid("56723cfe-ad7e-42f9-a50d-d255d68eeb4d"), "public/default/dry.png", null, "De que forma pretende secar?", "Secar" },
-                    { new Guid("97015a91-4db5-405f-b178-6f59e4e66b09"), "public/default/repair.png", null, "De que forma pretende arranjar a peça?", "Engomar" },
+                    { new Guid("97015a91-4db5-405f-b178-6f59e4e66b09"), "public/default/repair.png", null, "De que forma pretende arranjar a peça?", "Reparar" },
                     { new Guid("e9f9fbc8-2d67-421a-9a23-a2338554c5ff"), "public/default/wash.png", null, "De que forma pretende lavar?", "Lavar" }
                 });
 
@@ -585,7 +585,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 {
                     { new Guid("17c71665-aeb6-4916-8632-2e0e05d9866c"), "public/default/wash.png", null, "De que forma pertende lavar?", "Lavar" },
                     { new Guid("42d42921-cda2-402b-a66f-ceb192de23c2"), "public/default/dry.png", null, "De que forma pertende secar?", "Secar" },
-                    { new Guid("ab9ea09d-581c-4278-8580-af5271a3f813"), "public/default/repair.png", null, "De que forma pertende arranjar a peça?", "Engomar" },
+                    { new Guid("ab9ea09d-581c-4278-8580-af5271a3f813"), "public/default/repair.png", null, "De que forma pertende arranjar a peça?", "Reparar" },
                     { new Guid("dac2c8f8-519d-4ecb-a51d-a2fff5e02d25"), "public/default/iron.png", null, "De que forma pertende engomar?", "Engomar" }
                 });
 
