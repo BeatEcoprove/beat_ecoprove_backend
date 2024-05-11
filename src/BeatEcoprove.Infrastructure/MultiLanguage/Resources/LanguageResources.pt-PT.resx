@@ -132,6 +132,9 @@
     <data name="Bucket.InvalidClothToAdd" xml:space="preserve">
         <value>Roupa não encontrada.</value>
     </data>
+    <data name="DailyUse" xml:space="preserve">
+        <value>A peça foi utilizada em</value>
+    </data>
     <data name="Bucket.EmptyClothIds" xml:space="preserve">
         <value>Por favor, adiciona pelo menos uma peça ao cesto.</value>
     </data>

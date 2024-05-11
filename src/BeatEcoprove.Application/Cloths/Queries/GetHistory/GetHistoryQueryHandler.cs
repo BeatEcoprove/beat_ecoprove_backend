@@ -2,6 +2,7 @@ using BeatEcoprove.Application.Cloths.Queries.Common.HistoryResult;
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
+using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
@@ -18,17 +19,20 @@ internal sealed class GetHistoryQueryHandler : IQueryHandler<GetHistoryQuery, Er
     private readonly IClosetService _closetService;
     private readonly IClothRepository _clothRepository;
     private readonly IMaintenanceServiceRepository _maintenanceServiceRepository;
+    private readonly ILanguageCulture _languageCulture;
 
     public GetHistoryQueryHandler(
         IProfileManager profileManager,
         IClosetService closetService,
         IClothRepository clothRepository,
-        IMaintenanceServiceRepository maintenanceServiceRepository)
+        IMaintenanceServiceRepository maintenanceServiceRepository,
+        ILanguageCulture languageCulture)
     {
         _profileManager = profileManager;
         _closetService = closetService;
         _clothRepository = clothRepository;
         _maintenanceServiceRepository = maintenanceServiceRepository;
+        _languageCulture = languageCulture;
     }
 
     public async Task<ErrorOr<List<HistoryResult>>> Handle(GetHistoryQuery request, CancellationToken cancellationToken)
@@ -76,10 +80,10 @@ internal sealed class GetHistoryQueryHandler : IQueryHandler<GetHistoryQuery, Er
         return historyActivities;
     }
 
-    private static ErrorOr<HistoryResult> HandleDailyActivity(DailyUseActivity activity)
+    private ErrorOr<HistoryResult> HandleDailyActivity(DailyUseActivity activity)
     {
         return new DailyHistoryResult(
-            "Piece was used on",
+            _languageCulture.GetChunk("DailyUse", "Piece was used on"),
             activity.EndAt ?? DateTimeOffset.UtcNow
         );
     }
