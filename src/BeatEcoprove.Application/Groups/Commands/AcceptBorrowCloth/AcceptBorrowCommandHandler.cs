@@ -1,7 +1,9 @@
 ﻿using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Communication.Group;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
+using BeatEcoprove.Application.Shared.Interfaces.Websockets;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
@@ -26,19 +28,22 @@ internal sealed class AcceptBorrowCommandHandler : ICommandHandler<AcceptBorrowC
     private readonly IMessageRepository _messageRepository;
     private readonly IClothRepository _clothRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IGroupSessionManager _groupSessionManager;
 
     public AcceptBorrowCommandHandler(
         IProfileManager profileManager,
         IGroupRepository groupService,
         IMessageRepository messageRepository,
         IClothRepository clothRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IGroupSessionManager groupSessionManager)
     {
         _profileManager = profileManager;
         _groupRepository = groupService;
         _messageRepository = messageRepository;
         _clothRepository = clothRepository;
         _unitOfWork = unitOfWork;
+        _groupSessionManager = groupSessionManager;
     }
 
     public async Task<ErrorOr<string>> Handle(AcceptBorrowCommand request, CancellationToken cancellationToken)
@@ -130,6 +135,21 @@ internal sealed class AcceptBorrowCommandHandler : ICommandHandler<AcceptBorrowC
 
         // persist
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Notify group
+        await _groupSessionManager.SendEveryoneAsync(
+            groupId,
+            new NotifyBorrowExchangeEndedEvent(
+                profile.Value.Id,
+                new NotifyBorrowExchangeContent(
+                    messageId,
+                    groupId,
+                    clothId,
+                    true
+                )
+            ),
+            cancellationToken
+        );
 
         return request.MessageId;
     }
