@@ -1,3 +1,5 @@
+using Asp.Versioning;
+
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Cloths.Commands.CloseMaintenanceActivity;
 using BeatEcoprove.Application.Cloths.Commands.PerformAction;
@@ -21,8 +23,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
+[ApiVersion(1)]
 [Authorize]
-[Route("/profiles/closet/cloth/{clothId:guid}/services")]
+[Route("v{version:apiVersion}/profiles/closet/cloth/{clothId:guid}/services")]
 public class ClothController : ApiController
 {
     private readonly IMapper _mapper;

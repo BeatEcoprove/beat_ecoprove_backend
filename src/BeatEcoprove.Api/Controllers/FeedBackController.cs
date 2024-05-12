@@ -1,3 +1,5 @@
+using Asp.Versioning;
+
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.FeedBacks.Commands.SubmitFeedBack;
 using BeatEcoprove.Application.Shared.Multilanguage;
@@ -12,8 +14,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
+[ApiVersion(1)]
 [Authorize]
-[Route("extensions/feedback")]
+[Route("v{version:apiVersion}/extensions/feedback")]
 public class FeedBackController : ApiController
 {
     private readonly ISender _sender;

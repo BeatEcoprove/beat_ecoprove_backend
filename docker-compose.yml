@@ -35,8 +35,15 @@ services:
       - "${REDIS_PORT}:6379"
       - "${REDIS_PORT_INTERFACE}:8001"
     profiles:
-      - build
       - dev
+
+  redis-build:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "${REDIS_PORT}:6379"
+    profiles:
+      - build
 
   database:
     image: postgres:alpine3.18
@@ -90,7 +97,7 @@ services:
     depends_on:
       database:
         condition: service_healthy
-      redis:
+      redis-build:
         condition: service_started
     restart: always
     profiles:

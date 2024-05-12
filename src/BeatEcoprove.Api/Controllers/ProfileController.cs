@@ -1,3 +1,5 @@
+using Asp.Versioning;
+
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Profiles.Commands.CreateNestedProfile;
 using BeatEcoprove.Application.Profiles.Commands.DeleteNestedProfile;
@@ -20,8 +22,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
+[ApiVersion(1)]
 [Authorize]
-[Route("profiles")]
+[Route("v{version:apiVersion}/profiles")]
 public class ProfileController : ApiController
 {
     private readonly ISender _sender;

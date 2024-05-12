@@ -1,11 +1,14 @@
 
+using Asp.Versioning;
+
 using BeatEcoprove.Application.Shared.Multilanguage;
 
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
-[Route("ping")]
+[ApiVersion(1)]
+[Route("v{version:apiVersion}/ping")]
 public class PingController : ApiController
 {
     public PingController(ILanguageCulture localizer) : base(localizer)

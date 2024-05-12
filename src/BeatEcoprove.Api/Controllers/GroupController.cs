@@ -1,3 +1,5 @@
+using Asp.Versioning;
+
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Groups.Commands.AcceptBorrowCloth;
 using BeatEcoprove.Application.Groups.Commands.AcceptInvite;
@@ -24,8 +26,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
+[ApiVersion(1)]
 [Authorize]
-[Route("/groups")]
+[Route("v{version:apiVersion}/groups")]
 public class GroupController : ApiController
 {
     private readonly ISender _sender;
@@ -78,13 +81,13 @@ public class GroupController : ApiController
             ),
             cancellationToken
         );
-        
+
         return messageIdResult.Match(
             result => Ok(new AcceptBorrowClothResponse(result)),
             Problem<AcceptBorrowClothResponse>
         );
     }
-    
+
     [HttpGet("{groupId:guid}/messages")]
     public async Task<ActionResult<List<dynamic>>> GetGroupMessages(
         [FromRoute] Guid groupId,

@@ -1,3 +1,5 @@
+using Asp.Versioning;
+
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.ClosetBuckets.Commands;
 using BeatEcoprove.Application.Shared.Multilanguage;
@@ -12,8 +14,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
+
+[ApiVersion(1)]
 [Authorize]
-[Route("/profiles/closet/bucket/{bucketId:guid}")]
+[Route("v{version:apiVersion}/profiles/closet/bucket/{bucketId:guid}")]
 public class BucketController : ApiController
 {
     private readonly ISender _sender;

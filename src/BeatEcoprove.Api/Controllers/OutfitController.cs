@@ -1,4 +1,6 @@
-﻿using BeatEcoprove.Api.Extensions;
+﻿using Asp.Versioning;
+
+using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Closet.Commands.RegisterClothUsage;
 using BeatEcoprove.Application.Closet.Commands.RemoveClothFromOutfit;
 using BeatEcoprove.Application.Closet.Queries.GetCurrentOutfit;
@@ -17,8 +19,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
+[ApiVersion(1)]
 [Authorize]
-[Route("profiles/closet")]
+[Route("v{version:apiVersion}/profiles/closet")]
 public class OutfitController : ApiController
 {
     private readonly ISender _sender;

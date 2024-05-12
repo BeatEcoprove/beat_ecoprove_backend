@@ -1,4 +1,6 @@
-﻿using BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
+﻿using Asp.Versioning;
+
+using BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
 using BeatEcoprove.Application.Authentication.Commands.ResetPassword;
 using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
 using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
@@ -21,7 +23,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
-[Route("auth")]
+[ApiVersion(1)]
+[Route("v{version:apiVersion}/auth")]
 public class AuthenticationController : ApiController
 {
     private readonly ISender _sender;

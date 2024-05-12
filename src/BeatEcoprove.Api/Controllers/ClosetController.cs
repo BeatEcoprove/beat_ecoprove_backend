@@ -1,4 +1,6 @@
-﻿using BeatEcoprove.Api.Extensions;
+﻿using Asp.Versioning;
+
+using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Closet.Commands.AddClothToBucket;
 using BeatEcoprove.Application.Closet.Commands.CreateBucket;
 using BeatEcoprove.Application.Closet.Commands.CreateCloth;
@@ -25,8 +27,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
+[ApiVersion(1)]
 [Authorize]
-[Route("profiles/closet")]
+[Route("v{version:apiVersion}/profiles/closet")]
 public class ClosetController : ApiController
 {
     private readonly ISender _sender;

@@ -1,3 +1,5 @@
+using Asp.Versioning;
+
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Profiles.Queries.GetNotifications;
 using BeatEcoprove.Application.Shared.Multilanguage;
@@ -13,8 +15,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
+[ApiVersion(1)]
 [Authorize]
-[Route("profiles")]
+[Route("v{version:apiVersion}/profiles")]
 public class NotificationController : ApiController
 {
     private readonly ISender _sender;

@@ -1,4 +1,6 @@
-﻿using BeatEcoprove.Application.Brands.Queries;
+﻿using Asp.Versioning;
+
+using BeatEcoprove.Application.Brands.Queries;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Brands;
 
@@ -11,8 +13,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
+[ApiVersion(1)]
 [Authorize]
-[Route("extension/brands")]
+[Route("v{version:apiVersion}/extension/brands")]
 public class BrandController : ApiController
 {
     private readonly ISender _sender;

@@ -85,6 +85,7 @@ public static class ApplicationConfiguration
 
         app.AddLocalFileStorage();
         app.AddWebSockets();
+        app.UsePathBase("/api");
 
         return app;
     }

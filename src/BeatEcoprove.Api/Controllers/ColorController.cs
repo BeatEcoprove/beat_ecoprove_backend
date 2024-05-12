@@ -1,4 +1,6 @@
-﻿using BeatEcoprove.Application.Colors.Queries;
+﻿using Asp.Versioning;
+
+using BeatEcoprove.Application.Colors.Queries;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Colors;
 
@@ -11,8 +13,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
+[ApiVersion(1)]
 [Authorize]
-[Route("extension/colors")]
+[Route("v{version:apiVersion}/extension/colors")]
 public class ColorController : ApiController
 {
     private readonly ISender _sender;
