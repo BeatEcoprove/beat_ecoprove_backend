@@ -3,10 +3,36 @@
 using BeatEcoprove.Api.Mappers;
 using BeatEcoprove.Api.Middlewares;
 
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
+
 namespace BeatEcoprove.Api;
 
 public static class DependencyInjection
 {
+    private static IServiceCollection AddTelemetry(this IServiceCollection services)
+    {
+        services.AddOpenTelemetry()
+            .WithMetrics(metrics =>
+            {
+                metrics.AddRuntimeInstrumentation()
+                    .AddProcessInstrumentation()
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation();
+
+                metrics.AddEventCountersInstrumentation(events =>
+                {
+                    events.AddEventSources("Microsoft-AspNetCore-Hosting");
+                    events.AddEventSources("Microsoft-AspNetCore-Server-Kestrel");
+                    events.AddEventSources("System-Net-Http");
+                });
+                
+                metrics.AddPrometheusExporter();
+            });
+
+        return services;
+    }
+
     private static IServiceCollection AddApiVersion(this IServiceCollection services)
     {
         services.AddApiVersioning(options =>
@@ -33,6 +59,7 @@ public static class DependencyInjection
 
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
+        services.AddTelemetry();
         services.AddApiVersion();
 
         services.AddMiddlewares();

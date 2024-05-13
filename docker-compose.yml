@@ -1,6 +1,37 @@
 version: '3.7'
 
 services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    depends_on:
+      - api-build
+    profiles:
+      - build
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+      - ./docker/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
+    depends_on:
+      - prometheus
+    profiles:
+      - build
+
   nginx:
     container_name: nginx
     image: nginx:stable-alpine
@@ -14,6 +45,52 @@ services:
       - api-build
     profiles:
       - build
+
+  redis-build:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "${REDIS_PORT}:6379"
+    profiles:
+      - build
+
+  api-build:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+    ports:
+      - "8001:80"
+    env_file:
+      - .env
+    environment:
+      - MONGO_HOST=mongo
+      - POSTGRES_HOST=database
+      - REDIS_HOST=redis
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      database:
+        condition: service_healthy
+      redis-build:
+        condition: service_started
+    restart: always
+    profiles:
+      - build
+
+  database:
+    image: postgres:alpine3.18
+    ports:
+      - ${POSTGRES_PORT}:5432
+    env_file:
+      - .env
+    restart: always
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - build
+      - dev
 
   mongo:
     container_name: mongo
@@ -35,30 +112,6 @@ services:
       - "${REDIS_PORT}:6379"
       - "${REDIS_PORT_INTERFACE}:8001"
     profiles:
-      - dev
-
-  redis-build:
-    container_name: redis
-    image: redis:latest
-    ports:
-      - "${REDIS_PORT}:6379"
-    profiles:
-      - build
-
-  database:
-    image: postgres:alpine3.18
-    ports:
-      - ${POSTGRES_PORT}:5432
-    env_file:
-      - .env
-    restart: always
-    healthcheck:
-      test: [ "CMD", "pg_isready" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    profiles:
-      - build
       - dev
 
   api:
@@ -83,22 +136,5 @@ services:
     profiles:
       - dev
 
-  api-build:
-    build:
-      context: .
-      dockerfile: docker/api/Dockerfile
-    env_file:
-      - .env
-    environment:
-      - MONGO_HOST=mongo
-      - POSTGRES_HOST=database
-      - REDIS_HOST=redis
-      - ASPNETCORE_ENVIRONMENT=Production
-    depends_on:
-      database:
-        condition: service_healthy
-      redis-build:
-        condition: service_started
-    restart: always
-    profiles:
-      - build
+volumes:
+  grafana_data:

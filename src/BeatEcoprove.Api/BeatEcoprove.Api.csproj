@@ -12,6 +12,14 @@
         <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="7.1.0" />
         <PackageReference Include="DotNetEnv" Version="3.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.11" />
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.8.1" />
+        <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.6.0-alpha.1" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.5.1" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.8.1" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.EventCounters" Version="1.5.1-alpha.1" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.8.1" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Process" Version="0.5.0-beta.5" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.8.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
         <PackageReference Include="Mapster" Version="7.4.0-pre06" />
         <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1-pre02" />

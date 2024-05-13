@@ -17,6 +17,7 @@ builder.Services
 var app = builder
     .Build();
 
+app.MapPrometheusScrapingEndpoint();
 app.SetupConfiguration();
 app.Run();
 
