@@ -90,5 +90,11 @@ public class StoreConfiguration : IEntityTypeConfiguration<Domain.StoreAggregato
         
         builder.Property(cloth => cloth.DeletedAt)
             .HasColumnName("deleted_at");
+
+        builder.HasMany(store => store.Workers)
+            .WithOne()
+            .HasForeignKey(worker => worker.Store);
+        
+        builder.HasQueryFilter(b => b.Workers.All(be => be.DeletedAt == null));
     }
 }
