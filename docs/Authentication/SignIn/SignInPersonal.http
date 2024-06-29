@@ -1,4 +1,4 @@
-﻿@host = localhost:5182
+﻿@host = localhost:80
 
 POST /auth/signin/personal HTTP/1.1
 Content-Length: 967

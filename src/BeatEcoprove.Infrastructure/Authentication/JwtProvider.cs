@@ -8,6 +8,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Configuration;
 
@@ -86,6 +87,7 @@ public class JwtProvider : IJwtProvider
             profile.EcoCoins,
             profile.XP,
             _gamingService.GetNextLevelXp(profile),
+            profile.Type,
             Tokens.Access);
 
         return GenerateAuthenticationTokens(payload);
@@ -106,6 +108,7 @@ public class JwtProvider : IJwtProvider
             int.Parse(claims[UserClaims.EcoCoins]),
             double.Parse(claims[UserClaims.CurrentXp]),
             double.Parse(claims[UserClaims.NextLevelXp]),
+            UserType.Organization,
             Tokens.Access);
 
         return GenerateAuthenticationTokens(payload);

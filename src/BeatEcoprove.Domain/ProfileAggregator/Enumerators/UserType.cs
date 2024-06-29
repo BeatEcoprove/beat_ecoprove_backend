@@ -13,6 +13,11 @@ public class UserType : Enumeration<UserType>
     {
     }
 
+    public string GetUserType()
+    {
+        return Type.Name.ToLower();
+    }
+
     public static explicit operator UserType(int v) => FromValue(v)!;
 
     public static explicit operator int(UserType v) => v.Value;

@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 
 namespace BeatEcoprove.Application.Shared.Helpers;
 
@@ -8,9 +9,6 @@ public class AuthTokenPayload : TokenPayload
 {
     private readonly Guid _accountId;
     private readonly Guid _profileId;
-    private readonly string _email;
-    private readonly string _userName;
-    private readonly string _avatarUrl;
     private readonly int _level;
     private readonly double _levelPercentage;
     private readonly int _sustainablePoints;
@@ -32,13 +30,14 @@ public class AuthTokenPayload : TokenPayload
         int ecoCoins,
         double currentXp,
         double nextLevelXp,
+        UserType userType,
         Tokens tokenType) : base(tokenType)
     {
         _accountId = accountId;
         _profileId = profileId;
-        _email = email;
-        _userName = userName;
-        _avatarUrl = avatarUrl;
+        Email = email;
+        UserName = userName;
+        AvatarUrl = avatarUrl;
         _level = level;
         _levelPercentage = levelPercentage;
         _sustainablePoints = sustainablePoints;
@@ -46,13 +45,15 @@ public class AuthTokenPayload : TokenPayload
         _ecoCoins = ecoCoins;
         _currentXp = currentXp;
         _nextLevelXp = nextLevelXp;
+        UserType = userType;
     }
 
     public string AccountId => _accountId.ToString();
     public string ProfileId => _profileId.ToString();
-    public string Email => _email;
-    public string UserName => _userName;
-    public string AvatarUrl => _avatarUrl;
+    public string Email { get; }
+    public string UserName { get; }
+    public string AvatarUrl { get; }
+    public UserType UserType { get; }
     public string Level => _level.ToString();
     public string LevelPercentage => _levelPercentage.ToString(CultureInfo.CurrentCulture);
     public string SustainablePoints => _sustainablePoints.ToString();
@@ -76,7 +77,8 @@ public class AuthTokenPayload : TokenPayload
             { UserClaims.EcoScore, EcoScore },
             { UserClaims.EcoCoins, EcoCoins },
             { UserClaims.CurrentXp, CurrentXp },
-            { UserClaims.NextLevelXp, NextLevelXp }
+            { UserClaims.NextLevelXp, NextLevelXp },
+            { UserClaims.Type, UserType.GetUserType() }
         };
     }
 }
