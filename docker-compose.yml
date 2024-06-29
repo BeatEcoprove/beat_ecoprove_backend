@@ -80,7 +80,7 @@ services:
       - build
 
   database:
-    image: postgres:alpine3.18
+    image: postgis/postgis:16-3.4-alpine
     ports:
       - ${POSTGRES_PORT}:5432
     env_file:
