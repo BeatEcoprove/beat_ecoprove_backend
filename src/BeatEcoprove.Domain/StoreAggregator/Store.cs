@@ -1,5 +1,7 @@
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
+using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
 using NetTopologySuite.Geometries;
@@ -8,6 +10,8 @@ namespace BeatEcoprove.Domain.StoreAggregator;
 
 public class Store : AggregateRoot<StoreId, Guid>
 {
+    private readonly List<Worker> _workerEntries = new();
+    
     private Store() { }
     
     private Store(
@@ -38,6 +42,7 @@ public class Store : AggregateRoot<StoreId, Guid>
     public double Rating { get; private set; }
     public string Picture { get; private set; } = null!;
     public int Level { get; private set; }
+    public IReadOnlyList<Worker> Workers => _workerEntries.AsReadOnly();
 
     public static Store Create(
         ProfileId owner,
@@ -55,5 +60,17 @@ public class Store : AggregateRoot<StoreId, Guid>
             coordinates,
             picture
         );
+    }
+
+    public Worker AddWorker(Profile profile, WorkerType type)
+    {
+        var worker = Worker.Create(
+            Id,
+            profile.Id,
+            type
+        );
+
+        _workerEntries.Add(worker);
+        return worker;
     }
 }
