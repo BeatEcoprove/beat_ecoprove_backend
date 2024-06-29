@@ -11,6 +11,8 @@
 *.userosscache
 *.sln.docstates
 
+docs/requests
+
 # Enviroment variables
 .env
 

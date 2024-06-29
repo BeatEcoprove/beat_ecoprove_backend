@@ -47,13 +47,17 @@ public class BeatEcoproveDbContext : DbContext, IApplicationDbContext, IUnitOfWo
         optionsBuilder.UseNpgsql(Env.Postgres.ConnectionString, builder =>
         {
             builder.MigrationsAssembly("BeatEcoprove.Infrastructure");
+            builder.UseNetTopologySuite();
         });
-
+        
         optionsBuilder.EnableSensitiveDataLogging();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasPostgresExtension("postgis");
+        modelBuilder.HasPostgresExtension("postgis_topology");
+        
         modelBuilder
             .Ignore<List<IDomainEvent>>()
             .ApplyConfigurationsFromAssembly(typeof(BeatEcoproveDbContext).Assembly);

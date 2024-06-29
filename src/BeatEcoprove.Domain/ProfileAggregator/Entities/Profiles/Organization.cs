@@ -1,8 +1,11 @@
 ﻿using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Domain.StoreAggregator;
+using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
+
+using NetTopologySuite.Geometries;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
-
 
 public class Organization : Profile
 {
