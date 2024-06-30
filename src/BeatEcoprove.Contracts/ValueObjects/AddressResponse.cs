@@ -3,7 +3,7 @@ namespace BeatEcoprove.Contracts.ValueObjects;
 public record AddressResponse
 (
     string Street,
-    string PostalCode,
+    PostalCodeResponse PostalCode,
     string Locality,
     string Port
 );

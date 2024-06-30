@@ -13,12 +13,18 @@ public class StoreService : IStoreService
 {
     private readonly IStoreRepository _storeRepository;
     private readonly IFileStorageProvider _fileStorageProvider;
-    
+
+    public StoreService(IStoreRepository storeRepository, IFileStorageProvider fileStorageProvider)
+    {
+        _storeRepository = storeRepository;
+        _fileStorageProvider = fileStorageProvider;
+    }
+
     public async Task<ErrorOr<Store>> CreateStoreAsync(Store store, Stream picture, CancellationToken cancellationToken)
     {
-        if (!await _storeRepository.ExistsAnyStoreWithName(store.Name, cancellationToken))
+        if (await _storeRepository.ExistsAnyStoreWithName(store.Name, cancellationToken))
         {
-            return Errors.Store.RateNotAllowed;
+            return Errors.Store.StoreAlreadyExistsName;
         }
         
         var avatarUrl = 

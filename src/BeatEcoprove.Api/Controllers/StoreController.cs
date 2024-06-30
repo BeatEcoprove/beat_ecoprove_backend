@@ -17,6 +17,7 @@ namespace BeatEcoprove.Api.Controllers;
 
 [ApiVersion(1)]
 [Authorize]
+[AuthorizationRole("organization")]
 [Route("v{version:apiVersion}/stores")]
 public class StoreController : ApiController
 {
@@ -33,9 +34,15 @@ public class StoreController : ApiController
         _mapper = mapper;
     }
 
-    [HttpPost()]
+    [HttpGet]
+    public ActionResult GetHello()
+    {
+        return Ok("Hello World!");
+    }
+    
+    [HttpPost]
     public async Task<ActionResult<StoreResponse>> CreateStore(
-        CreateStoreRequest request,
+        [FromForm] CreateStoreRequest request,
         [FromQuery] Guid profileId,
         CancellationToken cancellationToken = default
     ) {
@@ -53,7 +60,7 @@ public class StoreController : ApiController
                 request.Port,
                 request.Lat,
                 request.Lon,
-                request.Picture.OpenReadStream()
+                request.PictureStream
             ), cancellationToken
         );
         
