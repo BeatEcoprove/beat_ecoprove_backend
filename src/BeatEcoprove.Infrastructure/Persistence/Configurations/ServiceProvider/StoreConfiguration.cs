@@ -4,7 +4,7 @@ using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Store;
+namespace BeatEcoprove.Infrastructure.Persistence.Configurations.ServiceProvider;
 
 public class StoreConfiguration : IEntityTypeConfiguration<Domain.StoreAggregator.Store>
 {

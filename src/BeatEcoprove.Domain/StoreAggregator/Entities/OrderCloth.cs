@@ -1,6 +1,7 @@
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
 namespace BeatEcoprove.Domain.StoreAggregator.Entities;

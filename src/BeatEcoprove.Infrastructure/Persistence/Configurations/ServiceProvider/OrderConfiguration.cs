@@ -1,14 +1,13 @@
-using BeatEcoprove.Domain.ClosetAggregator.Entities;
-using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
+using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Persistence.Converters;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Store;
+namespace BeatEcoprove.Infrastructure.Persistence.Configurations.ServiceProvider;
 
 public class OrderConfiguration : IEntityTypeConfiguration<Order>
 {

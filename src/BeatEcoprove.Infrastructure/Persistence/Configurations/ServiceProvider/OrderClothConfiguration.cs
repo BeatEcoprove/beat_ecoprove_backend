@@ -5,7 +5,7 @@ using BeatEcoprove.Domain.StoreAggregator.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BeatEcoprove.Infrastructure.Persistence.Configurations.Store;
+namespace BeatEcoprove.Infrastructure.Persistence.Configurations.ServiceProvider;
 
 public class OrderClothConfiguration : IEntityTypeConfiguration<OrderCloth>
 {
