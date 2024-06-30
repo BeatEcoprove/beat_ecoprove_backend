@@ -10,8 +10,16 @@ public partial class Errors
             "Store.RateNotAllowed",
             "Valor não aceite para o rating da loja");
         
+        public static Error StoreNotFound => Error.NotFound(
+            "Store.StoreNotFound",
+            "Não existe nenhuma loja com esse id");
+        
         public static Error StoreAlreadyExistsName => Error.Conflict(
             "Store.StoreAlreadyExistsName",
             "Este nome já foi utilizado para o registro de uma loja");    
+        
+        public static Error DontHaveAccessToStore => Error.Conflict(
+            "Store.DontHaveAccessToStore",
+            "Não tens acesso a este recurso");
     }
 }
