@@ -65,10 +65,8 @@ public class StoreConfiguration : IEntityTypeConfiguration<Domain.StoreAggregato
         builder.Property(s => s.SustainablePoints)
             .HasColumnName("sustainable_points")
             .IsRequired();
-        
-        builder.Property(s => s.Rating)
-            .HasColumnName("rating")
-            .IsRequired();
+
+        builder.Ignore(rating => rating.TotalRate);
         
         builder.Property(s => s.Picture)
             .HasColumnName("picture")
@@ -103,5 +101,11 @@ public class StoreConfiguration : IEntityTypeConfiguration<Domain.StoreAggregato
             .HasForeignKey(order => order.Store);        
         
         builder.HasQueryFilter(b => b.Orders.All(be => be.DeletedAt == null));
+
+        builder.HasMany(order => order.Ratings)
+            .WithOne()
+            .HasForeignKey(order => order.Store);
+        
+        builder.HasQueryFilter(b => b.Ratings.All(be => be.DeletedAt == null));
     }
 }

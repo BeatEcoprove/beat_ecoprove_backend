@@ -1,10 +1,11 @@
-using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
+
+using ErrorOr;
 
 using NetTopologySuite.Geometries;
 
@@ -14,6 +15,7 @@ public class Store : AggregateRoot<StoreId, Guid>
 {
     private readonly List<Order> _orderEntries = new();
     private readonly List<Worker> _workerEntries = new();
+    private readonly List<Rating> _ratingEntries = new();
     
     private Store() { }
     
@@ -33,7 +35,6 @@ public class Store : AggregateRoot<StoreId, Guid>
         Localization = localization;
         Picture = picture;
         SustainablePoints = 0;
-        Rating = 0D;
         Level = 0;
     }
 
@@ -42,11 +43,12 @@ public class Store : AggregateRoot<StoreId, Guid>
     public Point Localization { get; private set; } = null!;
     public Address Address { get; private set; } = null!;
     public int SustainablePoints { get; private set; }
-    public double Rating { get; private set; }
+    public double TotalRate => Ratings.Sum(rating => rating.Rate);
     public string Picture { get; private set; } = null!;
     public int Level { get; private set; }
     public IReadOnlyList<Worker> Workers => _workerEntries.AsReadOnly();
     public IReadOnlyList<Order> Orders => _orderEntries.AsReadOnly();
+    public IReadOnlyList<Rating> Ratings => _ratingEntries.AsReadOnly();
 
     public static Store Create(
         ProfileId owner,
@@ -102,5 +104,22 @@ public class Store : AggregateRoot<StoreId, Guid>
 
         _orderEntries.Add(orderBucket);
         return orderBucket;
+    }
+
+    public ErrorOr<Rating> AddRating(ProfileId user, double rate) 
+    {
+        var rating = Rating.Create(
+            this.Id,
+            user,
+            rate
+        );
+
+        if (rating.IsError)
+        {
+            return rating.Errors;
+        }
+        
+        _ratingEntries.Add(rating.Value);
+        return rating;
     }
 }
