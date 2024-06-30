@@ -16,6 +16,7 @@ public static class DependencyInjection
         services.AddScoped<IClosetService, ClosetService>();
         services.AddScoped<IGamingService, GamingService>();
         services.AddScoped<IGroupService, GroupService>();
+        services.AddScoped<IStoreService, StoreService>();
 
         return services;
     }

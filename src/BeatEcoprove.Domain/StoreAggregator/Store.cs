@@ -24,14 +24,12 @@ public class Store : ServiceProvider<StoreId, Guid>
         ProfileId owner, 
         string name, 
         Address address, 
-        Point localization, 
-        string picture
+        Point localization
     ) : base(owner, localization, 0)
     {
         Id = id;
         Name = name;
         Address = address;
-        Picture = picture;
         Level = 0;
     }
 
@@ -48,18 +46,20 @@ public class Store : ServiceProvider<StoreId, Guid>
         ProfileId owner,
         string name, 
         Address address, 
-        Point coordinates, 
-        string picture
-    )
+        Point coordinates)
     {
         return new Store(
             StoreId.CreateUnique(),
             owner,
             name,
             address,
-            coordinates,
-            picture
+            coordinates
         );
+    }
+
+    public void SetPictureUrl(string url)
+    {
+        Picture = url;
     }
 
     public Worker AddWorker(Profile profile, WorkerType type)

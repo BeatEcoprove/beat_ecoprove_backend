@@ -29,8 +29,6 @@ internal sealed class CreateGroupCommandHandler : ICommandHandler<CreateGroupCom
         var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
 
-        // validate the profile
-
         var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
 
         if (profile.IsError)
