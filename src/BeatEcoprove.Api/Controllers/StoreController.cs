@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
 
-// [ApiVersion(1)]
+[ApiVersion(1)]
 [Authorize]
 [Route("v{version:apiVersion}/stores")]
 public class StoreController : ApiController

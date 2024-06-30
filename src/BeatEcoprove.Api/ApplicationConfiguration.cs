@@ -78,15 +78,16 @@ public static class ApplicationConfiguration
         }
 
         app.UseHttpsRedirection();
-        app.UseAuthentication();
-        app.UseAuthorization();
 
+        app.UsePathBase("/api");
         app.MapControllers();
+        
+        app.UseAuthorization();
+        
         app.AddCustomMiddlewares();
 
         app.AddLocalFileStorage();
         app.AddWebSockets();
-        app.UsePathBase("/api");
 
         return app;
     }
