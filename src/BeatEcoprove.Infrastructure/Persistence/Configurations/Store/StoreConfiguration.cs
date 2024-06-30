@@ -80,6 +80,7 @@ public class StoreConfiguration : IEntityTypeConfiguration<Domain.StoreAggregato
         
         builder.Property(s => s.Localization)
             .HasColumnName("localization")
+            .HasColumnType("geography (point)")
             .IsRequired();
         
         builder.HasOne<Domain.ProfileAggregator.Entities.Profiles.Profile>()
