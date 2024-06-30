@@ -2,7 +2,7 @@ using BeatEcoprove.Domain.Shared.Models;
 
 namespace BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
-public class WorkerId : AggregateRootId<Guid>
+public class WorkerId : EntityId<Guid>
 {
     private WorkerId() { }
 
