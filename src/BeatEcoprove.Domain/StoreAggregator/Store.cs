@@ -1,3 +1,5 @@
+using BeatEcoprove.Domain.ClosetAggregator.Entities;
+using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
@@ -10,6 +12,7 @@ namespace BeatEcoprove.Domain.StoreAggregator;
 
 public class Store : AggregateRoot<StoreId, Guid>
 {
+    private readonly List<Order> _orderEntries = new();
     private readonly List<Worker> _workerEntries = new();
     
     private Store() { }
@@ -43,6 +46,7 @@ public class Store : AggregateRoot<StoreId, Guid>
     public string Picture { get; private set; } = null!;
     public int Level { get; private set; }
     public IReadOnlyList<Worker> Workers => _workerEntries.AsReadOnly();
+    public IReadOnlyList<Order> Orders => _orderEntries.AsReadOnly();
 
     public static Store Create(
         ProfileId owner,
@@ -72,5 +76,31 @@ public class Store : AggregateRoot<StoreId, Guid>
 
         _workerEntries.Add(worker);
         return worker;
+    }
+
+    public OrderCloth RegisterOrderCloth(ProfileId owner, ClothId cloth, List<MaintenanceServiceId> services)
+    {
+        var orderCloth = OrderCloth.Create(
+            this.Id,
+            owner,
+            cloth,
+            services
+        );
+
+        _orderEntries.Add(orderCloth);
+        return orderCloth;
+    }
+
+    public OrderBucket RegisterOrderBucket(ProfileId owner, BucketId bucket, List<MaintenanceServiceId> services)
+    {
+        var orderBucket = OrderBucket.Create(
+            this.Id,
+            owner,
+            bucket, 
+            services
+        );
+
+        _orderEntries.Add(orderBucket);
+        return orderBucket;
     }
 }

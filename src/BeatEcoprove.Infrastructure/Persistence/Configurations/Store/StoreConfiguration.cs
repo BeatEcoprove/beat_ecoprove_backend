@@ -96,5 +96,11 @@ public class StoreConfiguration : IEntityTypeConfiguration<Domain.StoreAggregato
             .HasForeignKey(worker => worker.Store);
         
         builder.HasQueryFilter(b => b.Workers.All(be => be.DeletedAt == null));
+        
+        builder.HasMany(store => store.Orders)
+            .WithOne()
+            .HasForeignKey(order => order.Store);        
+        
+        builder.HasQueryFilter(b => b.Orders.All(be => be.DeletedAt == null));
     }
 }
