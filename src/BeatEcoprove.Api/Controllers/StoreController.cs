@@ -3,6 +3,7 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddStore;
+using BeatEcoprove.Application.Stores.Queries.GetStoreById;
 using BeatEcoprove.Contracts.Store;
 
 using MapsterMapper;
@@ -34,10 +35,26 @@ public class StoreController : ApiController
         _mapper = mapper;
     }
 
-    [HttpGet]
-    public ActionResult GetHello()
+    [HttpGet("{storeId:guid}")]
+    public async Task<ActionResult<StoreResponse>> GetStoreById(
+        [FromRoute] Guid storeId,
+        [FromQuery] Guid profileId,
+        CancellationToken cancellationToken = default)
     {
-        return Ok("Hello World!");
+        var authId = HttpContext.User.GetUserId();
+        
+        var getStoreResult = await _sender.Send(new
+            GetStoreByIdQuery(
+                authId,
+                profileId,
+                storeId
+            ), cancellationToken
+        );
+        
+        return getStoreResult.Match(
+            result => Ok(_mapper.Map<StoreResponse>(result)),
+            Problem<StoreResponse>
+        );
     }
     
     [HttpPost]

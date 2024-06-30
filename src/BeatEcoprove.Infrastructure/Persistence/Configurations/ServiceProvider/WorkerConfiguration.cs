@@ -31,8 +31,7 @@ public class WorkerConfiguration : IEntityTypeConfiguration<Worker>
             .HasConversion(
                 storeId => storeId.Value,
                 value => StoreId.Create(value)
-            )
-            .IsRequired();
+            );
         
             builder.Property(worker => worker.Profile)
                 .HasColumnName("profile")
