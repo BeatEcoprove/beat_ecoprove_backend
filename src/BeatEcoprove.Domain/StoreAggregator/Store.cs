@@ -11,7 +11,7 @@ using NetTopologySuite.Geometries;
 
 namespace BeatEcoprove.Domain.StoreAggregator;
 
-public class Store : AggregateRoot<StoreId, Guid>
+public class Store : ServiceProvider<StoreId, Guid>
 {
     private readonly List<Order> _orderEntries = new();
     private readonly List<Worker> _workerEntries = new();
@@ -26,23 +26,17 @@ public class Store : AggregateRoot<StoreId, Guid>
         Address address, 
         Point localization, 
         string picture
-    )
+    ) : base(owner, localization, 0)
     {
         Id = id;
-        Owner = owner;
         Name = name;
         Address = address;
-        Localization = localization;
         Picture = picture;
-        SustainablePoints = 0;
         Level = 0;
     }
 
-    public ProfileId Owner { get; private set; } = null!;
     public string Name { get; private set; } = null!;
-    public Point Localization { get; private set; } = null!;
     public Address Address { get; private set; } = null!;
-    public int SustainablePoints { get; private set; }
     public double TotalRate => Ratings.Sum(rating => rating.Rate);
     public string Picture { get; private set; } = null!;
     public int Level { get; private set; }

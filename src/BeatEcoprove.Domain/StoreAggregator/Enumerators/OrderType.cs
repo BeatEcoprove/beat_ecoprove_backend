@@ -1,7 +1,7 @@
 using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
 
-namespace BeatEcoprove.Domain.StoreAggregator.ValueObjects;
+namespace BeatEcoprove.Domain.StoreAggregator.Enumerators;
 public class OrderType : Enumeration<OrderType>
 {
     public static readonly OrderType Cloth = new(0, typeof(OrderCloth));
