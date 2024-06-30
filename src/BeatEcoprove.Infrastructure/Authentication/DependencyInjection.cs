@@ -13,9 +13,9 @@ public static class DependencyInjection
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = JwtProvider.GetTokenValidationParameters();
-            });
+        {
+            options.TokenValidationParameters = JwtProvider.GetTokenValidationParameters();
+        });
 
         return services;
     }

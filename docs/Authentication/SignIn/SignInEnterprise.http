@@ -1,10 +1,8 @@
 ﻿@host = localhost:5182
 
-POST /auth/signin/enterprise HTTP/1.1
+POST {{url}}/auth/signin/enterprise HTTP/1.1
 Content-Length: 967
 Content-Type: multipart/form-data; boundary=PieBoundary123456789012345678901234567
-Host: {{host}}
-User-Agent: HTTPie
 
 --PieBoundary123456789012345678901234567
 Content-Disposition: form-data; name="street"
@@ -25,7 +23,7 @@ laudry
 --PieBoundary123456789012345678901234567
 Content-Disposition: form-data; name="name"
 
-John Doe
+Diogo Assuncao
 --PieBoundary123456789012345678901234567
 Content-Disposition: form-data; name="bornDate"
 
@@ -33,7 +31,7 @@ Content-Disposition: form-data; name="bornDate"
 --PieBoundary123456789012345678901234567
 Content-Disposition: form-data; name="userName"
 
-johncorp
+diogoassuncao
 --PieBoundary123456789012345678901234567
 Content-Disposition: form-data; name="gender"
 
@@ -49,11 +47,11 @@ Content-Disposition: form-data; name="phone"
 --PieBoundary123456789012345678901234567
 Content-Disposition: form-data; name="email"
 
-johndoe-enterprise@example.com
+diogoassuncao@ipvc.pt
 --PieBoundary123456789012345678901234567
 Content-Disposition: form-data; name="password"
 
-VeryGodPass12
+Password12
 --PieBoundary123456789012345678901234567
 Content-Disposition: form-data; name="avatarPicture"
 
