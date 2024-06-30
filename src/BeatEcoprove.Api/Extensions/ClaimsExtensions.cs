@@ -26,7 +26,16 @@ public static class ClaimsExtensions
         return Guid.Parse(userId!.Value);
     }
 
+    public static string GetUserType(this ClaimsPrincipal claims)
+    {
+        var claimList = claims.Claims;
 
+        var userType = claimList
+            .FirstOrDefault(claim => claim.Type == UserClaims.Type)!;
+
+        return userType.Value;
+    }
+ 
     public static string GetEmail(this ClaimsPrincipal claims)
     {
         var claimList = claims.Claims;

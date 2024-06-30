@@ -1,3 +1,5 @@
+using BeatEcoprove.Contracts.Authentication.SignIn;
+
 using Microsoft.AspNetCore.Http;
 
 namespace BeatEcoprove.Contracts.Store;
@@ -12,5 +14,8 @@ public record CreateStoreRequest
     int Port,
     double Lat,
     double Lon,
-    IFormFile Picture
-);
+    IFormFile? Picture
+) : IPictureRequest
+{
+    public Stream PictureStream => Picture?.OpenReadStream() ?? Stream.Null;
+}
