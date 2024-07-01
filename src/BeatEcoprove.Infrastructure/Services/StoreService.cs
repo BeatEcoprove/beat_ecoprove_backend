@@ -2,9 +2,12 @@ using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
+using BeatEcoprove.Application.Shared.Interfaces.Services.Common;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator;
+using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
 using ErrorOr;
@@ -20,6 +23,23 @@ public class StoreService : IStoreService
     {
         _storeRepository = storeRepository;
         _fileStorageProvider = fileStorageProvider;
+    }
+
+    public async Task<List<Order>> GetAllStores(ProfileId owner, GetAllStoreInput input, CancellationToken cancellationToken = default)
+    {
+        var stores = await _storeRepository.GetAllStoresAsync(
+            owner,
+            input.Search,
+            input.Services,
+            input.Colors,
+            input.Brands,
+            input.OrderBy,
+            input.PageSize,
+            input.Page, 
+            cancellationToken
+        );
+
+        return stores;
     }
 
     public async Task<ErrorOr<Store>> GetStoreAsync(StoreId id, Profile profile, CancellationToken cancellationToken = default)
