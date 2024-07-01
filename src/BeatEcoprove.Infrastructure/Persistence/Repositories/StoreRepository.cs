@@ -1,7 +1,11 @@
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+using BeatEcoprove.Domain.ClosetAggregator;
+using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
+using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 
@@ -28,5 +32,39 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
             select store;
 
         return await query.AnyAsync(cancellationToken);
+    }
+
+    public async Task<List<Order>> GetAllStoresAsync(
+        Guid owner, 
+        string? search, 
+        List<Guid>? services = null, 
+        List<Guid>? colorValue = null, 
+        List<Guid>? brandValue = null,
+        string? orderValue = null, 
+        int pageSize = 10, 
+        int page = 1,
+        CancellationToken cancellationToken = default)
+    {
+        var getAllOrders =
+            from store in DbContext.Set<Store>()
+            from order in store.Orders
+            where store.Owner == owner
+            select order;
+
+        getAllOrders = from order in getAllOrders
+            from cloth in DbContext.Set<Cloth>()
+            from color in DbContext.Set<Color>()
+            where 
+                order.Type.Equals(OrderType.Cloth) &&
+                cloth.Color == color.Id &&
+                (colorValue == null || colorValue.Contains(color.Id))
+            select order;
+            
+        getAllOrders = getAllOrders
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
+
+        return await getAllOrders
+            .ToListAsync(cancellationToken);
     }
 }
