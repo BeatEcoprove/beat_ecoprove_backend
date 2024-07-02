@@ -144,7 +144,7 @@ public class StoreService : IStoreService
         {
             return Errors.Store.DontHaveAccessToStore;
         }
-        
+
         var password = _passwordGenerator.GeneratePassword(6, 16);
         var userName = UserName.Create(input.Name);
 

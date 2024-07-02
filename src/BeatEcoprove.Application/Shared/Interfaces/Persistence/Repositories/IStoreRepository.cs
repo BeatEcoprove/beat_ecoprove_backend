@@ -1,4 +1,5 @@
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
@@ -22,5 +23,7 @@ public interface IStoreRepository : IRepository<Store, StoreId>
         CancellationToken cancellationToken = default
     );
     Task<OrderDAO?> GetOrderDaoAsync(OrderId orderId, CancellationToken cancellationToken = default);
-    Task<WorkerDao?> GetWorkerDaoAsync(WorkerId orderId, CancellationToken cancellationToken = default);
+    Task<WorkerDao?> GetWorkerDaoAsync(WorkerId workerId, CancellationToken cancellationToken = default);
+    Task<Worker?> GetWorkerAsync(WorkerId workerId, CancellationToken cancellationToken = default);
+    Task<bool> WorkerAlreadyOnStore(WorkerId workerId, StoreId storeId, CancellationToken cancellationToken = default);
 }
