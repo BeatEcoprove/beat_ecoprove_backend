@@ -7,4 +7,5 @@ public class Buckets
     public const string GroupBucket = "group";
     public const string ClothBucket = "cloth";
     public const string StoreBucket = "store";
+    public const string AdvertisementBucket = "advertisement";
 }

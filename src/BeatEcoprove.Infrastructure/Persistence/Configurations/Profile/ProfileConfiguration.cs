@@ -119,7 +119,8 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Domain.ProfileAggre
 
         builder.HasDiscriminator(u => u.Type)
             .HasValue<Consumer>(UserType.Consumer)
-            .HasValue<Organization>(UserType.Organization);
+            .HasValue<Organization>(UserType.Organization)
+            .HasValue<Employee>(UserType.Employee);
 
         builder.Property(a => a.Type)
             .HasColumnName("type")

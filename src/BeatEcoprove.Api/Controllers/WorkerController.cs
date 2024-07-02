@@ -3,7 +3,6 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddWorker;
-using BeatEcoprove.Application.Stores.Commands.RegisterOrder;
 using BeatEcoprove.Contracts.Store;
 
 using MapsterMapper;

@@ -1,10 +1,15 @@
 using BeatEcoprove.Domain.AdvertisementAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Domain.Shared.Errors;
+
+using ErrorOr;
 
 namespace BeatEcoprove.Domain.AdvertisementAggregator.Entities;
 
-public class Voucher : Advertisement
+public sealed class Voucher : Advertisement
 {
+    private const int AddCost = 10;
+    
     private Voucher()
     {
     }
@@ -15,35 +20,35 @@ public class Voucher : Advertisement
         string description, 
         DateTimeOffset initDate, 
         DateTimeOffset endDate, 
-        string picture, 
         int sustainablePoints,
-        int quantity) : base(creator, title, description, initDate, endDate, picture, sustainablePoints)
+        int quantity) : base(creator, title, description, initDate, endDate, sustainablePoints)
     {
         Quantity = quantity;
+        Type = AdvertisementType.Voucher;
     }
 
-    public override AdvertisementType Type => AdvertisementType.Voucher;
     public int Quantity { get; private set; } = 0;
 
-    public static Voucher Create(
+    public static ErrorOr<Advertisement> Create(
         ProfileId creator, 
         string title, 
         string description, 
         DateTimeOffset initDate, 
         DateTimeOffset endDate, 
-        string picture, 
-        int sustainablePoints,
         int quantity
-    )
-    {
+    ) {
+        if (quantity == 0)
+        {
+            return Errors.Advertisement.CannotPerformThis;
+        }
+        
         return new Voucher(
             creator,
             title,
             description, 
             initDate, 
             endDate, 
-            picture, 
-            sustainablePoints, 
+            AddCost * quantity, 
             quantity
         );
     }
