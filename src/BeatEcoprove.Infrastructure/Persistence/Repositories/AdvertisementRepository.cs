@@ -1,6 +1,7 @@
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Domain.AdvertisementAggregator;
 using BeatEcoprove.Domain.AdvertisementAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 
 using Microsoft.EntityFrameworkCore;
@@ -29,5 +30,15 @@ public class AdvertisementRepository : Repository<Advertisement, AdvertisementId
             .Take(pageSize);
         
         return await getAllAdverts.ToListAsync(cancellationToken);
+    }
+
+    public async Task<bool> HasProfileAccessToAdvert(AdvertisementId advertId, ProfileId profile,
+        CancellationToken cancellationToken = default)
+    {
+        var hasAccess = from advert in DbContext.Set<Advertisement>()
+            where advert.Creator == profile
+            select advert;
+
+        return await hasAccess.AnyAsync(cancellationToken);
     }
 }

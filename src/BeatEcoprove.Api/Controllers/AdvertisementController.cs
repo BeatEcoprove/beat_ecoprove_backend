@@ -3,6 +3,7 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.CreateAdd;
+using BeatEcoprove.Application.Stores.Queries.GetAdevertById;
 using BeatEcoprove.Contracts.Advertisements;
 
 using MapsterMapper;
@@ -32,6 +33,30 @@ public class AdvertisementController : ApiController
         _mapper = mapper;
     }
 
+    // TODO: Get My Announcements
+    
+    [HttpGet("{advertId:guid}")]
+    public async Task<ActionResult<AdvertisementResponse>> GetById(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid advertId,
+        CancellationToken cancellationToken = default)
+    {
+         var authId = HttpContext.User.GetUserId();
+                        
+        var getByIdAdvert = await _sender.Send(new
+            GetAdvertByIdQuery(
+                authId,
+                profileId,
+                advertId
+            ), cancellationToken
+        );
+        
+        return getByIdAdvert.Match(
+            result => Ok(_mapper.Map<AdvertisementResponse>(result)),
+            Problem<AdvertisementResponse>
+        );
+    }    
+    
     [HttpPost]
     public async Task<ActionResult<AdvertisementResponse>> CreateAdd(
         [FromQuery] Guid profileId,

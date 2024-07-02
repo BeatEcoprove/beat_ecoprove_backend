@@ -3,6 +3,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AdvertisementAggregator;
+using BeatEcoprove.Domain.AdvertisementAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.Shared.Errors;
@@ -26,6 +27,32 @@ public class AdvertisementService : IAdvertisementService
         _storeRepository = storeRepository;
         _advertisementRepository = advertisementRepository;
         _fileProvider = fileProvider;
+    }
+
+    public async Task<ErrorOr<Advertisement>> GetAdvertAsync(
+        AdvertisementId advertId, 
+        Profile profile, 
+        bool checkAuthorization = true,
+        CancellationToken cancellationToken = default)
+    {
+        var advert = await _advertisementRepository.GetByIdAsync(advertId, cancellationToken);
+
+        if (advert is null)
+        {
+            return Errors.Advertisement.NotFound;
+        }
+        
+        if (!checkAuthorization)
+        {
+            return advert;
+        }
+
+        if (!await _advertisementRepository.HasProfileAccessToAdvert(advertId, profile.Id, cancellationToken))
+        {
+            return Errors.Advertisement.CannotPerformThis;
+        }
+
+        return advert;
     }
 
     public async Task<ErrorOr<Advertisement>> CreateAdd(
