@@ -4,6 +4,7 @@ using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.Shared.Entities;
+using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
@@ -150,5 +151,21 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
             );
 
         return await getWorker.FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<Worker?> GetWorkerAsync(WorkerId workerId, CancellationToken cancellationToken = default)
+    {
+        return await DbContext.Set<Worker>()
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<bool> WorkerAlreadyOnStore(WorkerId workerId, StoreId storeId, CancellationToken cancellationToken = default)
+    {
+        var workerAlreadyOnStore = from store in DbContext.Set<Store>()
+            from worker in store.Workers
+            where store.Id == storeId && worker.Id == workerId
+            select worker;
+
+        return workerAlreadyOnStore.AnyAsync(cancellationToken);
     }
 }
