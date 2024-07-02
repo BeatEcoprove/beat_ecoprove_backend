@@ -3,7 +3,6 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddStore;
-using BeatEcoprove.Application.Stores.Commands.RegisterOrder;
 using BeatEcoprove.Application.Stores.Queries.GetAllStores;
 using BeatEcoprove.Application.Stores.Queries.GetStoreById;
 using BeatEcoprove.Contracts.Store;

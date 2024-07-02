@@ -10,6 +10,10 @@ public partial class Errors
             "Store.RateNotAllowed",
             "Valor não aceite para o rating da loja");
         
+        public static Error CantCreateStore => Error.Conflict(
+            "Store.CantCreateStore",
+            "Não tens permissão para criar uma loja");        
+        
         public static Error StoreNotFound => Error.NotFound(
             "Store.StoreNotFound",
             "Não existe nenhuma loja com esse id");

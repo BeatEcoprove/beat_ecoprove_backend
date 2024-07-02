@@ -6,8 +6,10 @@ using BeatEcoprove.Domain.AdvertisementAggregator;
 using BeatEcoprove.Domain.AdvertisementAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator.Enumerators;
+using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
 using ErrorOr;
 
@@ -16,17 +18,20 @@ namespace BeatEcoprove.Infrastructure.Services;
 public class AdvertisementService : IAdvertisementService
 {
     private readonly IStoreRepository _storeRepository;
+    private readonly IStoreService _storeService;
     private readonly IAdvertisementRepository _advertisementRepository;
     private readonly IFileStorageProvider _fileProvider;
 
     public AdvertisementService(
         IStoreRepository storeRepository, 
         IAdvertisementRepository advertisementRepository, 
-        IFileStorageProvider fileProvider)
+        IFileStorageProvider fileProvider, 
+        IStoreService storeService)
     {
         _storeRepository = storeRepository;
         _advertisementRepository = advertisementRepository;
         _fileProvider = fileProvider;
+        _storeService = storeService;
     }
 
     public async Task<ErrorOr<Advertisement>> GetAdvertAsync(
@@ -53,6 +58,45 @@ public class AdvertisementService : IAdvertisementService
         }
 
         return advert;
+    }
+
+    public async Task<ErrorOr<List<Advertisement>>> GetMyAdvertsAsync(
+        StoreId storeId,
+        Profile profile, 
+        string? search = null, 
+        int page = 1, 
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        List<ProfileId> allowedProfiles = new();
+        
+        var store = await _storeService.GetStoreAsync(storeId, profile, cancellationToken);
+        
+        if (store.IsError)
+        {
+            return store.Errors;
+        }
+        
+        if (profile.Type.Equals(UserType.Organization))
+        {
+            var workersIds = store.Value.Workers
+                .Select(worker => worker.Profile)
+                .ToList();
+                    
+            allowedProfiles.AddRange(workersIds);
+        }
+        
+        allowedProfiles.Add(profile.Id);
+            
+        var adverts = await _advertisementRepository.GetAllAddsAsync(
+            haveAccess: allowedProfiles,
+            search: search,
+            page: page,
+            pageSize: pageSize,
+            cancellationToken: cancellationToken
+        );
+
+        return adverts;
     }
 
     public async Task<ErrorOr<Advertisement>> CreateAdd(

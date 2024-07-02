@@ -1,6 +1,7 @@
 using BeatEcoprove.Domain.AdvertisementAggregator;
 using BeatEcoprove.Domain.AdvertisementAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
 using ErrorOr;
 
@@ -13,6 +14,14 @@ public interface IAdvertisementService
         Profile profile,
         bool checkAuthorization = true,
         CancellationToken cancellationToken = default);
+    
+    Task<ErrorOr<List<Advertisement>>> GetMyAdvertsAsync(
+        StoreId storeId,
+        Profile profile, 
+        string? search = null, 
+        int page = 1, 
+        int pageSize = 10,
+        CancellationToken cancellationToken = default);    
     
     Task<ErrorOr<Advertisement>> CreateAdd(
         Advertisement advertisement,
