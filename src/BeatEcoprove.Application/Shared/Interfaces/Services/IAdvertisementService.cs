@@ -28,4 +28,9 @@ public interface IAdvertisementService
         Profile profile,
         Stream picture,
         CancellationToken cancellationToken = default);
+
+    Task<ErrorOr<Advertisement>> DeleteAsync(
+        Advertisement advertisement,
+        Profile profile,
+        CancellationToken cancellationToken = default);
 }

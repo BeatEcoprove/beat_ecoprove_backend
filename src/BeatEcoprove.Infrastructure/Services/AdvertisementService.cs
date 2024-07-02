@@ -139,6 +139,17 @@ public class AdvertisementService : IAdvertisementService
         return advertisement;
     }
 
+    public async Task<ErrorOr<Advertisement>> DeleteAsync(Advertisement advertisement, Profile profile, CancellationToken cancellationToken = default)
+    {
+        if (!await _advertisementRepository.HasProfileAccessToAdvert(advertisement.Id, profile.Id, cancellationToken))
+        {
+            return Errors.Advertisement.CannotPerformThis;
+        }
+
+        await _advertisementRepository.RemoveAsync(advertisement.Id, cancellationToken);
+        return advertisement;
+    }
+
     private async Task<ErrorOr<Profile>> DoIfEmployee(Profile profile, CancellationToken cancellationToken)
     {
         var worker = await _storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);

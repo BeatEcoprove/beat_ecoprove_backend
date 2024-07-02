@@ -3,6 +3,7 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.CreateAdd;
+using BeatEcoprove.Application.Stores.Commands.RemoveAdvert;
 using BeatEcoprove.Application.Stores.Queries.GetAdevertById;
 using BeatEcoprove.Application.Stores.Queries.GetMyAdverts;
 using BeatEcoprove.Contracts.Advertisements;
@@ -32,6 +33,29 @@ public class AdvertisementController : ApiController
     {
         _sender = sender;
         _mapper = mapper;
+    }
+
+    [HttpDelete("{advertId:guid}")]
+    public async Task<ActionResult<AdvertisementResponse>> DeleteAdvert(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid advertId,
+        
+        CancellationToken cancellationToken = default)
+    {
+        var authId = HttpContext.User.GetUserId();
+                                
+        var deleteAdvert = await _sender.Send(new
+            RemoveAdvertCommand(
+                authId, 
+                profileId, 
+                advertId
+            ), cancellationToken
+        );
+        
+        return deleteAdvert.Match(
+            result => Ok(_mapper.Map<AdvertisementResponse>(result)),
+            Problem<AdvertisementResponse>
+        );
     }
 
     [HttpGet]
