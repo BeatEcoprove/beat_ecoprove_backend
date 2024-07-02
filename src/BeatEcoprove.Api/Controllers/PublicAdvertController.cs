@@ -2,7 +2,7 @@ using Asp.Versioning;
 
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
-using BeatEcoprove.Application.Stores.Commands.CreateAdd;
+using BeatEcoprove.Application.Stores.Queries.GetHomeAdds;
 using BeatEcoprove.Contracts.Advertisements;
 
 using MapsterMapper;
@@ -16,14 +16,13 @@ namespace BeatEcoprove.Api.Controllers;
 
 [ApiVersion(1)]
 [Authorize]
-// [AuthorizationRole("organization")]
-[Route("v{version:apiVersion}/stores/{storeId:guid}/add")]
-public class AdvertisementController : ApiController
+[Route("v{version:apiVersion}/adverts")]
+public class PublicAdvertController : ApiController
 {
     private readonly ISender _sender;
     private readonly IMapper _mapper;
 
-    public AdvertisementController(
+    public PublicAdvertController(
         ILanguageCulture localizer, 
         ISender sender, 
         IMapper mapper) : base(localizer)
@@ -32,32 +31,29 @@ public class AdvertisementController : ApiController
         _mapper = mapper;
     }
 
-    [HttpPost]
-    public async Task<ActionResult<AdvertisementResponse>> CreateAdd(
+    [HttpGet]
+    public async Task<ActionResult<List<AdvertisementResponse>>> GetHomeAdds(
         [FromQuery] Guid profileId,
-        [FromRoute] Guid storeId,
-        [FromForm] CreateAdvertisementRequest request,
+        [FromQuery] string? search,
+        [FromQuery] int? page, 
+        [FromQuery] int? pageSize,
         CancellationToken cancellationToken = default)
     {
         var authId = HttpContext.User.GetUserId();
                 
         var createAddResult = await _sender.Send(new
-            CreateAddCommand(
+            GetHomeAddsQuery(
                 authId,
                 profileId,
-                request.Title,
-                request.Description,
-                request.BeginAt,
-                request.EndAt,
-                request.PictureStream,
-                request.Type,
-                request.Quantity
+                search,
+                page ?? 1,
+                pageSize ?? 10
             ), cancellationToken
         );
         
         return createAddResult.Match(
-            result => Ok(_mapper.Map<AdvertisementResponse>(result)),
-            Problem<AdvertisementResponse>
+            result => Ok(_mapper.Map<List<AdvertisementResponse>>(result)),
+            Problem<List<AdvertisementResponse>>
         );
     }
 }
