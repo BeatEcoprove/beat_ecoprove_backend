@@ -42,8 +42,9 @@ public class MaintenanceServiceRepository : Repository<MaintenanceService, Maint
             .FirstOrDefaultAsync(action => action.Id == actionId, cancellationToken);
     }
 
-    public Task<MaintenanceServiceId?> GetMaintenanceServiceByName(string name, CancellationToken cancellationToken = default)
+    public async Task<MaintenanceService?> GetMaintenanceServiceByName(string name, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return await DbContext.Set<MaintenanceService>()
+            .FirstOrDefaultAsync(service => service.Title == name, cancellationToken);
     }
 }

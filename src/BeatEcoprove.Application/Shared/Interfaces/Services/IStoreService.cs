@@ -1,7 +1,10 @@
 using BeatEcoprove.Application.Shared.Interfaces.Services.Common;
+using BeatEcoprove.Domain.ClosetAggregator;
+using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator;
+using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
@@ -25,5 +28,11 @@ public interface IStoreService
     Task<ErrorOr<Store>> CreateStoreAsync(
         Store store,
         Stream avatarPicture,
+        CancellationToken cancellationToken = default);
+
+    Task<ErrorOr<Order>> RegisterOrderAsync(
+         Store store, 
+        ProfileId owner, 
+        ClothId clothId,
         CancellationToken cancellationToken = default);
 }

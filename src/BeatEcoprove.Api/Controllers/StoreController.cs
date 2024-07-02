@@ -3,6 +3,7 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddStore;
+using BeatEcoprove.Application.Stores.Commands.RegisterOrder;
 using BeatEcoprove.Application.Stores.Queries.GetAllStores;
 using BeatEcoprove.Application.Stores.Queries.GetStoreById;
 using BeatEcoprove.Contracts.Store;
@@ -20,7 +21,7 @@ namespace BeatEcoprove.Api.Controllers;
 
 [ApiVersion(1)]
 [Authorize]
-[AuthorizationRole("organization")]
+// [AuthorizationRole("organization")]
 [Route("v{version:apiVersion}/stores")]
 public class StoreController : ApiController
 {
@@ -123,6 +124,33 @@ public class StoreController : ApiController
         return createStoreResult.Match(
             result => Ok(_mapper.Map<StoreResponse>(result)),
             Problem<StoreResponse>
+        );
+    }
+
+    [HttpPost("{storeId:guid}/orders")]
+    public async Task<ActionResult<OrderResponse>> InsertOrder(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid storeId,
+        [FromQuery] Guid clothId,
+        [FromQuery] Guid ownerId,
+        CancellationToken cancellationToken = default
+        )
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var registerOrderResult = await _sender.Send(new
+            RegisterOrderCommand(
+                authId, 
+                profileId, 
+                storeId, 
+                ownerId, 
+                clothId
+            ), cancellationToken
+        );
+        
+        return registerOrderResult.Match(
+            result => Ok(_mapper.Map<OrderResponse>(result)),
+            Problem<OrderResponse>
         );
     }
 }

@@ -1,7 +1,9 @@
-using BeatEcoprove.Application.Stores.Commands.AddStore;
+using BeatEcoprove.Contracts.Closet.Cloth;
 using BeatEcoprove.Contracts.Store;
 using BeatEcoprove.Contracts.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator;
+using BeatEcoprove.Domain.StoreAggregator.Daos;
+using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 
 using Mapster;
 
@@ -22,5 +24,43 @@ public class StoreMappingConfiguration : IRegister
                     src.Level
                 )
             );
+
+        config.NewConfig<OrderDAO, OrderResponse>()
+            .MapWith(src => CreateOrderResponse(src));
+    }
+
+    private static OrderResponse CreateOrderResponse(OrderDAO src)
+    {
+        if (src is OrderClothDao orderClothDao)
+        {
+            return CreateOrderClothResponse(orderClothDao);
+        }
+        
+        return new OrderResponse(
+            src.Id,
+            src.Owner,
+            ToMaintenanceOrder(src),
+            nameof(src.Type).ToLower()
+        );
+    }
+    
+    private static OrderClothResponse CreateOrderClothResponse(OrderClothDao src)
+    {
+        return new OrderClothResponse(
+            src.Id,
+            src.Owner,
+            ToMaintenanceOrder(src),
+            nameof(src.Type).ToLower(),
+            src.Cloth.Adapt<ClothResponse>()
+        );
+    }
+
+    private static List<MaintenanceOrderResponse> ToMaintenanceOrder(OrderDAO src)
+    {
+        return src.MaintenanceServices.Select(service => new MaintenanceOrderResponse(
+            service.Id,
+            service.Title,
+            service.Badge
+        )).ToList();
     }
 }
