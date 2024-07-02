@@ -27,7 +27,7 @@ public abstract class Order : Entity<OrderId>
 
     public StoreId Store { get; private set; } = null!;
     public ProfileId Owner { get; private set; } = null!;
-    public WorkerId AssignedWorker { get; private set; } = null;
+    public WorkerId AssignedWorker { get; private set; }
     public OrderStatus Status { get; private set; } = OrderStatus.Arrived;
     public DateTimeOffset? AcceptedAt { get; set; } = null;
     public IReadOnlyList<ServiceEntry> Services => _serviceEntries.AsReadOnly();

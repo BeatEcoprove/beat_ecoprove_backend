@@ -43,7 +43,7 @@ internal sealed class GetAllStoresQueryHandler : IQueryHandler<GetAllStoresQuery
                 return Errors.MaintenanceService.NotFound;
             }
 
-            serviceIds.Add(serviceId.Value);
+            serviceIds.Add(serviceId.Id);
         }
 
         return serviceIds;

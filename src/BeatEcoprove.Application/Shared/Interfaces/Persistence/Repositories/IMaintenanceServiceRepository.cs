@@ -9,5 +9,5 @@ public interface IMaintenanceServiceRepository : IRepository<MaintenanceService,
     Task<bool> ExistServiceByIdAsync(MaintenanceServiceId serviceId, CancellationToken cancellationToken);
     Task<bool> ExistActionByIdAsync(MaintenanceActionId actionId, CancellationToken cancellationToken);
     Task<MaintenanceAction?> GetActionByIdAsync(MaintenanceActionId actionId, CancellationToken cancellationToken);
-    Task<MaintenanceServiceId?> GetMaintenanceServiceByName(string name, CancellationToken cancellationToken = default);
+    Task<MaintenanceService?> GetMaintenanceServiceByName(string name, CancellationToken cancellationToken = default);
 }

@@ -55,7 +55,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasConversion(
                 assignedWorkerId => assignedWorkerId.Value,
                 value => WorkerId.Create(value)
-            );
+            ).IsRequired(required: false);
 
         builder.HasOne<Worker>()
             .WithMany()
