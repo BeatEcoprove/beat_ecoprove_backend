@@ -15,6 +15,7 @@ public class AdvertisementRepository : Repository<Advertisement, AdvertisementId
     }
 
     public async Task<List<Advertisement>> GetAllAddsAsync(
+        List<ProfileId>? haveAccess = null,
         string? search = null,
         int page = 1,
         int pageSize = 10,

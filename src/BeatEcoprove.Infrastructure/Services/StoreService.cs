@@ -6,6 +6,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Application.Shared.Interfaces.Services.Common;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator;
@@ -78,8 +79,17 @@ public class StoreService : IStoreService
         return store;
     }
 
-    public async Task<ErrorOr<Store>> CreateStoreAsync(Store store, Stream picture, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Store>> CreateStoreAsync(
+        Store store, 
+        Profile profile,
+        Stream picture, 
+        CancellationToken cancellationToken)
     {
+        if (!profile.Type.Equals(UserType.Organization))
+        {
+            return Errors.Store.CantCreateStore;
+        }
+        
         if (await _storeRepository.ExistsAnyStoreWithName(store.Name, cancellationToken))
         {
             return Errors.Store.StoreAlreadyExistsName;

@@ -58,4 +58,9 @@ public class Advertisement : AggregateRoot<AdvertisementId, Guid>
     {
         Picture = url;
     }
+
+    public void SetMainProfile(ProfileId profileId)
+    {
+        Creator = profileId;
+    }
 }

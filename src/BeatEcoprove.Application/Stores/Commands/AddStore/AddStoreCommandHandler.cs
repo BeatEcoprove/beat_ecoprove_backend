@@ -70,6 +70,7 @@ internal sealed class AddStoreCommandHandler : ICommandHandler<AddStoreCommand, 
 
         var storeResult = await _storeService.CreateStoreAsync(
             store,
+            profile.Value,
             request.Picture,
             cancellationToken
         );

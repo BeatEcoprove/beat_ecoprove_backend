@@ -4,6 +4,7 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.CreateAdd;
 using BeatEcoprove.Application.Stores.Queries.GetAdevertById;
+using BeatEcoprove.Application.Stores.Queries.GetMyAdverts;
 using BeatEcoprove.Contracts.Advertisements;
 
 using MapsterMapper;
@@ -33,7 +34,32 @@ public class AdvertisementController : ApiController
         _mapper = mapper;
     }
 
-    // TODO: Get My Announcements
+    [HttpGet]
+    public async Task<ActionResult<List<AdvertisementResponse>>> GetMyAdverts(
+        [FromRoute] Guid storeId,
+        [FromQuery] Guid profileId,
+        [FromQuery] string? search,
+        [FromQuery] int? page, 
+        [FromQuery] int? pageSize,
+        CancellationToken cancellationToken = default) {
+        var authId = HttpContext.User.GetUserId();
+                        
+        var getMyAdverts = await _sender.Send(new
+            GetMyAdvertsQuery(
+                authId,
+                profileId,
+                storeId,
+                search,
+                page ?? 1,
+                pageSize ?? 10
+            ), cancellationToken
+        );
+        
+        return getMyAdverts.Match(
+            result => Ok(_mapper.Map<List<AdvertisementResponse>>(result)),
+            Problem<List<AdvertisementResponse>>
+        );
+    }
     
     [HttpGet("{advertId:guid}")]
     public async Task<ActionResult<AdvertisementResponse>> GetById(
@@ -41,7 +67,7 @@ public class AdvertisementController : ApiController
         [FromRoute] Guid advertId,
         CancellationToken cancellationToken = default)
     {
-         var authId = HttpContext.User.GetUserId();
+        var authId = HttpContext.User.GetUserId();
                         
         var getByIdAdvert = await _sender.Send(new
             GetAdvertByIdQuery(
