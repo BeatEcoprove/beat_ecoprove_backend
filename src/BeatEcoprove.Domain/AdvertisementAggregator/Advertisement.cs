@@ -7,6 +7,8 @@ namespace BeatEcoprove.Domain.AdvertisementAggregator;
 
 public class Advertisement : AggregateRoot<AdvertisementId, Guid>
 {
+    private const int AddCost = 150;
+    
     protected Advertisement() { }
     
     protected Advertisement(
@@ -15,15 +17,14 @@ public class Advertisement : AggregateRoot<AdvertisementId, Guid>
         string description, 
         DateTimeOffset initDate, 
         DateTimeOffset endDate, 
-        string picture, 
         int sustainablePoints)
     {
+        Id = AdvertisementId.CreateUnique();
         Creator = creator;
         Title = title;
         Description = description;
         InitDate = initDate;
         EndDate = endDate;
-        Picture = picture;
         SustainablePoints = sustainablePoints;
     }
 
@@ -33,18 +34,15 @@ public class Advertisement : AggregateRoot<AdvertisementId, Guid>
     public DateTimeOffset InitDate { get; private set; } 
     public DateTimeOffset EndDate { get; private set; }
     public string Picture { get; private set; } = null!;
-    public int SustainablePoints { get; private set; } = 0;
-    public virtual AdvertisementType Type { get; protected set; } = AdvertisementType.Advertisement;
+    public int SustainablePoints { get; private set; } = 150;
+    public virtual AdvertisementType Type { get; protected init; } = AdvertisementType.Advertisement;
     
     public static Advertisement Create(
         ProfileId creator, 
         string title, 
         string description, 
         DateTimeOffset initDate, 
-        DateTimeOffset endDate, 
-        string picture, 
-        int sustainablePoints
-    )
+        DateTimeOffset endDate)
     {
         return new Advertisement(
             creator,
@@ -52,8 +50,12 @@ public class Advertisement : AggregateRoot<AdvertisementId, Guid>
             description, 
             initDate, 
             endDate, 
-            picture, 
-            sustainablePoints
+            AddCost
         );
+    }
+
+    public void SetPictureUrl(string url)
+    {
+        Picture = url;
     }
 }

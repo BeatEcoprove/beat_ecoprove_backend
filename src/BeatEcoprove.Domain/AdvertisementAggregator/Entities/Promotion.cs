@@ -3,8 +3,10 @@ using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 namespace BeatEcoprove.Domain.AdvertisementAggregator.Entities;
 
-public class Promotion : Advertisement
+public sealed class Promotion : Advertisement
 {
+    private const int AddCost = 100;
+    
     private Promotion()
     {
     }
@@ -15,21 +17,17 @@ public class Promotion : Advertisement
         string description, 
         DateTimeOffset initDate, 
         DateTimeOffset endDate, 
-        string picture, 
-        int sustainablePoints) : base(creator, title, description, initDate, endDate, picture, sustainablePoints)
+        int sustainablePoints) : base(creator, title, description, initDate, endDate, sustainablePoints)
     {
+        Type = AdvertisementType.Promotion;
     }
-
-    public override AdvertisementType Type => AdvertisementType.Promotion;
 
     public static new Promotion Create(
         ProfileId creator, 
         string title, 
         string description, 
         DateTimeOffset initDate, 
-        DateTimeOffset endDate, 
-        string picture, 
-        int sustainablePoints)
+        DateTimeOffset endDate)
     {
         return new Promotion(
             creator,
@@ -37,8 +35,7 @@ public class Promotion : Advertisement
             description, 
             initDate, 
             endDate, 
-            picture, 
-            sustainablePoints
+            AddCost
         );
     }
 }

@@ -39,7 +39,6 @@ internal sealed class LoginQueryHandler : IQueryHandler<LoginQuery, ErrorOr<Auth
 
         var auth = await _authRepository.GetAuthByEmail(email.Value, cancellationToken);
 
-        // Verify user already exists
         if (auth is null)
         {
             return Errors.User.EmailDoesNotExists;
@@ -52,7 +51,6 @@ internal sealed class LoginQueryHandler : IQueryHandler<LoginQuery, ErrorOr<Auth
             return Errors.User.ProfileDoesNotExists;
         }
 
-        // Verify password is correct
         if (!_passwordProvider.VerifyPassword(password.Value, auth.Password))
         {
             return Errors.User.BadCredentials;

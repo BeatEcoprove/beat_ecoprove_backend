@@ -3,6 +3,7 @@ using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator;
@@ -151,6 +152,16 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
             );
 
         return await getWorker.FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<Worker?> GetWorkerByProfileAsync(ProfileId profileId, CancellationToken cancellationToken = default)
+    {
+        var getProfile = from worker in DbContext.Set<Worker>()
+            from profile in DbContext.Set<Profile>()
+            where worker.Profile == profileId
+            select worker;
+
+        return await getProfile.FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<Worker?> GetWorkerAsync(WorkerId workerId, CancellationToken cancellationToken = default)
