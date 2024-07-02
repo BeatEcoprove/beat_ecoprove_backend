@@ -126,31 +126,4 @@ public class StoreController : ApiController
             Problem<StoreResponse>
         );
     }
-
-    [HttpPost("{storeId:guid}/orders")]
-    public async Task<ActionResult<OrderResponse>> InsertOrder(
-        [FromQuery] Guid profileId,
-        [FromRoute] Guid storeId,
-        [FromQuery] Guid clothId,
-        [FromQuery] Guid ownerId,
-        CancellationToken cancellationToken = default
-        )
-    {
-        var authId = HttpContext.User.GetUserId();
-        
-        var registerOrderResult = await _sender.Send(new
-            RegisterOrderCommand(
-                authId, 
-                profileId, 
-                storeId, 
-                ownerId, 
-                clothId
-            ), cancellationToken
-        );
-        
-        return registerOrderResult.Match(
-            result => Ok(_mapper.Map<OrderResponse>(result)),
-            Problem<OrderResponse>
-        );
-    }
 }
