@@ -1,5 +1,6 @@
 using BeatEcoprove.Domain.AdvertisementAggregator;
 using BeatEcoprove.Domain.AdvertisementAggregator.ValueObjects;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
@@ -9,5 +10,10 @@ public interface IAdvertisementRepository : IRepository<Advertisement, Advertise
         string? search = null,
         int page = 1,
         int pageSize = 10,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> HasProfileAccessToAdvert(
+        AdvertisementId advertId, 
+        ProfileId profile, 
         CancellationToken cancellationToken = default);
 }
