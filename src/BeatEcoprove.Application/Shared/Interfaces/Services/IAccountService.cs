@@ -16,5 +16,6 @@ public interface IAccountService
         Password password,
         Profile profile,
         CancellationToken cancellationToken = default);
+    
     ErrorOr<Gender> GetGender(string gender);
 }

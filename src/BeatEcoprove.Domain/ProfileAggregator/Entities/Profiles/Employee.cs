@@ -16,4 +16,19 @@ public class Employee : Profile
         UserType type) : base(userName, phone, xP, sustainabilityPoints, ecoScore, type)
     {
     }
+
+    public static Employee Create(
+         UserName userName,
+         Phone phone
+    )
+    {
+        return new Employee(
+            userName,
+            phone,
+            0D,
+            0,
+            0,
+            UserType.Employee
+        );
+    }
 }

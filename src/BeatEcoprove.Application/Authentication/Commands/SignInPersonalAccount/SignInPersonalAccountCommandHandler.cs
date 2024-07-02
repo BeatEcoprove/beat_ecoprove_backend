@@ -66,7 +66,7 @@ internal sealed class SignInPersonalAccountCommandHandler : ICommandHandler<Sign
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var (accessToken, refreshToken) =
+        (string accessToken, string refreshToken) =
             _jwtProvider
                 .GenerateAuthenticationTokens(account.Value, personalProfile, personalProfile.Id);
 

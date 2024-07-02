@@ -3,6 +3,7 @@ using BeatEcoprove.Contracts.Store;
 using BeatEcoprove.Contracts.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
+using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 
 using Mapster;
@@ -13,6 +14,14 @@ public class StoreMappingConfiguration : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
+        config.NewConfig<WorkerDao, WorkerResponse>()
+            .MapWith(src => new WorkerResponse(
+                src.Id,
+                src.Name,
+                src.Email.Value,
+                src.Type.ToString()
+            ));
+            
         config.NewConfig<Store, StoreResponse>()
             .MapWith(src => new StoreResponse(
                     src.Id,

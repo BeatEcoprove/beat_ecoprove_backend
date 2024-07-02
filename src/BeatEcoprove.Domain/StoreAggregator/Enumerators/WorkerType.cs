@@ -1,4 +1,4 @@
-namespace BeatEcoprove.Domain.StoreAggregator.ValueObjects;
+namespace BeatEcoprove.Domain.StoreAggregator.Enumerators;
 
 public enum WorkerType
 {
