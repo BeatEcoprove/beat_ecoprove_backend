@@ -1,5 +1,6 @@
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
+using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
 namespace BeatEcoprove.Domain.StoreAggregator.Entities;
@@ -23,7 +24,7 @@ public class Worker : Entity<WorkerId>
     public StoreId Store { get; private set; } = null!;
     public ProfileId Profile { get; private set; } = null!;
     public WorkerType Role { get; private set; } = WorkerType.Worker;
-    public DateTimeOffset JoinedAt { get; private set; } = DateTimeOffset.Now;
+    public DateTimeOffset JoinedAt { get; private set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset ExitAt { get; private set; }
 
     public static Worker Create(StoreId store, ProfileId profile, WorkerType role)

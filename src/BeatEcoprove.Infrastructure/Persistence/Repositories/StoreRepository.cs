@@ -1,6 +1,6 @@
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
+using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ClosetAggregator;
-using BeatEcoprove.Domain.ClosetAggregator.DAOs;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.Shared.Entities;
@@ -130,5 +130,25 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
 
         dao.MaintenanceServices.AddRange(servicesDao);
         return dao;
+    }
+
+    public async Task<WorkerDao?> GetWorkerDaoAsync(WorkerId workerId, CancellationToken cancellationToken = default)
+    {
+        var getWorker = from store in DbContext.Set<Store>()
+            from worker in store.Workers
+            from profile in DbContext.Set<Profile>()
+            from auth in DbContext.Set<Auth>()
+            where 
+                worker.Id == workerId && 
+                worker.Profile == profile.Id &&
+                profile.AuthId == auth.Id
+            select new WorkerDao(
+                worker.Id,
+                profile.UserName,
+                auth.Email,
+                worker.Role
+            );
+
+        return await getWorker.FirstOrDefaultAsync(cancellationToken);
     }
 }

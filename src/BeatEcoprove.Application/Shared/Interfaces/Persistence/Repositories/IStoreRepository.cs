@@ -22,4 +22,5 @@ public interface IStoreRepository : IRepository<Store, StoreId>
         CancellationToken cancellationToken = default
     );
     Task<OrderDAO?> GetOrderDaoAsync(OrderId orderId, CancellationToken cancellationToken = default);
+    Task<WorkerDao?> GetWorkerDaoAsync(WorkerId orderId, CancellationToken cancellationToken = default);
 }

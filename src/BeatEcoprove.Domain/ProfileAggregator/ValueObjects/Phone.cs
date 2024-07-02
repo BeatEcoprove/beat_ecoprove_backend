@@ -18,6 +18,11 @@ public class Phone : ValueObject
     public string Value { get; private set; } = null!;
     public string Code { get; private set; } = null!;
 
+    public Phone Clone()
+    {
+        return Create(Code, Value).Value;
+    }
+
     public static ErrorOr<Phone> Create(string code, string value)
     {
         if (ShouldNotBeNull(code, value))

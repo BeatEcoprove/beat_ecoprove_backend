@@ -6,6 +6,7 @@ using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
+using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
 using ErrorOr;
@@ -31,8 +32,16 @@ public interface IStoreService
         CancellationToken cancellationToken = default);
 
     Task<ErrorOr<Order>> RegisterOrderAsync(
-         Store store, 
+        Store store, 
         ProfileId owner, 
         ClothId clothId,
         CancellationToken cancellationToken = default);
+
+    Task<ErrorOr<(Worker, Password)>> RegisterWorkerAsync(
+        Store store,
+        Profile profile,
+        AddWorkerInput input,
+        CancellationToken cancellationToken = default);
+    
+    ErrorOr<WorkerType> GetWorkerType(string permission);
 }
