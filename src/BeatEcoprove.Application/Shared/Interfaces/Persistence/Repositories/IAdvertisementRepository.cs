@@ -18,4 +18,6 @@ public interface IAdvertisementRepository : IRepository<Advertisement, Advertise
         AdvertisementId advertId, 
         ProfileId profile, 
         CancellationToken cancellationToken = default);
+
+    Task RemoveAsync(AdvertisementId id, CancellationToken cancellationToken = default);
 }

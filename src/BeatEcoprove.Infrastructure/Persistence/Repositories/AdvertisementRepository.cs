@@ -42,4 +42,11 @@ public class AdvertisementRepository : Repository<Advertisement, AdvertisementId
 
         return await hasAccess.AnyAsync(cancellationToken);
     }
+
+    public async Task RemoveAsync(AdvertisementId id, CancellationToken cancellationToken = default)
+    {
+        await DbContext.Set<Advertisement>()
+            .Where(add => add.Id == id)
+            .ExecuteDeleteAsync(cancellationToken);
+    }
 }
