@@ -15,6 +15,7 @@ public class Employee : Profile
         int ecoScore, 
         UserType type) : base(userName, phone, xP, sustainabilityPoints, ecoScore, type)
     {
+        Type = UserType.Employee;
     }
 
     public static Employee Create(

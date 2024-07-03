@@ -19,6 +19,7 @@ public class Consumer : Profile
     {
         BornDate = bornDate;
         Gender = gender;
+        Type = UserType.Consumer;
     }
 
     public DateOnly BornDate { get; private set; }
