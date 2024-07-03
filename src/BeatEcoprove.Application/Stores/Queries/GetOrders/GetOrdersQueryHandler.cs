@@ -32,10 +32,19 @@ internal sealed class GetOrdersQueryHandler : IQueryHandler<GetOrdersQuery, Erro
         _colorRepository = colorRepository;
         _brandRepository = brandRepository;
     }
+    
+    private ErrorOr<dynamic> ValidateParams(ErrorOr<string>? order)
+    {
+        if (order is not null && order.Value.IsError)
+        {
+            return order.Value.Errors;
+        }
+
+        return true;
+    }
 
     public async Task<ErrorOr<List<OrderDAO>>> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
     {
-        ErrorOr<bool> result = new();
         ErrorOr<List<Guid>>? serviceId = null;
         ErrorOr<List<Guid>>? colorId = null;
         ErrorOr<List<Guid>>? brandId = null;
@@ -44,13 +53,16 @@ internal sealed class GetOrdersQueryHandler : IQueryHandler<GetOrdersQuery, Erro
         var profileId = ProfileId.Create(request.ProfileId);
         var storeId = StoreId.Create(request.StoreId);
         
+        var result =
+            ValidateParams("asc");        
+        
         if (request.Color != null)
         {
             colorId = await GetColorId(request.Color, cancellationToken);
 
             if (colorId.Value.IsError)
             {
-                result = colorId.Value.IsError;
+                result = colorId.Value.Errors;
             }
         }
 

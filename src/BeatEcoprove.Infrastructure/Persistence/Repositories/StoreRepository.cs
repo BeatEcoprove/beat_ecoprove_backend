@@ -5,7 +5,6 @@ using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
-using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
@@ -20,7 +19,8 @@ namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
 public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
 {
-    public StoreRepository(IApplicationDbContext dbContext) : base(dbContext)
+    public StoreRepository(
+        IApplicationDbContext dbContext) : base(dbContext)
     {
     }
 
@@ -160,39 +160,33 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
         List<Guid>? services = null, 
         List<Guid>? colorValue = null,
         List<Guid>? brandValue = null,
-        int pageSize = 10, 
         int page = 1, 
+        int pageSize = 10, 
         CancellationToken cancellationToken = default)
     {
-         List<MaintenanceOrderDao> servicesDao = new();
-
-        var orderGetCloth = from store in DbContext.Set<Store>()
+        var orderGetAll = from store in DbContext.Set<Store>()
             from order in store.Orders
             from cloth in DbContext.Set<Cloth>()
             from brand in DbContext.Set<Brand>()
             from color in DbContext.Set<Color>()
-            where (order.Type.Equals(OrderType.Cloth) &&
-                   brand.Id == cloth.Brand) ||
-                  ( order.Type.Equals(OrderType.Bucket) )
-            select new
-            {
-                Order = order, 
-                Cloth = cloth, 
-                Brand = brand, 
-                Color = color
-            };
+            let orderCloth = order as OrderCloth
+            let isOrderCloth = orderCloth != null
+            where
+                store.Id == storeId &&
+                order.Store == storeId &&
+                (
+                    !isOrderCloth ||
+                    brand.Id == cloth.Brand &&
+                    cloth.Color == color.Id &&
+                    orderCloth.Cloth == cloth.Id &&
+                    (brandValue == null || brandValue.Contains(brand.Id)) &&
+                    (colorValue == null || colorValue.Contains(color.Id))
+                )
+            select isOrderCloth
+                ? orderCloth.ToOrderCloth(cloth, brand, color) 
+                : order.ToOrderDao();
 
-        orderGetCloth = orderGetCloth
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize);
-
-        var orderDao = from result in orderGetCloth
-            let orderCloth = result.Order as OrderCloth
-            select orderCloth != null
-                ? orderCloth.ToOrderCloth(result.Cloth, result.Brand, result.Color)
-                : result.Order.ToOrderDao();
-        
-        return await orderDao.ToListAsync(cancellationToken);
+        return await orderGetAll.ToListAsync(cancellationToken);
     }
 
     public async Task<WorkerDao?> GetWorkerDaoAsync(WorkerId workerId, CancellationToken cancellationToken = default)
