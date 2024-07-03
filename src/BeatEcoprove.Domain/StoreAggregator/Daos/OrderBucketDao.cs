@@ -1,4 +1,5 @@
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
@@ -10,7 +11,7 @@ public class OrderBucketDao : OrderDAO
     public OrderBucketDao(
         OrderId id, 
         StoreId storeId, 
-        ProfileId owner, 
+        Profile owner, 
         OrderStatus status, 
         DateTimeOffset? acceptedAt, 
         OrderType type,

@@ -1,6 +1,7 @@
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
+using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
@@ -9,12 +10,15 @@ namespace BeatEcoprove.Infrastructure.Extensions;
 
 public static class MappersExtensions
 {
-    public static OrderDAO ToOrderDao(this Order order, List<MaintenanceOrderDao>? services = null)
+    public static OrderDAO ToOrderDao(
+        this Order order, 
+        Profile profile, 
+        List<MaintenanceOrderDao>? services = null)
     {
         return new OrderDAO(
             order.Id,
             order.Store,
-            order.Owner,
+            profile,
             order.Status,
             order.AcceptedAt,
             order.Type
@@ -26,12 +30,13 @@ public static class MappersExtensions
         Cloth cloth, 
         Brand brand, 
         Color color,
+        Profile profile,
         List<MaintenanceOrderDao>? services = null)
     {
         var dao = new OrderClothDao(
            order.Id,
            order.Store,
-           order.Owner,
+           profile,
            order.Status,
            order.AcceptedAt,
            order.Type,

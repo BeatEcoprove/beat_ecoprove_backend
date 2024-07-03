@@ -65,7 +65,11 @@ public class StoreMappingConfiguration : IRegister
         
         return new OrderResponse(
             src.Id,
-            src.Owner,
+            new ProfileClosetResponse(
+                src.Owner.Id,
+                src.Owner.UserName,
+                src.Owner.AvatarUrl
+            ),
             ToMaintenanceOrder(src),
             src.Type.Type.Name.ToLower()
         );
@@ -75,7 +79,11 @@ public class StoreMappingConfiguration : IRegister
     {
         return new OrderClothResponse(
             src.Id,
-            src.Owner,
+            new ProfileClosetResponse(
+                src.Owner.Id,
+                src.Owner.UserName,
+                src.Owner.AvatarUrl
+            ),
             ToMaintenanceOrder(src),
              src.Type.Type.Name.ToLower(),
             src.Cloth.Adapt<ClothResponse>()
