@@ -3,12 +3,9 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddStore;
-using BeatEcoprove.Application.Stores.Commands.PostRating;
-using BeatEcoprove.Application.Stores.Queries.GetAllStores;
 using BeatEcoprove.Application.Stores.Queries.GetOwningStores;
 using BeatEcoprove.Application.Stores.Queries.GetStoreById;
 using BeatEcoprove.Contracts.Store;
-using BeatEcoprove.Domain.StoreAggregator.Entities;
 
 using MapsterMapper;
 
@@ -60,30 +57,6 @@ public class StoreController : ApiController
         return getOwningStores.Match(
             result => Ok(_mapper.Map<List<StoreResponse>>(result)),
             Problem<List<StoreResponse>>
-        );
-    }
-
-    [HttpPost("{storeId:guid}/ratings")]
-    public async Task<ActionResult<RatingResponse>> PostRating(
-        [FromQuery] Guid profileId,
-        [FromRoute] Guid storeId,
-        CreatePostRating request,
-        CancellationToken cancellationToken = default
-    ) {
-        var authId = HttpContext.User.GetUserId();
-                
-        var postRating = await _sender.Send(new
-            PostRatingCommand(
-                authId,
-                profileId,
-                storeId,
-                request.Rating
-            ), cancellationToken
-        );
-        
-        return postRating.Match(
-            result => Ok(_mapper.Map<RatingResponse>(result)),
-            Problem<RatingResponse>
         );
     }
 
