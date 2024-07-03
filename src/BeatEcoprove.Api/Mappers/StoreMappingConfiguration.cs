@@ -39,12 +39,16 @@ public class StoreMappingConfiguration : IRegister
             .MapWith(src => new StoreResponse(
                     src.Id,
                     src.Name,
-                    src.Workers.Count,
+                    src.NumberWorkers,
                     src.Address.Adapt<AddressResponse>(),
                     src.SustainablePoints,
-                    src.TotalRate,
+                    src.TotalRating,
                     src.Picture,
-                    src.Level
+                    src.Level,
+                    new CoordinatesResponse(
+                        src.Localization.X,
+                        src.Localization.Y
+                    )
                 )
             );
 

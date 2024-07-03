@@ -55,6 +55,8 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
             select store;
         
         allMyStores = allMyStores
+            .Include(a => a.Ratings)
+            .Include(a => a.Workers)
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
 

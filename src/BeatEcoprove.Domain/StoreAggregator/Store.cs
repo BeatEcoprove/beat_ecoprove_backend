@@ -64,6 +64,9 @@ public class Store : ServiceProvider<StoreId, Guid>
         Picture = url;
     }
 
+    public int NumberWorkers => _workerEntries.Count;
+    public double TotalRating => _ratingEntries.Sum(s => s.Rate);
+
     public Worker AddWorker(Profile profile, WorkerType type)
     {
         var worker = Worker.Create(
