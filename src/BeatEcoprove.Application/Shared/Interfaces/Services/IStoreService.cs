@@ -43,6 +43,12 @@ public interface IStoreService
         Profile profile,
         AddWorkerInput input,
         CancellationToken cancellationToken = default);
+
+    Task<ErrorOr<Worker>> SwitchPermission(
+        Store store,
+        Profile profile,
+        SwitchPermissionInput input,
+        CancellationToken cancellationToken = default);
     
     ErrorOr<WorkerType> GetWorkerType(string permission);
 }

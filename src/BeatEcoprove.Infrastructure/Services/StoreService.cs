@@ -187,6 +187,34 @@ public class StoreService : IStoreService
         return (worker, password);
     }
 
+    public async Task<ErrorOr<Worker>> SwitchPermission(Store store, Profile profile, SwitchPermissionInput input,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await _storeRepository.HasAccessToStore(store.Id, profile, cancellationToken))
+        {
+            return Errors.Store.DontHaveAccessToStore;
+        }
+
+        var worker = await _storeRepository.GetWorkerAsync(input.WorkerId, cancellationToken);
+
+        if (worker is null)
+        {
+            return Errors.Worker.NotFound;
+        }
+
+        var shouldUpgrade = store.SwitchWorkerPermission(
+            worker,
+            input.WorkerType
+        );
+
+        if (shouldUpgrade.IsError)
+        {
+            return shouldUpgrade.Errors;
+        }
+
+        return shouldUpgrade;
+    }
+
     public ErrorOr<WorkerType> GetWorkerType(string permission)
     {
         if (permission.CanConvertToEnum(out WorkerType result))

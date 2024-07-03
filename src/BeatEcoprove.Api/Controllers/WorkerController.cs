@@ -3,6 +3,7 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddWorker;
+using BeatEcoprove.Application.Stores.Commands.ElevatePermissionOnWorker;
 using BeatEcoprove.Application.Stores.Queries.GetWorkerById;
 using BeatEcoprove.Application.Stores.Queries.GetWorkers;
 using BeatEcoprove.Contracts.Store;
@@ -103,6 +104,32 @@ public class WorkerController : ApiController
                 request.Name,
                 request.Email,
                 request.Permission
+            ), cancellationToken
+        );
+        
+        return registerOrderResult.Match(
+            result => Ok(_mapper.Map<WorkerResponse>(result)),
+            Problem<WorkerResponse>
+        );
+    }
+
+    [HttpPatch("{workerId:guid}/switch")]
+    public async Task<ActionResult<WorkerResponse>> ChangePermission(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid storeId,
+        [FromRoute] Guid workerId,
+        ElevateWorkerPermissionRequest request,
+        CancellationToken cancellationToken = default
+    ) {
+        var authId = HttpContext.User.GetUserId();
+        
+        var registerOrderResult = await _sender.Send(new
+             ElevatePermissionOnWorkerCommand(
+                 authId,
+                 profileId,
+                 storeId,
+                 workerId,
+                 request.Permission
             ), cancellationToken
         );
         

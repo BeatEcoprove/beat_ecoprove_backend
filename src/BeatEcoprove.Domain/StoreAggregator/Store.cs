@@ -78,7 +78,25 @@ public class Store : ServiceProvider<StoreId, Guid>
         _workerEntries.Add(worker);
         return worker;
     }
+    
+    public ErrorOr<Worker> SwitchWorkerPermission(Worker worker, WorkerType type)
+    {
+        var foundWorker = _workerEntries.FirstOrDefault(w => w.Id == worker.Id);
+        
+        if (foundWorker is null)
+        {
+            return Errors.Worker.DoesNotBelongToStore;
+        }
 
+        var shouldUpgradeRole = foundWorker.UpgradeRole(type);
+
+        if (shouldUpgradeRole.IsError)
+        {
+            return shouldUpgradeRole.Errors;
+        }
+        
+        return worker;
+    }
     public OrderCloth RegisterOrderCloth(ProfileId owner, ClothId cloth, List<MaintenanceServiceId> services)
     {
         var orderCloth = OrderCloth.Create(

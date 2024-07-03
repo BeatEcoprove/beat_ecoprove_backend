@@ -1,7 +1,10 @@
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.Shared.Models;
 using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
+
+using ErrorOr;
 
 namespace BeatEcoprove.Domain.StoreAggregator.Entities;
 
@@ -37,9 +40,15 @@ public class Worker : Entity<WorkerId>
         );
     }
 
-    public void UpgradeRole(WorkerType role)
+    public ErrorOr<WorkerType> UpgradeRole(WorkerType role)
     {
+        if (Role == role)
+        {
+            return Errors.Worker.CannotChangeToSamePermission;
+        }
+        
         Role = role;
+        return role;
     }
 
     public void Exit()
