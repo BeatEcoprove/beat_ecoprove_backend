@@ -10,5 +10,6 @@ public record StoreResponse
     AddressResponse Address,
     int SustainablePoints,
     double TotalRating,
+    string Picture,
     int Level
 );

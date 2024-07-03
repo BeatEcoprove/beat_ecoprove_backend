@@ -4,6 +4,7 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddStore;
 using BeatEcoprove.Application.Stores.Queries.GetAllStores;
+using BeatEcoprove.Application.Stores.Queries.GetOwningStores;
 using BeatEcoprove.Application.Stores.Queries.GetStoreById;
 using BeatEcoprove.Contracts.Store;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
@@ -35,6 +36,30 @@ public class StoreController : ApiController
     {
         _sender = sender;
         _mapper = mapper;
+    }
+
+    [HttpGet("own")]
+    public async Task<ActionResult<List<StoreResponse>>> GetOwningStores(
+        [FromQuery] Guid profileId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken cancellationToken = default
+    ) {
+        var authId = HttpContext.User.GetUserId();
+                
+        var getOwningStores = await _sender.Send(new
+            GetOwningStoresQuery(
+                authId,
+                profileId,
+                page,
+                pageSize
+            ), cancellationToken
+        );
+        
+        return getOwningStores.Match(
+            result => Ok(_mapper.Map<List<StoreResponse>>(result)),
+            Problem<List<StoreResponse>>
+        );
     }
 
     [HttpGet]

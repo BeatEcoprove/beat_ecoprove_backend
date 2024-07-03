@@ -11,6 +11,11 @@ public interface IStoreRepository : IRepository<Store, StoreId>
 {
     public Task<bool> ExistsAnyStoreWithName(string name, CancellationToken cancellationToken = default);
     public Task<bool> HasAccessToStore(StoreId id, Profile manager, CancellationToken cancellationToken = default);
+    public Task<List<Store>> GetOwningStoreAsync(
+        ProfileId owner,
+        int page = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default);
     Task<List<Order>> GetAllStoresAsync(
         Guid owner, 
         string? search, 

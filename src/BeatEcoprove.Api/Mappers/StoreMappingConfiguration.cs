@@ -30,6 +30,7 @@ public class StoreMappingConfiguration : IRegister
                     src.Address.Adapt<AddressResponse>(),
                     src.SustainablePoints,
                     src.TotalRate,
+                    src.Picture,
                     src.Level
                 )
             );
