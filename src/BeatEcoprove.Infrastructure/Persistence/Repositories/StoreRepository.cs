@@ -175,6 +175,31 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
         return await getWorker.FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<List<WorkerDao>> GetWorkerDaosAsync(StoreId storeId, string? search = null, int page = 1, int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        var getWorkers = from store in DbContext.Set<Store>()
+            from worker in store.Workers
+            from profile in DbContext.Set<Profile>()
+            from auth in DbContext.Set<Auth>()
+            where 
+                    store.Id == storeId &&
+                    worker.Profile == profile.Id && profile.AuthId == auth.Id && 
+                    (search == null || ((string)profile.UserName).ToLower().Contains(search.ToLower()))
+            select new WorkerDao(
+                worker.Id,
+                profile.UserName,
+                auth.Email,
+                worker.Role
+            );
+        
+        getWorkers = getWorkers
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
+
+        return await getWorkers.ToListAsync(cancellationToken);
+    }
+
     public async Task<Worker?> GetWorkerByProfileAsync(ProfileId profileId, CancellationToken cancellationToken = default)
     {
         var getProfile = from worker in DbContext.Set<Worker>()
