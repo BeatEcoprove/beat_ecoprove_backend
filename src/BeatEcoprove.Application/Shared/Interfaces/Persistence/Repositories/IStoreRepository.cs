@@ -28,14 +28,15 @@ public interface IStoreRepository : IRepository<Store, StoreId>
     );
     Task<OrderDAO?> GetOrderDaoAsync(OrderId orderId, CancellationToken cancellationToken = default);
     Task<List<OrderDAO>> GetOrderDaosAsync(
-            Guid storeId, 
-            string? search, 
-            List<Guid>? services = null, 
-            List<Guid>? colorValue = null, 
-            List<Guid>? brandValue = null,
-            int pageSize = 10, 
-            int page = 1,
-            CancellationToken cancellationToken = default);
+        List<StoreId> storeId,
+        string? search,
+        List<Guid>? serviceValue = null,
+        List<Guid>? colorValue = null,
+        List<Guid>? brandValue = null,
+        bool? isDone = null,
+        int pageSize = 10,
+        int page = 1,
+        CancellationToken cancellationToken = default);
     Task<WorkerDao?> GetWorkerDaoAsync(WorkerId workerId, CancellationToken cancellationToken = default);
     Task<List<WorkerDao>> GetWorkerDaosAsync(
         StoreId storeId, 

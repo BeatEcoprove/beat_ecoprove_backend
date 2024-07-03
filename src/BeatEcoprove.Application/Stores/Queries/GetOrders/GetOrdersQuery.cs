@@ -10,11 +10,12 @@ public record GetOrdersQuery
 (
     Guid AuthId,
     Guid ProfileId,
-    Guid StoreId,
+    string StoreIds,
     string? Search = null,
     string? Services = null,
     string? Color = null,
     string? Brand = null,
+    bool? IsDone = null,
     int Page = 0,
     int PageSize = 10
 ) : IAuthorization, IQuery<ErrorOr<List<OrderDAO>>>;
