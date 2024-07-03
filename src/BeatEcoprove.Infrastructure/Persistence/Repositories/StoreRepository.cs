@@ -285,4 +285,22 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
 
         return workerAlreadyOnStore.AnyAsync(cancellationToken);
     }
+
+    public Task<List<RatingDao>> GetRatingsFromStore(StoreId id, CancellationToken cancellationToken = default)
+    {
+        var getAllRatings = from store in DbContext.Set<Store>()
+            from rating in store.Ratings
+            from profile in DbContext.Set<Profile>()
+            where
+                store.Id == id && 
+                rating.Store == store.Id &&
+                profile.Id == rating.User
+            select new RatingDao(
+                rating.Store,
+                rating.Rate,
+                profile
+            );
+
+        return getAllRatings.ToListAsync(cancellationToken);
+    }
 }
