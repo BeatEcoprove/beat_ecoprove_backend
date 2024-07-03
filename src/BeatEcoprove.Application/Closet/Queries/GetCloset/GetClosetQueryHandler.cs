@@ -80,7 +80,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
             _ => Errors.Filters.Order,
         };
     }
-
+   
     private async Task<ErrorOr<List<Guid>>> GetClothId(string hexs, CancellationToken cancellationToken = default)
     {
         List<Guid> colorIds = new();
@@ -143,7 +143,7 @@ internal sealed class GetClosetQueryHandler : IQueryHandler<GetClosetQuery, Erro
         {
             result = categories.Value.Errors;
         }
-
+        
         if (request.Color != null)
         {
             colorId = await GetClothId(request.Color, cancellationToken);

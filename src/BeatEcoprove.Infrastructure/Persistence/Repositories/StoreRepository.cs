@@ -155,13 +155,14 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
     }
 
     public async Task<List<OrderDAO>> GetOrderDaosAsync(
-        Guid storeId, 
-        string? search, 
-        List<Guid>? services = null, 
+        List<StoreId> storeId,
+        string? search,
+        List<Guid>? serviceValue = null,
         List<Guid>? colorValue = null,
         List<Guid>? brandValue = null,
-        int page = 1, 
-        int pageSize = 10, 
+        bool? isDone = null,
+        int page = 10,
+        int pageSize = 1,
         CancellationToken cancellationToken = default)
     {
         var orderGetAll = from store in DbContext.Set<Store>()
@@ -172,8 +173,8 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
             let orderCloth = order as OrderCloth
             let isOrderCloth = orderCloth != null
             where
-                store.Id == storeId &&
-                order.Store == storeId &&
+                storeId.Contains(store.Id) &&
+                order.Store == store.Id &&
                 (
                     !isOrderCloth ||
                     brand.Id == cloth.Brand &&
@@ -181,16 +182,22 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
                     orderCloth.Cloth == cloth.Id &&
                     (brandValue == null || brandValue.Contains(brand.Id)) &&
                     (colorValue == null || colorValue.Contains(color.Id))
-                )
+                ) 
             let orderServices = (
                     from service in DbContext.Set<MaintenanceService>()
-                    where order.Services.Select(entry => entry.Service).Contains(service.Id)
+                    where 
+                        order.Services.Select(entry => entry.Service).Contains(service.Id) &&
+                        (serviceValue == null || serviceValue.Contains(service.Id))
                     select new MaintenanceOrderDao(
                         service.Id,
                         service.Title,
                         service.Badge
                     )
                 ).ToList()
+            where 
+                orderServices.Count > 0 &&
+                (search == null || cloth.Name.ToLower().Contains(search.ToLower()) || brand.Name.ToLower().Contains(search.ToLower())) &&
+                ( isDone == null || (bool)isDone ? order.Status == OrderStatus.Completed : (bool)isDone == false )
             select isOrderCloth
                 ? orderCloth.ToOrderCloth(
                     cloth, 
@@ -198,6 +205,10 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
                     color,
                     orderServices
                 ) : order.ToOrderDao(orderServices);
+        
+       orderGetAll = orderGetAll
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
 
         return await orderGetAll
             .ToListAsync(cancellationToken);

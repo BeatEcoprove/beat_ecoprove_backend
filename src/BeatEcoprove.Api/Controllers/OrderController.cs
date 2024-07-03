@@ -39,14 +39,14 @@ public class OrderController : ApiController
     [HttpGet]
     public async Task<ActionResult<List<dynamic>>> GetOrders(
         [FromQuery] Guid profileId,
-        [FromRoute] Guid storeId,
+        [FromQuery] string storeIds,
         [FromQuery] string? search,
         [FromQuery] string? services,
         [FromQuery] string? color,
         [FromQuery] string? brand,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
-        [FromQuery] bool isCompleted = false,
+        [FromQuery] bool isDone = false,
         CancellationToken cancellationToken = default)
     {
         var authId = HttpContext.User.GetUserId();
@@ -55,11 +55,12 @@ public class OrderController : ApiController
             GetOrdersQuery(
                 authId, 
                 profileId, 
-                storeId, 
+                storeIds, 
                 search, 
                 services, 
                 color, 
                 brand, 
+                isDone,
                 page, 
                 pageSize
             ), cancellationToken
