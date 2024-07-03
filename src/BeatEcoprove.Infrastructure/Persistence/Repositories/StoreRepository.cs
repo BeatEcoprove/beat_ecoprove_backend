@@ -47,11 +47,17 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
         return await query.AnyAsync(cancellationToken);
     }
 
-    public async Task<List<Store>> GetOwningStoreAsync(ProfileId owner, int page = 1, int pageSize = 10,
+    public async Task<List<Store>> GetOwningStoreAsync(
+        ProfileId owner, 
+        string? search = null,
+        int page = 1, 
+        int pageSize = 10,
         CancellationToken cancellationToken = default)
     {
         var allMyStores = from store in DbContext.Set<Store>()
-            where store.Owner == owner
+            where 
+                store.Owner == owner &&
+                (search == null || store.Name.ToLower().Contains(search.ToLower()))
             select store;
         
         allMyStores = allMyStores

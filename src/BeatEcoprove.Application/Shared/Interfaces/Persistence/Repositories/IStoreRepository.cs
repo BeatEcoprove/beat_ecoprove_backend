@@ -13,6 +13,7 @@ public interface IStoreRepository : IRepository<Store, StoreId>
     public Task<bool> HasAccessToStore(StoreId id, Profile manager, CancellationToken cancellationToken = default);
     public Task<List<Store>> GetOwningStoreAsync(
         ProfileId owner,
+        string? search = null,
         int page = 1,
         int pageSize = 10,
         CancellationToken cancellationToken = default);

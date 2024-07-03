@@ -39,6 +39,7 @@ public class StoreController : ApiController
     [HttpGet("own")]
     public async Task<ActionResult<List<StoreResponse>>> GetOwningStores(
         [FromQuery] Guid profileId,
+        [FromQuery] string? search = null,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         CancellationToken cancellationToken = default
@@ -49,6 +50,7 @@ public class StoreController : ApiController
             GetOwningStoresQuery(
                 authId,
                 profileId,
+                search,
                 page,
                 pageSize
             ), cancellationToken

@@ -36,6 +36,7 @@ internal sealed class GetOwningStoresQueryHandler : IQueryHandler<GetOwningStore
 
         var stores = await _storeRepository.GetOwningStoreAsync(
             profile.Value.Id,
+            request.Search,
             request.Page,
             request.PageSize,
             cancellationToken);

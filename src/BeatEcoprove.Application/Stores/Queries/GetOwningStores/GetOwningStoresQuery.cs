@@ -10,6 +10,7 @@ public record GetOwningStoresQuery
 (
     Guid AuthId,
     Guid ProfileId,
+    string? Search = null,
     int Page = 1,
     int PageSize = 10
 ) : IAuthorization, IQuery<ErrorOr<List<Store>>>;
