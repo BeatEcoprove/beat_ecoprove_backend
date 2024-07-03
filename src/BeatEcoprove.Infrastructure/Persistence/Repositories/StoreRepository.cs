@@ -47,6 +47,20 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
         return await query.AnyAsync(cancellationToken);
     }
 
+    public async Task<List<Store>> GetOwningStoreAsync(ProfileId owner, int page = 1, int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        var allMyStores = from store in DbContext.Set<Store>()
+            where store.Owner == owner
+            select store;
+        
+        allMyStores = allMyStores
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
+
+        return await allMyStores.ToListAsync(cancellationToken);
+    }
+
     public async Task<List<Order>> GetAllStoresAsync(
         Guid owner, 
         string? search, 
