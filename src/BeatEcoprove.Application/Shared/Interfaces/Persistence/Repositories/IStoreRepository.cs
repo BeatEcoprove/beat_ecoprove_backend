@@ -29,6 +29,12 @@ public interface IStoreRepository : IRepository<Store, StoreId>
     );
     Task<OrderDAO?> GetOrderDaoAsync(OrderId orderId, CancellationToken cancellationToken = default);
     Task<WorkerDao?> GetWorkerDaoAsync(WorkerId workerId, CancellationToken cancellationToken = default);
+    Task<List<WorkerDao>> GetWorkerDaosAsync(
+        StoreId storeId, 
+        string? search = null,
+        int page = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default);
     Task<Worker?> GetWorkerByProfileAsync(ProfileId profileId, CancellationToken cancellationToken = default);
     Task<Worker?> GetWorkerAsync(WorkerId workerId, CancellationToken cancellationToken = default);
     Task<bool> WorkerAlreadyOnStore(WorkerId workerId, StoreId storeId, CancellationToken cancellationToken = default);

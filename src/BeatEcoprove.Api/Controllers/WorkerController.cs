@@ -4,6 +4,7 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddWorker;
 using BeatEcoprove.Application.Stores.Queries.GetWorkerById;
+using BeatEcoprove.Application.Stores.Queries.GetWorkers;
 using BeatEcoprove.Contracts.Store;
 
 using MapsterMapper;
@@ -33,6 +34,34 @@ public class WorkerController : ApiController
         _mapper = mapper;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<List<WorkerResponse>>> GetWorkers(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid storeId,
+        [FromQuery] string? search,
+        [FromQuery] int page = 1, 
+        [FromQuery] int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        var authId = HttpContext.User.GetUserId();
+                        
+        var getWorkerById = await _sender.Send(new
+            GetWorkersQuery(
+               authId, 
+               profileId, 
+               storeId, 
+               search,
+               page,
+               pageSize
+            ), cancellationToken
+        );
+
+        return getWorkerById.Match(
+            result => Ok(_mapper.Map<List<WorkerResponse>>(result)),
+            Problem<List<WorkerResponse>>
+        );
+    }
+    
     [HttpGet("{workerId:guid}")]
     public async Task<ActionResult<WorkerResponse>> GetWorkerById(
         [FromQuery] Guid profileId,
