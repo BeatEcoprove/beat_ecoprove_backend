@@ -40,7 +40,7 @@ public class Store : ServiceProvider<StoreId, Guid>
     public string Picture { get; private set; } = null!;
     public int Level { get; private set; }
     public List<Worker> Workers => _workerEntries;
-    public IReadOnlyList<Order> Orders => _orderEntries.AsReadOnly();
+    public List<Order> Orders => _orderEntries;
     public IReadOnlyList<Rating> Ratings => _ratingEntries.AsReadOnly();
 
     public static Store Create(

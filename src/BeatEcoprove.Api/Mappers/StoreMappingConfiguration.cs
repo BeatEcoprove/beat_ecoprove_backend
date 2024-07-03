@@ -36,10 +36,10 @@ public class StoreMappingConfiguration : IRegister
             );
 
         config.NewConfig<OrderDAO, OrderResponse>()
-            .MapWith(src => CreateOrderResponse(src));
+            .MapWith(src => (CreateOrderResponse(src) as OrderResponse)!);
     }
 
-    private static OrderResponse CreateOrderResponse(OrderDAO src)
+    public static dynamic CreateOrderResponse(OrderDAO src)
     {
         if (src is OrderClothDao orderClothDao)
         {
