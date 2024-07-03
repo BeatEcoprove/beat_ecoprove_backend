@@ -115,7 +115,9 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<OrderDAO?> GetOrderDaoAsync(OrderId orderId, CancellationToken cancellationToken = default)
+    public async Task<OrderDAO?> GetOrderDaoAsync(
+        OrderId orderId, 
+        CancellationToken cancellationToken = default)
     {
          var getOrderById = from store in DbContext.Set<Store>()
             from order in store.Orders

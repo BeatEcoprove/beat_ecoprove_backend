@@ -4,6 +4,7 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Api.Mappers;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.RegisterOrder;
+using BeatEcoprove.Application.Stores.Queries.GetOrderById;
 using BeatEcoprove.Application.Stores.Queries.GetOrders;
 using BeatEcoprove.Contracts.Store;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
@@ -34,6 +35,30 @@ public class OrderController : ApiController
     {
         _sender = sender;
         _mapper = mapper;
+    }
+
+    [HttpGet("{orderId:guid}")]
+    public async Task<ActionResult<OrderResponse>> GetOrderById(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid orderId,
+        [FromRoute] Guid storeId,
+        CancellationToken cancellationToken = default)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var registerOrderResult = await _sender.Send(new
+            GetOrderByIdQuery(
+                authId,
+                profileId,
+                orderId,
+                storeId
+            ), cancellationToken
+        );
+        
+        return registerOrderResult.Match(
+            result => Ok(_mapper.Map<OrderResponse>(result)),
+            Problem<OrderResponse>
+        );
     }
 
     [HttpGet]
