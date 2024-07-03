@@ -50,7 +50,7 @@ public class StoreMappingConfiguration : IRegister
             src.Id,
             src.Owner,
             ToMaintenanceOrder(src),
-            nameof(src.Type).ToLower()
+            src.Type.Type.Name.ToLower()
         );
     }
     
@@ -60,7 +60,7 @@ public class StoreMappingConfiguration : IRegister
             src.Id,
             src.Owner,
             ToMaintenanceOrder(src),
-            nameof(src.Type).ToLower(),
+             src.Type.Type.Name.ToLower(),
             src.Cloth.Adapt<ClothResponse>()
         );
     }
