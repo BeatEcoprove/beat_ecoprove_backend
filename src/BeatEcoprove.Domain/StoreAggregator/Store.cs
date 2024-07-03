@@ -1,7 +1,8 @@
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Models;
+using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
@@ -41,7 +42,7 @@ public class Store : ServiceProvider<StoreId, Guid>
     public int Level { get; private set; }
     public List<Worker> Workers => _workerEntries;
     public List<Order> Orders => _orderEntries;
-    public IReadOnlyList<Rating> Ratings => _ratingEntries.AsReadOnly();
+    public List<Rating> Ratings => _ratingEntries;
 
     public static Store Create(
         ProfileId owner,
@@ -101,19 +102,33 @@ public class Store : ServiceProvider<StoreId, Guid>
         return orderBucket;
     }
 
-    public ErrorOr<Rating> AddRating(ProfileId user, double rate) 
+    public ErrorOr<Rating> AddRating(Profile user, double rate)
     {
+        if (!user.Type.Equals(UserType.Consumer))
+        {
+            return Errors.Store.DontHaveAccessToStore;
+        }
+
+        var foundRating = _ratingEntries.FirstOrDefault(r => r.User == user.Id);
+
+        if (foundRating is not null)
+        {
+            foundRating.SetRate(rate);
+
+            return foundRating;
+        }
+
         var rating = Rating.Create(
             this.Id,
-            user,
+            user.Id,
             rate
         );
-
+            
         if (rating.IsError)
         {
             return rating.Errors;
-        }
-        
+        }            
+            
         _ratingEntries.Add(rating.Value);
         return rating;
     }

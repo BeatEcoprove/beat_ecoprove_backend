@@ -28,6 +28,7 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
     {
          return await DbContext.Set<Store>()
             .Include(group => group.Workers)
+            .Include(group => group.Ratings)
             .FirstOrDefaultAsync(group => group.Id == id, cancellationToken);
     }
 

@@ -1,4 +1,4 @@
-using BeatEcoprove.Contracts.Closet.Cloth;
+using BeatEcoprove.Contracts.Profile;
 using BeatEcoprove.Contracts.Store;
 using BeatEcoprove.Contracts.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator;
@@ -8,12 +8,25 @@ using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 
 using Mapster;
 
+using ClothResponse = BeatEcoprove.Contracts.Closet.Cloth.ClothResponse;
+
 namespace BeatEcoprove.Api.Mappers;
 
 public class StoreMappingConfiguration : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
+        config.NewConfig<RatingDao, RatingResponse>()
+            .MapWith(src => new RatingResponse(
+                src.Id,
+                src.Rating,
+                new ProfileClosetResponse(
+                    src.Profile.Id,
+                    src.Profile.UserName,
+                    src.Profile.AvatarUrl
+                )
+            ));
+        
         config.NewConfig<WorkerDao, WorkerResponse>()
             .MapWith(src => new WorkerResponse(
                 src.Id,

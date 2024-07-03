@@ -20,7 +20,7 @@ public class Rating
     public StoreId Store { get; private set; } = null!;
     public ProfileId User { get; private set; } = null!;
     public double Rate { get; private set; } = 0D;
-    public DateTimeOffset PublishAt { get; private set; } = DateTimeOffset.Now;
+    public DateTimeOffset PublishAt { get; private set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? DeletedAt { get; private set; }
 
     public static ErrorOr<Rating> Create(
@@ -34,5 +34,10 @@ public class Rating
         }
         
         return new Rating(store, user, rate);
+    }
+
+    public void SetRate(double rate)
+    {
+        Rate = rate;
     }
 }
