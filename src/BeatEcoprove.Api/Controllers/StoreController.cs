@@ -3,6 +3,7 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddStore;
+using BeatEcoprove.Application.Stores.Commands.PostRating;
 using BeatEcoprove.Application.Stores.Queries.GetAllStores;
 using BeatEcoprove.Application.Stores.Queries.GetOwningStores;
 using BeatEcoprove.Application.Stores.Queries.GetStoreById;
@@ -62,41 +63,28 @@ public class StoreController : ApiController
         );
     }
 
-    [HttpGet]
-    public async Task<ActionResult<List<Order>>> GetAll(
+    [HttpPost("{storeId:guid}/ratings")]
+    public async Task<ActionResult<RatingResponse>> PostRating(
         [FromQuery] Guid profileId,
-        [FromQuery] string? search,
-        [FromQuery] string? services,
-        [FromQuery] string? color,
-        [FromQuery] string? brand,
-        [FromQuery] string? orderBy,
-        [FromQuery] string? sortBy,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] bool isCompleted = false,
+        [FromRoute] Guid storeId,
+        CreatePostRating request,
         CancellationToken cancellationToken = default
-    )
-    {
+    ) {
         var authId = HttpContext.User.GetUserId();
-        
-        var getAllStores = await _sender.Send(new
-           GetAllStoresQuery(
-               authId, 
-               profileId, 
-               search, 
-               services, 
-               color, 
-               brand, 
-               orderBy, 
-               page, 
-               pageSize
-           ), cancellationToken
+                
+        var postRating = await _sender.Send(new
+            PostRatingCommand(
+                authId,
+                profileId,
+                storeId,
+                request.Rating
+            ), cancellationToken
         );
         
-        return getAllStores.Match(
-           result => Ok(_mapper.Map<List<Order>>(result)),
-           Problem<List<Order>>
-       );
+        return postRating.Match(
+            result => Ok(_mapper.Map<RatingResponse>(result)),
+            Problem<RatingResponse>
+        );
     }
 
     [HttpGet("{storeId:guid}")]
