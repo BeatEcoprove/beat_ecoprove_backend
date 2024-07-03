@@ -20,6 +20,11 @@ public interface IStoreService
         GetAllStoreInput input,
         CancellationToken cancellationToken = default
     );
+
+    Task<ErrorOr<List<Store>>> GetOwningStoreAsync(
+        Profile profile,
+        GetOwningStoreInput input,
+        CancellationToken cancellationToken = default);
     
      Task<ErrorOr<Store>> GetStoreAsync(
             StoreId id,
@@ -30,6 +35,11 @@ public interface IStoreService
         Store store,
         Profile profile,
         Stream avatarPicture,
+        CancellationToken cancellationToken = default);
+
+    Task<ErrorOr<Store>> DeleteStoreAsync(
+        Store store,
+        Profile profile,
         CancellationToken cancellationToken = default);
 
     Task<ErrorOr<Order>> RegisterOrderAsync(

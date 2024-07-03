@@ -30,11 +30,11 @@ public class StoreService : IStoreService
     private readonly IAccountService _accountService;
 
     public StoreService(
-        IStoreRepository storeRepository, 
-        IFileStorageProvider fileStorageProvider, 
-        IProfileRepository profileRepository, 
+        IStoreRepository storeRepository,
+        IFileStorageProvider fileStorageProvider,
+        IProfileRepository profileRepository,
         IMaintenanceServiceRepository maintenanceServiceRepository,
-        IPasswordGenerator passwordGenerator, 
+        IPasswordGenerator passwordGenerator,
         IAccountService accountService)
     {
         _storeRepository = storeRepository;
@@ -45,7 +45,8 @@ public class StoreService : IStoreService
         _accountService = accountService;
     }
 
-    public async Task<List<Order>> GetAllStores(ProfileId owner, GetAllStoreInput input, CancellationToken cancellationToken = default)
+    public async Task<List<Order>> GetAllStores(ProfileId owner, GetAllStoreInput input,
+        CancellationToken cancellationToken = default)
     {
         var stores = await _storeRepository.GetAllStoresAsync(
             owner,
@@ -54,16 +55,39 @@ public class StoreService : IStoreService
             input.Colors,
             input.Brands,
             input.PageSize,
-            input.Page, 
+            input.Page,
             cancellationToken
         );
 
         return stores;
     }
 
-    public async Task<ErrorOr<Store>> GetStoreAsync(StoreId id, Profile profile, CancellationToken cancellationToken = default)
+    public async Task<ErrorOr<List<Store>>> GetOwningStoreAsync(
+        Profile profile,
+        GetOwningStoreInput input,
+        CancellationToken cancellationToken = default)
     {
-        if (!await _storeRepository.HasAccessToStore(id, profile, cancellationToken))
+        bool isEmployee = profile.Type.Equals(UserType.Employee);
+
+        var stores = await _storeRepository.GetOwningStoreAsync(
+            profile.Id,
+            isEmployee,
+            input.Search,
+            input.Page,
+            input.PageSize,
+            cancellationToken);
+
+        return stores;
+    }
+
+    public async Task<ErrorOr<Store>> GetStoreAsync(
+        StoreId id, 
+        Profile profile,
+        CancellationToken cancellationToken = default)
+    {
+        var isEmployee = profile.Type.Equals(UserType.Employee);
+        
+        if (!await _storeRepository.HasAccessToStore(id, profile, isEmployee, cancellationToken))
         {
             return Errors.Store.DontHaveAccessToStore;
         }
@@ -79,38 +103,56 @@ public class StoreService : IStoreService
     }
 
     public async Task<ErrorOr<Store>> CreateStoreAsync(
-        Store store, 
+        Store store,
         Profile profile,
-        Stream picture, 
+        Stream picture,
         CancellationToken cancellationToken)
     {
         if (!profile.Type.Equals(UserType.Organization))
         {
             return Errors.Store.CantCreateStore;
         }
-        
+
         if (await _storeRepository.ExistsAnyStoreWithName(store.Name, cancellationToken))
         {
             return Errors.Store.StoreAlreadyExistsName;
         }
-        
-        var avatarUrl = 
-             await _fileStorageProvider
+
+        var avatarUrl =
+            await _fileStorageProvider
                 .UploadFileAsync(
                     Buckets.ProfileBucket,
                     ((Guid)store.Id).ToString(),
                     picture,
                     cancellationToken);
-                
+
         store.SetPictureUrl(avatarUrl);
 
         await _storeRepository.AddAsync(store, cancellationToken);
         return store;
     }
 
+    public async Task<ErrorOr<Store>> DeleteStoreAsync(Store store, Profile profile,
+        CancellationToken cancellationToken = default)
+    {
+        if (profile.Type.Equals(UserType.Employee))
+        {
+            return Errors.Store.DontHaveAccessToStore;
+        }
+
+        var deleted = await _storeRepository.DeleteStoreAsync(store, cancellationToken);
+
+        if (deleted)
+        {
+            return Errors.Store.StoreNotFound;
+        }
+
+        return store;
+    }
+
     public async Task<ErrorOr<Order>> RegisterOrderAsync(
-        Store store, 
-        ProfileId owner, 
+        Store store,
+        ProfileId owner,
         ClothId clothId,
         CancellationToken cancellationToken = default)
     {
@@ -120,7 +162,7 @@ public class StoreService : IStoreService
         }
 
         var maintenance = await _maintenanceServiceRepository.GetMaintenanceServiceByName(
-            "Lavar", 
+            "Lavar",
             cancellationToken);
 
         if (maintenance is null)
@@ -138,17 +180,19 @@ public class StoreService : IStoreService
     }
 
     public async Task<ErrorOr<(Worker, Password)>> RegisterWorkerAsync(
-        Store store, 
-        Profile profile, 
+        Store store,
+        Profile profile,
         AddWorkerInput input,
         CancellationToken cancellationToken = default)
     {
+        var isEmployee = profile.Type.Equals(UserType.Employee);
+     
         if (input.Name.IsNullOrEmpty())
         {
             return Errors.Worker.NotAllowedName;
         }
 
-        if (!await _storeRepository.HasAccessToStore(store.Id, profile, cancellationToken))
+        if (!await _storeRepository.HasAccessToStore(store.Id, profile, isEmployee, cancellationToken))
         {
             return Errors.Store.DontHaveAccessToStore;
         }
@@ -160,7 +204,7 @@ public class StoreService : IStoreService
         {
             return userName.Errors;
         }
-        
+
         var employee = Employee.Create(
             userName.Value,
             profile.Phone.Clone()
@@ -190,7 +234,9 @@ public class StoreService : IStoreService
     public async Task<ErrorOr<Worker>> SwitchPermission(Store store, Profile profile, SwitchPermissionInput input,
         CancellationToken cancellationToken = default)
     {
-        if (!await _storeRepository.HasAccessToStore(store.Id, profile, cancellationToken))
+        var isEmployee = profile.Type.Equals(UserType.Employee);
+        
+        if (!await _storeRepository.HasAccessToStore(store.Id, profile, isEmployee, cancellationToken))
         {
             return Errors.Store.DontHaveAccessToStore;
         }

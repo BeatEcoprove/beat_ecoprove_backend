@@ -47,7 +47,16 @@ internal sealed class DeleteStoreByIdCommandHandler : ICommandHandler<DeleteStor
             return store.Errors;
         }
 
-        var deleted = await _storeRepository.DeleteStoreAsync(store.Value, cancellationToken);
-        return !deleted ? Errors.Store.StoreNotFound : store;
+        var shouldDelete = await _storeService.DeleteStoreAsync(
+            store.Value,
+            profile.Value,
+            cancellationToken);
+
+        if (shouldDelete.IsError)
+        {
+            return shouldDelete.Errors;
+        }
+
+        return shouldDelete;
     }
 }

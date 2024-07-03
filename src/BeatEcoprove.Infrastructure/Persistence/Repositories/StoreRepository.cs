@@ -38,10 +38,19 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
             .AnyAsync(store => store.Name == name, cancellationToken);
     }
 
-    public async Task<bool> HasAccessToStore(StoreId id, Profile manager, CancellationToken cancellationToken = default)
+    public async Task<bool> HasAccessToStore(
+        StoreId id, 
+        Profile manager, 
+        bool isEmployee = false,
+        CancellationToken cancellationToken = default)
     {
         var query = from store in DbContext.Set<Store>()
-            where store.Id == id && store.Owner == manager.Id
+            where 
+                (
+                    isEmployee && store.Workers.Select(worker => worker.Profile).Contains(manager.Id) ||
+                    store.Owner == manager.Id
+                ) &&
+                store.Id == id 
             select store;
 
         return await query.AnyAsync(cancellationToken);
@@ -49,6 +58,7 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
 
     public async Task<List<Store>> GetOwningStoreAsync(
         ProfileId owner, 
+        bool isEmployee = false,
         string? search = null,
         int page = 1, 
         int pageSize = 10,
@@ -56,7 +66,10 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
     {
         var allMyStores = from store in DbContext.Set<Store>()
             where 
-                store.Owner == owner &&
+                (   
+                    isEmployee && store.Workers.Select(worker => worker.Profile).Contains(owner) ||
+                    store.Owner == owner
+                ) &&
                 (search == null || store.Name.ToLower().Contains(search.ToLower()))
             select store;
         

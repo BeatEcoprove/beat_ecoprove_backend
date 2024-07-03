@@ -5,7 +5,6 @@ using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
-using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 

@@ -1,6 +1,7 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
+using BeatEcoprove.Application.Shared.Interfaces.Services.Common;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator;
@@ -12,14 +13,14 @@ namespace BeatEcoprove.Application.Stores.Queries.GetOwningStores;
 internal sealed class GetOwningStoresQueryHandler : IQueryHandler<GetOwningStoresQuery, ErrorOr<List<Store>>>
 {
     private readonly IProfileManager _profileManager;
-    private readonly IStoreRepository _storeRepository;
+    private readonly IStoreService _storeService;
 
     public GetOwningStoresQueryHandler(
         IProfileManager profileManager, 
-        IStoreRepository storeRepository)
+        IStoreService storeService)
     {
         _profileManager = profileManager;
-        _storeRepository = storeRepository;
+        _storeService = storeService;
     }
 
     public async Task<ErrorOr<List<Store>>> Handle(GetOwningStoresQuery request, CancellationToken cancellationToken)
@@ -33,13 +34,20 @@ internal sealed class GetOwningStoresQueryHandler : IQueryHandler<GetOwningStore
         {
             return profile.Errors;
         }
-
-        var stores = await _storeRepository.GetOwningStoreAsync(
-            profile.Value.Id,
-            request.Search,
-            request.Page,
-            request.PageSize,
+        
+        var stores = await _storeService.GetOwningStoreAsync(
+            profile.Value,
+            new GetOwningStoreInput(
+                request.Search,
+                request.Page,
+                request.PageSize
+            ),
             cancellationToken);
+
+        if (stores.IsError)
+        {
+            return stores.Errors;
+        }
 
         return stores;
     }
