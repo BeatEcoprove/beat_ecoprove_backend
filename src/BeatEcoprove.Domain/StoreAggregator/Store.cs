@@ -39,7 +39,7 @@ public class Store : ServiceProvider<StoreId, Guid>
     public double TotalRate => Ratings.Sum(rating => rating.Rate);
     public string Picture { get; private set; } = null!;
     public int Level { get; private set; }
-    public IReadOnlyList<Worker> Workers => _workerEntries.AsReadOnly();
+    public List<Worker> Workers => _workerEntries;
     public IReadOnlyList<Order> Orders => _orderEntries.AsReadOnly();
     public IReadOnlyList<Rating> Ratings => _ratingEntries.AsReadOnly();
 

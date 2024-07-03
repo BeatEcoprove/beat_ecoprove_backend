@@ -3,6 +3,7 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddWorker;
+using BeatEcoprove.Application.Stores.Queries.GetWorkerById;
 using BeatEcoprove.Contracts.Store;
 
 using MapsterMapper;
@@ -32,6 +33,30 @@ public class WorkerController : ApiController
         _mapper = mapper;
     }
 
+    [HttpGet("{workerId:guid}")]
+    public async Task<ActionResult<WorkerResponse>> GetWorkerById(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid storeId,
+        [FromRoute] Guid workerId,
+        CancellationToken cancellationToken = default
+    ) {
+        var authId = HttpContext.User.GetUserId();
+                
+        var getWorkerById = await _sender.Send(new
+            GetWorkerByIdQuery(
+               authId, 
+               profileId, 
+               storeId, 
+               workerId
+            ), cancellationToken
+        );
+
+        return getWorkerById.Match(
+            result => Ok(_mapper.Map<WorkerResponse>(result)),
+            Problem<WorkerResponse>
+        );
+    }
+    
     [HttpPost]
     public async Task<ActionResult<WorkerResponse>> RegisterWorker(
         [FromQuery] Guid profileId,
