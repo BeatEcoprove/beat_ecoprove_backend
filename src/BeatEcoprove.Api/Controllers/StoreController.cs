@@ -3,6 +3,7 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddStore;
+using BeatEcoprove.Application.Stores.Commands.DeleteStoreById;
 using BeatEcoprove.Application.Stores.Queries.GetOwningStores;
 using BeatEcoprove.Application.Stores.Queries.GetStoreById;
 using BeatEcoprove.Contracts.Store;
@@ -109,6 +110,28 @@ public class StoreController : ApiController
         );
         
         return createStoreResult.Match(
+            result => Ok(_mapper.Map<StoreResponse>(result)),
+            Problem<StoreResponse>
+        );
+    }
+
+    [HttpDelete("{storeId:guid}")]
+    public async Task<ActionResult<StoreResponse>> DeleteStoreById(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid storeId,
+        CancellationToken cancellationToken = default
+    ) {
+        var authId = HttpContext.User.GetUserId();
+        
+        var deleteStoreById = await _sender.Send(new
+            DeleteStoreByIdCommand(
+                authId,
+                profileId,
+                storeId
+            ), cancellationToken
+        );
+        
+        return deleteStoreById.Match(
             result => Ok(_mapper.Map<StoreResponse>(result)),
             Problem<StoreResponse>
         );

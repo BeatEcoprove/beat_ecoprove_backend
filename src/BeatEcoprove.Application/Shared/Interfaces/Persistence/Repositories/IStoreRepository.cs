@@ -49,4 +49,5 @@ public interface IStoreRepository : IRepository<Store, StoreId>
     Task<Worker?> GetWorkerAsync(WorkerId workerId, CancellationToken cancellationToken = default);
     Task<bool> WorkerAlreadyOnStore(WorkerId workerId, StoreId storeId, CancellationToken cancellationToken = default);
     Task<List<RatingDao>> GetRatingsFromStore(StoreId id, CancellationToken cancellationToken = default);
+    Task<bool> DeleteStoreAsync(Store store, CancellationToken cancellationToken);
 }

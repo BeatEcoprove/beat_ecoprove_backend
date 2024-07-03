@@ -296,4 +296,13 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
 
         return getAllRatings.ToListAsync(cancellationToken);
     }
+
+    public async Task<bool> DeleteStoreAsync(Store store, CancellationToken cancellationToken)
+    {
+        await DbContext.Set<Store>()
+            .Where(s => s.Id == store.Id)
+            .ExecuteDeleteAsync(cancellationToken);
+
+        return true;
+    }
 }
