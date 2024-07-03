@@ -53,7 +53,6 @@ public class StoreService : IStoreService
             input.Services,
             input.Colors,
             input.Brands,
-            input.OrderBy,
             input.PageSize,
             input.Page, 
             cancellationToken

@@ -66,7 +66,6 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
         List<Guid>? services = null, 
         List<Guid>? colorValue = null, 
         List<Guid>? brandValue = null,
-        string? orderValue = null, 
         int pageSize = 10, 
         int page = 1,
         CancellationToken cancellationToken = default)
@@ -153,6 +152,47 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
 
         dao.MaintenanceServices.AddRange(servicesDao);
         return dao;
+    }
+
+    public async Task<List<OrderDAO>> GetOrderDaosAsync(
+        Guid storeId, 
+        string? search, 
+        List<Guid>? services = null, 
+        List<Guid>? colorValue = null,
+        List<Guid>? brandValue = null,
+        int pageSize = 10, 
+        int page = 1, 
+        CancellationToken cancellationToken = default)
+    {
+         List<MaintenanceOrderDao> servicesDao = new();
+
+        var orderGetCloth = from store in DbContext.Set<Store>()
+            from order in store.Orders
+            from cloth in DbContext.Set<Cloth>()
+            from brand in DbContext.Set<Brand>()
+            from color in DbContext.Set<Color>()
+            where (order.Type.Equals(OrderType.Cloth) &&
+                   brand.Id == cloth.Brand) ||
+                  ( order.Type.Equals(OrderType.Bucket) )
+            select new
+            {
+                Order = order, 
+                Cloth = cloth, 
+                Brand = brand, 
+                Color = color
+            };
+
+        orderGetCloth = orderGetCloth
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
+
+        var orderDao = from result in orderGetCloth
+            let orderCloth = result.Order as OrderCloth
+            select orderCloth != null
+                ? orderCloth.ToOrderCloth(result.Cloth, result.Brand, result.Color)
+                : result.Order.ToOrderDao();
+        
+        return await orderDao.ToListAsync(cancellationToken);
     }
 
     public async Task<WorkerDao?> GetWorkerDaoAsync(WorkerId workerId, CancellationToken cancellationToken = default)
