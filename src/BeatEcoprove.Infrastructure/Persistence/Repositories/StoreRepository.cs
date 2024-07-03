@@ -26,10 +26,9 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
 
     public new async Task<Store?> GetByIdAsync(StoreId id, CancellationToken cancellationToken = default)
     {
-        return await DbContext.Set<Store>()
-            .Include(store => store.Workers)
-            .Where(store => store.Id == id)
-            .FirstOrDefaultAsync(cancellationToken);
+         return await DbContext.Set<Store>()
+            .Include(group => group.Workers)
+            .FirstOrDefaultAsync(group => group.Id == id, cancellationToken);
     }
 
     public Task<bool> ExistsAnyStoreWithName(string name, CancellationToken cancellationToken = default)
