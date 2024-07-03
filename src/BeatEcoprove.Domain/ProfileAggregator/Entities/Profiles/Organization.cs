@@ -24,6 +24,7 @@ public class Organization : Profile
     {
         Address = address;
         TypeOption = TypeOption.Washer;
+        Type = UserType.Organization;
     }
 
     public Address Address { get; private set; } = null!;
