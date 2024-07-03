@@ -1,5 +1,6 @@
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
+using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
@@ -8,7 +9,7 @@ namespace BeatEcoprove.Infrastructure.Extensions;
 
 public static class MappersExtensions
 {
-    public static OrderDAO ToOrderDao(this Order order)
+    public static OrderDAO ToOrderDao(this Order order, List<MaintenanceOrderDao>? services = null)
     {
         return new OrderDAO(
             order.Id,
@@ -17,12 +18,17 @@ public static class MappersExtensions
             order.Status,
             order.AcceptedAt,
             order.Type
-        );
+        ) { MaintenanceServices = services ?? new List<MaintenanceOrderDao>()};
     }
 
-    public static OrderClothDao ToOrderCloth(this OrderCloth order, Cloth cloth, Brand brand, Color color)
+    public static OrderClothDao ToOrderCloth(
+        this OrderCloth order, 
+        Cloth cloth, 
+        Brand brand, 
+        Color color,
+        List<MaintenanceOrderDao>? services = null)
     {
-        return new OrderClothDao(
+        var dao = new OrderClothDao(
            order.Id,
            order.Store,
            order.Owner,
@@ -33,7 +39,9 @@ public static class MappersExtensions
                brand,
                color
             )
-        );
+        ) { MaintenanceServices = services ?? new List<MaintenanceOrderDao>() };
+
+        return dao;
     }
     
     public static ClothDao ToClothDao(this Cloth cloth, Brand brand, Color color)

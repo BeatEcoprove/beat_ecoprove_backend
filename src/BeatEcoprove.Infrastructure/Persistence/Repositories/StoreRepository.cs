@@ -182,11 +182,25 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
                     (brandValue == null || brandValue.Contains(brand.Id)) &&
                     (colorValue == null || colorValue.Contains(color.Id))
                 )
+            let orderServices = (
+                    from service in DbContext.Set<MaintenanceService>()
+                    where order.Services.Select(entry => entry.Service).Contains(service.Id)
+                    select new MaintenanceOrderDao(
+                        service.Id,
+                        service.Title,
+                        service.Badge
+                    )
+                ).ToList()
             select isOrderCloth
-                ? orderCloth.ToOrderCloth(cloth, brand, color) 
-                : order.ToOrderDao();
+                ? orderCloth.ToOrderCloth(
+                    cloth, 
+                    brand, 
+                    color,
+                    orderServices
+                ) : order.ToOrderDao(orderServices);
 
-        return await orderGetAll.ToListAsync(cancellationToken);
+        return await orderGetAll
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<WorkerDao?> GetWorkerDaoAsync(WorkerId workerId, CancellationToken cancellationToken = default)
