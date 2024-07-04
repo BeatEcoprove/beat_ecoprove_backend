@@ -9,6 +9,9 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
 public interface IStoreRepository : IRepository<Store, StoreId>
 {
+    public Task<int> GetTotalOfSustainablePoints(
+        Profile provider,
+        CancellationToken cancellationToken = default);
     public Task<bool> ExistsAnyStoreWithName(string name, CancellationToken cancellationToken = default);
     public Task<bool> HasAccessToStore(
         StoreId id, 

@@ -63,6 +63,22 @@ public class AdvertisementRepository : Repository<Advertisement, AdvertisementId
         return (await getAllAdverts.ToListAsync(cancellationToken));
     }
 
+    public async Task<List<Advertisement>> GetAllAdvertsFromOrganization(ProfileId providerId, string? search = null, int page = 1, int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        var getAdds = from advert in DbContext.Set<Advertisement>()
+            where 
+                advert.Creator == providerId &&
+                (search == null || ((string)advert.Title).ToLower().Contains(search.ToLower()))
+            select advert;
+
+        getAdds = getAdds
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
+        
+        return await getAdds.ToListAsync(cancellationToken);
+    }
+
     public async Task<bool> HasProfileAccessToAdvert(
         AdvertisementId advertId, 
         ProfileId profile,

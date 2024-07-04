@@ -3,6 +3,7 @@ using BeatEcoprove.Domain.AuthAggregator;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.StoreAggregator;
@@ -31,6 +32,32 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
             .Include(group => group.Orders)
             .Include(group => group.Ratings)
             .FirstOrDefaultAsync(group => group.Id == id, cancellationToken);
+    }
+
+    public async Task<int> GetTotalOfSustainablePoints(Profile provider, CancellationToken cancellationToken = default)
+    {
+        var totalSustainablePoint = from profile in DbContext.Set<Profile>()
+            where profile.Id == provider.Id
+            let employeeScore = (
+                from store in DbContext.Set<Store>()
+                from worker in store.Workers
+                where provider.Type.Equals(UserType.Employee) &&
+                      worker.Store == store.Id && provider.Id == worker.Id
+                select store.SustainablePoints
+            ).First()
+            let orgScore = (
+                from store in DbContext.Set<Store>()
+                where provider.Type.Equals(UserType.Organization)
+                group store by store.Owner
+                into storeGroup
+                select storeGroup.Sum(value => value.SustainablePoints)
+            ).First()
+            select employeeScore + orgScore;
+        
+        int? value = await totalSustainablePoint
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return value ?? 0;
     }
 
     public Task<bool> ExistsAnyStoreWithName(string name, CancellationToken cancellationToken = default)

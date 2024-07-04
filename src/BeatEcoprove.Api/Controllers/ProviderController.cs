@@ -2,10 +2,12 @@ using Asp.Versioning;
 
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Providers.Queries.GetAllStandardProviders;
+using BeatEcoprove.Application.Providers.Queries.GetProviderAdverts;
 using BeatEcoprove.Application.Providers.Queries.GetProviderById;
 using BeatEcoprove.Application.Providers.Queries.GetProviderStoreById;
 using BeatEcoprove.Application.Providers.Queries.GetProviderStores;
 using BeatEcoprove.Application.Shared.Multilanguage;
+using BeatEcoprove.Contracts.Advertisements;
 using BeatEcoprove.Contracts.Providers;
 using BeatEcoprove.Contracts.Store;
 
@@ -132,6 +134,28 @@ public class ProviderController : ApiController
         return getStoreById.Match(
             result => Ok(_mapper.Map<StoreResponse>(result)),
             Problem<StoreResponse>
+        );
+    }
+
+    [HttpGet("{providerId:guid}/adverts")]
+    public async Task<ActionResult<List<AdvertisementResponse>>> GetProviderAdverts(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid providerId, 
+        CancellationToken cancellationToken = default)
+    {
+        var authId = HttpContext.User.GetUserId();
+                        
+        var getAdverts = await _sender.Send(new
+            GetProviderAdvertsQuery(
+                authId,
+                profileId, 
+                providerId
+            ), cancellationToken
+        );
+        
+        return getAdverts.Match(
+            result => Ok(_mapper.Map<List<AdvertisementResponse>>(result)),
+            Problem<List<AdvertisementResponse>>
         );
     }
 }
