@@ -6,7 +6,6 @@ using BeatEcoprove.Domain.AdvertisementAggregator;
 using BeatEcoprove.Domain.AdvertisementAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
-using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Domain.StoreAggregator.Enumerators;
@@ -93,7 +92,7 @@ public class AdvertisementService : IAdvertisementService
     {
         if (advertisement.InitDate >= advertisement.EndDate)
         {
-            return Errors.Advertisement.CannotPerformThis;
+            return Errors.Advertisement.DateMustBeValid;
         }
         
         if (profile.Type.Equals(UserType.Consumer))

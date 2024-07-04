@@ -334,10 +334,16 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
 
     public async Task<bool> DeleteStoreAsync(Store store, CancellationToken cancellationToken)
     {
-        await DbContext.Set<Store>()
-            .Where(s => s.Id == store.Id)
-            .ExecuteDeleteAsync(cancellationToken);
-
+        var foundStore = await DbContext
+            .Set<Store>()
+            .FirstOrDefaultAsync(s => s.Id == store.Id, cancellationToken);
+        
+        if (foundStore is null)
+        {
+            return false;
+        }
+        
+        DbContext.Set<Store>().Remove(foundStore);
         return true;
     }
 }

@@ -1,9 +1,9 @@
 using BeatEcoprove.Application.Shared;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
-using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
@@ -16,15 +16,18 @@ internal sealed class DeleteStoreByIdCommandHandler : ICommandHandler<DeleteStor
     private readonly IProfileManager _profileManager;
     private readonly IStoreService _storeService;
     private readonly IStoreRepository _storeRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public DeleteStoreByIdCommandHandler(
         IProfileManager profileManager, 
         IStoreService storeService, 
-        IStoreRepository storeRepository)
+        IStoreRepository storeRepository, 
+        IUnitOfWork unitOfWork)
     {
         _profileManager = profileManager;
         _storeService = storeService;
         _storeRepository = storeRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<ErrorOr<Store>> Handle(DeleteStoreByIdCommand request, CancellationToken cancellationToken)
@@ -56,6 +59,8 @@ internal sealed class DeleteStoreByIdCommandHandler : ICommandHandler<DeleteStor
         {
             return shouldDelete.Errors;
         }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return shouldDelete;
     }

@@ -9,7 +9,6 @@ public partial class Errors
         public static Error CannotPerformThis => Error.Conflict(
             "Advertisement.CannotPerformThis",
             "Não tens acesso a criação de anúncios");
-        
         public static Error VoucherQuantityBelow0 => Error.Conflict(
             "Advertisement.VoucherQuantityBelow0",
             "O voucher deve pelo menos conter mais do que uma copia");
