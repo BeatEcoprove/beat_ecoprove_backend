@@ -1,4 +1,5 @@
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.StoreAggregator;
 
 namespace BeatEcoprove.Application.Shared.Interfaces.Services;
 
