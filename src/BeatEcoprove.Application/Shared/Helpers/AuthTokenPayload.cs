@@ -17,6 +17,7 @@ public class AuthTokenPayload : TokenPayload
     private readonly double _currentXp;
     private readonly double _nextLevelXp;
     private readonly string _role;
+    private readonly string _storeId;
 
     public AuthTokenPayload(
         Guid accountId,
@@ -33,8 +34,10 @@ public class AuthTokenPayload : TokenPayload
         double nextLevelXp,
         UserType userType,
         Tokens tokenType,
-        string role = "") : base(tokenType)
+        string role = "",
+        string storeId = "") : base(tokenType)
     {
+        _storeId = storeId;
         _role = role;
         _accountId = accountId;
         _profileId = profileId;
@@ -89,6 +92,7 @@ public class AuthTokenPayload : TokenPayload
         if (UserType.Equals(UserType.Employee))
         {
             claims.Add(UserClaims.Role, _role);
+            claims.Add(UserClaims.StoreId, _storeId);
         }
         
         return claims;

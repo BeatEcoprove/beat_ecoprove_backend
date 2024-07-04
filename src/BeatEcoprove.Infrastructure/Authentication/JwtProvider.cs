@@ -81,6 +81,7 @@ public class JwtProvider : IJwtProvider
         ProfileId profileId)
     {
         string role = "";
+        string storeId = "";
 
         if (profile is Employee employee)
         {
@@ -89,6 +90,7 @@ public class JwtProvider : IJwtProvider
             if (worker is not null)
             {
                 role = worker.Role.ToString().ToLower();
+                storeId = worker.Store.Value.ToString();
             }
         }
         
@@ -108,7 +110,8 @@ public class JwtProvider : IJwtProvider
             _gamingService.GetNextLevelXp(profile),
             profile.Type,
             Tokens.Access,
-            role);
+            role,
+            storeId);
 
         return GenerateAuthenticationTokens(payload);
     }
