@@ -11,6 +11,9 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
 public interface IProfileRepository : IRepository<Profile, ProfileId>
 {
+    Task<ProviderDao?> GetOrganizationAsync(
+        ProfileId organizationId,
+        CancellationToken cancellationToken = default);
     Task<List<Organization>> GetAllOrganizationsAsync(
         string? search = null,
         int page = 1,

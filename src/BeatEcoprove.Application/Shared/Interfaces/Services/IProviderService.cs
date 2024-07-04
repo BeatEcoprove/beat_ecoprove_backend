@@ -1,5 +1,7 @@
 using BeatEcoprove.Application.Shared.Interfaces.Services.Common;
+using BeatEcoprove.Domain.ProfileAggregator.DAOS;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 
 using ErrorOr;
 
@@ -9,6 +11,9 @@ public interface IProviderService
 {
     Task<ErrorOr<List<Organization>>> GetAllProvidersAsync(
         GetAllProviderInput input,
-        CancellationToken cancellationToken = default
-    );
+        CancellationToken cancellationToken = default);
+
+    Task<ErrorOr<ProviderDao>> GetProviderByIdAsync(
+        ProfileId providerId,
+        CancellationToken cancellationToken = default);
 }

@@ -2,6 +2,7 @@ using Asp.Versioning;
 
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Providers.Queries.GetAllStandardProviders;
+using BeatEcoprove.Application.Providers.Queries.GetProviderById;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Providers;
 
@@ -31,7 +32,6 @@ public class ProviderController : ApiController
         _mapper = mapper;
     }
     
-    // TODO: Get All: Query Search
     [HttpGet]
     public async Task<ActionResult<List<StandardProviderResponse>>> GetAllProviders(
         [FromQuery] Guid profileId,
@@ -58,5 +58,26 @@ public class ProviderController : ApiController
         );
     }
     
-    // TODO: Get By Id
+    [HttpGet("{providerId:guid}")]
+    public async Task<ActionResult<ProviderResponse>> GetProviderById(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid providerId,
+        CancellationToken cancellationToken = default)
+    {
+         
+        var authId = HttpContext.User.GetUserId();
+                        
+        var getAllProviders = await _sender.Send(new
+            GetProviderByIdQuery(
+                authId,
+                profileId,
+                providerId
+            ), cancellationToken
+        );
+        
+        return getAllProviders.Match(
+            result => Ok(_mapper.Map<ProviderResponse>(result)),
+            Problem<ProviderResponse>
+        );
+    }
 }

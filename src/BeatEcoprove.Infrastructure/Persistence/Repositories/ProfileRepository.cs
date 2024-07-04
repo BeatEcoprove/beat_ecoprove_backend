@@ -2,6 +2,7 @@
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
+using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.DAOS;
@@ -9,6 +10,8 @@ using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
+using BeatEcoprove.Domain.StoreAggregator;
+using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +22,34 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
 {
     public ProfileRepository(IApplicationDbContext dbContext) : base(dbContext)
     {
+    }
+
+    public async Task<ProviderDao?> GetOrganizationAsync(ProfileId organizationId, CancellationToken cancellationToken = default)
+    {
+        var getOrganization = from profile in DbContext.Set<Profile>()
+            let organization = profile as Organization
+            where 
+                organization != null && profile.Type.Equals(UserType.Organization)
+            let totalRating = (
+                from store in DbContext.Set<Store>()
+                where 
+                    store.Owner == organization.Id
+                    group store by store.Owner into storeGroup
+                    select new {
+                        TotalRating = storeGroup.Sum(s => s.Ratings.Sum(r => r.Rate)),
+                        TotalItems = storeGroup.Count()
+                    }
+            ).FirstOrDefault()
+            select new ProviderDao(
+                organization.Id,
+                organization.UserName,
+                organization.AvatarUrl,
+                organization.TypeOption,
+                new(),
+                totalRating != null ? totalRating.TotalItems / totalRating.TotalItems : 0
+            );
+
+        return await getOrganization.FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<List<Organization>> GetAllOrganizationsAsync(
