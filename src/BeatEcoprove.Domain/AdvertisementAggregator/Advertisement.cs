@@ -2,6 +2,7 @@ using BeatEcoprove.Domain.AdvertisementAggregator.Enumerators;
 using BeatEcoprove.Domain.AdvertisementAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Models;
+using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
 namespace BeatEcoprove.Domain.AdvertisementAggregator;
 
@@ -28,6 +29,7 @@ public class Advertisement : AggregateRoot<AdvertisementId, Guid>
         SustainablePoints = sustainablePoints;
     }
 
+    public StoreId Store { get; private set; }
     public ProfileId Creator { get; private set; } = null!;
     public string Title { get; private set; } = null!;
     public string Description { get; private set; } = null!;
@@ -53,6 +55,8 @@ public class Advertisement : AggregateRoot<AdvertisementId, Guid>
             AddCost
         );
     }
+
+    public void SetStore(StoreId id) => Store = id;
 
     public void SetPictureUrl(string url)
     {

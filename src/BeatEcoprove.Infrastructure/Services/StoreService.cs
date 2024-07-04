@@ -186,7 +186,22 @@ public class StoreService : IStoreService
         CancellationToken cancellationToken = default)
     {
         var isEmployee = profile.Type.Equals(UserType.Employee);
-     
+
+        if (isEmployee)
+        {
+            var foundWorker = await _storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
+
+            if (foundWorker is null)
+            {
+                return Errors.Worker.NotFound;
+            }
+
+            if (foundWorker.Role != WorkerType.Manager)
+            {
+                return Errors.Store.DontHaveAccessToStore;
+            }
+        }
+
         if (input.Name.IsNullOrEmpty())
         {
             return Errors.Worker.NotAllowedName;

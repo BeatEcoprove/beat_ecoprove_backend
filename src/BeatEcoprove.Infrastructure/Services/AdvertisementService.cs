@@ -8,6 +8,7 @@ using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
+using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 
@@ -40,6 +41,7 @@ public class AdvertisementService : IAdvertisementService
         bool checkAuthorization = true,
         CancellationToken cancellationToken = default)
     {
+        var isEmployee = profile.Type.Equals(UserType.Employee);
         var advert = await _advertisementRepository.GetByIdAsync(advertId, cancellationToken);
 
         if (advert is null)
@@ -52,7 +54,7 @@ public class AdvertisementService : IAdvertisementService
             return advert;
         }
 
-        if (!await _advertisementRepository.HasProfileAccessToAdvert(advertId, profile.Id, cancellationToken))
+        if (!await _advertisementRepository.HasProfileAccessToAdvert(advertId, profile.Id, isEmployee, cancellationToken))
         {
             return Errors.Advertisement.CannotPerformThis;
         }
@@ -68,28 +70,11 @@ public class AdvertisementService : IAdvertisementService
         int pageSize = 10,
         CancellationToken cancellationToken = default)
     {
-        List<ProfileId> allowedProfiles = new();
+        var isEmployee = profile.Type.Equals(UserType.Employee);
         
-        var store = await _storeService.GetStoreAsync(storeId, profile, cancellationToken);
-        
-        if (store.IsError)
-        {
-            return store.Errors;
-        }
-        
-        if (profile.Type.Equals(UserType.Organization))
-        {
-            var workersIds = store.Value.Workers
-                .Select(worker => worker.Profile)
-                .ToList();
-                    
-            allowedProfiles.AddRange(workersIds);
-        }
-        
-        allowedProfiles.Add(profile.Id);
-            
-        var adverts = await _advertisementRepository.GetAllAddsAsync(
-            haveAccess: allowedProfiles,
+         var adverts = await _advertisementRepository.GetAllAddsAsync(
+            profile.Id,
+            isEmployee,
             search: search,
             page: page,
             pageSize: pageSize,
@@ -100,6 +85,7 @@ public class AdvertisementService : IAdvertisementService
     }
 
     public async Task<ErrorOr<Advertisement>> CreateAdd(
+        StoreId storeId,
         Advertisement advertisement,
         Profile profile,
         Stream picture,
@@ -123,8 +109,23 @@ public class AdvertisementService : IAdvertisementService
             {
                 return result.Errors;
             }
+
+            storeId = result.Value.Store;
         }
 
+        if (storeId.Value != Guid.Empty)
+        {
+            var store = await _storeService.GetStoreAsync(storeId, profile, cancellationToken);
+
+            if (store.IsError)
+            {
+                return store.Errors;
+            }
+            
+            advertisement.SetStore(storeId);
+            advertisement.SetMainProfile(store.Value.Owner);
+        }
+        
         var avatarUrl = 
             await _fileProvider
                 .UploadFileAsync(
@@ -139,9 +140,18 @@ public class AdvertisementService : IAdvertisementService
         return advertisement;
     }
 
-    public async Task<ErrorOr<Advertisement>> DeleteAsync(Advertisement advertisement, Profile profile, CancellationToken cancellationToken = default)
+    public async Task<ErrorOr<Advertisement>> DeleteAsync(
+        Advertisement advertisement, 
+        Profile profile, 
+        CancellationToken cancellationToken = default)
     {
-        if (!await _advertisementRepository.HasProfileAccessToAdvert(advertisement.Id, profile.Id, cancellationToken))
+        var isEmployee = profile.Type.Equals(UserType.Employee);
+        
+        if (!await _advertisementRepository.HasProfileAccessToAdvert(
+                advertisement.Id, 
+                profile.Id, 
+                isEmployee,
+                cancellationToken))
         {
             return Errors.Advertisement.CannotPerformThis;
         }
@@ -150,7 +160,7 @@ public class AdvertisementService : IAdvertisementService
         return advertisement;
     }
 
-    private async Task<ErrorOr<Profile>> DoIfEmployee(Profile profile, CancellationToken cancellationToken)
+    private async Task<ErrorOr<Worker>> DoIfEmployee(Profile profile, CancellationToken cancellationToken)
     {
         var worker = await _storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
 
@@ -164,6 +174,6 @@ public class AdvertisementService : IAdvertisementService
             return Errors.Advertisement.CannotPerformThis;
         }
 
-        return profile;
+        return worker;
     }
 }

@@ -32,6 +32,7 @@ internal sealed class CreateAddCommandHandler : ICommandHandler<CreateAddCommand
     {
         var authId = AuthId.Create(request.AuthId);
         var profileId = ProfileId.Create(request.ProfileId);
+        var storeId = StoreId.Create(request.StoreId);
 
         var profile = await _profileManager.GetProfileAsync(authId, profileId, cancellationToken);
 
@@ -76,6 +77,7 @@ internal sealed class CreateAddCommandHandler : ICommandHandler<CreateAddCommand
         }
 
         var createResult = await _advertisementService.CreateAdd(
+            storeId,
             advertisement.Value,
             profile.Value,
             request.Picture,

@@ -1,7 +1,6 @@
 using BeatEcoprove.Application.Shared;
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
-using BeatEcoprove.Domain.StoreAggregator.Entities;
 
 using ErrorOr;
 

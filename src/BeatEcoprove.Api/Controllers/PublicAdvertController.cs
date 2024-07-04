@@ -17,7 +17,7 @@ namespace BeatEcoprove.Api.Controllers;
 
 [ApiVersion(1)]
 [Authorize]
-[Route("v{version:apiVersion}/adverts")]
+[Route("v{version:apiVersion}/public/adverts")]
 public class PublicAdvertController : ApiController
 {
     private readonly ISender _sender;

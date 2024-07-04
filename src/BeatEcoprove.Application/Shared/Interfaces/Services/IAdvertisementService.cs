@@ -24,6 +24,7 @@ public interface IAdvertisementService
         CancellationToken cancellationToken = default);    
     
     Task<ErrorOr<Advertisement>> CreateAdd(
+        StoreId storeId,
         Advertisement advertisement,
         Profile profile,
         Stream picture,

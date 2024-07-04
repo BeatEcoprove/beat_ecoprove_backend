@@ -2,6 +2,8 @@ using BeatEcoprove.Domain.AdvertisementAggregator.Entities;
 using BeatEcoprove.Domain.AdvertisementAggregator.Enumerators;
 using BeatEcoprove.Domain.AdvertisementAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
+using BeatEcoprove.Domain.StoreAggregator;
+using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
 using BeatEcoprove.Infrastructure.Persistence.Converters;
 
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +39,18 @@ public class AdvertisementConfiguration : IEntityTypeConfiguration<Domain.Advert
         builder.HasOne<Domain.ProfileAggregator.Entities.Profiles.Profile>()
             .WithMany()
             .HasForeignKey(add => add.Creator);
+
+        builder.Property(add => add.Store)
+            .HasColumnName("store")
+            .ValueGeneratedNever()
+            .HasConversion(
+                storeId => storeId.Value, 
+                value => StoreId.Create(value)
+            ).IsRequired(required: false);
+
+        builder.HasOne<Store>()
+            .WithMany()
+            .HasForeignKey(add => add.Store);
 
         builder.Property(add => add.Title)
             .HasColumnName("title")

@@ -34,7 +34,7 @@ internal sealed class GetHomeAddsQueryHandler : IQueryHandler<GetHomeAddsQuery, 
             return profile.Errors;
         }
         
-        var adds = await _advertisementRepository.GetAllAddsAsync(
+        var adds = await _advertisementRepository.GetAllHomeAdds(
             search: request.Search,
             page: request.Page,
             pageSize: request.PageSize,

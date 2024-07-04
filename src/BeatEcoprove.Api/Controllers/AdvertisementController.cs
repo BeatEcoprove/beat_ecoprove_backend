@@ -19,8 +19,8 @@ namespace BeatEcoprove.Api.Controllers;
 
 [ApiVersion(1)]
 [Authorize]
-// [AuthorizationRole("organization")]
-[Route("v{version:apiVersion}/stores/{storeId:guid}/add")]
+[AuthorizationRole("organization", "employee")]
+[Route("v{version:apiVersion}/adverts")]
 public class AdvertisementController : ApiController
 {
     private readonly ISender _sender;
@@ -110,7 +110,7 @@ public class AdvertisementController : ApiController
     [HttpPost]
     public async Task<ActionResult<AdvertisementResponse>> CreateAdd(
         [FromQuery] Guid profileId,
-        [FromRoute] Guid storeId,
+        [FromQuery] Guid storeId,
         [FromForm] CreateAdvertisementRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -120,6 +120,7 @@ public class AdvertisementController : ApiController
             CreateAddCommand(
                 authId,
                 profileId,
+                storeId,
                 request.Title,
                 request.Description,
                 request.BeginAt,

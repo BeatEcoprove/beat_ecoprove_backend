@@ -10,6 +10,7 @@ public record CreateAddCommand
 (
     Guid AuthId,
     Guid ProfileId,
+    Guid StoreId,
     string Title,
     string Description,
     DateOnly BeginAt,
