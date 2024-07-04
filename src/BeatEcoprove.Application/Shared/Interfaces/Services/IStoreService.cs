@@ -16,7 +16,7 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Services;
 public interface IStoreService
 {
     Task<List<Order>> GetAllStores(
-        ProfileId Owner,
+        ProfileId owner,
         GetAllStoreInput input,
         CancellationToken cancellationToken = default
     );
@@ -47,7 +47,11 @@ public interface IStoreService
         ProfileId owner, 
         ClothId clothId,
         CancellationToken cancellationToken = default);
-
+    Task<ErrorOr<Order>> CompleteOrderAsync(
+        Store store, 
+        OrderId order, 
+        ProfileId owner,
+        CancellationToken cancellationToken = default);
     Task<ErrorOr<(Worker, Password)>> RegisterWorkerAsync(
         Store store,
         Profile profile,

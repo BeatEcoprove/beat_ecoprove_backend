@@ -9,5 +9,9 @@ public partial class Errors
         public static Error NotFound => Error.NotFound(
             "Order.NotFound",
             "Não foi encontrado nenhum pedido");        
+        
+        public static Error IsAlreadyCompleted => Error.NotFound(
+            "Order.IsAlreadyCompleted",
+            "Este pedido já se encontra terminado!");     
     }
 }

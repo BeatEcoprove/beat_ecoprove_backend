@@ -44,6 +44,7 @@ public abstract class Order : Entity<OrderId>
     public void Complete()
     {
         Status = OrderStatus.Completed;
+        AcceptedAt = DateTimeOffset.UtcNow;
     }
     
     public void Reject()

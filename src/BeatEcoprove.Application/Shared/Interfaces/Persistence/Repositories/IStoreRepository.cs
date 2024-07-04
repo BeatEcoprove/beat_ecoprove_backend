@@ -32,6 +32,7 @@ public interface IStoreRepository : IRepository<Store, StoreId>
         int page = 1,
         CancellationToken cancellationToken = default
     );
+    Task<Order?> GetOrderAsync(OrderId orderId, CancellationToken cancellationToken = default);
     Task<OrderDAO?> GetOrderDaoAsync(OrderId orderId, CancellationToken cancellationToken = default);
     Task<List<OrderDAO>> GetOrderDaosAsync(
         List<StoreId> storeId,

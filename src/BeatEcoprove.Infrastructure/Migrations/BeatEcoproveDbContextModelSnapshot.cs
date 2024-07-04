@@ -1268,7 +1268,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             modelBuilder.Entity("BeatEcoprove.Domain.ClosetAggregator.Bucket", b =>
                 {
-                    b.OwnsMany("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.BucketClothEntry", "BucketClothEntries", b1 =>
+                    b.OwnsMany("BeatEcoprove.Domain.ClosetAggregator.Bucket.BucketClothEntries#BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.BucketClothEntry", "BucketClothEntries", b1 =>
                         {
                             b1.Property<Guid>("BucketId")
                                 .HasColumnType("uuid")
@@ -1393,7 +1393,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.OwnsMany("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.BucketEntry", "BucketEntries", b1 =>
+                    b.OwnsMany("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile.BucketEntries#BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.BucketEntry", "BucketEntries", b1 =>
                         {
                             b1.Property<Guid>("ProfileId")
                                 .HasColumnType("uuid")
@@ -1419,7 +1419,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                                 .HasForeignKey("ProfileId");
                         });
 
-                    b.OwnsMany("BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.ClothEntry", "ClothEntries", b1 =>
+                    b.OwnsMany("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile.ClothEntries#BeatEcoprove.Domain.ProfileAggregator.Entities.Cloths.ClothEntry", "ClothEntries", b1 =>
                         {
                             b1.Property<Guid>("ProfileId")
                                 .HasColumnType("uuid")
@@ -1453,7 +1453,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                                 .HasForeignKey("ProfileId");
                         });
 
-                    b.OwnsOne("BeatEcoprove.Domain.ProfileAggregator.ValueObjects.Phone", "Phone", b1 =>
+                    b.OwnsOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Profile.Phone#BeatEcoprove.Domain.ProfileAggregator.ValueObjects.Phone", "Phone", b1 =>
                         {
                             b1.Property<Guid>("ProfileId")
                                 .HasColumnType("uuid");
@@ -1472,7 +1472,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                             b1.HasKey("ProfileId");
 
-                            b1.ToTable("profiles");
+                            b1.ToTable("profiles", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ProfileId");
@@ -1567,7 +1567,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.OwnsOne("BeatEcoprove.Domain.ProfileAggregator.ValueObjects.Address", "Address", b1 =>
+                    b.OwnsOne("BeatEcoprove.Domain.StoreAggregator.Store.Address#BeatEcoprove.Domain.ProfileAggregator.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("StoreId")
                                 .HasColumnType("uuid");
@@ -1590,12 +1590,12 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                             b1.HasKey("StoreId");
 
-                            b1.ToTable("stores");
+                            b1.ToTable("stores", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("StoreId");
 
-                            b1.OwnsOne("BeatEcoprove.Domain.ProfileAggregator.ValueObjects.PostalCode", "PostalCode", b2 =>
+                            b1.OwnsOne("BeatEcoprove.Domain.StoreAggregator.Store.Address#BeatEcoprove.Domain.ProfileAggregator.ValueObjects.Address.PostalCode#BeatEcoprove.Domain.ProfileAggregator.ValueObjects.PostalCode", "PostalCode", b2 =>
                                 {
                                     b2.Property<Guid>("AddressStoreId")
                                         .HasColumnType("uuid");
@@ -1608,7 +1608,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                                     b2.HasKey("AddressStoreId");
 
-                                    b2.ToTable("stores");
+                                    b2.ToTable("stores", (string)null);
 
                                     b2.WithOwner()
                                         .HasForeignKey("AddressStoreId");
@@ -1654,7 +1654,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
             modelBuilder.Entity("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Organization", b =>
                 {
-                    b.OwnsOne("BeatEcoprove.Domain.ProfileAggregator.ValueObjects.Address", "Address", b1 =>
+                    b.OwnsOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Organization.Address#BeatEcoprove.Domain.ProfileAggregator.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("OrganizationId")
                                 .HasColumnType("uuid");
@@ -1677,12 +1677,12 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                             b1.HasKey("OrganizationId");
 
-                            b1.ToTable("profiles");
+                            b1.ToTable("profiles", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrganizationId");
 
-                            b1.OwnsOne("BeatEcoprove.Domain.ProfileAggregator.ValueObjects.PostalCode", "PostalCode", b2 =>
+                            b1.OwnsOne("BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles.Organization.Address#BeatEcoprove.Domain.ProfileAggregator.ValueObjects.Address.PostalCode#BeatEcoprove.Domain.ProfileAggregator.ValueObjects.PostalCode", "PostalCode", b2 =>
                                 {
                                     b2.Property<Guid>("AddressOrganizationId")
                                         .HasColumnType("uuid");
@@ -1695,7 +1695,7 @@ namespace BeatEcoprove.Infrastructure.Migrations
 
                                     b2.HasKey("AddressOrganizationId");
 
-                                    b2.ToTable("profiles");
+                                    b2.ToTable("profiles", (string)null);
 
                                     b2.WithOwner()
                                         .HasForeignKey("AddressOrganizationId");

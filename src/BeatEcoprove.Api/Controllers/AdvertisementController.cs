@@ -60,7 +60,7 @@ public class AdvertisementController : ApiController
 
     [HttpGet]
     public async Task<ActionResult<List<AdvertisementResponse>>> GetMyAdverts(
-        [FromRoute] Guid storeId,
+        [FromQuery] Guid storeId,
         [FromQuery] Guid profileId,
         [FromQuery] string? search,
         [FromQuery] int? page, 

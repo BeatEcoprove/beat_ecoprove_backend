@@ -10,6 +10,7 @@ using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator;
+using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Domain.StoreAggregator.Enumerators;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
@@ -29,6 +30,7 @@ public class StoreService : IStoreService
     private readonly IPasswordGenerator _passwordGenerator;
     private readonly IAccountService _accountService;
     private readonly IAuthRepository _authRepository;
+    private readonly IClosetService _closetService;
 
     public StoreService(
         IStoreRepository storeRepository,
@@ -37,7 +39,7 @@ public class StoreService : IStoreService
         IMaintenanceServiceRepository maintenanceServiceRepository,
         IPasswordGenerator passwordGenerator,
         IAccountService accountService, 
-        IAuthRepository authRepository)
+        IAuthRepository authRepository, IClosetService closetService)
     {
         _storeRepository = storeRepository;
         _fileStorageProvider = fileStorageProvider;
@@ -46,6 +48,7 @@ public class StoreService : IStoreService
         _passwordGenerator = passwordGenerator;
         _accountService = accountService;
         _authRepository = authRepository;
+        _closetService = closetService;
     }
 
     public async Task<List<Order>> GetAllStores(ProfileId owner, GetAllStoreInput input,
@@ -178,6 +181,49 @@ public class StoreService : IStoreService
             clothId,
             new() { maintenance.Id }
         );
+
+        return order;
+    }
+
+    public async Task<ErrorOr<Order>> CompleteOrderAsync(
+        Store store, 
+        OrderId orderId, 
+        ProfileId ownerId, 
+        CancellationToken cancellationToken = default)
+    {
+        var order = store
+            .Orders
+            .Where(order => order is OrderCloth)
+            .FirstOrDefault(order => order.Id == orderId) as OrderCloth;
+
+        if (order is null)
+        {
+            return Errors.Order.NotFound;
+        }
+
+        if (order.Status == OrderStatus.Completed)
+        {
+            return Errors.Order.IsAlreadyCompleted;
+        }
+        
+        var owner = await _profileRepository.GetByIdAsync(ownerId, cancellationToken);
+
+        if (owner is null)
+        {
+            return Errors.Profile.NotFound;
+        }
+
+        var cloth = await _closetService.GetCloth(
+            owner,
+            order.Cloth,
+            cancellationToken);
+
+        if (cloth.IsError)
+        {
+            return Errors.Cloth.CannotAccessBucket;
+        }
+
+        order.Complete();
 
         return order;
     }
