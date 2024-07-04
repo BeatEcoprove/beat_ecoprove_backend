@@ -281,10 +281,16 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
 
     public async Task<bool> RemoveWorkerAsync(WorkerId id, CancellationToken cancellationToken = default)
     {
-        await DbContext.Set<Worker>()
-            .Where(w => w.Id == id)
-            .ExecuteDeleteAsync(cancellationToken);
+        var worker = await DbContext
+            .Set<Worker>()
+            .FirstOrDefaultAsync(w => w.Id == id, cancellationToken);
 
+        if (worker is null)
+        {
+            return false;
+        }
+
+        DbContext.Set<Worker>().Remove(worker);
         return true;
     }
 
@@ -301,7 +307,7 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
     public async Task<Worker?> GetWorkerAsync(WorkerId workerId, CancellationToken cancellationToken = default)
     {
         return await DbContext.Set<Worker>()
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(s => s.Id == workerId, cancellationToken);
     }
 
     public Task<bool> WorkerAlreadyOnStore(WorkerId workerId, StoreId storeId, CancellationToken cancellationToken = default)

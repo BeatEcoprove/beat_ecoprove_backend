@@ -351,6 +351,21 @@ public class StoreService : IStoreService
             return Errors.Worker.NotFound;
         }
 
+        if (isEmployee)
+        {
+            var foundWorker = await _storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
+            
+            if (foundWorker is null)
+            {
+                return Errors.Worker.NotFound;
+            }
+
+            if (foundWorker.Role != WorkerType.Manager)
+            {
+                return Errors.Store.DontHaveAccessToStore;
+            }
+        }
+
         var shouldUpgrade = store.SwitchWorkerPermission(
             worker,
             input.WorkerType

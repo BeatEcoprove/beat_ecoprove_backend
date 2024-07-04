@@ -65,14 +65,28 @@ public class AuthRepository : Repository<Auth, AuthId>, IAuthRepository
 
     public async Task<bool> RemoveAuthProfileAsync(Profile workerProfile, CancellationToken cancellationToken)
     {
-        await DbContext.Set<Profile>()
-            .Where(p => p.Id == workerProfile.Id)
-            .ExecuteDeleteAsync(cancellationToken);
+        var foundProfile = await DbContext.Set<Profile>()
+            .FirstOrDefaultAsync(f => f.Id == workerProfile.Id, cancellationToken);
 
-        await DbContext.Set<Auth>()
-            .Where(p => p.MainProfileId == workerProfile.Id)
-            .ExecuteDeleteAsync(cancellationToken);
+        if (foundProfile is null)
+        {
+            return false;
+        }
 
+        var foundAuth = await DbContext.Set<Auth>()
+            .FirstOrDefaultAsync(a => a.MainProfileId == workerProfile.Id, cancellationToken: cancellationToken);
+
+        if (foundAuth is null)
+        {
+            return false;
+        }
+
+        DbContext.Set<Profile>()
+            .Remove(foundProfile);
+        
+        DbContext.Set<Auth>()
+            .Remove(foundAuth);
+        
         return true;
     }
 }
