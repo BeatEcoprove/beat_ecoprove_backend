@@ -3,6 +3,7 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Providers.Queries.GetAllStandardProviders;
 using BeatEcoprove.Application.Providers.Queries.GetProviderById;
+using BeatEcoprove.Application.Providers.Queries.GetProviderStoreById;
 using BeatEcoprove.Application.Providers.Queries.GetProviderStores;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Providers;
@@ -107,6 +108,30 @@ public class ProviderController : ApiController
         return getAllProviders.Match(
             result => Ok(_mapper.Map<List<StoreResponse>>(result)),
             Problem<List<StoreResponse>>
+        );
+    }
+
+    [HttpGet("{providerId:guid}/stores/{storeId:guid}")]
+    public async Task<ActionResult<StoreResponse>> GetStoreById(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid providerId,
+        [FromRoute] Guid storeId,
+        CancellationToken cancellationToken = default)
+    {
+        var authId = HttpContext.User.GetUserId();
+                        
+        var getStoreById = await _sender.Send(new
+            GetProviderStoreByIdQuery(
+                authId,
+                profileId,
+                providerId,
+                storeId
+            ), cancellationToken
+        );
+        
+        return getStoreById.Match(
+            result => Ok(_mapper.Map<StoreResponse>(result)),
+            Problem<StoreResponse>
         );
     }
 }
