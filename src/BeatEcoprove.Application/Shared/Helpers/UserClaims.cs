@@ -5,6 +5,7 @@ public struct UserClaims
     public const string AccountId = "sub";
     public const string Type = "type";
     public const string Role = "role";
+    public const string StoreId = "store_id";
     public const string ProfileId = "profile_id";
     public const string Email = "email";
     public const string UserName = "given_name";
