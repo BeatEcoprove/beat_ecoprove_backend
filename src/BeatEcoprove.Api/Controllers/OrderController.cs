@@ -7,8 +7,6 @@ using BeatEcoprove.Application.Stores.Commands.RegisterOrder;
 using BeatEcoprove.Application.Stores.Queries.GetOrderById;
 using BeatEcoprove.Application.Stores.Queries.GetOrders;
 using BeatEcoprove.Contracts.Store;
-using BeatEcoprove.Domain.StoreAggregator.Daos;
-using BeatEcoprove.Infrastructure.Persistence.Configurations.ServiceProvider;
 
 using MapsterMapper;
 
@@ -21,8 +19,8 @@ namespace BeatEcoprove.Api.Controllers;
 
 [ApiVersion(1)]
 [Authorize]
-// [AuthorizationRole("organization")]
-[Route("v{version:apiVersion}/stores/{storeId:guid}/orders")]
+[AuthorizationRole("organization", "employee")]
+[Route("v{version:apiVersion}/orders")]
 public class OrderController : ApiController
 {
     private readonly ISender _sender;
@@ -37,7 +35,7 @@ public class OrderController : ApiController
         _mapper = mapper;
     }
 
-    [HttpGet("{orderId:guid}")]
+    [HttpGet("{orderId:guid}/stores/{storeId:guid}")]
     public async Task<ActionResult<OrderResponse>> GetOrderById(
         [FromQuery] Guid profileId,
         [FromRoute] Guid orderId,
@@ -100,7 +98,7 @@ public class OrderController : ApiController
     [HttpPost]
     public async Task<ActionResult<OrderResponse>> InsertOrder(
         [FromQuery] Guid profileId,
-        [FromRoute] Guid storeId,
+        [FromQuery] Guid storeId,
         [FromQuery] Guid clothId,
         [FromQuery] Guid ownerId,
         CancellationToken cancellationToken = default
