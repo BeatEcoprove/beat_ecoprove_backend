@@ -68,6 +68,11 @@ public class Store : ServiceProvider<StoreId, Guid>
 
     public double GetTotalRating()
     {
+        if (_ratingEntries.Count == 0)
+        {
+            return 0;
+        }
+        
         return _ratingEntries.Sum(s => s.Rate) / _ratingEntries.Count;
     }
     
