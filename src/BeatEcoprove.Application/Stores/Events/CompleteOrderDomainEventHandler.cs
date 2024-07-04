@@ -1,7 +1,6 @@
 using BeatEcoprove.Application.Shared.Interfaces.Persistence;
 using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
-using BeatEcoprove.Application.Stores.Commands.CompleteOrder;
 using BeatEcoprove.Domain.Events;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.StoreAggregator.ValueObjects;
@@ -17,15 +16,18 @@ internal sealed class CompleteOrderDomainEventHandler : INotificationHandler<Com
     private readonly IProfileRepository _profileRepository;
     private readonly IStoreService _storeService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IGamingService _gamingService;
 
     public CompleteOrderDomainEventHandler(
         IProfileRepository profileRepository, 
         IStoreService storeService, 
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork, 
+        IGamingService gamingService)
     {
         _profileRepository = profileRepository;
         _storeService = storeService;
         _unitOfWork = unitOfWork;
+        _gamingService = gamingService;
     }
     
     public async Task Handle(CompleteOrderDomainEvent notification, CancellationToken cancellationToken)
@@ -52,6 +54,9 @@ internal sealed class CompleteOrderDomainEventHandler : INotificationHandler<Com
             owner,
             CompleteOrderSustainablePoints,
             cancellationToken);
+        
+        owner.EcoScore += 120;
+        _gamingService.GainXp(owner, 5);        
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }

@@ -16,15 +16,18 @@ public class CreateOrderDomainEventHandler : INotificationHandler<CreateOrderDom
     private readonly IProfileRepository _profileRepository;
     private readonly IStoreService _storeService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IGamingService _gamingService;
 
     public CreateOrderDomainEventHandler(
         IProfileRepository profileRepository, 
         IStoreService storeService, 
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork, 
+        IGamingService gamingService)
     {
         _profileRepository = profileRepository;
         _storeService = storeService;
         _unitOfWork = unitOfWork;
+        _gamingService = gamingService;
     }
 
     public async Task Handle(CreateOrderDomainEvent notification, CancellationToken cancellationToken)
@@ -51,6 +54,9 @@ public class CreateOrderDomainEventHandler : INotificationHandler<CreateOrderDom
             owner,
             RegisterOrderSustainablePoints,
             cancellationToken);
+
+        owner.EcoScore += 100;
+        _gamingService.GainXp(owner, 10);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
