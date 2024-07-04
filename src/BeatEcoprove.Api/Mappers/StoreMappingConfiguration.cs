@@ -42,7 +42,7 @@ public class StoreMappingConfiguration : IRegister
                     src.NumberWorkers,
                     src.Address.Adapt<AddressResponse>(),
                     src.SustainablePoints,
-                    src.TotalRating,
+                    src.GetTotalRating(),
                     src.Picture,
                     src.Level,
                     new CoordinatesResponse(

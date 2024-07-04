@@ -65,8 +65,12 @@ public class Store : ServiceProvider<StoreId, Guid>
     }
 
     public int NumberWorkers => _workerEntries.Count;
-    public double TotalRating => _ratingEntries.Sum(s => s.Rate);
 
+    public double GetTotalRating()
+    {
+        return _ratingEntries.Sum(s => s.Rate) / _ratingEntries.Count;
+    }
+    
     public Worker AddWorker(Profile profile, WorkerType type)
     {
         var worker = Worker.Create(
