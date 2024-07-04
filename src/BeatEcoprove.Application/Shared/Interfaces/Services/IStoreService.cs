@@ -15,12 +15,16 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Services;
 
 public interface IStoreService
 {
+    Task GivePointsTo(
+        Store store,
+        Profile owner,
+        int sustainablePoints,
+        CancellationToken cancellationToken = default);
     Task<List<Order>> GetAllStoresAsync(
         ProfileId owner,
         GetAllStoreInput input,
         CancellationToken cancellationToken = default
     );
-
     Task<ErrorOr<List<Store>>> GetOwningStoreAsync(
         Profile profile,
         GetOwningStoreInput input,
@@ -30,18 +34,15 @@ public interface IStoreService
             StoreId id,
             Profile profile,
             CancellationToken cancellationToken = default);
-     
     Task<ErrorOr<Store>> CreateStoreAsync(
         Store store,
         Profile profile,
         Stream avatarPicture,
         CancellationToken cancellationToken = default);
-
     Task<ErrorOr<Store>> DeleteStoreAsync(
         Store store,
         Profile profile,
         CancellationToken cancellationToken = default);
-
     Task<ErrorOr<Order>> RegisterOrderAsync(
         Store store, 
         ProfileId owner, 
@@ -67,6 +68,5 @@ public interface IStoreService
         Profile profile,
         SwitchPermissionInput input,
         CancellationToken cancellationToken = default);
-    
     ErrorOr<WorkerType> GetWorkerType(string permission);
 }

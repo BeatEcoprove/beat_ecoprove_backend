@@ -1,4 +1,5 @@
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
+using BeatEcoprove.Domain.Events;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -116,6 +117,7 @@ public class Store : ServiceProvider<StoreId, Guid>
         );
 
         _orderEntries.Add(orderCloth);
+        AddDomainEvent(new CreateOrderDomainEvent(this.Id, Owner));
         return orderCloth;
     }
 
@@ -161,5 +163,11 @@ public class Store : ServiceProvider<StoreId, Guid>
             
         _ratingEntries.Add(rating.Value);
         return rating;
+    }
+
+    public void Complete(OrderCloth order)
+    {
+        order.Complete();
+        AddDomainEvent(new CompleteOrderDomainEvent(Id, Owner));
     }
 }

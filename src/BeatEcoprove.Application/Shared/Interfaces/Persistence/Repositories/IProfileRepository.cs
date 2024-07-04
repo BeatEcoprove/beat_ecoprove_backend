@@ -45,6 +45,11 @@ public interface IProfileRepository : IRepository<Profile, ProfileId>
         int pageSize = 10,
         int page = 1,
         CancellationToken cancellationToken = default);
-
-    Task<Profile?> GetByUserNameAsync(UserName username, CancellationToken cancellationToken);
+    Task<Profile?> GetByUserNameAsync(
+        UserName username, 
+        CancellationToken cancellationToken = default);
+    Task UpdateWorkerProfileSustainablePoints(
+        List<ProfileId> workerProfileIds, 
+        int valueSustainablePoints, 
+        CancellationToken cancellationToken = default);
 }

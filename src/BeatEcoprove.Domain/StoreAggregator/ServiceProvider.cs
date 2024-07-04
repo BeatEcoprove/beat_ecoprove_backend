@@ -23,5 +23,5 @@ public class ServiceProvider<TId, TIdType> : AggregateRoot<TId, TIdType>
     
     public ProfileId Owner { get; private set; } = null!;
     public Point Localization { get; private set; } = null!;
-    public int SustainablePoints { get; private set; }
+    public int SustainablePoints { get; set; }
 }

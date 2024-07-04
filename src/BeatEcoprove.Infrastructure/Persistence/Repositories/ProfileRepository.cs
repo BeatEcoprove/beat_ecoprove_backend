@@ -2,7 +2,6 @@
 using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.DAOs;
-using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.DAOS;
@@ -11,7 +10,7 @@ using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Domain.StoreAggregator;
-using BeatEcoprove.Domain.StoreAggregator.Daos;
+using BeatEcoprove.Domain.StoreAggregator.Entities;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
 
 using Microsoft.EntityFrameworkCore;
@@ -169,6 +168,22 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
         return DbContext
             .Profiles
             .SingleOrDefaultAsync(p => p.UserName == username, cancellationToken);
+    }
+
+    public async Task UpdateWorkerProfileSustainablePoints(
+        List<ProfileId> workerProfileIds, 
+        int valueSustainablePoints,
+        CancellationToken cancellationToken = default)
+    {
+        var getWorkers = from profile in DbContext.Set<Profile>()
+            where profile.Type.Equals(UserType.Employee) && workerProfileIds.Contains(profile.Id)
+            select profile;
+
+        var workers = await getWorkers.ToListAsync(cancellationToken);
+        workers.ForEach(worker =>
+        {
+            worker.SustainabilityPoints = valueSustainablePoints;
+        });
     }
 
     public Task<List<ProfileId>> GetNestedProfileIds(AuthId authId, CancellationToken cancellationToken)

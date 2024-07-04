@@ -51,6 +51,29 @@ public class StoreService : IStoreService
         _closetService = closetService;
     }
 
+    public async Task GivePointsTo(
+        Store store, 
+        Profile owner, 
+        int sustainablePoints, 
+        CancellationToken cancellationToken = default)
+    {
+         if (owner is Organization organization)
+         {
+             owner.SustainabilityPoints += sustainablePoints;
+         }
+        
+         store.SustainablePoints += sustainablePoints;
+        
+         var workerProfileIds = store.Workers
+             .Select(worker => worker.Profile)
+             .ToList();
+
+         await _profileRepository.UpdateWorkerProfileSustainablePoints(
+             workerProfileIds,
+             store.SustainablePoints,
+             cancellationToken);
+    }
+
     public async Task<List<Order>> GetAllStoresAsync(ProfileId owner, GetAllStoreInput input,
         CancellationToken cancellationToken = default)
     {
@@ -223,7 +246,7 @@ public class StoreService : IStoreService
             return Errors.Cloth.CannotAccessBucket;
         }
 
-        order.Complete();
+        store.Complete(order);
 
         return order;
     }

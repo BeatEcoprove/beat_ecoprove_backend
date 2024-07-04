@@ -83,30 +83,17 @@ public class JwtProvider : IJwtProvider
         string role = "";
         string storeId = "";
 
-        switch (profile)
+        if (profile is Employee employee)
         {
-            case Organization organization:
-                {
-                    // var total = _storeRepository.GetTotalOfSustainablePoints(organization).GetAwaiter().GetResult();
-                    // profile.SustainabilityPoints = total;
-                    break;
-                }
-            case Employee employee:
-                {
-                    var worker = _storeRepository.GetWorkerByProfileAsync(profile.Id).GetAwaiter().GetResult();
+            var worker = _storeRepository.GetWorkerByProfileAsync(profile.Id).GetAwaiter().GetResult();
 
-                    if (worker is not null)
-                    {
-                        role = worker.Role.ToString().ToLower();
-                        storeId = worker.Store.Value.ToString();
-                    }
-            
-                    // var total = _storeRepository.GetTotalOfSustainablePoints(employee).GetAwaiter().GetResult();
-                    // employee.SustainabilityPoints = total;
-                    break;
-                }
+            if (worker is not null)
+            {
+                role = worker.Role.ToString().ToLower();
+                storeId = worker.Store.Value.ToString();
+            }
         }
-
+        
         var levelProgress = _gamingService.GetLevelProgress(profile);
         var payload = new AuthTokenPayload(
             account.Id,
