@@ -51,7 +51,7 @@ public class StoreService : IStoreService
         _closetService = closetService;
     }
 
-    public async Task<List<Order>> GetAllStores(ProfileId owner, GetAllStoreInput input,
+    public async Task<List<Order>> GetAllStoresAsync(ProfileId owner, GetAllStoreInput input,
         CancellationToken cancellationToken = default)
     {
         var stores = await _storeRepository.GetAllStoresAsync(

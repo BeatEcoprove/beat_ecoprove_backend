@@ -3,8 +3,10 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Providers.Queries.GetAllStandardProviders;
 using BeatEcoprove.Application.Providers.Queries.GetProviderById;
+using BeatEcoprove.Application.Providers.Queries.GetProviderStores;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts.Providers;
+using BeatEcoprove.Contracts.Store;
 
 using MapsterMapper;
 
@@ -64,7 +66,6 @@ public class ProviderController : ApiController
         [FromRoute] Guid providerId,
         CancellationToken cancellationToken = default)
     {
-         
         var authId = HttpContext.User.GetUserId();
                         
         var getAllProviders = await _sender.Send(new
@@ -78,6 +79,34 @@ public class ProviderController : ApiController
         return getAllProviders.Match(
             result => Ok(_mapper.Map<ProviderResponse>(result)),
             Problem<ProviderResponse>
+        );
+    }
+
+    [HttpGet("{providerId:guid}/stores")]
+    public async Task<ActionResult<List<StoreResponse>>> GetStores(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid providerId,
+        [FromQuery] string? search = null,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        var authId = HttpContext.User.GetUserId();
+                        
+        var getAllProviders = await _sender.Send(new
+            GetProviderStoresQuery(
+                authId, 
+                profileId, 
+                providerId, 
+                search, 
+                page, 
+                pageSize
+            ), cancellationToken
+        );
+        
+        return getAllProviders.Match(
+            result => Ok(_mapper.Map<List<StoreResponse>>(result)),
+            Problem<List<StoreResponse>>
         );
     }
 }

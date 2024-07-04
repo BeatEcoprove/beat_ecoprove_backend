@@ -15,7 +15,7 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Services;
 
 public interface IStoreService
 {
-    Task<List<Order>> GetAllStores(
+    Task<List<Order>> GetAllStoresAsync(
         ProfileId owner,
         GetAllStoreInput input,
         CancellationToken cancellationToken = default

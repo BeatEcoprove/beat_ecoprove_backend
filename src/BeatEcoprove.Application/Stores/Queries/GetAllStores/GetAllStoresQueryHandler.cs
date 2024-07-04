@@ -163,7 +163,7 @@ internal sealed class GetAllStoresQueryHandler : IQueryHandler<GetAllStoresQuery
             return profile.Errors;
         }
         
-        var stores = await _storeService.GetAllStores(
+        var stores = await _storeService.GetAllStoresAsync(
             profile.Value.Id,
             new GetAllStoreInput(
                 serviceId?.Value,
