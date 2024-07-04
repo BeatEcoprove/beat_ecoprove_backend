@@ -57,6 +57,7 @@ public class CreateOrderDomainEventHandler : INotificationHandler<CreateOrderDom
 
         owner.EcoScore += 100;
         _gamingService.GainXp(owner, 10);
+        _gamingService.GainXp(store.Value, 10);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }

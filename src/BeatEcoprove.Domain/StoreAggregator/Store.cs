@@ -1,3 +1,4 @@
+using BeatEcoprove.Application.Shared.Gaming;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Events;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
@@ -14,7 +15,7 @@ using NetTopologySuite.Geometries;
 
 namespace BeatEcoprove.Domain.StoreAggregator;
 
-public class Store : ServiceProvider<StoreId, Guid>
+public class Store : ServiceProvider<StoreId, Guid>, IGamingObject
 {
     private readonly List<Order> _orderEntries = new();
     private readonly List<Worker> _workerEntries = new();
@@ -34,13 +35,15 @@ public class Store : ServiceProvider<StoreId, Guid>
         Name = name;
         Address = address;
         Level = 0;
+        XP = 0.0;
     }
 
     public string Name { get; private set; } = null!;
     public Address Address { get; private set; } = null!;
     public double TotalRate => Ratings.Sum(rating => rating.Rate);
     public string Picture { get; private set; } = null!;
-    public int Level { get; private set; }
+    public int Level { get; set; }
+    public double XP { get; set; }
     public List<Worker> Workers => _workerEntries;
     public List<Order> Orders => _orderEntries;
     public List<Rating> Ratings => _ratingEntries;

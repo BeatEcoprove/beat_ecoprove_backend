@@ -105,6 +105,9 @@ public class StoreConfiguration : IEntityTypeConfiguration<Domain.StoreAggregato
         builder.HasMany(order => order.Ratings)
             .WithOne()
             .HasForeignKey(order => order.Store);
+
+        builder.Property(store => store.XP)
+            .HasColumnName("xp");
         
         builder.HasQueryFilter(b => b.Ratings.All(be => be.DeletedAt == null));
     }

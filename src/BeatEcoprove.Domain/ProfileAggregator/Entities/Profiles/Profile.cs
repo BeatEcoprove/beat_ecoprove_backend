@@ -1,4 +1,5 @@
-﻿using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
+﻿using BeatEcoprove.Application.Shared.Gaming;
+using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ClosetAggregator;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.Events;
@@ -12,7 +13,7 @@ using ErrorOr;
 
 namespace BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 
-public abstract class Profile : AggregateRoot<ProfileId, Guid>
+public abstract class Profile : AggregateRoot<ProfileId, Guid>, IGamingObject
 {
     private const int ConvertConcurrencyRange = 10;
     private readonly List<ClothEntry> _clothEntries = new();

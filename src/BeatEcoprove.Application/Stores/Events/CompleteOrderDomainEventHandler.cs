@@ -57,6 +57,7 @@ internal sealed class CompleteOrderDomainEventHandler : INotificationHandler<Com
         
         owner.EcoScore += 120;
         _gamingService.GainXp(owner, 5);        
+        _gamingService.GainXp(store.Value, 5);        
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
