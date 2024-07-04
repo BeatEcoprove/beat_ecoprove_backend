@@ -4,6 +4,7 @@ using System.Text;
 
 using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Interfaces.Helpers;
+using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator;
@@ -21,11 +22,14 @@ public class JwtProvider : IJwtProvider
     private const string Algorithm = SecurityAlgorithms.HmacSha256;
     private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
     private readonly IGamingService _gamingService;
+    private readonly IStoreRepository _storeRepository;
 
     public JwtProvider(
-        IGamingService gamingService)
+        IGamingService gamingService, 
+        IStoreRepository storeRepository)
     {
         _gamingService = gamingService;
+        _storeRepository = storeRepository;
     }
 
     public string GenerateToken(TokenPayload payload)
@@ -71,8 +75,23 @@ public class JwtProvider : IJwtProvider
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     }
 
-    public (string, string) GenerateAuthenticationTokens(Auth account, Profile profile, ProfileId profileId)
+    public (string, string) GenerateAuthenticationTokens(
+        Auth account, 
+        Profile profile, 
+        ProfileId profileId)
     {
+        string role = "";
+
+        if (profile is Employee employee)
+        {
+            var worker = _storeRepository.GetWorkerByProfileAsync(profile.Id).GetAwaiter().GetResult();
+
+            if (worker is not null)
+            {
+                role = worker.Role.ToString().ToLower();
+            }
+        }
+        
         var levelProgress = _gamingService.GetLevelProgress(profile);
         var payload = new AuthTokenPayload(
             account.Id,
@@ -88,7 +107,8 @@ public class JwtProvider : IJwtProvider
             profile.XP,
             _gamingService.GetNextLevelXp(profile),
             profile.Type,
-            Tokens.Access);
+            Tokens.Access,
+            role);
 
         return GenerateAuthenticationTokens(payload);
     }

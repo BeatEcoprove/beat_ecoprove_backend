@@ -16,6 +16,7 @@ public class AuthTokenPayload : TokenPayload
     private readonly int _ecoCoins;
     private readonly double _currentXp;
     private readonly double _nextLevelXp;
+    private readonly string _role;
 
     public AuthTokenPayload(
         Guid accountId,
@@ -31,8 +32,10 @@ public class AuthTokenPayload : TokenPayload
         double currentXp,
         double nextLevelXp,
         UserType userType,
-        Tokens tokenType) : base(tokenType)
+        Tokens tokenType,
+        string role = "") : base(tokenType)
     {
+        _role = role;
         _accountId = accountId;
         _profileId = profileId;
         Email = email;
@@ -64,7 +67,9 @@ public class AuthTokenPayload : TokenPayload
 
     public override IDictionary<string, string> GetPayload()
     {
-        return new Dictionary<string, string>
+        var userType = UserType.GetUserType();
+        
+        var claims = new Dictionary<string, string>
         {
             { UserClaims.AccountId, AccountId },
             { UserClaims.ProfileId, ProfileId },
@@ -78,7 +83,14 @@ public class AuthTokenPayload : TokenPayload
             { UserClaims.EcoCoins, EcoCoins },
             { UserClaims.CurrentXp, CurrentXp },
             { UserClaims.NextLevelXp, NextLevelXp },
-            { UserClaims.Type, UserType.GetUserType() }
+            { UserClaims.Type, userType } 
         };
+
+        if (UserType.Equals(UserType.Employee))
+        {
+            claims.Add(UserClaims.Role, _role);
+        }
+        
+        return claims;
     }
 }
