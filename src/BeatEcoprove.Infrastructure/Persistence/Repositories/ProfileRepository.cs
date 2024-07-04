@@ -6,6 +6,7 @@ using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.DAOS;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
+using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
 using BeatEcoprove.Infrastructure.Persistence.Shared;
@@ -18,6 +19,26 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
 {
     public ProfileRepository(IApplicationDbContext dbContext) : base(dbContext)
     {
+    }
+
+    public async Task<List<Organization>> GetAllOrganizationsAsync(
+        string? search = null, 
+        int page = 1, 
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        var getAllOrganizations = from profile in DbContext.Set<Profile>()
+            let organization = profile as Organization
+            where
+                profile.Type.Equals(UserType.Organization) && organization != null &&
+                (search == null || ((string)profile.UserName).ToLower().Contains(search.ToLower()))
+            select organization;
+        
+         getAllOrganizations = getAllOrganizations
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
+ 
+        return await getAllOrganizations.ToListAsync(cancellationToken);
     }
 
     public async Task<List<Profile>> GetAllProfilesAsync(string? search, int pageSize = 10, int page = 1,

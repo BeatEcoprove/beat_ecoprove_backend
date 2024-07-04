@@ -11,6 +11,12 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
 public interface IProfileRepository : IRepository<Profile, ProfileId>
 {
+    Task<List<Organization>> GetAllOrganizationsAsync(
+        string? search = null,
+        int page = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default
+    );
     Task<List<Profile>> GetAllProfilesAsync(string? search,
         int pageSize = 10,
         int page = 1,
