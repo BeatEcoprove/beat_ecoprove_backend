@@ -39,7 +39,7 @@ public sealed class Voucher : Advertisement
     ) {
         if (quantity == 0)
         {
-            return Errors.Advertisement.CannotPerformThis;
+            return Errors.Advertisement.VoucherQuantityBelow0;
         }
         
         return new Voucher(

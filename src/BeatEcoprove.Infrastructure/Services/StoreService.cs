@@ -148,7 +148,7 @@ public class StoreService : IStoreService
 
         var deleted = await _storeRepository.DeleteStoreAsync(store, cancellationToken);
 
-        if (deleted)
+        if (!deleted)
         {
             return Errors.Store.StoreNotFound;
         }
