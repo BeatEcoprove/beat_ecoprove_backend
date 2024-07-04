@@ -146,7 +146,7 @@ public class AdvertisementService : IAdvertisementService
         CancellationToken cancellationToken = default)
     {
         var isEmployee = profile.Type.Equals(UserType.Employee);
-        
+
         if (!await _advertisementRepository.HasProfileAccessToAdvert(
                 advertisement.Id, 
                 profile.Id, 
@@ -154,6 +154,21 @@ public class AdvertisementService : IAdvertisementService
                 cancellationToken))
         {
             return Errors.Advertisement.CannotPerformThis;
+        }
+
+        if (isEmployee)
+        {
+            var worker = await _storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
+            
+            if (worker is null)
+            {
+                return Errors.Worker.NotFound;
+            }
+    
+            if (worker.Role != WorkerType.Manager)
+            {
+                return Errors.Store.DontHaveAccessToStore;
+            }
         }
 
         await _advertisementRepository.RemoveAsync(advertisement.Id, cancellationToken);

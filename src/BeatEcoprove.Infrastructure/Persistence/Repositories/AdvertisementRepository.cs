@@ -71,13 +71,12 @@ public class AdvertisementRepository : Repository<Advertisement, AdvertisementId
     {
         var hasAccess = from advert in DbContext.Set<Advertisement>()
             from store in DbContext.Set<Store>()
+            from worker in store.Workers
             where 
                  (
-                    isEmployee && 
-                    store.Workers.Select(worker => worker.Profile).Contains(profile) &&
-                    store.Id == advert.Id
+                    isEmployee && advert.Store == null 
                     ||
-                    isEmployee && advert.Store == null
+                    isEmployee && advert.Store == store.Id && worker.Profile == profile && worker.Store == store.Id
                     ||
                     advert.Creator == profile
                 ) 
