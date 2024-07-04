@@ -53,7 +53,11 @@ public interface IStoreService
         Profile profile,
         AddWorkerInput input,
         CancellationToken cancellationToken = default);
-
+    Task<ErrorOr<Worker>> RemoveWorkerAsync(
+        Store store,
+        Profile profile,
+        WorkerId worker,
+        CancellationToken cancellationToken = default);
     Task<ErrorOr<Worker>> SwitchPermission(
         Store store,
         Profile profile,

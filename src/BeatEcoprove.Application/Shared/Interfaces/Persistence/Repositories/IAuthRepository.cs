@@ -13,4 +13,5 @@ public interface IAuthRepository : IRepository<Auth, AuthId>
     Task<Auth?> GetAuthByEmail(Email value, CancellationToken cancellationToken);
     Task UpdateUserPassword(AuthId id, Password hashedPassword, CancellationToken cancellationToken);
     Task<bool> DoesProfileBelongToAuth(AuthId authId, ProfileId profileId, CancellationToken cancellationToken);
+    Task<bool> RemoveAuthProfileAsync(Profile workerProfile, CancellationToken cancellationToken);
 }

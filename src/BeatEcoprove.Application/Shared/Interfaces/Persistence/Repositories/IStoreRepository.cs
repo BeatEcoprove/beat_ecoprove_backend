@@ -50,6 +50,8 @@ public interface IStoreRepository : IRepository<Store, StoreId>
         int page = 1,
         int pageSize = 10,
         CancellationToken cancellationToken = default);
+
+    Task<bool> RemoveWorkerAsync(WorkerId id, CancellationToken cancellationToken = default);
     Task<Worker?> GetWorkerByProfileAsync(ProfileId profileId, CancellationToken cancellationToken = default);
     Task<Worker?> GetWorkerAsync(WorkerId workerId, CancellationToken cancellationToken = default);
     Task<bool> WorkerAlreadyOnStore(WorkerId workerId, StoreId storeId, CancellationToken cancellationToken = default);

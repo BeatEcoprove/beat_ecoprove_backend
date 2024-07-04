@@ -28,6 +28,7 @@ public class StoreService : IStoreService
     private readonly IMaintenanceServiceRepository _maintenanceServiceRepository;
     private readonly IPasswordGenerator _passwordGenerator;
     private readonly IAccountService _accountService;
+    private readonly IAuthRepository _authRepository;
 
     public StoreService(
         IStoreRepository storeRepository,
@@ -35,7 +36,8 @@ public class StoreService : IStoreService
         IProfileRepository profileRepository,
         IMaintenanceServiceRepository maintenanceServiceRepository,
         IPasswordGenerator passwordGenerator,
-        IAccountService accountService)
+        IAccountService accountService, 
+        IAuthRepository authRepository)
     {
         _storeRepository = storeRepository;
         _fileStorageProvider = fileStorageProvider;
@@ -43,6 +45,7 @@ public class StoreService : IStoreService
         _maintenanceServiceRepository = maintenanceServiceRepository;
         _passwordGenerator = passwordGenerator;
         _accountService = accountService;
+        _authRepository = authRepository;
     }
 
     public async Task<List<Order>> GetAllStores(ProfileId owner, GetAllStoreInput input,
@@ -244,6 +247,45 @@ public class StoreService : IStoreService
         );
 
         return (worker, password);
+    }
+
+    public async Task<ErrorOr<Worker>> RemoveWorkerAsync(Store store, Profile profile, WorkerId workerId, CancellationToken cancellationToken = default)
+    {
+        var isEmployee = profile.Type.Equals(UserType.Employee);
+
+        if (isEmployee)
+        {
+            var foundWorker = await _storeRepository.GetWorkerByProfileAsync(profile.Id, cancellationToken);
+
+            if (foundWorker is null)
+            {
+                return Errors.Worker.NotFound;
+            }
+
+            if (foundWorker.Role != WorkerType.Manager)
+            {
+                return Errors.Store.DontHaveAccessToStore;
+            }
+        }        
+        
+        var worker = await _storeRepository.GetWorkerAsync(workerId, cancellationToken);
+
+        if (worker is null)
+        {
+            return Errors.Worker.NotFound;
+        }
+
+        var workerProfile = await _profileRepository.GetByIdAsync(worker.Profile, cancellationToken);
+
+        if (workerProfile is null)
+        {
+            return Errors.Profile.NotFound;
+        }
+
+        await _authRepository.RemoveAuthProfileAsync(workerProfile, cancellationToken);
+        await _storeRepository.RemoveWorkerAsync(worker.Id, cancellationToken);
+
+        return worker;
     }
 
     public async Task<ErrorOr<Worker>> SwitchPermission(Store store, Profile profile, SwitchPermissionInput input,

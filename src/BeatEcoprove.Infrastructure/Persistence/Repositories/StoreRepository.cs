@@ -5,6 +5,7 @@ using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
+using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
@@ -266,6 +267,15 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
             .Take(pageSize);
 
         return await getWorkers.ToListAsync(cancellationToken);
+    }
+
+    public async Task<bool> RemoveWorkerAsync(WorkerId id, CancellationToken cancellationToken = default)
+    {
+        await DbContext.Set<Worker>()
+            .Where(w => w.Id == id)
+            .ExecuteDeleteAsync(cancellationToken);
+
+        return true;
     }
 
     public async Task<Worker?> GetWorkerByProfileAsync(ProfileId profileId, CancellationToken cancellationToken = default)

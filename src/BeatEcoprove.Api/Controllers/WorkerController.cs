@@ -4,6 +4,7 @@ using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Application.Stores.Commands.AddWorker;
 using BeatEcoprove.Application.Stores.Commands.ElevatePermissionOnWorker;
+using BeatEcoprove.Application.Stores.Commands.RemoveWorker;
 using BeatEcoprove.Application.Stores.Queries.GetWorkerById;
 using BeatEcoprove.Application.Stores.Queries.GetWorkers;
 using BeatEcoprove.Contracts.Store;
@@ -19,7 +20,7 @@ namespace BeatEcoprove.Api.Controllers;
 
 [ApiVersion(1)]
 [Authorize]
-// [AuthorizationRole("organization")]
+[AuthorizationRole("organization", "employee")]
 [Route("v{version:apiVersion}/stores/{storeId:guid}/workers")]
 public class WorkerController : ApiController
 {
@@ -104,6 +105,30 @@ public class WorkerController : ApiController
                 request.Name,
                 request.Email,
                 request.Permission
+            ), cancellationToken
+        );
+        
+        return registerOrderResult.Match(
+            result => Ok(_mapper.Map<WorkerResponse>(result)),
+            Problem<WorkerResponse>
+        );
+    }
+
+    [HttpDelete("{workerId:guid}")]
+    public async Task<ActionResult<WorkerResponse>> RemoveWorker(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid storeId,
+        [FromRoute] Guid workerId,
+        CancellationToken cancellationToken = default)
+    {
+        var authId = HttpContext.User.GetUserId();
+        
+        var registerOrderResult = await _sender.Send(new
+             RemoveWorkerCommand(
+                authId,
+                profileId,
+                storeId,
+                workerId
             ), cancellationToken
         );
         
