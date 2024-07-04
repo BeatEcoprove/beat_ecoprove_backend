@@ -3,6 +3,7 @@ using Asp.Versioning;
 using BeatEcoprove.Api.Extensions;
 using BeatEcoprove.Api.Mappers;
 using BeatEcoprove.Application.Shared.Multilanguage;
+using BeatEcoprove.Application.Stores.Commands.CompleteOrder;
 using BeatEcoprove.Application.Stores.Commands.RegisterOrder;
 using BeatEcoprove.Application.Stores.Queries.GetOrderById;
 using BeatEcoprove.Application.Stores.Queries.GetOrders;
@@ -120,5 +121,31 @@ public class OrderController : ApiController
             result => Ok(_mapper.Map<OrderResponse>(result)),
             Problem<OrderResponse>
         );
+    }
+
+    [HttpPatch("{orderId:guid}")]
+    public async Task<ActionResult<OrderResponse>> CompleteOrder(
+        [FromQuery] Guid profileId,
+        [FromRoute] Guid orderId,
+        [FromQuery] Guid storeId,
+        [FromQuery] Guid ownerId,
+        CancellationToken cancellationToken = default)
+    {
+         var authId = HttpContext.User.GetUserId();
+         
+         var completeOrder = await _sender.Send(new
+             CompleteOrderCommand(
+                 authId, 
+                 profileId, 
+                 storeId,
+                 orderId,
+                 ownerId
+             ), cancellationToken
+         );
+         
+         return completeOrder.Match(
+             result => Ok(_mapper.Map<OrderResponse>(result)),
+             Problem<OrderResponse>
+         );       
     }
 }

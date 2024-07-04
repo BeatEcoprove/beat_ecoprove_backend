@@ -17,7 +17,6 @@ namespace BeatEcoprove.Api.Controllers;
 
 [ApiVersion(1)]
 [Authorize]
-[AuthorizationRole("organization", "employee")]
 [Route("v{version:apiVersion}/stores/{storeId:guid}/ratings")]
 public class RatingController : ApiController
 {

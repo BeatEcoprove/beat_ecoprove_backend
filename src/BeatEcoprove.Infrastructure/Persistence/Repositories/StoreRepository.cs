@@ -5,7 +5,6 @@ using BeatEcoprove.Domain.ClosetAggregator.Entities;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
 using BeatEcoprove.Domain.Shared.Entities;
-using BeatEcoprove.Domain.Shared.Errors;
 using BeatEcoprove.Domain.StoreAggregator;
 using BeatEcoprove.Domain.StoreAggregator.Daos;
 using BeatEcoprove.Domain.StoreAggregator.Entities;
@@ -29,6 +28,7 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
     {
          return await DbContext.Set<Store>()
             .Include(group => group.Workers)
+            .Include(group => group.Orders)
             .Include(group => group.Ratings)
             .FirstOrDefaultAsync(group => group.Id == id, cancellationToken);
     }
@@ -114,6 +114,15 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
 
         return await getAllOrders
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Order?> GetOrderAsync(OrderId orderId, CancellationToken cancellationToken = default)
+    {
+        var getOrderById = from order in DbContext.Set<Order>()
+            where order.Id == orderId
+            select order;
+
+        return await getOrderById.FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<OrderDAO?> GetOrderDaoAsync(
@@ -205,7 +214,7 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
             where 
                 orderServices.Count > 0 &&
                 (search == null || cloth.Name.ToLower().Contains(search.ToLower()) || brand.Name.ToLower().Contains(search.ToLower())) &&
-                ( isDone == null || (bool)isDone ? order.Status == OrderStatus.Completed : (bool)isDone == false ) &&
+                (isDone == null || (bool)isDone ? order.Status == OrderStatus.Completed : order.Status != OrderStatus.Completed ) &&
                 profile.Id == order.Owner
             select isOrderCloth
                 ? orderCloth.ToOrderCloth(
@@ -231,6 +240,7 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
             from profile in DbContext.Set<Profile>()
             from auth in DbContext.Set<Auth>()
             where 
+                worker.Store == store.Id &&
                 worker.Id == workerId && 
                 worker.Profile == profile.Id &&
                 profile.AuthId == auth.Id
