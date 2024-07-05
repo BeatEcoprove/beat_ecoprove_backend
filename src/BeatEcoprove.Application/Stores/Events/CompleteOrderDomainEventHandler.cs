@@ -11,7 +11,7 @@ namespace BeatEcoprove.Application.Stores.Events;
 
 internal sealed class CompleteOrderDomainEventHandler : INotificationHandler<CompleteOrderDomainEvent>
 { 
-    private const int CompleteOrderSustainablePoints = 25;
+    private const int CompleteOrderSustainablePoints = 35;
         
     private readonly IProfileRepository _profileRepository;
     private readonly IStoreService _storeService;

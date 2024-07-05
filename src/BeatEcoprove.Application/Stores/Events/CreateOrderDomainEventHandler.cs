@@ -11,7 +11,7 @@ namespace BeatEcoprove.Application.Stores.Events;
 
 public class CreateOrderDomainEventHandler : INotificationHandler<CreateOrderDomainEvent>
 {
-    private const int RegisterOrderSustainablePoints = 15;
+    private const int RegisterOrderSustainablePoints = 30;
     
     private readonly IProfileRepository _profileRepository;
     private readonly IStoreService _storeService;
