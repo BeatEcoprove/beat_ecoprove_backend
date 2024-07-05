@@ -4,6 +4,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Application.Shared.Interfaces.Services.Common;
+using BeatEcoprove.Domain.ClosetAggregator.Enumerators;
 using BeatEcoprove.Domain.ClosetAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
@@ -190,6 +191,20 @@ public class StoreService : IStoreService
             return Errors.Profile.CannotFindCloth;
         }
 
+        var profile = await _profileRepository.GetByIdAsync(owner, cancellationToken);
+
+        if (profile is null)
+        {
+            return Errors.Profile.NotFound;
+        }
+
+        var cloth = await _closetService.GetCloth(profile, clothId, cancellationToken);
+
+        if (cloth.IsError)
+        {
+            return cloth.Errors;
+        }
+
         var maintenance = await _maintenanceServiceRepository.GetMaintenanceServiceByName(
             "Lavar",
             cancellationToken);
@@ -204,6 +219,8 @@ public class StoreService : IStoreService
             clothId,
             new() { maintenance.Id }
         );
+
+        cloth.Value.SetState(ClothState.Blocked);
 
         return order;
     }
@@ -247,6 +264,7 @@ public class StoreService : IStoreService
         }
 
         store.Complete(order);
+        cloth.Value.SetState(ClothState.Idle);
 
         return order;
     }
