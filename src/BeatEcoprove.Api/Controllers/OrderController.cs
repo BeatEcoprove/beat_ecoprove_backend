@@ -20,7 +20,7 @@ namespace BeatEcoprove.Api.Controllers;
 
 [ApiVersion(1)]
 [Authorize]
-[AuthorizationRole("organization", "employee")]
+[AuthorizationRole("organization", "employee", "consumer")]
 [Route("v{version:apiVersion}/orders")]
 public class OrderController : ApiController
 {

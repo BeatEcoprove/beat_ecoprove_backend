@@ -46,18 +46,17 @@ internal sealed class CompleteOrderCommandHandler : ICommandHandler<CompleteOrde
             return profile.Errors;
         }
 
-        var store = await _storeService.GetStoreAsync(
+        var store = await _storeRepository.GetByIdAsync(
             storeId, 
-            profile.Value, 
             cancellationToken);
 
-        if (store.IsError)
+        if (store is null)
         {
-            return store.Errors;
+            return Errors.Store.StoreNotFound;
         }
 
         var shouldComplete = await _storeService.CompleteOrderAsync(
-            store.Value,
+            store,
             orderId,
             ownerId,
             cancellationToken);
