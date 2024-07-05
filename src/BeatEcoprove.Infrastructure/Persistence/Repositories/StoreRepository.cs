@@ -20,9 +20,13 @@ namespace BeatEcoprove.Infrastructure.Persistence.Repositories;
 
 public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
 {
+    private readonly IProfileRepository _profileRepository;
+    
     public StoreRepository(
-        IApplicationDbContext dbContext) : base(dbContext)
+        IApplicationDbContext dbContext, 
+        IProfileRepository profileRepository) : base(dbContext)
     {
+        _profileRepository = profileRepository;
     }
 
     public new async Task<Store?> GetByIdAsync(StoreId id, CancellationToken cancellationToken = default)
@@ -32,6 +36,35 @@ public class StoreRepository : Repository<Store, StoreId>, IStoreRepository
             .Include(group => group.Orders)
             .Include(group => group.Ratings)
             .FirstOrDefaultAsync(group => group.Id == id, cancellationToken);
+    }
+
+    public async Task SubtractPoints(
+        ProfileId profileId, 
+        int advertisementSustainablePoints, 
+        CancellationToken cancellationToken)
+    {
+        var getStore = from store in DbContext.Set<Store>()
+            where store.Owner == profileId && store.SustainablePoints >= advertisementSustainablePoints
+            select store;
+
+        var foundStore = await getStore
+            .Include(o => o.Workers)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (foundStore is null)
+        {
+            return;
+        }
+
+        var profileList = foundStore.Workers.Select(worker => worker.Profile)
+            .ToList();
+        
+        await _profileRepository.UpdateWorkerProfileSustainablePoints(
+             profileList,
+             advertisementSustainablePoints,
+             cancellationToken);
+        
+        foundStore.SustainablePoints -= advertisementSustainablePoints;
     }
 
     public async Task<int> GetTotalOfSustainablePoints(Profile provider, CancellationToken cancellationToken = default)

@@ -21,17 +21,20 @@ public class AdvertisementService : IAdvertisementService
     private readonly IStoreService _storeService;
     private readonly IAdvertisementRepository _advertisementRepository;
     private readonly IFileStorageProvider _fileProvider;
+    private readonly IProfileRepository _profileRepository;
 
     public AdvertisementService(
         IStoreRepository storeRepository, 
         IAdvertisementRepository advertisementRepository, 
         IFileStorageProvider fileProvider, 
-        IStoreService storeService)
+        IStoreService storeService, 
+        IProfileRepository profileRepository)
     {
         _storeRepository = storeRepository;
         _advertisementRepository = advertisementRepository;
         _fileProvider = fileProvider;
         _storeService = storeService;
+        _profileRepository = profileRepository;
     }
 
     public async Task<ErrorOr<Advertisement>> GetAdvertAsync(
@@ -111,6 +114,11 @@ public class AdvertisementService : IAdvertisementService
 
             storeId = result.Value.Store;
         }
+        
+        if (profile.SustainabilityPoints < advertisement.SustainablePoints)
+        {
+            return Errors.Advertisement.DontHaveEnoughPoint;
+        }
 
         if (storeId.Value != Guid.Empty)
         {
@@ -123,7 +131,27 @@ public class AdvertisementService : IAdvertisementService
             
             advertisement.SetStore(storeId);
             advertisement.SetMainProfile(store.Value.Owner);
+
+            store.Value.SustainablePoints -= advertisement.SustainablePoints;
+
+            var ownerProfile = await _profileRepository.GetByIdAsync(store.Value.Owner, cancellationToken);
+
+            if (ownerProfile is null)
+            {
+                return Errors.Provider.NotFound;
+            }
+
+            ownerProfile.SustainabilityPoints -= advertisement.SustainablePoints;
         }
+        else
+        {
+            await _storeRepository.SubtractPoints(
+                profile.Id, 
+                advertisement.SustainablePoints, 
+                cancellationToken);
+        }
+        
+        profile.SustainabilityPoints -= advertisement.SustainablePoints;
         
         var avatarUrl = 
             await _fileProvider
@@ -134,6 +162,7 @@ public class AdvertisementService : IAdvertisementService
                     cancellationToken);
                         
         advertisement.SetPictureUrl(avatarUrl);
+        
         await _advertisementRepository.AddAsync(advertisement, cancellationToken);
         
         return advertisement;

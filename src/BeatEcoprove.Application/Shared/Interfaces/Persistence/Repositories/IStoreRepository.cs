@@ -9,6 +9,10 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
 public interface IStoreRepository : IRepository<Store, StoreId>
 {
+    Task SubtractPoints(
+        ProfileId profileId, 
+        int advertisementSustainablePoints, 
+        CancellationToken cancellationToken);
     public Task<int> GetTotalOfSustainablePoints(
         Profile provider,
         CancellationToken cancellationToken = default);
