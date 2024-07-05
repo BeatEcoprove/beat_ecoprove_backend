@@ -245,78 +245,78 @@ namespace BeatEcoprove.Infrastructure.Migrations
                 nullable: false,
                 defaultValue: 0.0);
 
-            migrationBuilder.InsertData(
-                table: "brands",
-                columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
-                values: new object[,]
-                {
-                    { new Guid("0d810f3b-2f17-49a0-9faf-320c30393e22"), "public/default/brands/mo.png", null, "MO" },
-                    { new Guid("1066f7be-78b8-4704-b444-bc6c11057b25"), "public/default/brands/zippy.png", null, "Zippy" },
-                    { new Guid("a0a204c5-067c-46b8-8ad8-9f72a1100eeb"), "public/default/brands/salsa.png", null, "Salsa" },
-                    { new Guid("ae921096-f72b-4b77-8562-ad49ab137d68"), "public/default/brands/losan.png", null, "Losan" }
-                });
+            // migrationBuilder.InsertData(
+            //     table: "brands",
+            //     columns: new[] { "id", "brand_avatar", "deleted_at", "name" },
+            //     values: new object[,]
+            //     {
+            //         { new Guid("0d810f3b-2f17-49a0-9faf-320c30393e22"), "public/default/brands/mo.png", null, "MO" },
+            //         { new Guid("1066f7be-78b8-4704-b444-bc6c11057b25"), "public/default/brands/zippy.png", null, "Zippy" },
+            //         { new Guid("a0a204c5-067c-46b8-8ad8-9f72a1100eeb"), "public/default/brands/salsa.png", null, "Salsa" },
+            //         { new Guid("ae921096-f72b-4b77-8562-ad49ab137d68"), "public/default/brands/losan.png", null, "Losan" }
+            //     });
 
-            migrationBuilder.InsertData(
-                table: "colors",
-                columns: new[] { "id", "deleted_at", "hex", "name" },
-                values: new object[,]
-                {
-                    { new Guid("02e1621a-31de-428f-bfe8-12ce16303cfa"), null, "FF29394A", "Azul Escuro" },
-                    { new Guid("0dc52312-73b4-45cd-97c2-7ba0a0684195"), null, "FFDA252E", "Vermelho" },
-                    { new Guid("20648049-1121-4037-912a-0b5ae4fe8ca1"), null, "FF4C4C4C", "Cinzento Claro" },
-                    { new Guid("21077620-0f70-4b79-adcb-26747d1f5d03"), null, "FFC3A572", "Amarelo Claro" },
-                    { new Guid("27b5e9e4-c2cc-487e-a47e-42ccc0ff7a82"), null, "FFD2AAC5", "Roxo Claro" },
-                    { new Guid("460345a7-22c3-4739-92a5-bc15b7dbc8ec"), null, "FFC2BC8B", "Verde Lima" },
-                    { new Guid("607c29b2-e0a8-4c0e-9903-a9d95e335135"), null, "FF98B3C8", "Azul Claro" },
-                    { new Guid("64332e3c-fbff-403d-b450-6cf764d67a98"), null, "FFD62598", "Roxo" },
-                    { new Guid("679480a2-707b-45ca-9bd6-cc8643877fa6"), null, "FFFF6D6D", "Vermelho Claro" },
-                    { new Guid("737af9e9-d7e6-45a3-93db-66352b62d1af"), null, "FFBE5967", "Rosa" },
-                    { new Guid("9039f788-7265-474d-b352-302233dea969"), null, "FF8B5F3C", "Castanho Bebê" },
-                    { new Guid("9169de9c-87f0-40a7-8381-8a5b1107ad19"), null, "FFFFE69F", "Amarelo" },
-                    { new Guid("92957cca-6e3b-4512-a813-243f0da7b148"), null, "FFF9C7C4", "Rosa Claro" },
-                    { new Guid("9b4ec4c5-cb66-4b10-a433-a85d72652593"), null, "FF948066", "Castanho Claro" },
-                    { new Guid("a3895e31-4048-48fb-83d1-8315448b12c1"), null, "FFFFFFFF", "White" },
-                    { new Guid("b1c577cc-498a-4f54-9c30-54a0eef365a3"), null, "FF000000", "Black" },
-                    { new Guid("c114ae9d-fe77-437e-a3ca-44d5a606efd2"), null, "FFC0C0C0", "Cinzento Bebê" },
-                    { new Guid("c24acdb0-b7ff-4dd6-bd06-6f3f7bc13e01"), null, "FFF58221", "Laranja" },
-                    { new Guid("dfb2b324-6205-4200-b617-7371495b9b9c"), null, "FFF2E7D4", "Amarelo Bebê" },
-                    { new Guid("e18956f5-22a8-4a42-be44-a17227a05958"), null, "FF509C75", "Verde" },
-                    { new Guid("e72157a6-64f3-4d47-ac2b-e67dd9148f04"), null, "FF4A2D16", "Castanho" }
-                });
+            // migrationBuilder.InsertData(
+            //     table: "colors",
+            //     columns: new[] { "id", "deleted_at", "hex", "name" },
+            //     values: new object[,]
+            //     {
+            //         { new Guid("02e1621a-31de-428f-bfe8-12ce16303cfa"), null, "FF29394A", "Azul Escuro" },
+            //         { new Guid("0dc52312-73b4-45cd-97c2-7ba0a0684195"), null, "FFDA252E", "Vermelho" },
+            //         { new Guid("20648049-1121-4037-912a-0b5ae4fe8ca1"), null, "FF4C4C4C", "Cinzento Claro" },
+            //         { new Guid("21077620-0f70-4b79-adcb-26747d1f5d03"), null, "FFC3A572", "Amarelo Claro" },
+            //         { new Guid("27b5e9e4-c2cc-487e-a47e-42ccc0ff7a82"), null, "FFD2AAC5", "Roxo Claro" },
+            //         { new Guid("460345a7-22c3-4739-92a5-bc15b7dbc8ec"), null, "FFC2BC8B", "Verde Lima" },
+            //         { new Guid("607c29b2-e0a8-4c0e-9903-a9d95e335135"), null, "FF98B3C8", "Azul Claro" },
+            //         { new Guid("64332e3c-fbff-403d-b450-6cf764d67a98"), null, "FFD62598", "Roxo" },
+            //         { new Guid("679480a2-707b-45ca-9bd6-cc8643877fa6"), null, "FFFF6D6D", "Vermelho Claro" },
+            //         { new Guid("737af9e9-d7e6-45a3-93db-66352b62d1af"), null, "FFBE5967", "Rosa" },
+            //         { new Guid("9039f788-7265-474d-b352-302233dea969"), null, "FF8B5F3C", "Castanho Bebê" },
+            //         { new Guid("9169de9c-87f0-40a7-8381-8a5b1107ad19"), null, "FFFFE69F", "Amarelo" },
+            //         { new Guid("92957cca-6e3b-4512-a813-243f0da7b148"), null, "FFF9C7C4", "Rosa Claro" },
+            //         { new Guid("9b4ec4c5-cb66-4b10-a433-a85d72652593"), null, "FF948066", "Castanho Claro" },
+            //         { new Guid("a3895e31-4048-48fb-83d1-8315448b12c1"), null, "FFFFFFFF", "White" },
+            //         { new Guid("b1c577cc-498a-4f54-9c30-54a0eef365a3"), null, "FF000000", "Black" },
+            //         { new Guid("c114ae9d-fe77-437e-a3ca-44d5a606efd2"), null, "FFC0C0C0", "Cinzento Bebê" },
+            //         { new Guid("c24acdb0-b7ff-4dd6-bd06-6f3f7bc13e01"), null, "FFF58221", "Laranja" },
+            //         { new Guid("dfb2b324-6205-4200-b617-7371495b9b9c"), null, "FFF2E7D4", "Amarelo Bebê" },
+            //         { new Guid("e18956f5-22a8-4a42-be44-a17227a05958"), null, "FF509C75", "Verde" },
+            //         { new Guid("e72157a6-64f3-4d47-ac2b-e67dd9148f04"), null, "FF4A2D16", "Castanho" }
+            //     });
 
-            migrationBuilder.InsertData(
-                table: "maintenance_services",
-                columns: new[] { "id", "badge", "deleted_at", "description", "title" },
-                values: new object[,]
-                {
-                    { new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"), "public/default/iron.png", null, "De que forma pretende engomar?", "Engomar" },
-                    { new Guid("5cf609b9-227d-42e8-8dba-6a30da3fdab2"), "public/default/dry.png", null, "De que forma pretende secar?", "Secar" },
-                    { new Guid("8aaa293b-bc68-426a-bafb-0a5fc1c4244e"), "public/default/repair.png", null, "De que forma pretende arranjar a peça?", "Reparar" },
-                    { new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), "public/default/wash.png", null, "De que forma pretende lavar?", "Lavar" }
-                });
+            // migrationBuilder.InsertData(
+            //     table: "maintenance_services",
+            //     columns: new[] { "id", "badge", "deleted_at", "description", "title" },
+            //     values: new object[,]
+            //     {
+            //         { new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"), "public/default/iron.png", null, "De que forma pretende engomar?", "Engomar" },
+            //         { new Guid("5cf609b9-227d-42e8-8dba-6a30da3fdab2"), "public/default/dry.png", null, "De que forma pretende secar?", "Secar" },
+            //         { new Guid("8aaa293b-bc68-426a-bafb-0a5fc1c4244e"), "public/default/repair.png", null, "De que forma pretende arranjar a peça?", "Reparar" },
+            //         { new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), "public/default/wash.png", null, "De que forma pretende lavar?", "Lavar" }
+            //     });
 
-            migrationBuilder.InsertData(
-                table: "maintenance_service_actions",
-                columns: new[] { "id", "badge", "deleted_at", "Description", "eco_score", "maintenance_service_id", "sustainable_points", "title" },
-                values: new object[,]
-                {
-                    { new Guid("0489437f-e69d-46b4-8efd-71a49333550d"), "public/default/iron/less150.png", null, "Engomar a menos de 150ºC", -1, new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"), 1, "A menos de 150ºC" },
-                    { new Guid("320d38a2-9067-49c4-849b-db85766a8c2b"), "public/default/wash/dry.png", null, "Lavar a seco", -3, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 0, "A seco" },
-                    { new Guid("344a0c07-eb30-490c-a7e8-eda8ac310d9f"), "public/default/dry/air.png", null, "Secar ao ar livre", 0, new Guid("5cf609b9-227d-42e8-8dba-6a30da3fdab2"), 2, "Ao ar livre" },
-                    { new Guid("50fdf9dd-a510-452f-9149-61db12696b79"), "public/default/iron/less110.png", null, "Engomar a menos de 110ºC", -1, new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"), 1, "A menos de 110ºC" },
-                    { new Guid("636302c3-a457-400c-8352-2852bf610ebf"), "public/default/iron/less200.png", null, "Engomar a menos de 200ºC", -1, new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"), 1, "A menos de 200ºC" },
-                    { new Guid("a41ee2b3-70ab-4574-9c32-0ee81b7b0e9f"), "public/default/repair.png", null, "Arranjar a peça pelo próprio", 2, new Guid("8aaa293b-bc68-426a-bafb-0a5fc1c4244e"), 3, "Pelo Próprio" },
-                    { new Guid("a7910197-97ba-441a-a4b9-9353650b22ad"), "public/default/wash/less30.png", null, "Lavar a menos de 30ºC", -1, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 2, "A menos de 30ºC" },
-                    { new Guid("a85c6baa-0cea-441e-8545-bb99877118e1"), "public/default/dry/machine.png", null, "Secar na máquina", -1, new Guid("5cf609b9-227d-42e8-8dba-6a30da3fdab2"), 1, "Na máquina" },
-                    { new Guid("aeef60ff-7006-49b0-bc9c-26b049411434"), "public/default/wash/hand.png", null, "Lavar à mão com água e sabão", 10, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 100, "Lavar à mão" },
-                    { new Guid("b8ff55b2-af07-47c0-9428-5e24596afc68"), "public/default/service.png", null, "Escolhe uma lavandaria", 10, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 100, "Serviço de lavandaria" },
-                    { new Guid("bab6b0f1-4841-4c0a-b31d-35cb0d794a82"), "public/default/wash/less50.png", null, "Lavar a menos de 50ºC", -2, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 1, "A menos de 50ºC" },
-                    { new Guid("bf2026c0-359c-423d-9216-0edd70b874dc"), "public/default/service.png", null, "Escolhe um serviço de secagem", 10, new Guid("5cf609b9-227d-42e8-8dba-6a30da3fdab2"), 100, "Serviço de Secagem" },
-                    { new Guid("bf296acc-c032-42b3-8ae3-8b08addfd66b"), "public/default/wash/less95.png", null, "Lavar a menos de 95ºC", -2, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 1, "A menos de 95ºC" },
-                    { new Guid("c1794ceb-9750-411d-8a48-f047f52253c9"), "public/default/wash/less70.png", null, "Lavar a menos de 70ºC", -2, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 1, "A menos de 70ºC" },
-                    { new Guid("f11a3aef-3d2a-490c-b7ee-02e695d6c47c"), "public/default/service.png", null, "Escolhe um serviço de engomadoria", 10, new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"), 100, "Serviço de Engomadoria" },
-                    { new Guid("f50a6b8b-5861-40ba-9084-3d7f1ff98253"), "public/default/service.png", null, "Escolhe um serviço de Reparação", 10, new Guid("8aaa293b-bc68-426a-bafb-0a5fc1c4244e"), 100, "Serviço de Reparação" }
-                });
+            // migrationBuilder.InsertData(
+            //     table: "maintenance_service_actions",
+            //     columns: new[] { "id", "badge", "deleted_at", "Description", "eco_score", "maintenance_service_id", "sustainable_points", "title" },
+            //     values: new object[,]
+            //     {
+            //         { new Guid("0489437f-e69d-46b4-8efd-71a49333550d"), "public/default/iron/less150.png", null, "Engomar a menos de 150ºC", -1, new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"), 1, "A menos de 150ºC" },
+            //         { new Guid("320d38a2-9067-49c4-849b-db85766a8c2b"), "public/default/wash/dry.png", null, "Lavar a seco", -3, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 0, "A seco" },
+            //         { new Guid("344a0c07-eb30-490c-a7e8-eda8ac310d9f"), "public/default/dry/air.png", null, "Secar ao ar livre", 0, new Guid("5cf609b9-227d-42e8-8dba-6a30da3fdab2"), 2, "Ao ar livre" },
+            //         { new Guid("50fdf9dd-a510-452f-9149-61db12696b79"), "public/default/iron/less110.png", null, "Engomar a menos de 110ºC", -1, new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"), 1, "A menos de 110ºC" },
+            //         { new Guid("636302c3-a457-400c-8352-2852bf610ebf"), "public/default/iron/less200.png", null, "Engomar a menos de 200ºC", -1, new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"), 1, "A menos de 200ºC" },
+            //         { new Guid("a41ee2b3-70ab-4574-9c32-0ee81b7b0e9f"), "public/default/repair.png", null, "Arranjar a peça pelo próprio", 2, new Guid("8aaa293b-bc68-426a-bafb-0a5fc1c4244e"), 3, "Pelo Próprio" },
+            //         { new Guid("a7910197-97ba-441a-a4b9-9353650b22ad"), "public/default/wash/less30.png", null, "Lavar a menos de 30ºC", -1, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 2, "A menos de 30ºC" },
+            //         { new Guid("a85c6baa-0cea-441e-8545-bb99877118e1"), "public/default/dry/machine.png", null, "Secar na máquina", -1, new Guid("5cf609b9-227d-42e8-8dba-6a30da3fdab2"), 1, "Na máquina" },
+            //         { new Guid("aeef60ff-7006-49b0-bc9c-26b049411434"), "public/default/wash/hand.png", null, "Lavar à mão com água e sabão", 10, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 100, "Lavar à mão" },
+            //         { new Guid("b8ff55b2-af07-47c0-9428-5e24596afc68"), "public/default/service.png", null, "Escolhe uma lavandaria", 10, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 100, "Serviço de lavandaria" },
+            //         { new Guid("bab6b0f1-4841-4c0a-b31d-35cb0d794a82"), "public/default/wash/less50.png", null, "Lavar a menos de 50ºC", -2, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 1, "A menos de 50ºC" },
+            //         { new Guid("bf2026c0-359c-423d-9216-0edd70b874dc"), "public/default/service.png", null, "Escolhe um serviço de secagem", 10, new Guid("5cf609b9-227d-42e8-8dba-6a30da3fdab2"), 100, "Serviço de Secagem" },
+            //         { new Guid("bf296acc-c032-42b3-8ae3-8b08addfd66b"), "public/default/wash/less95.png", null, "Lavar a menos de 95ºC", -2, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 1, "A menos de 95ºC" },
+            //         { new Guid("c1794ceb-9750-411d-8a48-f047f52253c9"), "public/default/wash/less70.png", null, "Lavar a menos de 70ºC", -2, new Guid("9197ddd7-6f01-4eb6-8ef4-4412fcb7cb1f"), 1, "A menos de 70ºC" },
+            //         { new Guid("f11a3aef-3d2a-490c-b7ee-02e695d6c47c"), "public/default/service.png", null, "Escolhe um serviço de engomadoria", 10, new Guid("2b78eb70-b39a-40c7-a9c4-0d6294c8da68"), 100, "Serviço de Engomadoria" },
+            //         { new Guid("f50a6b8b-5861-40ba-9084-3d7f1ff98253"), "public/default/service.png", null, "Escolhe um serviço de Reparação", 10, new Guid("8aaa293b-bc68-426a-bafb-0a5fc1c4244e"), 100, "Serviço de Reparação" }
+            //     });
         }
 
         /// <inheritdoc />
