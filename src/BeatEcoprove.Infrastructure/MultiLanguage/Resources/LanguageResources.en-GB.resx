@@ -255,4 +255,7 @@
     <data name="Username.InvalidUsername" xml:space="preserve">
         <value>Please enter a valid username.</value>
     </data>
+    <data name="DeleteAccount.Response" xml:space="preserve">
+        <value>The Account was deleted with sucess</value>
+    </data>
 </root>

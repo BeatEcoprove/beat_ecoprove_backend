@@ -354,4 +354,7 @@
     <data name="Username.InvalidUsername" xml:space="preserve">
         <value>Por favor, insira um nome de utilizador válido.</value>
     </data>
+    <data name="DeleteAccount.Response" xml:space="preserve">
+        <value>A conta de utilizador foi removida</value>
+    </data>
 </root>

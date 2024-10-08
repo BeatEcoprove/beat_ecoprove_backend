@@ -1,5 +1,7 @@
 ﻿using Asp.Versioning;
 
+using BeatEcoprove.Api.Extensions;
+using BeatEcoprove.Application.Authentication.Commands.DeleteAccount;
 using BeatEcoprove.Application.Authentication.Commands.ForgotPassword;
 using BeatEcoprove.Application.Authentication.Commands.ResetPassword;
 using BeatEcoprove.Application.Authentication.Commands.SignInEnterpriseAccount;
@@ -7,6 +9,7 @@ using BeatEcoprove.Application.Authentication.Commands.SignInPersonalAccount;
 using BeatEcoprove.Application.Authentication.Queries.Login;
 using BeatEcoprove.Application.Authentication.Queries.RefreshTokens;
 using BeatEcoprove.Application.Authentication.Queries.ValidationField;
+using BeatEcoprove.Application.Shared.Helpers;
 using BeatEcoprove.Application.Shared.Multilanguage;
 using BeatEcoprove.Contracts;
 using BeatEcoprove.Contracts.Authentication;
@@ -19,6 +22,7 @@ using MapsterMapper;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeatEcoprove.Api.Controllers;
@@ -131,6 +135,25 @@ public class AuthenticationController : ApiController
         return resultMessage.Match(
             message => Ok(new DefaultResponse(message)),
             Problem<DefaultResponse>
+        );
+    }
+
+    [Authorize]
+    [HttpDelete("delete")]
+    public async Task<ActionResult<DeleteAccountResponse>> DeleteAccount()
+    {
+        var userId = HttpContext.User.GetUserId();
+        
+        var resultMessage =
+            await _sender.Send(new
+            {
+                AuthId = userId,
+            }.Adapt<DeleteAccountCommand>());
+
+        return resultMessage.Match(
+            message => Ok(new DeleteAccountResponse(
+                Localizer.GetChunk(LanguageUtil.DeleteAccount))),
+            Problem<DeleteAccountResponse>
         );
     }
 }

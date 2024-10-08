@@ -7,7 +7,8 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
 public interface IAuthRepository : IRepository<Auth, AuthId>
 {
-    Task<bool> ExistsUserByEmailAsync(Email value, CancellationToken cancellationToken = default);
+    Task<bool> RemoveByIdAsync(AuthId authId, CancellationToken cancellationToken = default);
+     Task<bool> ExistsUserByEmailAsync(Email value, CancellationToken cancellationToken = default);
     Task<bool> ExistsUserByIdAsync(AuthId authId, CancellationToken cancellationToken = default);
     Task<Profile?> GetMainProfile(AuthId id, CancellationToken cancellationToken = default);
     Task<Auth?> GetAuthByEmail(Email value, CancellationToken cancellationToken);

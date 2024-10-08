@@ -11,6 +11,9 @@ namespace BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 
 public interface IProfileRepository : IRepository<Profile, ProfileId>
 {
+    Task<bool> DisableSubProfiles(
+        AuthId authId,
+        CancellationToken cancellationToken = default);
     Task<ProviderDao?> GetOrganizationAsync(
         ProfileId organizationId,
         CancellationToken cancellationToken = default);

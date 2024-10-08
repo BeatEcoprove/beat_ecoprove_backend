@@ -4,6 +4,7 @@ using BeatEcoprove.Application.Shared.Interfaces.Persistence.Repositories;
 using BeatEcoprove.Application.Shared.Interfaces.Providers;
 using BeatEcoprove.Application.Shared.Interfaces.Services;
 using BeatEcoprove.Domain.AuthAggregator;
+using BeatEcoprove.Domain.AuthAggregator.ValueObjects;
 using BeatEcoprove.Domain.ProfileAggregator.Entities.Profiles;
 using BeatEcoprove.Domain.ProfileAggregator.Enumerators;
 using BeatEcoprove.Domain.ProfileAggregator.ValueObjects;
@@ -75,6 +76,33 @@ public class AccountService : IAccountService
         await _profileRepository.AddAsync(profile, cancellationToken);
 
         return auth;
+    }
+
+    public async Task<ErrorOr<Auth>> DeleteAccount(AuthId authId, ProfileId profileId,
+        CancellationToken cancellationToken)
+    {
+        var authUser = await _authRepository.GetByIdAsync(authId, cancellationToken);
+
+        if (authUser is null)
+        {
+            return Errors.Auth.InvalidAuth;
+        }
+        
+        var shouldRemoveSubProfiles = await _profileRepository.DisableSubProfiles(authId, cancellationToken);
+
+        if (!shouldRemoveSubProfiles)
+        {
+            return Errors.Auth.FailedRemovingSubProfiles;
+        }
+        
+        var shouldRemoveAuthKey = await _authRepository.RemoveByIdAsync(authId, cancellationToken);
+
+        if (!shouldRemoveAuthKey)
+        {
+            return Errors.Auth.FailedRemovingAuthKey;
+        }
+
+        return authUser;
     }
 
     public async Task<ErrorOr<Auth>> CreateAccountFromProfile(

@@ -23,6 +23,27 @@ public class ProfileRepository : Repository<Profile, ProfileId>, IProfileReposit
     {
     }
 
+    public async Task<bool> DisableSubProfiles(AuthId authId, CancellationToken cancellationToken = default)
+    {
+        var getAllSubProfiles = from profile in DbContext.Set<Profile>()
+            where profile.AuthId == authId
+            select profile;
+
+        var subProfiles = await getAllSubProfiles.ToListAsync(cancellationToken);
+
+        if (subProfiles.Count == 0)
+        {
+            return false;
+        }
+        
+        foreach (var profile in subProfiles)
+        {
+            DbContext.Profiles.Remove(profile);
+        }
+
+        return true;
+    }
+
     public async Task<ProviderDao?> GetOrganizationAsync(ProfileId organizationId, CancellationToken cancellationToken = default)
     {
         var getOrganization = from profile in DbContext.Set<Profile>()

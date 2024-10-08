@@ -15,6 +15,20 @@ public class AuthRepository : Repository<Auth, AuthId>, IAuthRepository
     {
     }
 
+    public async Task<bool> RemoveByIdAsync(AuthId authId, CancellationToken cancellationToken = default)
+    {
+        var account = await DbContext.Auths
+            .SingleOrDefaultAsync(auth => auth.Id == authId, cancellationToken);
+
+        if (account is null)
+        {
+            return false;
+        }
+
+        DbContext.Auths.Remove(account);
+        return true;
+    }
+
     public async Task<bool> ExistsUserByEmailAsync(Email value, CancellationToken cancellationToken = default)
     {
         return await DbContext.Auths
